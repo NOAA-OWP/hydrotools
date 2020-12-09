@@ -28,7 +28,7 @@ REQUIREMENTS = [
     "numpy",
     "requests",
     "requests-cache",
-    "evaluation_tools._restclient@ git+https://git@github.com/NOAA-OWP/evaluation_tools.git@main#subdirectory=python/_restclient",
+    "evaluation_tools._restclient@ git+https://github.com/NOAA-OWP/evaluation_tools.git@main#subdirectory=python/_restclient",
 ]
 
 setup(
