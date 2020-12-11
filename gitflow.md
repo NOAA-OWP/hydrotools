@@ -3,7 +3,7 @@
 ## Getting Started
 
 Begin by making a local copy of the repository
-`git clone https://github.com/jarq6c/evaluation_tools`
+`git clone https://github.com/NOAA-OWP/evaluation_tools`
 
 Don't forget to ensure identity is set properly, by default, git doesn't configure e-mail addresses well!  You can set your machines global policy using
 
