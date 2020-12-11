@@ -30,6 +30,7 @@ URL = "https://github.com/NOAA-OWP/evaluation_tools"
 SUBPACKAGES = {
     "evaluation_tools.nwis_client": "python/nwis_client",
     "evaluation_tools._restclient": "python/_restclient",
+    "evaluation_tools.gcp_client": "python/gcp_client",
 }
 
 # Short sub-package description
