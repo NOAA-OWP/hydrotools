@@ -181,6 +181,15 @@ class NWMDataService:
         -------
         df : pandas.DataFrame
             Model data in stacked format.
+
+        Examples
+        --------
+        >>> from evaluation_tools.gcp_client import gcp
+        >>> model_data_service = gcp.NWMDataService()
+        >>> df = model_data_service.get(
+        ...     configuration='analysis_assim_extend',
+        ...     reference_time='20201209T16Z'
+        ... )
         
         """
         # Valid hours to retrieve
