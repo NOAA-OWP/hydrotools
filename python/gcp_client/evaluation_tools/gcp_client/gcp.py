@@ -20,9 +20,15 @@ import xarray as xr
 import pandas as pd
 from os import cpu_count
 from multiprocessing import Pool
+from typing import Union, Iterable
+from pathlib import Path
 
-def NWM_bytes_to_DataFrame(bytes_string) -> pd.DataFrame:
-    """Convert bytes from an NWM channel route netcdf4 file to a 
+# Global singletons for holding location and df/None of NWM feature id to usgs site
+# code mapping
+_FEATURE_ID_TO_USGS_SITE_MAP_FILE = (
+    Path(__file__).resolve().parent / "data/nwm_2_0_feature_id_with_usgs_site.csv"
+)
+_FEATURE_ID_TO_USGS_SITE_MAP = None
     pandas.DataFrame
 
     Parameters
