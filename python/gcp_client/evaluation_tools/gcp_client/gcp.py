@@ -57,6 +57,23 @@ def NWM_bytes_to_DataFrame(
     pd.DataFrame
         A stacked DataFrame.
     """
+    global _FEATURE_ID_TO_USGS_SITE_MAP
+    global _FEATURE_ID_TO_USGS_SITE_MAP_FILE
+
+    if not filter_nwm_feature_id_with:
+
+        if _FEATURE_ID_TO_USGS_SITE_MAP is None:
+            # if the dataframe holding the mapping from feature id to site code hasn't
+            # been loaded
+
+            # Read, ensure its the right data types
+            _FEATURE_ID_TO_USGS_SITE_MAP = pd.read_csv(
+                _FEATURE_ID_TO_USGS_SITE_MAP_FILE,
+                dtype={"nwm_feature_id": int, "usgs_site_code": str},
+            )
+
+        filter_nwm_feature_id_with = _FEATURE_ID_TO_USGS_SITE_MAP
+
     # Load data as xarray DataSet
     ds = xr.load_dataset(BytesIO(bytes_string), engine='h5netcdf', 
         mask_and_scale=False)
@@ -68,8 +85,21 @@ def NWM_bytes_to_DataFrame(
     })
 
     # Subset data
-    # TODO implement RouteLink
-    df = df.head(100)
+    if filter:
+        try:
+            # try to left merge using filter_nwm_feature_id_with and join_on key
+            df = pd.merge(
+                filter_nwm_feature_id_with,
+                df,
+                how="left",
+                left_on=join_on,
+                right_on="nwm_feature_id",
+            )
+
+        except TypeError:
+            # object passed to pd.merge not dataframe or series
+            # assume some kind of list like object
+            df = df[df["nwm_feature_id"].isin(filter_nwm_feature_id_with)]
 
     # Scale data
     scale_factor = ds['streamflow'].scale_factor[0]
