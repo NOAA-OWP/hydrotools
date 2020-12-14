@@ -13,7 +13,7 @@ import pandas as pd
 import xarray as xr
 import six
 from pathlib import Path
-from typing import Union
+from typing import Union, List
 
 
 def nwm_routelink_extract_usgs_sites(
