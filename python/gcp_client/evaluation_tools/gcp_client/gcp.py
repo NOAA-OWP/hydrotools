@@ -275,8 +275,8 @@ class NWMDataService:
             )
 
             # Get data
-            data_frames = pool.map(self.get_DataFrame, blob_names)
-            
+            data_frames = pool.map(part, blob_names)
+
             # Concatenate
             return pd.concat(data_frames, ignore_index=True)
 
