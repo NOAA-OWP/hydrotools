@@ -38,6 +38,14 @@ def nwm_routelink_extract_usgs_sites(
     -------
     pd.DataFrame
         Dataframe with cols `nwm_feature_id` and `usgs_site_code`
+
+    Examples
+    --------
+    >>> from evaluation_tools.gcp_client import utils
+    >>> df = utils.nwm_routelink_extract_usgs_sites("RouteLink_NHDPLUS.nc")
+    >>> import csv
+    >>> df.to_csv("nwm_feature_id_with_usgs_site.csv", index=False, quoting=csv.QUOTE_NONNUMERIC)
+
     """
     # open dataset
     ds = xr.open_dataset(routelink_file_or_url, mask_and_scale=False, engine="h5netcdf")
