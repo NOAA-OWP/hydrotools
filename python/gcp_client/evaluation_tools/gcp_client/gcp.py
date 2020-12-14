@@ -29,18 +29,33 @@ _FEATURE_ID_TO_USGS_SITE_MAP_FILE = (
     Path(__file__).resolve().parent / "data/nwm_2_0_feature_id_with_usgs_site.csv"
 )
 _FEATURE_ID_TO_USGS_SITE_MAP = None
+
+
+def NWM_bytes_to_DataFrame(
+    bytes_string,
+    filter: bool = True,
+    filter_nwm_feature_id_with: Union[pd.DataFrame, pd.Series, Iterable] = None,
+    join_on: str = "nwm_feature_id",
+) -> pd.DataFrame:
+    """Convert bytes from an NWM channel route netcdf4 file to a
     pandas.DataFrame
 
     Parameters
     ----------
     bytes_string : bytes, required
         Raw bytes from NWM channel route file.
+    filter : bool, optional, default True
+        To or not to filter returned df.
+    filter_nwm_feature_id_with : Union[pd.DataFrame, pd.Series, Iterable], optional, default None
+        Object used to filter the returned df. Dataframe, Series, list, np.array
+    join_on : str, optional, default "nwm_feature_id"
+        Field in filter_nwm_feature_id_with to filter by if applicable. Typically a
+        column name.
 
     Returns
     -------
-    df : pandas.DataFrame
+    pd.DataFrame
         A stacked DataFrame.
-    
     """
     # Load data as xarray DataSet
     ds = xr.load_dataset(BytesIO(bytes_string), engine='h5netcdf', 
