@@ -52,7 +52,7 @@ def nwm_routelink_extract_usgs_sites(
 
     df = pd.DataFrame(
         {
-            "nwm_feature_id": ds.gages.feature_id.values,
+            "nwm_feature_id": ds.link.values,
             "usgs_site_code": ds.gages.values,
         }
     )
