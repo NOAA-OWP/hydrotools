@@ -68,13 +68,19 @@ def nwm_routelink_extract_usgs_sites(
     return df[df["usgs_site_code"].str.len() > 0].reset_index(drop=True)
 
 
-def crosswalk(usgs_site_codes: Union[str, List[str]]) -> pd.DataFrame:
-    """Return the nwm_feature_id(s) for one or more provided usgs_sites_codes.
+def crosswalk(
+    usgs_site_codes: Union[str, List[str]] = None,
+    nwm_feature_ids: Union[str, List[str]] = None,
+) -> pd.DataFrame:
+    """Return the nwm_feature_id(s) OR usgs_site_codes for one or more provided
+    usgs_sites_codes or nwm_feature_ids.
 
     Parameters
     ----------
-    usgs_site_codes : Union[str, List[str]]
+    usgs_site_codes : Union[str, List[str]], either usgs_site_codes or nwm_feature_ids
         USGS site code as string, string seperated by commas, or list of strings
+    nwm_feature_ids : Union[str, List[str]], either usgs_site_codes or nwm_feature_ids
+        NWM feature id(s) as string, string seperated by commas, or list of strings
 
     Returns
     -------
@@ -85,14 +91,35 @@ def crosswalk(usgs_site_codes: Union[str, List[str]]) -> pd.DataFrame:
     --------
     >>> from evaluation_tools.gcp_client import utils
     >>> cribbs_creek = "02465292"
-    >>> crx_walk = utils.crosswalk(cribbs_creek)
+    >>> crx_walk = utils.crosswalk(usgs_site_codes=cribbs_creek)
 
     >>> sites = ["02465292", "04234000"]
-    >>> crx_walk = utils.crosswalk(sites)
+    >>> crx_walk = utils.crosswalk(usgs_site_codes=sites)
 
     >>> sites = "02465292,04234000"
-    >>> crx_walk = utils.crosswalk(sites)
+    >>> crx_walk = utils.crosswalk(usgs_site_codes=sites)
+
+    >>> nwm_feature = 18206880
+    >>> crx_walk = utils.crosswalk(nwm_feature_ids=nwm_feature)
     """
+
+    # Handle keyword args. XNOR is invalid
+    if (not usgs_site_codes and not nwm_feature_ids) or (
+        usgs_site_codes and nwm_feature_ids
+    ):
+        error_message = (
+            "Cannot pass both `usgs_site_codes` and `nwm_feature_ids` parameters."
+        )
+        raise TypeError(error_message)
+
+    if usgs_site_codes:
+        crosswalk_var = "usgs_site_code"
+        crosswalk_values = usgs_site_codes
+
+    else:
+        crosswalk_var = "nwm_feature_id"
+        crosswalk_values = nwm_feature_ids
+
     # Path to crosswalk file
     crosswalk_file = (
         Path(__file__).resolve().parent / "data/nwm_2_0_feature_id_with_usgs_site.csv"
@@ -105,8 +132,8 @@ def crosswalk(usgs_site_codes: Union[str, List[str]]) -> pd.DataFrame:
     )
 
     # If passed site codes are singular or in string form convert to list
-    if isinstance(usgs_site_codes, six.string_types):
-        usgs_site_codes = usgs_site_codes.split(",")
+    if isinstance(crosswalk_values, six.string_types):
+        crosswalk_values = crosswalk_values.split(",")
 
     # Return df of nwm_feature_ids and matching usgs_site_codes
-    return crosswalk_df[crosswalk_df["usgs_site_code"].isin(usgs_site_codes)]
+    return crosswalk_df[crosswalk_df[crosswalk_var].isin(crosswalk_values)]
