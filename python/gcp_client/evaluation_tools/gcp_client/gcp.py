@@ -256,11 +256,18 @@ class NWMDataService:
         ...     configuration='analysis_assim_extend',
         ...     reference_time='20201209T16Z'
         ... )
-        
+
+        >>> cribbs_mill_creek_nwm_feature_id = [18206880]
+        >>> cribbs_mill_df = model_data_service.get(
+        ...     configuration='analysis_assim_extend',
+        ...     reference_time='20201209T16Z',
+        ...     filter_nwm_feature_id_with=cribbs_mill_creek_nwm_feature_id
+        ... )
+
         """
         # Valid hours to retrieve
         valid_hours = [(configuration, reference_time, i) for i in range(28)]
-        
+
         # Spawn processes
         with Pool(processes=self.max_processes) as pool:
             # Generate blob names
