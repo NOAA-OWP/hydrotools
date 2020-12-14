@@ -11,6 +11,7 @@ interest.
 
 import pandas as pd
 import xarray as xr
+import six
 from pathlib import Path
 from typing import Union
 
