@@ -218,7 +218,14 @@ class NWMDataService:
 
         return f'nwm.{idt}/{configuration}/nwm.t{itm}.{configuration}.channel_rt.tm{vhr}.conus.nc'
 
-    def get(self, configuration, reference_time) -> pd.DataFrame:
+    def get(
+        self,
+        configuration,
+        reference_time,
+        filter: bool = True,
+        filter_nwm_feature_id_with: Union[pd.DataFrame, pd.Series, Iterable] = None,
+        join_on: str = "nwm_feature_id",
+    ) -> pd.DataFrame:
         """Retrieve a blob from the data service as a pandas.DataFrame.
 
         Parameters
@@ -227,6 +234,13 @@ class NWMDataService:
             Operational cycle of NWM.
         reference_time : str, required
             Issue time of model output in YYYYmmddTHHZ format.
+        filter : bool, optional, default True
+            To or not to filter returned df.
+        filter_nwm_feature_id_with : Union[pd.DataFrame, pd.Series, Iterable], optional, default None
+            Object used to filter the returned df. Dataframe, Series, list, np.array
+        join_on : str, optional, default "nwm_feature_id"
+            Field in filter_nwm_feature_id_with to filter by if applicable. Typically a
+            column name.
 
         Returns
         -------
