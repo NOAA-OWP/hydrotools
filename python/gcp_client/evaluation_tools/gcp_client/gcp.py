@@ -18,6 +18,7 @@ from google.cloud import storage
 from io import BytesIO
 import xarray as xr
 import pandas as pd
+from functools import partial
 from os import cpu_count
 from multiprocessing import Pool
 from typing import Union, Iterable
@@ -264,7 +265,15 @@ class NWMDataService:
         with Pool(processes=self.max_processes) as pool:
             # Generate blob names
             blob_names = pool.starmap(self._make_blob_name, valid_hours)
-            
+
+            # Wrap get_DataFrame with keyword arguments
+            part = partial(
+                self.get_DataFrame,
+                filter=filter,
+                filter_nwm_feature_id_with=filter_nwm_feature_id_with,
+                join_on=join_on,
+            )
+
             # Get data
             data_frames = pool.map(self.get_DataFrame, blob_names)
             
