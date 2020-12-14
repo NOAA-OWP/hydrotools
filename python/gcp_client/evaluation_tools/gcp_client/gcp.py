@@ -170,7 +170,7 @@ class NWMDataService:
         bucket = client.bucket(self.bucket_name)
         return bucket.blob(blob_name).download_as_bytes(timeout=120)
 
-    def get_DataFrame(self, blob_name) -> pd.DataFrame:
+    def get_DataFrame(self, blob_name, **kwargs) -> pd.DataFrame:
         """Retrieve a blob from the data service as a pandas.DataFrame.
 
         Parameters
@@ -185,7 +185,7 @@ class NWMDataService:
         
         """
         bytes_string = self.get_blob(blob_name)
-        return NWM_bytes_to_DataFrame(bytes_string)
+        return NWM_bytes_to_DataFrame(bytes_string, **kwargs)
 
     def _make_blob_name(self, configuration, reference_time, valid_hour) -> str:
         """Generate blob name for retrieval.
