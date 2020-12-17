@@ -1,0 +1,8 @@
+Must use `--implicit-namespaces` w/ sphinx-api doc with namespace packages
+
+Use, to build the package docs:
+sphinx-apidoc --implicit-namespaces -o docs/ python "*test?*"
+
+sphinx-apidoc -P --implicit-namespaces -o . ../python/_restclient/evaluation_tools
+
+sphinx-apidoc -T -P -e --implicit-namespaces -o . ../python/_restclient/evaluation_tools
