@@ -80,7 +80,7 @@ class IVDataService:
             None,
         ] = None,
         period: Union[str, None] = None,
-        siteStatus: str = "active",
+        siteStatus: str = "all",
         **params,
     ):
         """Return Pandas DataFrame of NWIS IV data.
@@ -108,7 +108,7 @@ class IVDataService:
         period: str, None
             Observation record for period until current time. Uses ISO 8601
             period time.
-        siteStatus: str, optional, default 'active'
+        siteStatus: str, optional, default 'all'
             Site status in string format
         params:
             Additional parameters passed directly to service.
