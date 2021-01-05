@@ -226,7 +226,7 @@ class IVDataService:
             None,
         ] = None,
         period: Union[str, None] = None,
-        siteStatus: str = "active",
+        siteStatus: str = "all",
         **params,
     ):
         # TODO Docstring
@@ -268,7 +268,7 @@ class IVDataService:
             None,
         ] = None,
         period: Union[str, None] = None,
-        siteStatus: str = "active",
+        siteStatus: str = "all",
         max_sites_per_request: int = 100,
         **params,
     ) -> List[requests.Response]:
@@ -300,7 +300,7 @@ class IVDataService:
         period: str, None
             Observation record for period until current time. Uses ISO 8601
             period time.
-        siteStatus: str, optional, default 'active'
+        siteStatus: str, optional, default 'all'
             Site status in string format
         max_sites_per_request: int, optional, default 100
             Generally should not be changed. Maximum number of sites in any single
@@ -385,7 +385,7 @@ class IVDataService:
             None,
         ] = None,
         period: Union[str, None] = None,
-        siteStatus: str = "active",
+        siteStatus: str = "all",
         max_sites_per_request: int = 100,
         **params,
     ):
@@ -429,7 +429,7 @@ class IVDataService:
             None,
         ] = None,
         period: Union[str, None] = None,
-        siteStatus: str = "active",
+        siteStatus: str = "all",
         **params,
     ):
         params.update(
@@ -465,7 +465,7 @@ class IVDataService:
             None,
         ] = None,
         period: Union[str, None] = None,
-        siteStatus: str = "active",
+        siteStatus: str = "all",
         **params,
     ):
         params = self._get_raw_params_handler(
@@ -504,7 +504,7 @@ class IVDataService:
             None,
         ] = None,
         period: Union[str, None] = None,
-        siteStatus: str = "active",
+        siteStatus: str = "all",
         **params,
     ):
         params = self._get_raw_params_handler(
@@ -535,7 +535,7 @@ class IVDataService:
             None,
         ] = None,
         period: Union[str, None] = None,
-        siteStatus: str = "active",
+        siteStatus: str = "all",
         **params,
     ):
         params = self._get_raw_params_handler(
@@ -570,7 +570,7 @@ class IVDataService:
             None,
         ] = None,
         period: Union[str, None] = None,
-        siteStatus: str = "active",
+        siteStatus: str = "all",
         **params,
     ):
         params = self._get_raw_params_handler(
