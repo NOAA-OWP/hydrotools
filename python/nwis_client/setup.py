@@ -13,7 +13,7 @@ SUBPACKAGE_NAME = "nwis_client"
 SUBPACKAGE_SLUG = f"{NAMESPACE_PACKAGE_NAME}.{SUBPACKAGE_NAME}"
 
 # Subpackage version
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 
 # Package author information
 AUTHOR = "Austin Raney"
