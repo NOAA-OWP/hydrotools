@@ -71,3 +71,6 @@ $ python3 -m pip install git+https://github.com/NOAA-OWP/evaluation_tools.git#su
 $ python3 -m pip install git+https://github.com/NOAA-OWP/evaluation_tools.git#subdirectory=python/_restclient
 ```
 
+## Documentation
+
+[Evaluation tools](https://noaa-owp.github.io/evaluation_tools/) GitHub pages documentation
