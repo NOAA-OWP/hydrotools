@@ -50,6 +50,32 @@ datetimes that assume UTC time. In general, do not assume methods are compatible
 time-zone aware datetimes or timestamps. Expect methods to transform time-zone aware
 datetimes and timestamps into their timezone naive counterparts at UTC time.
 
+## Usage
+
+### NWIS IV Client Example
+```python
+# Import the NWIS IV Client
+from evaluation_tools.nwis_client.iv import IVDataService
+
+# Retrieve data from a single site
+observations_data = IVDataService.get(
+    sites='01646500', 
+    startDT='2019-08-01', 
+    endDT='2020-08-01'
+    )
+
+# Look at the data
+print(observations_data.head())
+
+           value_date variable_name usgs_site_code measurement_unit   value qualifiers  series
+0 2019-08-01 04:00:00    streamflow       01646500            ft3/s  4170.0        [A]       0
+1 2019-08-01 04:15:00    streamflow       01646500            ft3/s  4170.0        [A]       0
+2 2019-08-01 04:30:00    streamflow       01646500            ft3/s  4170.0        [A]       0
+3 2019-08-01 04:45:00    streamflow       01646500            ft3/s  4170.0        [A]       0
+4 2019-08-01 05:00:00    streamflow       01646500            ft3/s  4170.0        [A]       0
+```
+
+
 ## Installation
 
 In accordance with the python community, we support and advise the usage of virtual
