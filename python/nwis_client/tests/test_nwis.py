@@ -79,6 +79,17 @@ def request_status_setter(status: int = 404):
     return partial(MockRequests, **requests_testable_attributes)
 
 
+def test_get_throw_warning(monkeypatch):
+    def wrapper(*args, **kwargs):
+        return []
+
+    # Monkey patch get_raw method to return []
+    monkeypatch.setattr(IVDataService, "get_raw", wrapper)
+
+    with pytest.warns(UserWarning):
+        assert IVDataService.get(sites="04233255").empty is True
+
+
 @pytest.mark.slow
 def test_get(setup_iv):
     # TODO
