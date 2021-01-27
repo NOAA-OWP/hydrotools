@@ -24,7 +24,7 @@ from typing import Union
 def detrend_streamflow(
     series: pd.Series,
     halflife: Union[float, str, pd.Timedelta],
-    window: Union[int, pd.offsets, pd.Index],
+    window: Union[int, pd.tseries.offsets.DateOffset, pd.Index],
     reverse: bool =False
     ) -> pd.Series:
     """Model the trend in a streamflow time series using a rolling 
@@ -90,7 +90,7 @@ def detrend_streamflow(
 def mark_event_flows(
     series: pd.Series,
     halflife: Union[float, str, pd.Timedelta],
-    window: Union[int, pd.offsets, pd.Index]
+    window: Union[int, pd.tseries.offsets.DateOffset, pd.Index]
     ) -> pd.Series:
     """Model the trend in a streamflow time series by taking the mean
         of two rolling minimum filters applied in a forward and 
@@ -145,7 +145,7 @@ def mark_event_flows(
 def list_events(
     series: pd.Series,
     halflife: Union[float, str, pd.Timedelta],
-    window: Union[int, pd.offsets, pd.Index]
+    window: Union[int, pd.tseries.offsets.DateOffset, pd.Index]
     ) -> pd.DataFrame:
     """Apply time series decomposition to mark event values in a streamflow
         time series. Discretize continuous event values into indiviual events.
