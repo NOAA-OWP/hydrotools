@@ -92,7 +92,7 @@ def mark_event_flows(
     halflife: Union[float, str, pd.Timedelta],
     window: Union[int, pd.tseries.offsets.DateOffset, pd.Index]
     ) -> pd.Series:
-    """Model the trend in a streamflow time series by taking the mean
+    """Model the trend in a streamflow time series by taking the max
         of two rolling minimum filters applied in a forward and 
         backward fashion. Remove the trend and residual components. The method 
         aims to produce a detrended time series with a median of 0.0. It assumes 
@@ -127,8 +127,8 @@ def mark_event_flows(
     # Detrend with a backward filter
     backward = detrend_streamflow(series, halflife, window, True)
 
-    # Take the mean of the forward and backward trends
-    detrended = np.mean([forward, backward], axis=0)
+    # Take the max of the forward and backward trends
+    detrended = np.maximum(forward, backward)
 
     # Assume a residual equal to twice the detrended median
     residual = np.median(detrended) * 2.0
