@@ -84,10 +84,10 @@ def test_get_throw_warning(monkeypatch):
         return []
 
     # Monkey patch get_raw method to return []
-    monkeypatch.setattr(IVDataService, "get_raw", wrapper)
+    monkeypatch.setattr(iv.IVDataService, "get_raw", wrapper)
 
     with pytest.warns(UserWarning):
-        assert IVDataService.get(sites="04233255").empty is True
+        assert iv.IVDataService.get(sites="04233255").empty is True
 
 
 @pytest.mark.slow
