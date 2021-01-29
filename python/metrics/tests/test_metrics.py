@@ -12,15 +12,17 @@ contigency_table= {
 }
 
 def test_compute_contingency_table():
-    obs = pd.Categorical([True, True, True, False, False, False])
-    sim = pd.Categorical([True, True, False, True, False, False])
+    obs = pd.Categorical([True, True, True, False, False, False, 
+        False, False, False, False])
+    sim = pd.Categorical([True, False, False, True, True, True, 
+        False, False, False, False])
 
     table = metrics.compute_contingency_table(obs, sim)
 
-    assert table['true_positive'] == 2
-    assert table['false_positive'] == 1
-    assert table['false_negative'] == 1
-    assert table['true_negative'] == 2
+    assert table['true_positive'] == 1
+    assert table['false_positive'] == 2
+    assert table['false_negative'] == 3
+    assert table['true_negative'] == 4
 
 def test_probability_of_detection():
     POD = metrics.probability_of_detection(contigency_table)
