@@ -18,30 +18,41 @@ threat_score
 frequency_bias
 percent_correct
 base_chance
+equitable_threat_score
 
 """
 
 import pandas as pd
 from typing import Union
 
-def compute_contingency_table(obs, sim):
-    """Compute components of a contingency table
+def compute_contingency_table(
+    observed: pd.Series,
+    simulated: pd.Series
+    ) -> pd.Series:
+    """Compute components of a contingency table.
         
         Parameters
         ----------
-        contingency_table: dict, pandas.DataFrame, or pandas.Series, required
-            Contingency table containing key-value pairs with the following 
-            keys: 'true_positive', 'false_positive', 'false_negative', 
-                'true_negative'; and int or float values
+        observed: pandas.Series, required
+            pandas.Series of boolean pandas.Categorical values indicating
+            observed occurences
+        simulated: pandas.Series, required
+            pandas.Series of boolean pandas.Categorical values indicating
+            simulated occurences
             
         Returns
         -------
-        POD: float
-            Probability of detection.
+        contingency_table: pandas.Series
+            pandas.Series of integer values keyed to pandas.Index([
+                'true_positive',
+                'false_positive,
+                'false_negative',
+                'true_negative'
+                ])
         
     """
     # Cross tabulate
-    ctab = pd.crosstab(obs, sim, dropna=False)
+    ctab = pd.crosstab(observed, simulated, dropna=False)
 
     # Reformat
     return pd.Series({
@@ -51,7 +62,9 @@ def compute_contingency_table(obs, sim):
         'true_negative' : ctab.loc[False, False]
         })
 
-def probability_of_detection(contingency_table):
+def probability_of_detection(
+    contingency_table: Union[dict, pd.DataFrame, pd.Series]
+    ) -> float:
     """Compute probability of detection (POD).
         
         Parameters
@@ -71,7 +84,9 @@ def probability_of_detection(contingency_table):
     c = contingency_table['false_negative']
     return a / (a+c)
 
-def probability_of_false_detection(contingency_table):
+def probability_of_false_detection(
+    contingency_table: Union[dict, pd.DataFrame, pd.Series]
+    ) -> float:
     """Compute probability of false detection/false alarm rate (POFD/FARate).
         
         Parameters
@@ -83,16 +98,18 @@ def probability_of_false_detection(contingency_table):
             
         Returns
         -------
-        POD: float
-            Probability of detection.
+        POFD: float
+            Probability of false detection.
         
     """
     b = contingency_table['false_positive']
     d = contingency_table['true_negative']
     return b / (b+d)
 
-def probability_of_false_alarm(contingency_table):
-    """Compute probability of false alarm/false alarm ratio (POFD/FARatio).
+def probability_of_false_alarm(
+    contingency_table: Union[dict, pd.DataFrame, pd.Series]
+    ) -> float:
+    """Compute probability of false alarm/false alarm ratio (POFA/FARatio).
         
         Parameters
         ----------
@@ -103,15 +120,17 @@ def probability_of_false_alarm(contingency_table):
             
         Returns
         -------
-        POD: float
-            Probability of detection.
+        POFA: float
+            Probability of false alarm.
         
     """
     b = contingency_table['false_positive']
     a = contingency_table['true_positive']
     return b / (b+a)
 
-def threat_score(contingency_table):
+def threat_score(
+    contingency_table: Union[dict, pd.DataFrame, pd.Series]
+    ) -> float:
     """Compute threat score/critical success index (TS/CSI).
         
         Parameters
@@ -123,8 +142,8 @@ def threat_score(contingency_table):
             
         Returns
         -------
-        POD: float
-            Probability of detection.
+        TS: float
+            Threat score.
         
     """
     a = contingency_table['true_positive']
@@ -132,7 +151,9 @@ def threat_score(contingency_table):
     c = contingency_table['false_negative']
     return a / (a+b+c)
 
-def frequency_bias(contingency_table):
+def frequency_bias(
+    contingency_table: Union[dict, pd.DataFrame, pd.Series]
+    ) -> float:
     """Compute frequency bias (FBI).
         
         Parameters
@@ -144,8 +165,8 @@ def frequency_bias(contingency_table):
             
         Returns
         -------
-        POD: float
-            Probability of detection.
+        FBI: float
+            Frequency bias.
         
     """
     a = contingency_table['true_positive']
@@ -153,7 +174,9 @@ def frequency_bias(contingency_table):
     c = contingency_table['false_negative']
     return (a+b) / (a+c)
 
-def percent_correct(contingency_table):
+def percent_correct(
+    contingency_table: Union[dict, pd.DataFrame, pd.Series]
+    ) -> float:
     """Compute percent correct (PC).
         
         Parameters
@@ -165,8 +188,8 @@ def percent_correct(contingency_table):
             
         Returns
         -------
-        POD: float
-            Probability of detection.
+        PC: float
+            Percent correct.
         
     """
     a = contingency_table['true_positive']
@@ -175,7 +198,9 @@ def percent_correct(contingency_table):
     d = contingency_table['true_negative']
     return (a+d) / (a+b+c+d)
 
-def base_chance(contingency_table):
+def base_chance(
+    contingency_table: Union[dict, pd.DataFrame, pd.Series]
+    ) -> float:
     """Compute base chance to hit (a_r).
         
         Parameters
@@ -187,8 +212,8 @@ def base_chance(contingency_table):
             
         Returns
         -------
-        POD: float
-            Probability of detection.
+        a_r: float
+            Base chance to hit by chance.
         
     """
     a = contingency_table['true_positive']
@@ -197,7 +222,9 @@ def base_chance(contingency_table):
     d = contingency_table['true_negative']
     return ((a+b) * (a+c)) / (a+b+c+d)
 
-def equitable_threat_score(contingency_table):
+def equitable_threat_score(
+    contingency_table: Union[dict, pd.DataFrame, pd.Series]
+    ) -> float:
     """Compute equitable threat score (ETS).
         
         Parameters
@@ -209,8 +236,8 @@ def equitable_threat_score(contingency_table):
             
         Returns
         -------
-        POD: float
-            Probability of detection.
+        ETS: float
+            Equitable threat score.
         
     """
     a_r = base_chance(contingency_table)
