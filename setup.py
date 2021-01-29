@@ -22,7 +22,7 @@ AUTHOR = "Jason Regina"
 AUTHOR_EMAIL = "jarq6c@gmail.com"
 
 # Namespace package version
-VERSION = "1.2.0"
+VERSION = "1.3.0"
 URL = "https://github.com/NOAA-OWP/evaluation_tools"
 
 # Map subpackage namespace to relative location
@@ -32,6 +32,7 @@ SUBPACKAGES = {
     "evaluation_tools._restclient": "python/_restclient",
     "evaluation_tools.gcp_client": "python/gcp_client",
     "evaluation_tools.events": "python/events",
+    "evaluation_tools.metrics": "python/metrics",
 }
 
 # Short sub-package description
