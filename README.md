@@ -142,6 +142,72 @@ usgs_site_code
                38 2020-09-28 05:00:00 2020-09-28 11:00:00
 ```
 
+### Metrics Example
+```python
+from evaluation_tools.metrics import metrics
+from evaluation_tools.nwis_client.iv import IVDataService
+import pandas as pd
+
+# Get observed data
+observed = IVDataService.get(
+    sites='01646500',
+    startDT='2020-01-01',
+    endDT='2021-01-01'
+    )
+
+# Preprocess data
+observed = observed[['value_date', 'value']]
+observed = observed.drop_duplicates(['value_date'])
+observed = observed.set_index('value_date')
+observed = observed.resample('H').nearest()
+
+# Simulate a 10-day persistence forecast
+issue_frequency = pd.Timedelta('6H')
+forecast_length = pd.Timedelta('10D')
+forecasts = observed.resample(issue_frequency).nearest()
+
+# Apply flood criteria using a "Hit Window" approach
+#  A flood is observed or simluated if any value within the
+#  forecast_length meets or exceeds the flood_criteria
+# 
+# Apply flood_criteria to forecasts
+flood_criteria = 19200.0
+forecasts['simulated_flood'] = (forecasts['value'] >= flood_criteria)
+
+# Apply flood_criteria to observations
+for row in forecasts.itertuples():
+    obs = observed.loc[row.Index:row.Index+forecast_length, 'value'].max()
+    observed.loc[row.Index, 'observed_flood'] = (obs >= flood_criteria)
+
+# Drop non-forecast times
+observed = observed.dropna()
+
+# Convert boolean columns to Categoricals
+forecasts['simulated_flood'] = forecasts['simulated_flood'].astype('category')
+observed['observed_flood'] = observed['observed_flood'].astype('category')
+
+# Compute contingency table
+contingency_table = metrics.compute_contingency_table(
+    observed['observed_flood'],
+    forecasts['simulated_flood']
+)
+print('Contingency Table Components')
+print('============================')
+print(contingency_table)
+
+# Compute threat score/critical success index
+TS = metrics.threat_score(contingency_table)
+print('Threat Score: {:.2f}'.format(TS))
+
+Contingency Table Components
+============================
+true_positive      148
+false_positive     194
+false_negative       0
+true_negative     1123
+dtype: int64
+Threat Score: 0.43
+```
 
 ## Installation
 
