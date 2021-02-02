@@ -11,6 +11,7 @@ Tools for retrieving hydrological data
    evaluation_tools.nwis_client
    evaluation_tools.gcp_client
    evaluation_tools._restclient
+   evaluation_tools.metrics
 
 
 Motivation
@@ -64,6 +65,7 @@ Currently the repository has the following subpackages:
    Service <https://waterservices.usgs.gov/rest/IV-Service.html>`__.
 -  \_restclient: A generic REST client with built in cache that make the
    construction and retrieval of GET requests painless.
+-  metrics: Variety of methods used to compute common evaluation metrics.
 
 Installation
 ------------
@@ -87,6 +89,9 @@ work just fine (``conda``, ``pipenv``, etc. ).
 
    # Install _restclient
    $ python3 -m pip install git+https://github.com/NOAA-OWP/evaluation_tools.git#subdirectory=python/_restclient
+
+   # Install metrics
+   $ python3 -m pip install git+https://github.com/NOAA-OWP/evaluation_tools.git#subdirectory=python/metrics
 
 UTC Time
 --------
