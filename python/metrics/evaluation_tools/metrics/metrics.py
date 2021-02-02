@@ -324,7 +324,12 @@ def equitable_threat_score(
             Equitable threat score.
         
     """
-    a_r = base_chance(contingency_table)
+    a_r = base_chance(contingency_table,
+        true_positive_key=true_positive_key,
+        false_positive_key=false_positive_key,
+        false_negative_key=false_negative_key,
+        true_negative_key=true_negative_key
+        )
     a = contingency_table[true_positive_key]
     b = contingency_table[false_positive_key]
     c = contingency_table[false_negative_key]
