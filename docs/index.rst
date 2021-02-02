@@ -9,6 +9,7 @@ Tools for retrieving hydrological data
    :caption: API:
 
    evaluation_tools.nwis_client
+   evaluation_tools.gcp_client
    evaluation_tools._restclient
 
 
