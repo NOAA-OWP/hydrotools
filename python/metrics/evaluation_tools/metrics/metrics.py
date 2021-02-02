@@ -27,7 +27,11 @@ from typing import Union
 
 def compute_contingency_table(
     observed: pd.Series,
-    simulated: pd.Series
+    simulated: pd.Series,
+    true_positive_key: str = 'true_positive',
+    false_positive_key: str = 'false_positive',
+    false_negative_key: str = 'false_negative',
+    true_negative_key: str = 'true_negative'
     ) -> pd.Series:
     """Compute components of a contingency table.
         
@@ -39,15 +43,23 @@ def compute_contingency_table(
         simulated: pandas.Series, required
             pandas.Series of boolean pandas.Categorical values indicating
             simulated occurences
+        true_positive_key: str, optional, default 'true_positive'
+            Label to use for true positives.
+        false_positive_key: str, optional, default 'false_positive'
+            Label to use for false positives.
+        false_negative_key: str, optional, default 'false_negative'
+            Label to use for false negatives.
+        true_negative_key: str, optional, default 'true_negative'
+            Label to use for true negatives.
             
         Returns
         -------
         contingency_table: pandas.Series
             pandas.Series of integer values keyed to pandas.Index([
-                'true_positive',
-                'false_positive,
-                'false_negative',
-                'true_negative'
+                true_positive_key,
+                false_positive_key
+                false_negative_key,
+                true_negative_key
                 ])
         
     """
@@ -56,14 +68,16 @@ def compute_contingency_table(
 
     # Reformat
     return pd.Series({
-        'true_positive' : ctab.loc[True, True],
-        'false_positive' : ctab.loc[True, False],
-        'false_negative' : ctab.loc[False, True],
-        'true_negative' : ctab.loc[False, False]
+        true_positive_key : ctab.loc[True, True],
+        false_positive_key : ctab.loc[True, False],
+        false_negative_key : ctab.loc[False, True],
+        true_negative_key : ctab.loc[False, False]
         })
 
 def probability_of_detection(
-    contingency_table: Union[dict, pd.DataFrame, pd.Series]
+    contingency_table: Union[dict, pd.DataFrame, pd.Series],
+    true_positive_key: str = 'true_positive',
+    false_negative_key: str = 'false_negative'
     ) -> float:
     """Compute probability of detection (POD).
         
@@ -71,8 +85,12 @@ def probability_of_detection(
         ----------
         contingency_table: dict, pandas.DataFrame, or pandas.Series, required
             Contingency table containing key-value pairs with the following 
-            keys: 'true_positive', 'false_positive', 'false_negative', 
-                'true_negative'; and int or float values
+            keys: true_positive_key, false_positive_key, false_negative_key, 
+                true_negative_key; and int or float values
+        true_positive_key: str, optional, default 'true_positive'
+            Label to use for true positives.
+        false_negative_key: str, optional, default 'false_negative'
+            Label to use for false negatives.
             
         Returns
         -------
@@ -80,12 +98,14 @@ def probability_of_detection(
             Probability of detection.
         
     """
-    a = contingency_table['true_positive']
-    c = contingency_table['false_negative']
+    a = contingency_table[true_positive_key]
+    c = contingency_table[false_negative_key]
     return a / (a+c)
 
 def probability_of_false_detection(
-    contingency_table: Union[dict, pd.DataFrame, pd.Series]
+    contingency_table: Union[dict, pd.DataFrame, pd.Series],
+    false_positive_key: str = 'false_positive',
+    true_negative_key: str = 'true_negative'
     ) -> float:
     """Compute probability of false detection/false alarm rate (POFD/FARate).
         
@@ -93,8 +113,12 @@ def probability_of_false_detection(
         ----------
         contingency_table: dict, pandas.DataFrame, or pandas.Series, required
             Contingency table containing key-value pairs with the following 
-            keys: 'true_positive', 'false_positive', 'false_negative', 
-                'true_negative'; and int or float values
+            keys: true_positive_key, false_positive_key, false_negative_key, 
+                true_negative_key; and int or float values
+        false_positive_key: str, optional, default 'false_positive'
+            Label to use for false positives.
+        true_negative_key: str, optional, default 'true_negative'
+            Label to use for true negatives.
             
         Returns
         -------
@@ -102,12 +126,14 @@ def probability_of_false_detection(
             Probability of false detection.
         
     """
-    b = contingency_table['false_positive']
-    d = contingency_table['true_negative']
+    b = contingency_table[false_positive_key]
+    d = contingency_table[true_negative_key]
     return b / (b+d)
 
 def probability_of_false_alarm(
-    contingency_table: Union[dict, pd.DataFrame, pd.Series]
+    contingency_table: Union[dict, pd.DataFrame, pd.Series],
+    true_positive_key: str = 'true_positive',
+    false_positive_key: str = 'false_positive'
     ) -> float:
     """Compute probability of false alarm/false alarm ratio (POFA/FARatio).
         
@@ -115,8 +141,12 @@ def probability_of_false_alarm(
         ----------
         contingency_table: dict, pandas.DataFrame, or pandas.Series, required
             Contingency table containing key-value pairs with the following 
-            keys: 'true_positive', 'false_positive', 'false_negative', 
-                'true_negative'; and int or float values
+            keys: true_positive_key, false_positive_key, false_negative_key, 
+                true_negative_key; and int or float values
+        true_positive_key: str, optional, default 'true_positive'
+            Label to use for true positives.
+        false_positive_key: str, optional, default 'false_positive'
+            Label to use for false positives.
             
         Returns
         -------
@@ -124,12 +154,15 @@ def probability_of_false_alarm(
             Probability of false alarm.
         
     """
-    b = contingency_table['false_positive']
-    a = contingency_table['true_positive']
+    b = contingency_table[false_positive_key]
+    a = contingency_table[true_positive_key]
     return b / (b+a)
 
 def threat_score(
-    contingency_table: Union[dict, pd.DataFrame, pd.Series]
+    contingency_table: Union[dict, pd.DataFrame, pd.Series],
+    true_positive_key: str = 'true_positive',
+    false_positive_key: str = 'false_positive',
+    false_negative_key: str = 'false_negative'
     ) -> float:
     """Compute threat score/critical success index (TS/CSI).
         
@@ -137,8 +170,14 @@ def threat_score(
         ----------
         contingency_table: dict, pandas.DataFrame, or pandas.Series, required
             Contingency table containing key-value pairs with the following 
-            keys: 'true_positive', 'false_positive', 'false_negative', 
-                'true_negative'; and int or float values
+            keys: true_positive_key, false_positive_key, false_negative_key, 
+                true_negative_key; and int or float values
+        true_positive_key: str, optional, default 'true_positive'
+            Label to use for true positives.
+        false_positive_key: str, optional, default 'false_positive'
+            Label to use for false positives.
+        false_negative_key: str, optional, default 'false_negative'
+            Label to use for false negatives.
             
         Returns
         -------
@@ -146,13 +185,16 @@ def threat_score(
             Threat score.
         
     """
-    a = contingency_table['true_positive']
-    b = contingency_table['false_positive']
-    c = contingency_table['false_negative']
+    a = contingency_table[true_positive_key]
+    b = contingency_table[false_positive_key]
+    c = contingency_table[false_negative_key]
     return a / (a+b+c)
 
 def frequency_bias(
-    contingency_table: Union[dict, pd.DataFrame, pd.Series]
+    contingency_table: Union[dict, pd.DataFrame, pd.Series],
+    true_positive_key: str = 'true_positive',
+    false_positive_key: str = 'false_positive',
+    false_negative_key: str = 'false_negative'
     ) -> float:
     """Compute frequency bias (FBI).
         
@@ -160,8 +202,14 @@ def frequency_bias(
         ----------
         contingency_table: dict, pandas.DataFrame, or pandas.Series, required
             Contingency table containing key-value pairs with the following 
-            keys: 'true_positive', 'false_positive', 'false_negative', 
-                'true_negative'; and int or float values
+            keys: true_positive_key, false_positive_key, false_negative_key, 
+                true_negative_key; and int or float values
+        true_positive_key: str, optional, default 'true_positive'
+            Label to use for true positives.
+        false_positive_key: str, optional, default 'false_positive'
+            Label to use for false positives.
+        false_negative_key: str, optional, default 'false_negative'
+            Label to use for false negatives.
             
         Returns
         -------
@@ -169,13 +217,17 @@ def frequency_bias(
             Frequency bias.
         
     """
-    a = contingency_table['true_positive']
-    b = contingency_table['false_positive']
-    c = contingency_table['false_negative']
+    a = contingency_table[true_positive_key]
+    b = contingency_table[false_positive_key]
+    c = contingency_table[false_negative_key]
     return (a+b) / (a+c)
 
 def percent_correct(
-    contingency_table: Union[dict, pd.DataFrame, pd.Series]
+    contingency_table: Union[dict, pd.DataFrame, pd.Series],
+    true_positive_key: str = 'true_positive',
+    false_positive_key: str = 'false_positive',
+    false_negative_key: str = 'false_negative',
+    true_negative_key: str = 'true_negative'
     ) -> float:
     """Compute percent correct (PC).
         
@@ -183,8 +235,16 @@ def percent_correct(
         ----------
         contingency_table: dict, pandas.DataFrame, or pandas.Series, required
             Contingency table containing key-value pairs with the following 
-            keys: 'true_positive', 'false_positive', 'false_negative', 
-                'true_negative'; and int or float values
+            keys: true_positive_key, false_positive_key, false_negative_key, 
+                true_negative_key; and int or float values
+        true_positive_key: str, optional, default 'true_positive'
+            Label to use for true positives.
+        false_positive_key: str, optional, default 'false_positive'
+            Label to use for false positives.
+        false_negative_key: str, optional, default 'false_negative'
+            Label to use for false negatives.
+        true_negative_key: str, optional, default 'true_negative'
+            Label to use for true negatives.
             
         Returns
         -------
@@ -192,14 +252,18 @@ def percent_correct(
             Percent correct.
         
     """
-    a = contingency_table['true_positive']
-    b = contingency_table['false_positive']
-    c = contingency_table['false_negative']
-    d = contingency_table['true_negative']
+    a = contingency_table[true_positive_key]
+    b = contingency_table[false_positive_key]
+    c = contingency_table[false_negative_key]
+    d = contingency_table[true_negative_key]
     return (a+d) / (a+b+c+d)
 
 def base_chance(
-    contingency_table: Union[dict, pd.DataFrame, pd.Series]
+    contingency_table: Union[dict, pd.DataFrame, pd.Series],
+    true_positive_key: str = 'true_positive',
+    false_positive_key: str = 'false_positive',
+    false_negative_key: str = 'false_negative',
+    true_negative_key: str = 'true_negative'
     ) -> float:
     """Compute base chance to hit (a_r).
         
@@ -207,8 +271,16 @@ def base_chance(
         ----------
         contingency_table: dict, pandas.DataFrame, or pandas.Series, required
             Contingency table containing key-value pairs with the following 
-            keys: 'true_positive', 'false_positive', 'false_negative', 
-                'true_negative'; and int or float values
+            keys: true_positive_key, false_positive_key, false_negative_key, 
+                true_negative_key; and int or float values
+        true_positive_key: str, optional, default 'true_positive'
+            Label to use for true positives.
+        false_positive_key: str, optional, default 'false_positive'
+            Label to use for false positives.
+        false_negative_key: str, optional, default 'false_negative'
+            Label to use for false negatives.
+        true_negative_key: str, optional, default 'true_negative'
+            Label to use for true negatives.
             
         Returns
         -------
@@ -216,14 +288,18 @@ def base_chance(
             Base chance to hit by chance.
         
     """
-    a = contingency_table['true_positive']
-    b = contingency_table['false_positive']
-    c = contingency_table['false_negative']
-    d = contingency_table['true_negative']
+    a = contingency_table[true_positive_key]
+    b = contingency_table[false_positive_key]
+    c = contingency_table[false_negative_key]
+    d = contingency_table[true_negative_key]
     return ((a+b) * (a+c)) / (a+b+c+d)
 
 def equitable_threat_score(
-    contingency_table: Union[dict, pd.DataFrame, pd.Series]
+    contingency_table: Union[dict, pd.DataFrame, pd.Series],
+    true_positive_key: str = 'true_positive',
+    false_positive_key: str = 'false_positive',
+    false_negative_key: str = 'false_negative',
+    true_negative_key: str = 'true_negative'
     ) -> float:
     """Compute equitable threat score (ETS).
         
@@ -231,8 +307,16 @@ def equitable_threat_score(
         ----------
         contingency_table: dict, pandas.DataFrame, or pandas.Series, required
             Contingency table containing key-value pairs with the following 
-            keys: 'true_positive', 'false_positive', 'false_negative', 
-                'true_negative'; and int or float values
+            keys: true_positive_key, false_positive_key, false_negative_key, 
+                true_negative_key; and int or float values
+        true_positive_key: str, optional, default 'true_positive'
+            Label to use for true positives.
+        false_positive_key: str, optional, default 'false_positive'
+            Label to use for false positives.
+        false_negative_key: str, optional, default 'false_negative'
+            Label to use for false negatives.
+        true_negative_key: str, optional, default 'true_negative'
+            Label to use for true negatives.
             
         Returns
         -------
@@ -241,7 +325,7 @@ def equitable_threat_score(
         
     """
     a_r = base_chance(contingency_table)
-    a = contingency_table['true_positive']
-    b = contingency_table['false_positive']
-    c = contingency_table['false_negative']
+    a = contingency_table[true_positive_key]
+    b = contingency_table[false_positive_key]
+    c = contingency_table[false_negative_key]
     return (a-a_r) / (a+b+c-a_r)
