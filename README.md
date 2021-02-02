@@ -43,6 +43,7 @@ Currently the repository has the following subpackages:
 - \_restclient: A generic REST client with built in cache that make the construction
   and retrieval of GET requests painless.
 - events: Variety of methods used to perform event-based evaluations of hydrometric time series.
+- metrics: Variety of methods used to compute common evaluation metrics.
 
 ## UTC Time
 
@@ -231,6 +232,9 @@ $ python3 -m pip install git+https://github.com/NOAA-OWP/evaluation_tools.git#su
 
 # Install events
 $ python3 -m pip install git+https://github.com/NOAA-OWP/evaluation_tools.git#subdirectory=python/events
+
+# Install metrics
+$ python3 -m pip install git+https://github.com/NOAA-OWP/evaluation_tools.git#subdirectory=python/metrics
 ```
 
 ## Documentation
