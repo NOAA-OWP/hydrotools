@@ -1,0 +1,5 @@
+pandas
+numpy
+requests
+requests-cache
+evaluation_tools._restclient@ git+https://github.com/NOAA-OWP/evaluation_tools.git#subdirectory=python/_restclient

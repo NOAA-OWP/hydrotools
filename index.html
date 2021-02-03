@@ -3,9 +3,9 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="evaluation_tools.nwis_client subpackage" href="evaluation_tools.nwis_client.html" />
 
-    <meta name="generator" content="sphinx-3.3.1, furo 2020.12.09.beta21"/>
+    <meta name="generator" content="sphinx-3.4.3, furo 2020.12.30.beta24"/>
         <title>Home - Evaluation Tools 1.0.0 documentation</title>
-      <link rel="stylesheet" href="_static/styles/furo.css?digest=a3f371badb8538d75df213ccffb17a4f6e8f3ac5">
+      <link rel="stylesheet" href="_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
     <link rel="stylesheet" href="_static/pygments.css">
     <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css">
     
@@ -36,13 +36,11 @@
   --color-code-foreground: #d0d0d0;
   
   }
-</style><link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="_static/pygments_dark.css" />
-    <link rel="stylesheet" href="_static/styles/furo-extensions.css?digest=26485485040e7aaf717c13fd0188a5ad2c2deb60">
+</style><link rel="stylesheet" href="_static/styles/furo-extensions.css?digest=26485485040e7aaf717c13fd0188a5ad2c2deb60">
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script defer src="_static/jquery.js"></script>
-    <script defer src="_static/underscore.js"></script>
-    <script defer src="_static/doctools.js"></script>
-    <script defer src="_static/language_data.js"></script>
+    <script defer="defer" src="_static/jquery.js"></script>
+    <script defer="defer" src="_static/underscore.js"></script>
+    <script defer="defer" src="_static/doctools.js"></script>
     <script defer src="_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></head>
   <body dir="">
     
@@ -83,6 +81,7 @@
 <label class="overlay toc-overlay" for="__toc"></label>
 
 
+
 <div class="page">
   <header class="mobile-header">
     <div class="header-left">
@@ -108,14 +107,23 @@
   <span class="sidebar-brand-text">Evaluation Tools 1.0.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html">
-  <input class="sidebar-search" placeholder="Search" name="q">
+  <input class="sidebar-search" placeholder=Search name="q">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption"><span class="caption-text">API:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="evaluation_tools.nwis_client.html">evaluation_tools.nwis_client subpackage</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="evaluation_tools.gcp_client.html">evaluation_tools.gcp_client package</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="evaluation_tools.gcp_client.gcp.html">evaluation_tools.gcp_client.gcp module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluation_tools.gcp_client.utils.html">evaluation_tools.gcp_client.utils module</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="evaluation_tools._restclient.html">evaluation_tools._restclient subpackage</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="evaluation_tools.metrics.html">evaluation_tools.metrics subpackage</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label for="toctree-checkbox-2"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="evaluation_tools.metrics.metrics.html">evaluation_tools.metrics.metrics module</a></li>
+</ul>
+</li>
 </ul>
 
 </div>
@@ -174,6 +182,7 @@ the <a class="reference external" href="https://waterservices.usgs.gov/rest/IV-S
 Service</a>.</p></li>
 <li><p>_restclient: A generic REST client with built in cache that make the
 construction and retrieval of GET requests painless.</p></li>
+<li><p>metrics: Variety of methods used to compute common evaluation metrics.</p></li>
 </ul>
 </div>
 <div class="section" id="installation">
@@ -194,6 +203,9 @@ $ python3 -m pip install git+https://github.com/NOAA-OWP/evaluation_tools.git#su
 
 <span class="c1"># Install _restclient</span>
 $ python3 -m pip install git+https://github.com/NOAA-OWP/evaluation_tools.git#subdirectory<span class="o">=</span>python/_restclient
+
+<span class="c1"># Install metrics</span>
+$ python3 -m pip install git+https://github.com/NOAA-OWP/evaluation_tools.git#subdirectory<span class="o">=</span>python/metrics
 </pre></div>
 </div>
 </div>

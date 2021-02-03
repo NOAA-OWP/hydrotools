@@ -1,0 +1,9 @@
+setup.py
+evaluation_tools._restclient.egg-info/PKG-INFO
+evaluation_tools._restclient.egg-info/SOURCES.txt
+evaluation_tools._restclient.egg-info/dependency_links.txt
+evaluation_tools._restclient.egg-info/namespace_packages.txt
+evaluation_tools._restclient.egg-info/requires.txt
+evaluation_tools._restclient.egg-info/top_level.txt
+evaluation_tools/_restclient/__init__.py
+evaluation_tools/_restclient/_restclient.py

@@ -1,0 +1,11 @@
+Metadata-Version: 1.1
+Name: evaluation-tools.-restclient
+Version: 1.0.0
+Summary: Abstract REST client with built in request caching and retries
+Home-page: UNKNOWN
+Author: Austin Raney
+Author-email: arthur.raney@noaa.gov
+License: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: Private :: Do Not Upload to pypi server
