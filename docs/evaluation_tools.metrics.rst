@@ -1,4 +1,4 @@
-evaluation\_tools.metrics package
+evaluation\_tools.metrics subpackage
 =================================
 
 Submodules
