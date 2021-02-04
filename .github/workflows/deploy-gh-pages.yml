@@ -30,8 +30,10 @@ jobs:
         rsync -ac _build/html/ ../
         cd ..
         rm -rf docs
-        git config user.name "github-actions"
-        git config user.email "github-actions@github.com"
-        git add -A
-        git commit -m "Deploy gh-pages"
-        git push origin gh-pages
+        if [[ $(git status --porcelain | wc -l) -gt 0 ]]; then
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add -A
+          git commit -m "Deploy gh-pages"
+          git push origin gh-pages
+        fi
