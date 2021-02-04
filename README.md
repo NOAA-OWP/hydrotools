@@ -265,11 +265,13 @@ memory usage: 141.5 MB
 None
 ```
 
-Columns with `Dtype` `category` are `pandas.Categorical`. In most cases, the behavior of these columns is indistinguishable from their primitive types (in this case `str`) However, there are times when use of categories can lead to unexpected behavior such as when using `pandas.DataFrame.groupby` as documented [here](https://stackoverflow.com/questions/48471648/pandas-groupby-with-categories-with-redundant-nan).
+Columns with `Dtype` `category` are `pandas.Categorical`. In most cases, the behavior of these columns is indistinguishable from their primitive types (in this case `str`) However, there are times when use of categories can lead to unexpected behavior such as when using `pandas.DataFrame.groupby` as documented [here](https://stackoverflow.com/questions/48471648/pandas-groupby-with-categories-with-redundant-nan). `pandas.Categorical` are also incompatible with `fixed` format HDF files (must use `format="table"`) and may cause unexpected behavior when attempting to write to GeoSpatial formats using `geopandas`.
 
-Possible solutions to this issue include:
+Possible solutions include:
 
 ### Cast `Categorical` to `str`
+
+Casting to `str` will resolve all of the aformentioned issues including writing to geospatial formats.
 
 ```python
 my_dataframe['usgs_site_code'] = my_dataframe['usgs_site_code'].apply(str)
@@ -277,11 +279,15 @@ my_dataframe['usgs_site_code'] = my_dataframe['usgs_site_code'].apply(str)
 
 ### Remove unused categories
 
+This will remove categories from the `Series` for which no values are actually present.
+
 ```python
 my_dataframe['usgs_site_code'] = my_dataframe['usgs_site_code'].cat.remove_unused_categories()
 ```
 
 ### Use `observed` option with `groupby`
+
+This limits `groupby` operations to category values that actually appear in the `Series` or `DataFrame`.
 
 ```python
 mean_flow = my_dataframe.groupby('usgs_site_code', observed=True).mean()
