@@ -240,3 +240,55 @@ $ python3 -m pip install git+https://github.com/NOAA-OWP/evaluation_tools.git#su
 ## Documentation
 
 [Evaluation tools](https://noaa-owp.github.io/evaluation_tools/) GitHub pages documentation
+
+## Categorical Data Types
+
+`evaluation_tools` uses `pandas.Dataframe` that contain `pandas.Categorical` values to increase memory efficiency. Depending upon your use-case, these values may require special consideration. To see if a `Dataframe` returned by `evaluation_tools` contains `pandas.Categorical` you can use `pandas.Dataframe.info` like so:
+
+```python
+print(my_dataframe.info())
+
+<class 'pandas.core.frame.DataFrame'>
+Int64Index: 5706954 entries, 0 to 5706953
+Data columns (total 7 columns):
+ #   Column            Dtype         
+---  ------            -----         
+ 0   value_date        datetime64[ns]
+ 1   variable_name     category      
+ 2   usgs_site_code    category      
+ 3   measurement_unit  category      
+ 4   value             float32       
+ 5   qualifiers        category      
+ 6   series            category      
+dtypes: category(5), datetime64[ns](1), float32(1)
+memory usage: 141.5 MB
+None
+```
+
+Columns with `Dtype` `category` are `pandas.Categorical`. In most cases, the behavior of these columns is indistinguishable from their primitive types (in this case `str`) However, there are times when use of categories can lead to unexpected behavior such as when using `pandas.DataFrame.groupby` as documented [here](https://stackoverflow.com/questions/48471648/pandas-groupby-with-categories-with-redundant-nan). `pandas.Categorical` are also incompatible with `fixed` format HDF files (must use `format="table"`) and may cause unexpected behavior when attempting to write to GeoSpatial formats using `geopandas`.
+
+Possible solutions include:
+
+### Cast `Categorical` to `str`
+
+Casting to `str` will resolve all of the aformentioned issues including writing to geospatial formats.
+
+```python
+my_dataframe['usgs_site_code'] = my_dataframe['usgs_site_code'].apply(str)
+```
+
+### Remove unused categories
+
+This will remove categories from the `Series` for which no values are actually present.
+
+```python
+my_dataframe['usgs_site_code'] = my_dataframe['usgs_site_code'].cat.remove_unused_categories()
+```
+
+### Use `observed` option with `groupby`
+
+This limits `groupby` operations to category values that actually appear in the `Series` or `DataFrame`.
+
+```python
+mean_flow = my_dataframe.groupby('usgs_site_code', observed=True).mean()
+```
