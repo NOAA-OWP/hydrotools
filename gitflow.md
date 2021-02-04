@@ -1,108 +1,118 @@
-# MaaS Git-Flow
+# Git-Flow
+
+This document briefly outlines the git workflow used to make additions, changes, and
+deletions of content on this repo. In general we used a three step process:
+
+1. Fork
+2. Branch
+3. Pull Request
+
+The subsequent sections will outline these steps and discuss how to synchronize your
+fork with the upstream repo.
 
 ## Getting Started
 
-Begin by making a local copy of the repository
-`git clone https://github.com/NOAA-OWP/evaluation_tools`
+Begin by creating a fork of the repository ([official GitHub docs on
+forking](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo)).
+This is done by clicking the fork button in the upper right hand corner while on the
+GitHub web ui. This will effectively create a copy of the repo under your user
+account.
 
-Don't forget to ensure identity is set properly, by default, git doesn't configure e-mail addresses well!  You can set your machines global policy using
+Next, navigate to your fork and create a local clone (copy) of the repo. This is done
+on the command line.
 
-    git config --global user.name "Jane Doe"
-    git config --global user.email "jane@doe.org"
+```bash
+git clone https://github.com/<your-username>/evaluation_tools
+cd evaluation_tools
+```
 
-If you only want to make name and e-mail changes for _this_ newly cloned repository then use
+Next, if you haven't already, you'll need to configure `git` to know who you are. You
+can either do this globally, meaning you do it once and these settings will be
+default for all other `git` repos in the future, or locally meaning just change the
+settings for this repo. Here we will do it globally.
 
-	cd evaluation_tools
-    git config user.name "John Doe"
-    git config user.email "john@doe.org"
+```bash
+git config --global user.name "<First Name> <Last Name>"
+git config --global user.email "<your>@<email>"
+```
 
-Local development is left to developer preference, but all development should sync with the upstream development branch frequently.  This guide shows the process using local development “feature” branches, but ultimately, changes should end up on development, synced upstream, and then pushed to the development branch upstream with as much commit history as is meaningful (minimal merge commits).
+Lastly, it will be helpful in the future to pull commits from the upstream
+repository, in this case `NOAA-OWP/evaluation_tools`. Right now the local cloned
+repository only knows about the remote fork under your username (you can check this
+using `git remote --verbose`).
+Add an upstream remote that points to `NOAA-OWP/evaluation_tools` using:
 
-## Synchronizing
+```bash
+git remote add upstream git@github.com:NOAA-OWP/evaluation_tools.git
+```
 
-To sync a single upstream branch and pull all the upstream changes into your working tree:
+## Branching
 
-`git fetch <branch>; git checkout <branch>; git rebase origin/<branch>;`
-OR
-`git checkout <branch>; git pull --rebase`
-OR
-`git pull origin <branch> --rebase`
+Now that a local clone of your fork has been made, to commit changes, you'll want to
+open a feature branch. To do so run:
 
-## Development
-To get started with some feature development, create a local branch and check it out
+```bash
+git checkout -b <feature-branch-name>
+```
 
-	git checkout develop
-    git branch featureA
-    git checkout featureA
-OR
-`git checkout -b featureA develop`
+It's important to note that when creating a branch, the starting point of the created
+branch is the last commit from the branch you were last on. Diagrammatically:
 
-Development work should commit frequently when changes are complete and meaningful.  If work requires modifying more than one file in the source, it is recommended to commit the changes independently to help avoid too large of conflicts if the occur.
+```bash
+      / <feature-branch-name> commit 3
+main | commit 3
+     | commit 2
+     | commit 1
+```
 
-### Commits
+## Committing changes
 
-When changes are made to a file and ready for committing, then use these git commands
+Now that the feature branch has been created, its safe to make changes. Do so using:
 
-    git add <file>
-    git commit -m “meaningful commit message here”
-    
-If multiple files need to be associated with a single commit (this should be rare) then you can add multiple files with
-`git add <file1> <file2> <fileN>`
+```bash
+git add <some-file-name>
+git commit -m "<a human readable and meaningful commit message>"
 
-Use `git status` to see what files are modified but not committed.
+# Push changes up to origin remote (aka your fork)
+git push origin <feature-branch-name>
+```
 
-### Rebasing
+## Opening a Pull Request
 
-When work is ready to be shared upstream, it should be synced with the upstream development branch.  This should be done frequently, even if the work isn’t complete.  This will help minimize potential conflicts.  To prepare for moving work upstream, first make sure the local repository is synced (see above instructions for [Synchronizing](#synchronizing).)
+Now that you've made changes to the feature branch and pushed them to your origin
+remote (fork), its time to open a PR to start the process of adding your changes to
+the official `NOAA-OWP/evaluation_tools` repo.
 
-Next we want to rebase the new work onto the development branch. To rebase local changes:
+This step is done on the GitHub site, so open a browser and navigate to your fork.
+Next, select _Pull requests_ from the ribbon, then _New pull request_. You should be
+greeted with a dialog asking to compare changes. Simply this is asking, what changes
+on your fork do you want to compare with the official `NOAA-OWP/evaluation_tools`. On
+the right side, click the dropdown menu labeled _compare_ and find the feature branch
+you pushed up to the origin. You should see a new dialog appear that looks similar to
+a GitHub issue form. Fill out the information and click open pull request.
 
-    git checkout featureA
-    git rebase develop
+## Syncing your fork
 
-OR 
-`git rebase develop featureA`
+Inevitably there will come a time when the `NOAA-OWP/evaluation_tools` `main` branch
+is ahead of your forks main branch. That's okay, but this means that you wont have
+the latest work on your fork. This is important because if you are to start new work,
+**you should always base it off the newest work on main**.
 
-Once the rebase is complete and conflicts are resolved, the develop branch can be fast forwarded to include all the local changes.  This is done by
+To update your fork, from the command line do the following:
 
-	git checkout develop
-	git merge featureA --ff
+```bash
+# switch to main branch on your fork
+git checkout main # if you have any unstaged changes you will need to deal with those first. See `git stash`
 
-### Interactive rebasing
+# Fetch latest data from upstream remote
+git fetch upstream
 
-This is a good time to tidy up and clean up the local development work, and interactive rebasing is a good idea here.  Just use `git rebase -i` in place of the `git rebase` commands above (the other arguments stay the same.)
+# Put those changes on top of your local main's using a rebase
+git rebase upstream/main
 
-In interactive rebasing, you have the opportunity to drop commits, squash multiple together into a more logical patch, or even edit commits by splitting them up into multiple commits.  For more on the power of interactive rebasing, browse the internet.  A great place to get familiar with git flows and rebasing is [https://learngitbranching.js.org](https://learngitbranching.js.org/)
+```
 
-### Pushing Upstream
+## Cleanup
 
-Once local work has been rebased onto the synchronized development branch, push those changes upstream to share the work.
-`git push origin develop`
-
-### Cleanup
-
-If you have local branches that are no longer needed once they have made their way into the remote tracked development branch, you can remove them with
-`git branch -d <branch>`
-
-## General rebase reference
-
-A quick synopsis of local rebasing to manage local branches is provided here
-
-**Add commits from branch B to the end of branch A**
-`git rebase A B`
-To sync both to same commit, invert the rebase or merge
-`git rebase B A` OR `git checkout A; git merge B`
-
-**sync two branches very explicitly**
-
-    git checkout B
-    git rebase A
-sync both to same commit:
-
-    git checkout A
-    git rebase B
-
-OR `git merge B --ff`
-
-
-> Written with [StackEdit](https://stackedit.io/).
+If you have local branches that are no longer needed (list all branches using `git branch`) once they have made their way into the remote tracked development branch,
+you can remove them with `git branch -D <branch>`.
