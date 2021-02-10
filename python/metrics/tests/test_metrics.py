@@ -19,9 +19,9 @@ alt_contigency_table = {
 }
 
 def test_compute_contingency_table():
-    obs = pd.Categorical([True, True, True, False, False, False, 
+    obs = pd.Categorical([True, False, False, True, True, True,
         False, False, False, False])
-    sim = pd.Categorical([True, False, False, True, True, True, 
+    sim = pd.Categorical([True, True, True, False, False, False, 
         False, False, False, False])
 
     table = metrics.compute_contingency_table(obs, sim)
