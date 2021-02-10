@@ -203,8 +203,8 @@ print('Threat Score: {:.2f}'.format(TS))
 Contingency Table Components
 ============================
 true_positive      148
-false_positive     194
-false_negative       0
+false_positive       0
+false_negative     194
 true_negative     1123
 dtype: int64
 Threat Score: 0.43
