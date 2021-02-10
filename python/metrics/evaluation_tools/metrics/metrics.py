@@ -62,8 +62,8 @@ def compute_contingency_table(
     # Reformat
     return pd.Series({
         true_positive_key : ctab.loc[True, True],
-        false_positive_key : ctab.loc[True, False],
-        false_negative_key : ctab.loc[False, True],
+        false_positive_key : ctab.loc[False, True],
+        false_negative_key : ctab.loc[True, False],
         true_negative_key : ctab.loc[False, False]
         })
 
