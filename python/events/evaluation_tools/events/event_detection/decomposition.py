@@ -125,7 +125,7 @@ def mark_event_flows(
     series: pd.Series,
     halflife: Union[float, str, pd.Timedelta],
     window: Union[int, pd.tseries.offsets.DateOffset, pd.Index],
-    minimum_event_duration: Union[pd.Timedelta, datetime.timedelta, np.timedelta64, str, int] = 0
+    minimum_event_duration: Union[pd.Timedelta, datetime.timedelta, np.timedelta64, str, int] = '0H'
     ) -> pd.Series:
     """Model the trend in a streamflow time series by taking the max
         of two rolling minimum filters applied in a forward and 
@@ -148,7 +148,7 @@ def mark_event_flows(
         window: int, offset, or BaseIndexer subclass, required
             Size of the moving window for `pandas.Series.rolling.min`.
             This filter is used to model the trend in `series`.
-        minimum_event_duration: pandas.Timedelta, datetime.timedelta, numpy.timedelta64, str, int, optional, default 0
+        minimum_event_duration: pandas.Timedelta, datetime.timedelta, numpy.timedelta64, str, int, optional, default '0H'
             Enforce a minimum event duration. This should generally be set equal to 
             halflife to reduce the number of false positives flagged as events.
             
@@ -181,7 +181,8 @@ def mark_event_flows(
     event_points = pd.Series((detrended > 0.0), index=series.index)
 
     # Do not filter events
-    if minimum_event_duration == 0:
+    minimum_event_duration = pd.Timedelta(minimum_event_duration)
+    if minimum_event_duration == pd.Timedelta(0):
         # Return mask of non-zero detrended flows
         return event_points
 
@@ -192,7 +193,7 @@ def mark_event_flows(
     durations = events['end'].sub(events['start'])
 
     # Filter events
-    events = events[durations >= pd.Timedelta(minimum_event_duration)].reset_index(drop=True)
+    events = events[durations >= minimum_event_duration].reset_index(drop=True)
     
     # Refine event points
     filtered_event_points = pd.Series(data=False, index=event_points.index)
@@ -206,7 +207,7 @@ def list_events(
     series: pd.Series,
     halflife: Union[float, str, pd.Timedelta],
     window: Union[int, pd.tseries.offsets.DateOffset, pd.Index],
-    minimum_event_duration: Union[pd.Timedelta, datetime.timedelta, np.timedelta64, str, int] = 0
+    minimum_event_duration: Union[pd.Timedelta, datetime.timedelta, np.timedelta64, str, int] = '0H'
     ) -> pd.DataFrame:
     """Apply time series decomposition to mark event values in a streamflow
         time series. Discretize continuous event values into indiviual events.
@@ -224,7 +225,7 @@ def list_events(
         window: int, offset, or BaseIndexer subclass, required
             Size of the moving window for `pandas.Series.rolling.min`.
             This filter is used to model the trend in `series`.
-        minimum_event_duration: pandas.Timedelta, datetime.timedelta, numpy.timedelta64, str, int, optional, default 0
+        minimum_event_duration: pandas.Timedelta, datetime.timedelta, numpy.timedelta64, str, int, optional, default '0H'
             Enforce a minimum event duration. This should generally be set equal to 
             halflife to reduce the number of false positives flagged as events.
             
