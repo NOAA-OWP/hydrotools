@@ -20,6 +20,8 @@ list_events
 import numpy as np
 import pandas as pd
 from typing import Union
+import datetime
+from pandas.tseries.frequencies import to_offset
 
 def detrend_streamflow(
     series: pd.Series,
@@ -145,7 +147,8 @@ def mark_event_flows(
 def list_events(
     series: pd.Series,
     halflife: Union[float, str, pd.Timedelta],
-    window: Union[int, pd.tseries.offsets.DateOffset, pd.Index]
+    window: Union[int, pd.tseries.offsets.DateOffset, pd.Index],
+    minimum_event_duration: Union[str, tuple, datetime.timedelta, pd.tseries.offsets.DateOffset] = '0H'
     ) -> pd.DataFrame:
     """Apply time series decomposition to mark event values in a streamflow
         time series. Discretize continuous event values into indiviual events.
@@ -163,6 +166,9 @@ def list_events(
         window: int, offset, or BaseIndexer subclass, required
             Size of the moving window for `pandas.Series.rolling.min`.
             This filter is used to model the trend in `series`.
+        minimum_event_duration: str, tuple, datetime.timedelta, pd.tseries.offsets.DateOffset, optional, default '0H'
+            Enforce a minimum event duration. This should generally be set equal to 
+            halflife to reduce the number of false positives flagged as events.
             
         Returns
         -------
@@ -185,8 +191,21 @@ def list_events(
     ends = ends[ends]
 
     # Extract times
-    return pd.DataFrame({
-        'start': starts.index,
-        'end': ends.index
-    })
+    if minimum_event_duration == '0H':
+        return pd.DataFrame({
+            'start': starts.index,
+            'end': ends.index
+        })
+    
+    # Build events DataFrame
+    events = pd.DataFrame({
+            'start': starts.index,
+            'end': ends.index
+        })
+
+    # Compute durations
+    durations = events['end'].sub(events['start'])
+
+    # Filter events
+    return events[durations >= to_offset(minimum_event_duration)].reset_index(drop=True)
     
