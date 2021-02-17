@@ -89,6 +89,39 @@ def detrend_streamflow(
     # Return detrended series
     return detrended
 
+def event_boundaries(event_points: pd.Series):
+    """Return a two column pandas.DataFrame with 'start' and 'end' event times
+        generated from a time series of boolean event points.
+        
+        Parameters
+        ----------
+        event_points: pandas.Series
+            Boolean time series where True indicates the associated value
+            in the `series` is part of an event.
+
+        Returns
+        -------
+        events: pandas.DataFrame
+            A two column DataFrame with a row for each event detected. `start` and 
+            `end` columns indicate the boundaries of each event.
+        
+        """
+    # Identify event starts
+    forward_shift = event_points.shift(1).fillna(False)
+    starts = (event_points & ~forward_shift)
+    starts = starts[starts]
+
+    # Identify event ends
+    backward_shift = event_points.shift(-1).fillna(False)
+    ends = (event_points & ~backward_shift)
+    ends = ends[ends]
+
+    # Extract times
+    return pd.DataFrame({
+        'start': starts.index,
+        'end': ends.index
+    })
+
 def mark_event_flows(
     series: pd.Series,
     halflife: Union[float, str, pd.Timedelta],
@@ -127,31 +160,34 @@ def mark_event_flows(
             in the `series` is part of an event.
         
         """
+    # Detrend with a forward filter
+    forward = detrend_streamflow(series, halflife, window)
+
+    # Detrend with a backward filter
+    backward = detrend_streamflow(series, halflife, window, True)
+
+    # Take the max of the forward and backward trends
+    detrended = np.maximum(forward, backward)
+
+    # Assume a residual equal to twice the detrended median
+    residual = np.median(detrended) * 2.0
+
+    # Remove the residual
+    detrended = detrended - residual
+
+    # Eliminate negative values
+    detrended[detrended < 0.0] = 0.0
+
     # Do not filter events
     if minimum_event_duration == '0H':
-        # Detrend with a forward filter
-        forward = detrend_streamflow(series, halflife, window)
-
-        # Detrend with a backward filter
-        backward = detrend_streamflow(series, halflife, window, True)
-
-        # Take the max of the forward and backward trends
-        detrended = np.maximum(forward, backward)
-
-        # Assume a residual equal to twice the detrended median
-        residual = np.median(detrended) * 2.0
-
-        # Remove the residual
-        detrended = detrended - residual
-
-        # Eliminate negative values
-        detrended[detrended < 0.0] = 0.0
-
         # Return mask of non-zero detrended flows
         return pd.Series((detrended > 0.0), index=series.index)
     
+    # Generate mask of non-zero detrended flows
+    event_points = pd.Series((detrended > 0.0), index=series.index)
+
     # Get list of potential events
-    events = list_events(series, halflife, window, '0H')
+    events = event_boundaries(event_points)
 
     # Compute durations
     durations = events['end'].sub(events['start'])
@@ -159,13 +195,13 @@ def mark_event_flows(
     # Filter events
     events = events[durations >= to_offset(minimum_event_duration)].reset_index(drop=True)
     
-    # Generate series of event points
-    event_flows = pd.Series([False for i in series], index=series.index)
+    # Refine event points
+    event_points = False
     for e in events.itertuples():
-        event_flows.loc[e.start:e.end] = True
+        event_points.loc[e.start:e.end] = True
     
-    # Done
-    return event_flows
+    # Return filtered event points
+    return event_points
 
 def list_events(
     series: pd.Series,
@@ -201,20 +237,7 @@ def list_events(
         
         """
     # Detect event flows
-    event_flows = mark_event_flows(series, halflife, window, mark_event_flows)
+    event_points = mark_event_flows(series, halflife, window, minimum_event_duration)
 
-    # Identify event starts
-    forward_shift = event_flows.shift(1).fillna(False)
-    starts = (event_flows & ~forward_shift)
-    starts = starts[starts]
-
-    # Identify event ends
-    backward_shift = event_flows.shift(-1).fillna(False)
-    ends = (event_flows & ~backward_shift)
-    ends = ends[ends]
-
-    # Extract times
-    return pd.DataFrame({
-        'start': starts.index,
-        'end': ends.index
-    })
+    # Return events
+    return event_boundaries(event_points)
