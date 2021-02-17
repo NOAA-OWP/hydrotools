@@ -195,12 +195,12 @@ def mark_event_flows(
     events = events[durations >= pd.Timedelta(minimum_event_duration)].reset_index(drop=True)
     
     # Refine event points
-    event_points.loc[:] = False
+    filtered_event_points = pd.Series(data=False, index=event_points.index)
     for e in events.itertuples():
-        event_points.loc[e.start:e.end] = True
+        filtered_event_points.loc[e.start:e.end] = True
     
     # Return filtered event points
-    return event_points
+    return filtered_event_points
 
 def list_events(
     series: pd.Series,
