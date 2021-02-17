@@ -121,6 +121,34 @@ def event_boundaries(event_points: pd.Series):
         'end': ends.index
     })
 
+def find_local_minimum(origin, radius, timeseries):
+    """Return Datetime of local minimum value within radius of origin.
+        
+        Parameters
+        ----------
+        origin: pandas.Series index label applicable to timeseries, required
+            The original streamflow time series.
+        radius: pandas.Timedelta, datetime.timedelta, numpy.timedelta64, str, int, required
+            The search radius around origin to look for a minimum value.
+        timseries: pandas.Series with a DateTimeIndex, required
+            The original time series to inspect.
+            
+        Returns
+        -------
+        Index: 
+            Datetime of the minimum value.
+
+    """
+    # Define search radius
+    radius = pd.Timedelta(radius)
+
+    # Define window
+    left = origin - radius
+    right = origin + radius
+
+    # Find index of minimum value
+    return timeseries.loc[left:right].idxmin()
+
 def mark_event_flows(
     series: pd.Series,
     halflife: Union[float, str, pd.Timedelta],
