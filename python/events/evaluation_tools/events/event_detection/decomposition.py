@@ -92,7 +92,8 @@ def detrend_streamflow(
 def mark_event_flows(
     series: pd.Series,
     halflife: Union[float, str, pd.Timedelta],
-    window: Union[int, pd.tseries.offsets.DateOffset, pd.Index]
+    window: Union[int, pd.tseries.offsets.DateOffset, pd.Index],
+    minimum_event_duration: Union[str, tuple, datetime.timedelta, pd.tseries.offsets.DateOffset] = '0H'
     ) -> pd.Series:
     """Model the trend in a streamflow time series by taking the max
         of two rolling minimum filters applied in a forward and 
@@ -115,6 +116,9 @@ def mark_event_flows(
         window: int, offset, or BaseIndexer subclass, required
             Size of the moving window for `pandas.Series.rolling.min`.
             This filter is used to model the trend in `series`.
+        minimum_event_duration: str, tuple, datetime.timedelta, pd.tseries.offsets.DateOffset, optional, default '0H'
+            Enforce a minimum event duration. This should generally be set equal to 
+            halflife to reduce the number of false positives flagged as events.
             
         Returns
         -------
@@ -123,26 +127,45 @@ def mark_event_flows(
             in the `series` is part of an event.
         
         """
-    # Detrend with a forward filter
-    forward = detrend_streamflow(series, halflife, window)
+    # Do not filter events
+    if minimum_event_duration == '0H':
+        # Detrend with a forward filter
+        forward = detrend_streamflow(series, halflife, window)
 
-    # Detrend with a backward filter
-    backward = detrend_streamflow(series, halflife, window, True)
+        # Detrend with a backward filter
+        backward = detrend_streamflow(series, halflife, window, True)
 
-    # Take the max of the forward and backward trends
-    detrended = np.maximum(forward, backward)
+        # Take the max of the forward and backward trends
+        detrended = np.maximum(forward, backward)
 
-    # Assume a residual equal to twice the detrended median
-    residual = np.median(detrended) * 2.0
+        # Assume a residual equal to twice the detrended median
+        residual = np.median(detrended) * 2.0
 
-    # Remove the residual
-    detrended = detrended - residual
+        # Remove the residual
+        detrended = detrended - residual
 
-    # Eliminate negative values
-    detrended[detrended < 0.0] = 0.0
+        # Eliminate negative values
+        detrended[detrended < 0.0] = 0.0
 
-    # Return mask of non-zero detrended flows
-    return pd.Series((detrended > 0.0), index=series.index)
+        # Return mask of non-zero detrended flows
+        return pd.Series((detrended > 0.0), index=series.index)
+    
+    # Get list of potential events
+    events = list_events(series, halflife, window, '0H')
+
+    # Compute durations
+    durations = events['end'].sub(events['start'])
+
+    # Filter events
+    events = events[durations >= to_offset(minimum_event_duration)].reset_index(drop=True)
+    
+    # Generate series of event points
+    event_flows = pd.Series([False for i in series], index=series.index)
+    for e in events.itertuples():
+        event_flows.loc[e.start:e.end] = True
+    
+    # Done
+    return event_flows
 
 def list_events(
     series: pd.Series,
@@ -178,34 +201,20 @@ def list_events(
         
         """
     # Detect event flows
-    events = mark_event_flows(series, halflife, window)
+    event_flows = mark_event_flows(series, halflife, window, mark_event_flows)
 
     # Identify event starts
-    forward_shift = events.shift(1).fillna(False)
-    starts = (events & ~forward_shift)
+    forward_shift = event_flows.shift(1).fillna(False)
+    starts = (event_flows & ~forward_shift)
     starts = starts[starts]
 
     # Identify event ends
-    backward_shift = events.shift(-1).fillna(False)
-    ends = (events & ~backward_shift)
+    backward_shift = event_flows.shift(-1).fillna(False)
+    ends = (event_flows & ~backward_shift)
     ends = ends[ends]
 
     # Extract times
-    if minimum_event_duration == '0H':
-        return pd.DataFrame({
-            'start': starts.index,
-            'end': ends.index
-        })
-    
-    # Build events DataFrame
-    events = pd.DataFrame({
-            'start': starts.index,
-            'end': ends.index
-        })
-
-    # Compute durations
-    durations = events['end'].sub(events['start'])
-
-    # Filter events
-    return events[durations >= to_offset(minimum_event_duration)].reset_index(drop=True)
-    
+    return pd.DataFrame({
+        'start': starts.index,
+        'end': ends.index
+    })
