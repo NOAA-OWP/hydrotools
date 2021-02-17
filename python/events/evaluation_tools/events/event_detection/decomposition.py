@@ -196,7 +196,7 @@ def mark_event_flows(
     events = events[durations >= to_offset(minimum_event_duration)].reset_index(drop=True)
     
     # Refine event points
-    event_points = False
+    event_points.loc[:] = False
     for e in events.itertuples():
         event_points.loc[e.start:e.end] = True
     
