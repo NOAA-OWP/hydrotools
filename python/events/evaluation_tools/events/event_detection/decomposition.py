@@ -20,6 +20,7 @@ list_events
 import numpy as np
 import pandas as pd
 from typing import Union
+import datetime
 
 def detrend_streamflow(
     series: pd.Series,
@@ -87,10 +88,85 @@ def detrend_streamflow(
     # Return detrended series
     return detrended
 
+def event_boundaries(event_points: pd.Series):
+    """Return a two column pandas.DataFrame with 'start' and 'end' event times
+        generated from a time series of boolean event points.
+        
+        Parameters
+        ----------
+        event_points: pandas.Series
+            Boolean time series where True indicates the associated value
+            in the `series` is part of an event.
+
+        Returns
+        -------
+        events: pandas.DataFrame
+            A two column DataFrame with a row for each event detected. `start` and 
+            `end` columns indicate the boundaries of each event.
+        
+        """
+    # Identify event starts
+    forward_shift = event_points.shift(1).fillna(False)
+    starts = (event_points & ~forward_shift)
+    starts = starts[starts]
+
+    # Identify event ends
+    backward_shift = event_points.shift(-1).fillna(False)
+    ends = (event_points & ~backward_shift)
+    ends = ends[ends]
+
+    # Extract times
+    return pd.DataFrame({
+        'start': starts.index,
+        'end': ends.index
+    })
+
+def find_local_minimum(
+    origin: pd.Timestamp,
+    radius: Union[float, str, pd.Timedelta],
+    timeseries: pd.Series
+    ):
+    """Return Datetime of the local minimum value within radius of origin.
+        
+        Parameters
+        ----------
+        origin: pandas.Timestamp, required
+            The central datetime around which to search.
+        radius: float, str, pd.Timedelta, required
+            The search radius around origin to look for a minimum value.
+        timseries: pandas.Series with a DateTimeIndex, required
+            The original time series to inspect.
+            
+        Returns
+        -------
+        Index: 
+            Datetime of the local minimum value.
+
+    """
+    # Check for DatetimeIndex
+    if type(timeseries.index) != pd.DatetimeIndex:
+        raise Exception("timeseries index is not DatetimeIndex")
+
+    # Check origin is in index
+    if origin not in timeseries.index:
+        raise Exception("origin is not in index")
+
+    # Define search radius
+    radius = pd.Timedelta(radius)
+
+    # Define window
+    left = origin - radius
+    right = origin + radius
+
+    # Find index of minimum value
+    return timeseries.loc[left:right].idxmin()
+
 def mark_event_flows(
     series: pd.Series,
     halflife: Union[float, str, pd.Timedelta],
-    window: Union[int, pd.tseries.offsets.DateOffset, pd.Index]
+    window: Union[int, pd.tseries.offsets.DateOffset, pd.Index],
+    minimum_event_duration: Union[pd.Timedelta, datetime.timedelta, np.timedelta64, str, int] = '0H',
+    start_radius: Union[pd.Timedelta, datetime.timedelta, np.timedelta64, str, int] = '0H'
     ) -> pd.Series:
     """Model the trend in a streamflow time series by taking the max
         of two rolling minimum filters applied in a forward and 
@@ -113,6 +189,13 @@ def mark_event_flows(
         window: int, offset, or BaseIndexer subclass, required
             Size of the moving window for `pandas.Series.rolling.min`.
             This filter is used to model the trend in `series`.
+        minimum_event_duration: pandas.Timedelta, datetime.timedelta, numpy.timedelta64, str, int, optional, default '0H'
+            Enforce a minimum event duration. This should generally be set equal to 
+            halflife to reduce the number of false positives flagged as events.
+        start_radius: pandas.Timedelta, datetime.timedelta, numpy.timedelta64, str, int, optional, default '0H'
+            Shift event starts to a local minimum. Phase shifts imparted on the 
+            original signal may advance or delay event start times depending upon how 
+            much smoothing is required to eliminate noise.
             
         Returns
         -------
@@ -138,14 +221,48 @@ def mark_event_flows(
 
     # Eliminate negative values
     detrended[detrended < 0.0] = 0.0
+    
+    # Generate mask of non-zero detrended flows
+    event_points = pd.Series((detrended > 0.0), index=series.index)
 
-    # Return mask of non-zero detrended flows
-    return pd.Series((detrended > 0.0), index=series.index)
+    # Do not filter events
+    minimum_event_duration = pd.Timedelta(minimum_event_duration)
+    start_radius = pd.Timedelta(start_radius)
+    if (minimum_event_duration == pd.Timedelta(0)) & (start_radius == pd.Timedelta(0)):
+        # Return mask of non-zero detrended flows
+        return event_points
+
+    # Get list of potential events
+    events = event_boundaries(event_points)
+
+    # Filter by duration
+    if minimum_event_duration != pd.Timedelta(0):
+        # Compute duration
+        durations = events['end'].sub(events['start'])
+
+        # Filter events
+        events = events[durations >= minimum_event_duration].reset_index(drop=True)
+
+    # Adjust event starts
+    if start_radius != pd.Timedelta(0):
+        # Adjust
+        events['start'] = events['start'].apply(find_local_minimum, 
+            radius=start_radius, timeseries=series)
+    
+    # Refine event points
+    filtered_event_points = pd.Series(data=False, index=event_points.index)
+    for e in events.itertuples():
+        filtered_event_points.loc[e.start:e.end] = True
+    
+    # Return filtered event points
+    return filtered_event_points
 
 def list_events(
     series: pd.Series,
     halflife: Union[float, str, pd.Timedelta],
-    window: Union[int, pd.tseries.offsets.DateOffset, pd.Index]
+    window: Union[int, pd.tseries.offsets.DateOffset, pd.Index],
+    minimum_event_duration: Union[pd.Timedelta, datetime.timedelta, np.timedelta64, str, int] = '0H',
+    start_radius: Union[pd.Timedelta, datetime.timedelta, np.timedelta64, str, int] = '0H'
     ) -> pd.DataFrame:
     """Apply time series decomposition to mark event values in a streamflow
         time series. Discretize continuous event values into indiviual events.
@@ -163,6 +280,13 @@ def list_events(
         window: int, offset, or BaseIndexer subclass, required
             Size of the moving window for `pandas.Series.rolling.min`.
             This filter is used to model the trend in `series`.
+        minimum_event_duration: pandas.Timedelta, datetime.timedelta, numpy.timedelta64, str, int, optional, default '0H'
+            Enforce a minimum event duration. This should generally be set equal to 
+            halflife to reduce the number of false positives flagged as events.
+        start_radius: pandas.Timedelta, datetime.timedelta, numpy.timedelta64, str, int, optional, default '0H'
+            Shift event starts to a local minimum. Phase shifts imparted on the 
+            original signal may advance or delay event start times depending upon how 
+            much smoothing is required to eliminate noise.
             
         Returns
         -------
@@ -172,21 +296,8 @@ def list_events(
         
         """
     # Detect event flows
-    events = mark_event_flows(series, halflife, window)
+    event_points = mark_event_flows(series, halflife, window, 
+        minimum_event_duration, start_radius)
 
-    # Identify event starts
-    forward_shift = events.shift(1).fillna(False)
-    starts = (events & ~forward_shift)
-    starts = starts[starts]
-
-    # Identify event ends
-    backward_shift = events.shift(-1).fillna(False)
-    ends = (events & ~backward_shift)
-    ends = ends[ends]
-
-    # Extract times
-    return pd.DataFrame({
-        'start': starts.index,
-        'end': ends.index
-    })
-    
+    # Return events
+    return event_boundaries(event_points)
