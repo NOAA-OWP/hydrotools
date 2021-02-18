@@ -22,7 +22,7 @@ AUTHOR = "Jason Regina"
 AUTHOR_EMAIL = "jarq6c@gmail.com"
 
 # Namespace package version
-VERSION = "1.3.0"
+VERSION = "1.3.2"
 URL = "https://github.com/NOAA-OWP/evaluation_tools"
 
 # Map subpackage namespace to relative location
