@@ -55,6 +55,16 @@ def detrend_streamflow(
             New streamflow time series with trend removed.
         
         """
+    # Check index
+    if type(series.index) != pd.DatetimeIndex:
+        raise Exception("series index is not DatetimeIndex")
+
+    if not series.index.is_monotonic_increasing:
+        raise Exception("series index is not monotonically increasing")
+
+    if series.index.has_duplicates:
+        raise Exception("series index has duplicate timestamps")
+
     # Flip series values to run filter in reverse
     if reverse:
         series = pd.Series(series.values[::-1], 
