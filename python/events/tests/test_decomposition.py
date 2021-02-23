@@ -44,8 +44,8 @@ def test_list_events_noise():
     event_flows = np.concatenate([zero_flows, event_flows])
 
     # Simulate noise
-    x = np.linspace(0.0, 42*np.pi, 1000)
-    noise = 25.0 * np.sin(x)
+    x = np.linspace(0.0, 334*np.pi, 1000)
+    noise = 5.0 * np.sin(x)
 
     # Sum total flow
     flow = trend + event_flows + noise
@@ -61,7 +61,7 @@ def test_list_events_noise():
     )
     
     # Detect event
-    events = ev.list_events(series, '6H', '7D', '6H', '6H')
+    events = ev.list_events(series, '6H', '7D', '6H', '7H')
 
     # Should detect a single event
     assert len(events.index) == 1

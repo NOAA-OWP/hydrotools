@@ -11,8 +11,11 @@ Regina, J.A., F.L. Ogden, 2020.  Automated Correction of Systematic
 
 Functions
 ---------
+rolling_minimum
 detrend_streamflow
 mark_event_flows
+find_local_minimum
+event_boundaries
 list_events
 
 """
@@ -22,11 +25,53 @@ import pandas as pd
 from typing import Union
 import datetime
 
+def rolling_minimum(
+    series: pd.Series,
+    window: Union[int, pd.tseries.offsets.DateOffset, pd.Index]
+    ) -> pd.Series:
+    """Model the trend in a streamflow time series using a rolling 
+        minimum filter. 
+        Return the trend of a streamflow time series.
+        
+        Parameters
+        ----------
+        series: pandas.Series with a DateTimeIndex, required
+            The original streamflow time series.
+        window: int, offset, or BaseIndexer subclass, required
+            Size of the moving window for `pandas.Series.rolling.min`.
+            This filter is used to model the trend in `series`.
+            
+        Returns
+        -------
+        trend: pandas.Series
+            Approximate baseflow trend of original series.
+        
+        """
+    # Check index
+    if not isinstance(series.index, pd.DatetimeIndex):
+        raise Exception("series index is not DatetimeIndex")
+
+    # Estimate trend using a forward rolling minimum
+    forward = series.rolling(window=window).min()
+
+    # Flip series values to run filter in reverse
+    reverse = pd.Series(series.values[::-1], 
+        index=series.index)
+
+    # Estimate trend using a backward rolling minimum
+    backward = reverse.rolling(window=window).min()
+
+    # Restore reversed series
+    backward = pd.Series(backward.values[::-1], 
+            index=backward.index)
+
+    # Take the max of the forward and backward trends
+    return np.maximum(forward, backward)
+
 def detrend_streamflow(
     series: pd.Series,
     halflife: Union[float, str, pd.Timedelta],
-    window: Union[int, pd.tseries.offsets.DateOffset, pd.Index],
-    reverse: bool =False
+    window: Union[int, pd.tseries.offsets.DateOffset, pd.Index]
     ) -> pd.Series:
     """Model the trend in a streamflow time series using a rolling 
         minimum filter. Remove the trend and residual components. The method 
@@ -46,8 +91,6 @@ def detrend_streamflow(
         window: int, offset, or BaseIndexer subclass, required
             Size of the moving window for `pandas.Series.rolling.min`.
             This filter is used to model the trend in `series`.
-        reverse: bool, default False, optional
-            Specifies whether to run the filter in reverse.
             
         Returns
         -------
@@ -65,19 +108,14 @@ def detrend_streamflow(
     if series.index.has_duplicates:
         raise Exception("series index has duplicate timestamps")
 
-    # Flip series values to run filter in reverse
-    if reverse:
-        series = pd.Series(series.values[::-1], 
-            index=series.index)
-
     # Smooth series
     smooth = series.ewm(halflife=halflife, times=series.index, 
         adjust=False).mean()
     
-    # Estimate a seasonal trend using a rolling minimum
-    trend = smooth.rolling(window=window).min()
+    # Estimate a trend using a rolling minimum
+    trend = rolling_minimum(smooth, window)
 
-    # Remove the seasonal trend
+    # Remove the trend
     detrended = smooth - trend
 
     # Assume a residual equal to twice the detrended median
@@ -88,12 +126,6 @@ def detrend_streamflow(
 
     # Eliminate negative values
     detrended[detrended < 0.0] = 0.0
-
-    # Restore reversed series
-    if reverse:
-        # Return detrended series
-        return pd.Series(detrended.values[::-1], 
-            index=detrended.index)
 
     # Return detrended series
     return detrended
@@ -214,23 +246,8 @@ def mark_event_flows(
             in the `series` is part of an event.
         
         """
-    # Detrend with a forward filter
-    forward = detrend_streamflow(series, halflife, window)
-
-    # Detrend with a backward filter
-    backward = detrend_streamflow(series, halflife, window, True)
-
-    # Take the max of the forward and backward trends
-    detrended = np.maximum(forward, backward)
-
-    # Assume a residual equal to twice the detrended median
-    residual = np.median(detrended) * 2.0
-
-    # Remove the residual
-    detrended = detrended - residual
-
-    # Eliminate negative values
-    detrended[detrended < 0.0] = 0.0
+    # Detrend with a minimum filter
+    detrended = detrend_streamflow(series, halflife, window)
     
     # Generate mask of non-zero detrended flows
     event_points = pd.Series((detrended > 0.0), index=series.index)
