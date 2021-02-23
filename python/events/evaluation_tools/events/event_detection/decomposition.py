@@ -47,6 +47,10 @@ def rolling_minimum(
             Approximate baseflow trend of original series.
         
         """
+    # Check index
+    if not isinstance(series.index, pd.DatetimeIndex):
+        raise Exception("series index is not DatetimeIndex")
+
     # Estimate trend using a forward rolling minimum
     forward = series.rolling(window=window).min()
 
