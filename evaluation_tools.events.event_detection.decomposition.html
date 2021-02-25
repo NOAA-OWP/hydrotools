@@ -1,0 +1,389 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="evaluation_tools.events.event_detection subpackage" href="evaluation_tools.events.event_detection.html" />
+
+    <meta name="generator" content="sphinx-3.5.1, furo 2021.02.21.beta25"/>
+        <title>evaluation_tools.events.event_detection.decomposition module - Evaluation Tools 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
+    <link rel="stylesheet" href="_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" href="_static/styles/furo-extensions.css?digest=d391b54134226e4196576da3bdb6dddb7e05ba2b"></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">Evaluation Tools 1.0.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">Evaluation Tools 1.0.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption"><span class="caption-text">API:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="evaluation_tools.nwis_client.html">evaluation_tools.nwis_client subpackage</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="evaluation_tools.gcp_client.html">evaluation_tools.gcp_client package</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="evaluation_tools.gcp_client.gcp.html">evaluation_tools.gcp_client.gcp module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluation_tools.gcp_client.utils.html">evaluation_tools.gcp_client.utils module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="evaluation_tools._restclient.html">evaluation_tools._restclient subpackage</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="evaluation_tools.metrics.html">evaluation_tools.metrics subpackage</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label for="toctree-checkbox-2"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="evaluation_tools.metrics.metrics.html">evaluation_tools.metrics.metrics module</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="evaluation_tools.events.event_detection.html">evaluation_tools.events.event_detection subpackage</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label for="toctree-checkbox-3"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">evaluation_tools.events.event_detection.decomposition module</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <div class="section" id="module-evaluation_tools.events.event_detection.decomposition">
+<span id="evaluation-tools-events-event-detection-decomposition-module"></span><h1>evaluation_tools.events.event_detection.decomposition module<a class="headerlink" href="#module-evaluation_tools.events.event_detection.decomposition" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="event-detection-decomposition">
+<h2>Event Detection :: Decomposition<a class="headerlink" href="#event-detection-decomposition" title="Permalink to this headline">¶</a></h2>
+<p>Use time series decomposition to detect hydrological events in
+streamflow time series as described in Regina &amp; Ogden, 2020.</p>
+<dl class="simple">
+<dt>Regina, J.A., F.L. Ogden, 2020.  Automated Correction of Systematic</dt><dd><p>Errors in High-Frequency Stage Data from V-Notch Weirs using
+Time Series Decomposition., Under review., Hydrol. Proc.</p>
+</dd>
+</dl>
+<div class="section" id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
+<p>rolling_minimum
+detrend_streamflow
+mark_event_flows
+find_local_minimum
+event_boundaries
+list_events</p>
+<dl class="py function">
+<dt id="evaluation_tools.events.event_detection.decomposition.detrend_streamflow">
+<code class="sig-prename descclassname"><span class="pre">evaluation_tools.events.event_detection.decomposition.</span></code><code class="sig-name descname"><span class="pre">detrend_streamflow</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.series.Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">halflife</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas._libs.tslibs.timedeltas.Timedelta</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas._libs.tslibs.offsets.DateOffset</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.indexes.base.Index</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> → <span class="pre">pandas.core.series.Series</span><a class="headerlink" href="#evaluation_tools.events.event_detection.decomposition.detrend_streamflow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model the trend in a streamflow time series using a rolling
+minimum filter. Remove the trend and residual components. The method
+aims to produce a detrended time series with a median of 0.0. It assumes
+any residual components less than twice the detrended median are random
+noise.
+Return the detrended streamflow time series.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>series</strong> (<em>pandas.Series with a DateTimeIndex</em><em>, </em><em>required</em>) – The original streamflow time series.</p></li>
+<li><p><strong>halflife</strong> (<em>float</em><em>, </em><em>str</em><em>, </em><em>timedelta</em><em>, </em><em>required</em>) – Specifies the decay term for <cite>pandas.Series.ewm.mean</cite>. This filter
+is used to smooth over interevent noise and reduce detection
+of normal instrument fluctuations as events.</p></li>
+<li><p><strong>window</strong> (<em>int</em><em>, </em><em>offset</em><em>, or </em><em>BaseIndexer subclass</em><em>, </em><em>required</em>) – Size of the moving window for <cite>pandas.Series.rolling.min</cite>.
+This filter is used to model the trend in <cite>series</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>detrended</strong> – New streamflow time series with trend removed.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.Series</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt id="evaluation_tools.events.event_detection.decomposition.event_boundaries">
+<code class="sig-prename descclassname"><span class="pre">evaluation_tools.events.event_detection.decomposition.</span></code><code class="sig-name descname"><span class="pre">event_boundaries</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_points</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.series.Series</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#evaluation_tools.events.event_detection.decomposition.event_boundaries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a two column pandas.DataFrame with ‘start’ and ‘end’ event times
+generated from a time series of boolean event points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>event_points</strong> (<em>pandas.Series</em>) – Boolean time series where True indicates the associated value
+in the <cite>series</cite> is part of an event.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>events</strong> – A two column DataFrame with a row for each event detected. <cite>start</cite> and
+<cite>end</cite> columns indicate the boundaries of each event.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt id="evaluation_tools.events.event_detection.decomposition.find_local_minimum">
+<code class="sig-prename descclassname"><span class="pre">evaluation_tools.events.event_detection.decomposition.</span></code><code class="sig-name descname"><span class="pre">find_local_minimum</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas._libs.tslibs.timestamps.Timestamp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas._libs.tslibs.timedeltas.Timedelta</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeseries</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.series.Series</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#evaluation_tools.events.event_detection.decomposition.find_local_minimum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return Datetime of the local minimum value within radius of origin.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>origin</strong> (<em>pandas.Timestamp</em><em>, </em><em>required</em>) – The central datetime around which to search.</p></li>
+<li><p><strong>radius</strong> (<em>float</em><em>, </em><em>str</em><em>, </em><em>pd.Timedelta</em><em>, </em><em>required</em>) – The search radius around origin to look for a minimum value.</p></li>
+<li><p><strong>timseries</strong> (<em>pandas.Series with a DateTimeIndex</em><em>, </em><em>required</em>) – The original time series to inspect.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Datetime of the local minimum value.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Index</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt id="evaluation_tools.events.event_detection.decomposition.list_events">
+<code class="sig-prename descclassname"><span class="pre">evaluation_tools.events.event_detection.decomposition.</span></code><code class="sig-name descname"><span class="pre">list_events</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.series.Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">halflife</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas._libs.tslibs.timedeltas.Timedelta</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas._libs.tslibs.offsets.DateOffset</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.indexes.base.Index</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimum_event_duration</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">pandas._libs.tslibs.timedeltas.Timedelta</span><span class="p"><span class="pre">,</span> </span><span class="pre">datetime.timedelta</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.timedelta64</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'0H'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_radius</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">pandas._libs.tslibs.timedeltas.Timedelta</span><span class="p"><span class="pre">,</span> </span><span class="pre">datetime.timedelta</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.timedelta64</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'0H'</span></span></em><span class="sig-paren">)</span> → <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#evaluation_tools.events.event_detection.decomposition.list_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply time series decomposition to mark event values in a streamflow
+time series. Discretize continuous event values into indiviual events.
+Return a DataFrame with one row for each event detected with <cite>start</cite> and
+<cite>end</cite> columns indicating the boundaries of each event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>series</strong> (<em>pandas.Series with a DateTimeIndex</em><em>, </em><em>required</em>) – The original streamflow time series.</p></li>
+<li><p><strong>halflife</strong> (<em>float</em><em>, </em><em>str</em><em>, </em><em>timedelta</em><em>, </em><em>required</em>) – Specifies the decay term for <cite>pandas.Series.ewm.mean</cite>. This filter
+is used to smooth over interevent noise and reduce detection
+of normal instrument fluctuations as events.</p></li>
+<li><p><strong>window</strong> (<em>int</em><em>, </em><em>offset</em><em>, or </em><em>BaseIndexer subclass</em><em>, </em><em>required</em>) – Size of the moving window for <cite>pandas.Series.rolling.min</cite>.
+This filter is used to model the trend in <cite>series</cite>.</p></li>
+<li><p><strong>minimum_event_duration</strong> (<em>pandas.Timedelta</em><em>, </em><em>datetime.timedelta</em><em>, </em><em>numpy.timedelta64</em><em>, </em><em>str</em><em>, </em><em>int</em><em>, </em><em>optional</em><em>, </em><em>default '0H'</em>) – Enforce a minimum event duration. This should generally be set equal to
+halflife to reduce the number of false positives flagged as events.</p></li>
+<li><p><strong>start_radius</strong> (<em>pandas.Timedelta</em><em>, </em><em>datetime.timedelta</em><em>, </em><em>numpy.timedelta64</em><em>, </em><em>str</em><em>, </em><em>int</em><em>, </em><em>optional</em><em>, </em><em>default '0H'</em>) – Shift event starts to a local minimum. Phase shifts imparted on the
+original signal may advance or delay event start times depending upon how
+much smoothing is required to eliminate noise.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>events</strong> – A two column DataFrame with a row for each event detected. <cite>start</cite> and
+<cite>end</cite> columns indicate the boundaries of each event.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt id="evaluation_tools.events.event_detection.decomposition.mark_event_flows">
+<code class="sig-prename descclassname"><span class="pre">evaluation_tools.events.event_detection.decomposition.</span></code><code class="sig-name descname"><span class="pre">mark_event_flows</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.series.Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">halflife</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas._libs.tslibs.timedeltas.Timedelta</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas._libs.tslibs.offsets.DateOffset</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.indexes.base.Index</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimum_event_duration</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">pandas._libs.tslibs.timedeltas.Timedelta</span><span class="p"><span class="pre">,</span> </span><span class="pre">datetime.timedelta</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.timedelta64</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'0H'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_radius</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">pandas._libs.tslibs.timedeltas.Timedelta</span><span class="p"><span class="pre">,</span> </span><span class="pre">datetime.timedelta</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.timedelta64</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'0H'</span></span></em><span class="sig-paren">)</span> → <span class="pre">pandas.core.series.Series</span><a class="headerlink" href="#evaluation_tools.events.event_detection.decomposition.mark_event_flows" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model the trend in a streamflow time series by taking the max
+of two rolling minimum filters applied in a forward and
+backward fashion. Remove the trend and residual components. The method
+aims to produce a detrended time series with a median of 0.0. It assumes
+any residual components less than twice the detrended median are random
+noise.
+Return the boolean time series that indicates whether an
+individual value in the original streamflow time series
+is part of an event (True) or not part of an event (False).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>series</strong> (<em>pandas.Series with a DateTimeIndex</em><em>, </em><em>required</em>) – The original streamflow time series.</p></li>
+<li><p><strong>halflife</strong> (<em>float</em><em>, </em><em>str</em><em>, </em><em>timedelta</em><em>, </em><em>required</em>) – Specifies the decay term for <cite>pandas.Series.ewm.mean</cite>. This filter
+is used to smooth over interevent noise and reduce detection
+of normal instrument fluctuations as events.</p></li>
+<li><p><strong>window</strong> (<em>int</em><em>, </em><em>offset</em><em>, or </em><em>BaseIndexer subclass</em><em>, </em><em>required</em>) – Size of the moving window for <cite>pandas.Series.rolling.min</cite>.
+This filter is used to model the trend in <cite>series</cite>.</p></li>
+<li><p><strong>minimum_event_duration</strong> (<em>pandas.Timedelta</em><em>, </em><em>datetime.timedelta</em><em>, </em><em>numpy.timedelta64</em><em>, </em><em>str</em><em>, </em><em>int</em><em>, </em><em>optional</em><em>, </em><em>default '0H'</em>) – Enforce a minimum event duration. This should generally be set equal to
+halflife to reduce the number of false positives flagged as events.</p></li>
+<li><p><strong>start_radius</strong> (<em>pandas.Timedelta</em><em>, </em><em>datetime.timedelta</em><em>, </em><em>numpy.timedelta64</em><em>, </em><em>str</em><em>, </em><em>int</em><em>, </em><em>optional</em><em>, </em><em>default '0H'</em>) – Shift event starts to a local minimum. Phase shifts imparted on the
+original signal may advance or delay event start times depending upon how
+much smoothing is required to eliminate noise.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>event_points</strong> – Boolean time series where True indicates the associated value
+in the <cite>series</cite> is part of an event.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.Series</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt id="evaluation_tools.events.event_detection.decomposition.rolling_minimum">
+<code class="sig-prename descclassname"><span class="pre">evaluation_tools.events.event_detection.decomposition.</span></code><code class="sig-name descname"><span class="pre">rolling_minimum</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.series.Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas._libs.tslibs.offsets.DateOffset</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.indexes.base.Index</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> → <span class="pre">pandas.core.series.Series</span><a class="headerlink" href="#evaluation_tools.events.event_detection.decomposition.rolling_minimum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model the trend in a streamflow time series using a rolling
+minimum filter.
+Return the trend of a streamflow time series.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>series</strong> (<em>pandas.Series with a DateTimeIndex</em><em>, </em><em>required</em>) – The original streamflow time series.</p></li>
+<li><p><strong>window</strong> (<em>int</em><em>, </em><em>offset</em><em>, or </em><em>BaseIndexer subclass</em><em>, </em><em>required</em>) – Size of the moving window for <cite>pandas.Series.rolling.min</cite>.
+This filter is used to model the trend in <cite>series</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>trend</strong> – Approximate baseflow trend of original series.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.Series</p>
+</dd>
+</dl>
+</dd></dl>
+</div>
+</div>
+</div>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          
+          <a class="prev-page" href="evaluation_tools.events.event_detection.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">evaluation_tools.events.event_detection subpackage</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2020, Jason Regina and Austin Raney
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="_sources/evaluation_tools.events.event_detection.decomposition.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">evaluation_tools.events.event_detection.decomposition module</a><ul>
+<li><a class="reference internal" href="#event-detection-decomposition">Event Detection :: Decomposition</a><ul>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </main>
+</div>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></body>
+</html>
