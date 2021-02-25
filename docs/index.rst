@@ -12,6 +12,7 @@ Tools for retrieving hydrological data
    evaluation_tools.gcp_client
    evaluation_tools._restclient
    evaluation_tools.metrics
+   evaluation_tools.events.event_detection
 
 
 Motivation

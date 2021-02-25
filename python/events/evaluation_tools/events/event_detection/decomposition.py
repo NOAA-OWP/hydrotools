@@ -2,7 +2,7 @@
 ================================
 Event Detection :: Decomposition
 ================================
-Use time series decomposition to detect hydroligical events in 
+Use time series decomposition to detect hydrological events in 
 streamflow time series as described in Regina & Ogden, 2020.
 
 Regina, J.A., F.L. Ogden, 2020.  Automated Correction of Systematic 
