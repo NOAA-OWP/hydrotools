@@ -2,6 +2,10 @@
 
 Tools for retrieving and evaluating hydrological data.
 
+## Documentation
+
+[Evaluation tools](https://noaa-owp.github.io/evaluation_tools/) GitHub pages documentation
+
 ## Motivation
 
 We developed evaluation_tools with data scientists in mind. We attempted to ensure
@@ -236,10 +240,6 @@ $ python3 -m pip install git+https://github.com/NOAA-OWP/evaluation_tools.git#su
 # Install metrics
 $ python3 -m pip install git+https://github.com/NOAA-OWP/evaluation_tools.git#subdirectory=python/metrics
 ```
-
-## Documentation
-
-[Evaluation tools](https://noaa-owp.github.io/evaluation_tools/) GitHub pages documentation
 
 ## Categorical Data Types
 
