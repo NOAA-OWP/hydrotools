@@ -322,8 +322,17 @@ def list_events(
             `end` columns indicate the boundaries of each event.
         
         """
+    missing = series.isnull()
+    #Find all groups of consecutive data
+    #True = 1, False = 0, so a cumulative sum
+    #identifies groups of data (falses)
+    grouper = missing.cumsum()
+    #Drop groups of nan
+    grouper = grouper[ series.notnull() ]
+    #Group the original data based on this cumulative sum
+    groups = series.groupby(grouper)
     # Detect event flows
-    event_points = mark_event_flows(series, halflife, window, 
+    event_points = groups.apply( mark_event_flows, halflife, window,
         minimum_event_duration, start_radius)
 
     # Return events
