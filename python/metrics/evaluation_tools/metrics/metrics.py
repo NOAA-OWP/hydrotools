@@ -19,11 +19,58 @@ Functions
  - percent_correct
  - base_chance
  - equitable_threat_score
+ - mean_squared_error
+ - nash_sutcliffe_efficiency
 
 """
 
+import numpy as np
 import pandas as pd
 from typing import Union
+
+def mean_squared_error(
+    y_true,
+    y_pred,
+    root=False
+    ):
+    """MSE"""
+    MSE = np.sum(np.subtract(y_true, y_pred) ** 2.0) / len(y_true)
+
+    if root:
+        return np.sqrt(MSE)
+    return MSE
+
+def nash_sutcliffe_efficiency(
+    y_true,
+    y_pred,
+    log=False,
+    normalized=False
+    ):
+    """NSE
+
+    Nash, J. E., & Sutcliffe, J. V. (1970). River flow forecasting through 
+    conceptual models part I—A discussion of principles. Journal of 
+    hydrology, 10(3), 282-290.
+
+    Nossent, J., & Bauwens, W. (2012, April). Application of a normalized 
+    Nash-Sutcliffe efficiency to improve the accuracy of the Sobol' 
+    sensitivity analysis of a hydrological model. In EGU General Assembly 
+    Conference Abstracts (p. 237).
+    
+    """
+    # Optionally transform components
+    if log:
+        y_true = np.log(y_true)
+        y_pred = np.log(y_pred)
+
+    # Compute components
+    numerator = mean_squared_error(y_true, y_pred)
+    denominator = mean_squared_error(y_true, np.mean(y_true))
+
+    # Compute score, optionally normalize
+    if normalized:
+        return 1.0 / (1.0 + numerator/denominator)
+    return 1.0 - numerator/denominator
 
 def compute_contingency_table(
     observed: pd.Series,
