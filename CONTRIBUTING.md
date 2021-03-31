@@ -109,10 +109,11 @@ python
    │       └── foo.py
    │       └── bar.py
    ├── setup.py
+   ├── pyproject.toml
    └── tests/
 ```
 
-3. The packages `setup.py` should use the following template:
+3. The package's `setup.py` should use the following template:
 
 ```python
 #!/usr/bin/env python3
@@ -157,7 +158,20 @@ setup(
 )
 ```
 
-4. The _package_ level (not subpackage) `setup.py` dictionary `SUBPACKAGES`
+4. The package's `pyproject.toml` should use the following template and add any
+build-system requirements:
+
+```
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = [
+  "setuptools>=42",
+  "wheel",
+]
+
+```
+
+5. The _package_ level (not subpackage) `setup.py` dictionary `SUBPACKAGES`
 should be updated to include the subpackage slug (i.e.
 `evaluation_tools.my_subpackage`) and the relative path to the subpackage
 (i.e. `python/my_subpackage`).
