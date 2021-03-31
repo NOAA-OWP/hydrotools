@@ -20,6 +20,8 @@ NAMESPACE_PACKAGE_NAME = "evaluation_tools"
 # Package author information
 AUTHOR = "Jason Regina"
 AUTHOR_EMAIL = "jason.regina@noaa.gov"
+MAINTAINER = "Austin Raney"
+MAINTAINER_EMAIL = "arthur.raney@noaa.gov"
 
 # Namespace package version
 VERSION = "1.3.4"
@@ -116,6 +118,8 @@ setup(
     version=VERSION,
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,
+    maintainer=MAINTAINER,
+    maintainer_email=MAINTAINER_EMAIL,
     classifiers=[
         "Private :: Do Not Upload to pypi server",
         "Programming Language :: Python :: 3",
