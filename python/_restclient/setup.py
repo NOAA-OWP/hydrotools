@@ -13,7 +13,7 @@ SUBPACKAGE_NAME = "_restclient"
 SUBPACKAGE_SLUG = f"{NAMESPACE_PACKAGE_NAME}.{SUBPACKAGE_NAME}"
 
 # Subpackage version
-VERSION = "1.0.0"
+VERSION = "1.0.0+1"
 
 # Package author information
 AUTHOR = "Austin Raney"

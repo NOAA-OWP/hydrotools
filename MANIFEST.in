@@ -1,0 +1,4 @@
+include LICENSE
+graft python/*/evaluation_tools/**
+include python/*/setup.py python/*/setup.cfg python/*/pyproject.toml
+

@@ -19,10 +19,12 @@ NAMESPACE_PACKAGE_NAME = "evaluation_tools"
 
 # Package author information
 AUTHOR = "Jason Regina"
-AUTHOR_EMAIL = "jarq6c@gmail.com"
+AUTHOR_EMAIL = "jason.regina@noaa.gov"
+MAINTAINER = "Austin Raney"
+MAINTAINER_EMAIL = "arthur.raney@noaa.gov"
 
 # Namespace package version
-VERSION = "1.3.4"
+VERSION = "1.3.4+1"
 URL = "https://github.com/NOAA-OWP/evaluation_tools"
 
 # Map subpackage namespace to relative location
@@ -63,7 +65,7 @@ def install_subpackages(sources: dict, develop_flag: bool = False) -> None:
         Install in normal or development mode, by default normal
     """
     # absolute path
-    ROOT_DIR = Path(".").resolve()
+    ROOT_DIR = Path(__file__).resolve().parent
     for k, v in sources.items():
         try:
             subpackage_dir = str(ROOT_DIR / v)
@@ -89,8 +91,8 @@ def install_subpackages(sources: dict, develop_flag: bool = False) -> None:
                     ]
                 )
         except Exception as e:
-            print("An error occurred when installing {k}")
-            raise
+            error_message = "An error occurred when installing %s" % (k,)
+            raise Exception(error_message) from e
 
 
 # Normal installation
@@ -116,6 +118,8 @@ setup(
     version=VERSION,
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,
+    maintainer=MAINTAINER,
+    maintainer_email=MAINTAINER_EMAIL,
     classifiers=[
         "Private :: Do Not Upload to pypi server",
         "Programming Language :: Python :: 3",
