@@ -19,7 +19,7 @@ NAMESPACE_PACKAGE_NAME = "evaluation_tools"
 
 # Package author information
 AUTHOR = "Jason Regina"
-AUTHOR_EMAIL = "jarq6c@gmail.com"
+AUTHOR_EMAIL = "jason.regina@noaa.gov"
 
 # Namespace package version
 VERSION = "1.3.4"
