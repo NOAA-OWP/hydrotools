@@ -65,7 +65,7 @@ def install_subpackages(sources: dict, develop_flag: bool = False) -> None:
         Install in normal or development mode, by default normal
     """
     # absolute path
-    ROOT_DIR = Path(".").resolve()
+    ROOT_DIR = Path(__file__).resolve().parent
     for k, v in sources.items():
         try:
             subpackage_dir = str(ROOT_DIR / v)
