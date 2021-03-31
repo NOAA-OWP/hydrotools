@@ -91,8 +91,8 @@ def install_subpackages(sources: dict, develop_flag: bool = False) -> None:
                     ]
                 )
         except Exception as e:
-            print("An error occurred when installing {k}")
-            raise
+            error_message = "An error occurred when installing %s" % (k,)
+            raise Exception(error_message) from e
 
 
 # Normal installation
