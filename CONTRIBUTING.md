@@ -64,6 +64,8 @@ python -m venv env
 
 2. Install development version of package
 
+NOTE: `pip install -e .` will not work if install entire namespace package. Use the following:
+
 ```bash
 python setup.py develop
 ```
