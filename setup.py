@@ -16,7 +16,7 @@ from pathlib import Path
 # presented here:
 # https://medium.com/@jherreras/python-microlibs-5be9461ad979
 
-NAMESPACE_PACKAGE_NAME = "evaluation_tools"
+NAMESPACE_PACKAGE_NAME = "hydrotools"
 SRC_ROOT = "python"
 
 # Package author information
@@ -26,8 +26,8 @@ MAINTAINER = "Austin Raney"
 MAINTAINER_EMAIL = "arthur.raney@noaa.gov"
 
 # Namespace package version
-VERSION = "1.3.5+2"
-URL = "https://github.com/NOAA-OWP/evaluation_tools"
+VERSION = "2.0.0-alpha.0"
+URL = "https://github.com/NOAA-OWP/hydrotools"
 
 # Map subpackage namespace to relative location
 # key: Subpackage slug, value: subpackage relative location
