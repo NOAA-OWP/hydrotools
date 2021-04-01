@@ -100,7 +100,9 @@ def build_subpackage_mapping() -> Dict[str, str]:
     return subpackage_mapping
 
 
-def install_subpackages(sources: dict, develop_flag: bool = False) -> None:
+def install_subpackages(
+    sources: dict,
+) -> None:
     """Install all subpackages in a namespace package
 
     Parameters
@@ -115,27 +117,16 @@ def install_subpackages(sources: dict, develop_flag: bool = False) -> None:
     for k, v in sources.items():
         try:
             subpackage_dir = str(ROOT_DIR / v)
-            if develop_flag:
-                subprocess.check_call(
-                    [
-                        sys.executable,
-                        "-m",
-                        "pip",
-                        "install",
-                        "-e",
-                        subpackage_dir,
-                    ]
-                )
-            else:
-                subprocess.check_call(
-                    [
-                        sys.executable,
-                        "-m",
-                        "pip",
-                        "install",
-                        subpackage_dir,
-                    ]
-                )
+            subprocess.check_call(
+                [
+                    sys.executable,
+                    "-m",
+                    "pip",
+                    "install",
+                    "-e",
+                    subpackage_dir,
+                ]
+            )
         except Exception as e:
             error_message = "An error occurred when installing %s" % (k,)
             raise Exception(error_message) from e
