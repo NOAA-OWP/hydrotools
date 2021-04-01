@@ -29,16 +29,6 @@ MAINTAINER_EMAIL = "arthur.raney@noaa.gov"
 VERSION = "2.0.0-alpha.0"
 URL = "https://github.com/NOAA-OWP/hydrotools"
 
-# Map subpackage namespace to relative location
-# key: Subpackage slug, value: subpackage relative location
-SUBPACKAGES = {
-    "evaluation_tools.nwis_client": "python/nwis_client",
-    "evaluation_tools._restclient": "python/_restclient",
-    "evaluation_tools.gcp_client": "python/gcp_client",
-    "evaluation_tools.events": "python/events",
-    "evaluation_tools.metrics": "python/metrics",
-}
-
 # Short sub-package description
 DESCRIPTION = (
     "Suite of tools for retrieving USGS NWIS observations and evaluating "
