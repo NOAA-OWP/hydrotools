@@ -49,9 +49,6 @@ DESCRIPTION = (
 LONG_DESCRIPTION = Path("README.md").read_text()
 LICENSE = Path("LICENSE").read_text()
 
-# Package dependency requirements
-REQUIREMENTS = []
-
 # Development requirements
 DEVELOPMENT_REQUIREMENTS = ["pytest"]
 
