@@ -1,7 +1,7 @@
-evaluation\_tools.gcp\_client.gcp module
+hydrotools.gcp\_client.gcp module
 ========================================
 
-.. automodule:: evaluation_tools.gcp_client.gcp
+.. automodule:: hydrotools.gcp_client.gcp
    :members:
    :undoc-members:
    :show-inheritance:

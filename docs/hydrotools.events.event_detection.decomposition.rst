@@ -1,7 +1,7 @@
-evaluation\_tools.events.event\_detection.decomposition module
+hydrotools.events.event\_detection.decomposition module
 ==============================================================
 
-.. automodule:: evaluation_tools.events.event_detection.decomposition
+.. automodule:: hydrotools.events.event_detection.decomposition
    :members:
    :undoc-members:
    :show-inheritance:

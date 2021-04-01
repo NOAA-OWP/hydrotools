@@ -1,7 +1,7 @@
-evaluation\_tools.metrics.metrics module
+hydrotools.metrics.metrics module
 ========================================
 
-.. automodule:: evaluation_tools.metrics.metrics
+.. automodule:: hydrotools.metrics.metrics
    :members:
    :undoc-members:
    :show-inheritance:

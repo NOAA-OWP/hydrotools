@@ -1,4 +1,4 @@
-evaluation\_tools.metrics subpackage
+hydrotools.metrics subpackage
 =================================
 
 Submodules
@@ -7,12 +7,12 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
-   evaluation_tools.metrics.metrics
+   hydrotools.metrics.metrics
 
 Module contents
 ---------------
 
-.. automodule:: evaluation_tools.metrics
+.. automodule:: hydrotools.metrics
    :members:
    :undoc-members:
    :show-inheritance:
