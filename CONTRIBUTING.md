@@ -42,7 +42,7 @@ and submit a PR. This consists of three main steps:
 2. Clone your fork. Make a local copy of your fork
 
 ```bash
-git clone git@github.com:{{ user.name }}/evaluation_tools.git && cd evaluation_tools
+git clone git@github.com:{{ user.name }}/hydrotools.git && cd hydrotools
 ```
 
 3. Create a new branch. Open a new branch off of `master` for which you will work
@@ -105,7 +105,7 @@ This project uses python native `namespace` packaging as outlined introduced in 
 ```bash
 python
 ├── my_subpackage/
-   ├── evaluation_tools/
+   ├── hydrotools/
    │   └── my_subpackage/
    │       ├── __init__.py
    │       └── foo.py
@@ -125,7 +125,7 @@ from setuptools import setup, find_namespace_packages
 # this namespace package follows PEP420
 # https://packaging.python.org/guides/packaging-namespace-packages/#native-namespace-packages
 
-NAMESPACE_PACKAGE_NAME = "evaluation_tools"
+NAMESPACE_PACKAGE_NAME = "hydrotools"
 SUBPACKAGE_NAME = "{{ SUBPACKAGE_NAME }}"
 
 # Namespace subpackage slug.
@@ -175,7 +175,7 @@ requires = [
 
 5. The _package_ level (not subpackage) `setup.py` dictionary `SUBPACKAGES`
 should be updated to include the subpackage slug (i.e.
-`evaluation_tools.my_subpackage`) and the relative path to the subpackage
+`hydrotools.my_subpackage`) and the relative path to the subpackage
 (i.e. `python/my_subpackage`).
 
 Example:
@@ -184,7 +184,7 @@ Example:
 
 SUBPACKAGES ={
     ...,
-    "evaluation_tools.my_subpackage": "python/my_subpackage",
+    "hydrotools.my_subpackage": "python/my_subpackage",
 }
 ```
 
