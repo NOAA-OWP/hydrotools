@@ -22,7 +22,7 @@ import warnings
 
 import numpy as np
 import pandas as pd
-from evaluation_tools._restclient import RestClient
+from hydrotools._restclient import RestClient
 from .constants import US_STATE_AND_TERRITORY_ABBREVIATIONS
 
 
@@ -120,7 +120,7 @@ class IVDataService:
 
         Examples
         --------
-        >>> from evaluation_tools.nwis_client.iv import IVDataService
+        >>> from hydrotools.nwis_client.iv import IVDataService
         >>> data = IVDataService.get(sites='01646500')
         """
         iv_data_service = cls()
@@ -325,7 +325,7 @@ class IVDataService:
 
         Examples
         --------
-        >>> from evaluation_tools.nwis_client import iv
+        >>> from hydrotools.nwis_client import iv
         >>> service = iv.IVDataService()
         >>> data = service.get(sites='01646500')
 
@@ -878,7 +878,7 @@ class IVDataService:
                 "parsing timezone aware datetimes is deprecated;\n"
                 "the date has been converted to UTC and the tz information has been "
                 "dropped, ergo the date is now considered `naive` UTC.\n"
-                "See https://github.com/NOAA-OWP/evaluation_tools/issues/46"
+                "See https://github.com/NOAA-OWP/hydrotools/issues/46"
             )
             warnings.warn(warning_message, DeprecationWarning)
 
