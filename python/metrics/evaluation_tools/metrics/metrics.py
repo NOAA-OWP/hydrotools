@@ -25,37 +25,75 @@ Functions
 """
 
 import numpy as np
+import numpy.typing as npt
 import pandas as pd
 from typing import Union
 
 def mean_squared_error(
-    y_true,
-    y_pred,
-    root=False
-    ):
-    """MSE"""
+    y_true: npt.ArrayLike,
+    y_pred: npt.ArrayLike,
+    root: bool = False
+    ) -> float:
+    """Compute the mean squared error, or optionally root mean squared error.
+        
+    Parameters
+    ----------
+    y_true: array-like of shape (n_samples,) or (n_samples, n_outputs)
+        Ground truth (correct) target values, also called observations, measurements, or observed values.
+    y_pred: pandas.Series, required
+        Estimated target values, also called simulations or modeled values.
+    root: bool, default False
+        When True, return the root mean squared error.
+        
+    Returns
+    -------
+    error: float
+        Mean squared error or root mean squared error.
+    
+    """
+    # Compute mean squared error
     MSE = np.sum(np.subtract(y_true, y_pred) ** 2.0) / len(y_true)
 
+    # Return MSE, optionally return root mean squared error
     if root:
         return np.sqrt(MSE)
     return MSE
 
 def nash_sutcliffe_efficiency(
-    y_true,
-    y_pred,
-    log=False,
-    normalized=False
-    ):
-    """NSE
-
+    y_true: npt.ArrayLike,
+    y_pred: npt.ArrayLike,
+    log: bool = False,
+    normalized: bool = False
+    ) -> float:
+    """Compute the Nash–Sutcliffe model efficiency coefficient (NSE), also called the 
+    mean squared error skill score or the R^2 (coefficient of determination) regression score.
+        
+    Parameters
+    ----------
+    y_true: array-like of shape (n_samples,) or (n_samples, n_outputs)
+        Ground truth (correct) target values, also called observations, measurements, or observed values.
+    y_pred: pandas.Series, required
+        Estimated target values, also called simulations or modeled values.
+    log: bool, default False
+        When True, take the log of y_true and y_pred before computing the NSE.
+    normalized: bool, default False
+        When True, normalize the final NSE value using the method from 
+        Nossent & Bauwens, 2012.
+        
+    Returns
+    -------
+    score: float
+        Nash–Sutcliffe model efficiency coefficient
+        
+    References
+    ----------
     Nash, J. E., & Sutcliffe, J. V. (1970). River flow forecasting through 
-    conceptual models part I—A discussion of principles. Journal of 
-    hydrology, 10(3), 282-290.
-
+        conceptual models part I—A discussion of principles. Journal of 
+        hydrology, 10(3), 282-290.
     Nossent, J., & Bauwens, W. (2012, April). Application of a normalized 
-    Nash-Sutcliffe efficiency to improve the accuracy of the Sobol' 
-    sensitivity analysis of a hydrological model. In EGU General Assembly 
-    Conference Abstracts (p. 237).
+        Nash-Sutcliffe efficiency to improve the accuracy of the Sobol' 
+        sensitivity analysis of a hydrological model. In EGU General Assembly 
+        Conference Abstracts (p. 237).
     
     """
     # Optionally transform components
@@ -85,9 +123,9 @@ def compute_contingency_table(
     Parameters
     ----------
     observed: pandas.Series, required
-        pandas.Series of boolean pandas.Categorical values indicating observed occurences
+        pandas.Series of boolean pandas.Categorical values indicating observed occurrences
     simulated: pandas.Series, required
-        pandas.Series of boolean pandas.Categorical values indicating simulated occurences
+        pandas.Series of boolean pandas.Categorical values indicating simulated occurrences
     true_positive_key: str, optional, default 'true_positive'
         Label to use for true positives.
     false_positive_key: str, optional, default 'false_positive'
