@@ -141,6 +141,9 @@ def install_subpackages(sources: dict, develop_flag: bool = False) -> None:
             raise Exception(error_message) from e
 
 
+REQUIREMENTS = build_subpackage_requirements()
+SUBPACKAGES = build_subpackage_mapping()
+
 # Normal installation
 class Install(install):
     def run(self):
