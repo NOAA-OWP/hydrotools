@@ -141,7 +141,7 @@ class NWMDataService:
 
         Examples
         --------
-        >>> from evaluation_tools.gcp_client import gcp
+        >>> from hydrotools.gcp_client import gcp
         >>> model_data_service = gcp.NWMDataService()
         
         """
@@ -250,7 +250,7 @@ class NWMDataService:
 
         Examples
         --------
-        >>> from evaluation_tools.gcp_client import gcp
+        >>> from hydrotools.gcp_client import gcp
         >>> model_data_service = gcp.NWMDataService()
         >>> df = model_data_service.get(
         ...     configuration='analysis_assim_extend',
