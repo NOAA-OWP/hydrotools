@@ -5,6 +5,7 @@ from setuptools import setup
 from setuptools.command.develop import develop
 from setuptools.command.install import install
 
+from typing import Dict, List
 from pathlib import Path
 
 # python root namespace package
