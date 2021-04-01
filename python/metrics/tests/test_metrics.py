@@ -3,6 +3,7 @@ from evaluation_tools.metrics import metrics
 
 import pandas as pd
 from math import isclose
+import numpy as np
 
 contigency_table = {
     'true_positive': 1,
@@ -17,6 +18,9 @@ alt_contigency_table = {
     'FN': 3,
     'TN': 4
 }
+
+y_true = [1., 2., 3., 4.]
+y_pred = [4., 3., 2., 1.]
 
 def test_compute_contingency_table():
     obs = pd.Categorical([True, False, False, True, True, True,
@@ -132,3 +136,27 @@ def test_equitable_threat_score():
         true_negative_key='TN'
         )
     assert isclose(ETS, (-0.2/4.8), abs_tol=0.000001)
+
+def test_mean_squared_error():
+    MSE = metrics.mean_squared_error(y_true, y_pred)
+    assert MSE == 5.0
+
+    RMSE = metrics.mean_squared_error(y_true, y_pred, root=True)
+    assert RMSE == np.sqrt(5.0)
+
+def test_nash_sutcliffe_efficiency():
+    NSE = metrics.nash_sutcliffe_efficiency(y_true, y_pred)
+    assert NSE == -3.0
+    
+    NNSE = metrics.nash_sutcliffe_efficiency(y_true, y_pred, 
+        normalized=True)
+    assert NNSE == 0.2
+    
+    NSEL = metrics.nash_sutcliffe_efficiency(np.exp(y_true), 
+        np.exp(y_pred), log=True)
+    assert NSEL == -3.0
+    
+    NNSEL = metrics.nash_sutcliffe_efficiency(np.exp(y_true), 
+        np.exp(y_pred), log=True, normalized=True)
+    assert NNSEL == 0.2
+    print(NNSEL)
