@@ -5,7 +5,7 @@ from setuptools import setup, find_namespace_packages
 # this namespace package follows PEP420
 # https://packaging.python.org/guides/packaging-namespace-packages/#native-namespace-packages
 
-NAMESPACE_PACKAGE_NAME = "evaluation_tools"
+NAMESPACE_PACKAGE_NAME = "hydrotools"
 SUBPACKAGE_NAME = "metrics"
 
 # Namespace subpackage slug.
@@ -13,7 +13,7 @@ SUBPACKAGE_NAME = "metrics"
 SUBPACKAGE_SLUG = f"{NAMESPACE_PACKAGE_NAME}.{SUBPACKAGE_NAME}"
 
 # Subpackage version
-VERSION = "0.1.2+1"
+VERSION = "1.0.0-alpha.0"
 
 # Package author information
 AUTHOR = "Jason Regina"
