@@ -1,5 +1,5 @@
 import pytest
-from evaluation_tools.events.event_detection import decomposition as ev
+from hydrotools.events.event_detection import decomposition as ev
 
 import pandas as pd
 import numpy as np
