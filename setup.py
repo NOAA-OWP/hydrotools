@@ -135,17 +135,10 @@ def install_subpackages(
 REQUIREMENTS = build_subpackage_requirements()
 SUBPACKAGES = build_subpackage_mapping()
 
-# Normal installation
-class Install(install):
-    def run(self):
-        install_subpackages(SUBPACKAGES, develop_flag=False)
-        super().run()
-
-
 # Development installation
 class Develop(develop):
     def run(self):
-        install_subpackages(SUBPACKAGES, develop_flag=True)
+        install_subpackages(SUBPACKAGES)
         # Install development requirements
         for dev_requirement in DEVELOPMENT_REQUIREMENTS:
             subprocess.check_call(
