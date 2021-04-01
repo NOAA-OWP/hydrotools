@@ -4,8 +4,8 @@
 
 1. Start by first creating a fork of the repo. This will create a personal clone of the
    repository under your username.
-2. Make a local clone of your fork using `git clone https://github.com/<your-user-name>/evaluation_tools` on the command line.
-3. Change directories your local copy using `cd evaluation_tools` from the command line.
+2. Make a local clone of your fork using `git clone https://github.com/<your-user-name>/hydrotools` on the command line.
+3. Change directories your local copy using `cd hydrotools` from the command line.
    1. If you have not setup `git` before, you'll need to tell `git` your name and
       email. To set these options globally use `git config --global user.name "Your Name"`, then `git config --global user.email "your@email.com"`. You can do this locally instead using `git config --local`.
 4. Create a new branch to add work to using `git checkout -b sphinx-docs`. Now we can move onto the installation.
@@ -19,23 +19,23 @@ choice, here we will use anaconda.
 
 - `Sphinx`
 - `furo` this is the `sphinx` theme used.
-- `evaluation_tools`
+- `hydrotools`
 
 ```python
 # Create virtual environment
-conda create --name evaluation_tools-sphinx-docs python=3.8 -y
+conda create --name hydrotools-sphinx-docs python=3.8 -y
 
 # activate the virtual environment
-conda activate evaluation_tools-sphinx-docs
+conda activate hydrotools-sphinx-docs
 
-# Install dependencies. This assumes you are in the evaluation_tools root directory
+# Install dependencies. This assumes you are in the hydrotools root directory
 pip install .
 pip install Sphinx furo
 ```
 
 ## Building the docs
 
-To build the docs, it helpful to first know the process. All `evaluation_tools`
+To build the docs, it helpful to first know the process. All `hydrotools`
 documentation is build using [`Sphinx`](https://www.sphinx-doc.org/en/master/). Its
 helpful to note that `Sphinx` by default uses reStructured text its another markup
 language like markdown. For `Sphinx` to _know_ about code we want to add to
@@ -53,15 +53,15 @@ the `gcp_client` and outputs them in the `docs/` directory.
 # separate all modules into individual rst files, tell sphinx-apidoc that the
 # package is a namespace style package, output the bindings in docs/, generate bindings
 # for gcp_client, and ignore files that include the word test.
-sphinx-apidoc --no-toc --private --separate --implicit-namespaces -o docs/ python/gcp_client/evaluation_tools "*test?*"
+sphinx-apidoc --no-toc --private --separate --implicit-namespaces -o docs/ python/gcp_client/hydrotools "*test?*"
 ```
 
 After running this, a few files should appear in the `docs/` directory. The one named
-`evaluation_tools.gcp_client.rst` is the package level file, there should be other
-appended with module names like `evaluation_tools.gcp_client.gcp.rst` for example. If
+`hydrotools.gcp_client.rst` is the package level file, there should be other
+appended with module names like `hydrotools.gcp_client.gcp.rst` for example. If
 the subpackage only has one file, you may just see one new binding, that's okay.
 
-Next, open the package level file, in this case `evaluation_tools.gcp_client.rst`.
+Next, open the package level file, in this case `hydrotools.gcp_client.rst`.
 The top should look something like the following:
 
 ```rst
@@ -87,8 +87,8 @@ So, this:
    :maxdepth: 2
    :caption: API:
 
-   evaluation_tools.nwis_client
-   evaluation_tools._restclient
+   hydrotools.nwis_client
+   hydrotools._restclient
 ```
 
 Becomes this:
@@ -99,9 +99,9 @@ Becomes this:
    :maxdepth: 2
    :caption: API:
 
-   evaluation_tools.nwis_client
-   evaluation_tools._restclient
-   evaluation_tools.gcp_client
+   hydrotools.nwis_client
+   hydrotools._restclient
+   hydrotools.gcp_client
 ```
 
 ## Verify that documentation was added properly
