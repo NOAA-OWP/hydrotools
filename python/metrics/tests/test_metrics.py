@@ -159,3 +159,4 @@ def test_nash_sutcliffe_efficiency():
     NNSEL = metrics.nash_sutcliffe_efficiency(np.exp(y_true), 
         np.exp(y_pred), log=True, normalized=True)
     assert NNSEL == 0.2
+    print(NNSEL)
