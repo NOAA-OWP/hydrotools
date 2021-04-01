@@ -1,4 +1,4 @@
-evaluation\_tools.gcp\_client package
+hydrotools.gcp\_client package
 =====================================
 
 Submodules
@@ -6,13 +6,13 @@ Submodules
 
 .. toctree::
 
-   evaluation_tools.gcp_client.gcp
-   evaluation_tools.gcp_client.utils
+   hydrotools.gcp_client.gcp
+   hydrotools.gcp_client.utils
 
 Module contents
 ---------------
 
-.. automodule:: evaluation_tools.gcp_client
+.. automodule:: hydrotools.gcp_client
    :members:
    :undoc-members:
    :show-inheritance:

@@ -1,4 +1,4 @@
-evaluation\_tools.events.event\_detection subpackage
+hydrotools.events.event\_detection subpackage
 ====================================================
 
 Submodules
@@ -7,12 +7,12 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
-   evaluation_tools.events.event_detection.decomposition
+   hydrotools.events.event_detection.decomposition
 
 Module contents
 ---------------
 
-.. automodule:: evaluation_tools.events.event_detection
+.. automodule:: hydrotools.events.event_detection
    :members:
    :undoc-members:
    :show-inheritance:
