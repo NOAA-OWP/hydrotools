@@ -17,6 +17,7 @@ from pathlib import Path
 # https://medium.com/@jherreras/python-microlibs-5be9461ad979
 
 NAMESPACE_PACKAGE_NAME = "evaluation_tools"
+SRC_ROOT = "python"
 
 # Package author information
 AUTHOR = "Jason Regina"
