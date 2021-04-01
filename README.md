@@ -1,14 +1,14 @@
-# Evaluation Tools
+# Hydro Tools
 
 Tools for retrieving and evaluating hydrological data.
 
 ## Documentation
 
-[Evaluation tools](https://noaa-owp.github.io/evaluation_tools/) GitHub pages documentation
+[Hydro tools](https://noaa-owp.github.io/hydrotools/) GitHub pages documentation
 
 ## Motivation
 
-We developed evaluation_tools with data scientists in mind. We attempted to ensure
+We developed hydrotools with data scientists in mind. We attempted to ensure
 the simplest methods such as `get` both accepted and returned data structures
 frequently used by data scientists using scientific Python. Specifically, this means
 that
@@ -16,7 +16,7 @@ that
 [`geopandas.GeoDataFrames`](https://geopandas.readthedocs.io/en/latest/docs/user_guide/data_structures.html#geodataframe),
 and
 [`numpy.arrays`](https://numpy.org/doc/stable/reference/arrays.html#array-objects)
-are the most frequently encountered data structures when using evaluation_tools. The
+are the most frequently encountered data structures when using hydrotools. The
 majority of methods include sensible defaults that cover the majority of use-cases,
 but allow customization if required.
 
@@ -29,13 +29,13 @@ scientists, practitioners and other hydrological experts.
 
 ## What's here?
 
-We've taken a grab-and-go approach to installation and usage of Evaluation tools.
+We've taken a grab-and-go approach to installation and usage of Hydro tools.
 This means, in line with a standard toolbox, you will typically install just the tool
 or tools that get your job done without having to install all the other tools
 available. This means a lighter installation load and that tools can be added to the
 toolbox, without affecting your workflows!
 
-It should be noted, we commonly refer to individual tools in evaluation tools as a
+It should be noted, we commonly refer to individual tools in hydro tools as a
 subpackage or by their name (e.g. `nwis_client`). You will find this lingo in both
 issues and documentation.
 
@@ -51,7 +51,7 @@ Currently the repository has the following subpackages:
 
 ## UTC Time
 
-Note: the canonical `pandas.DataFrames` used by evaluation_tools use time-zone naive
+Note: the canonical `pandas.DataFrames` used by hydrotools use time-zone naive
 datetimes that assume UTC time. In general, do not assume methods are compatible with
 time-zone aware datetimes or timestamps. Expect methods to transform time-zone aware
 datetimes and timestamps into their timezone naive counterparts at UTC time.
@@ -61,7 +61,7 @@ datetimes and timestamps into their timezone naive counterparts at UTC time.
 ### NWIS IV Client Example
 ```python
 # Import the NWIS IV Client
-from evaluation_tools.nwis_client.iv import IVDataService
+from hydrotools.nwis_client.iv import IVDataService
 
 # Retrieve data from a single site
 observations_data = IVDataService.get(
@@ -84,8 +84,8 @@ print(observations_data.head())
 ### Event Detection Example
 ```python
 # Import tools to retrieve data and detect events
-from evaluation_tools.nwis_client.iv import IVDataService
-from evaluation_tools.events.event_detection import decomposition as ev
+from hydrotools.nwis_client.iv import IVDataService
+from hydrotools.events.event_detection import decomposition as ev
 
 # Use pandas to resample the data
 from pandas import Grouper
@@ -149,8 +149,8 @@ usgs_site_code
 
 ### Metrics Example
 ```python
-from evaluation_tools.metrics import metrics
-from evaluation_tools.nwis_client.iv import IVDataService
+from hydrotools.metrics import metrics
+from hydrotools.nwis_client.iv import IVDataService
 import pandas as pd
 
 # Get observed data
@@ -229,21 +229,21 @@ $ source venv/bin/activate
 $ python3 -m pip install --upgrade pip
 
 # Install nwis_client
-$ python3 -m pip install git+https://github.com/NOAA-OWP/evaluation_tools.git#subdirectory=python/nwis_client
+$ python3 -m pip install git+https://github.com/NOAA-OWP/hydrotools.git#subdirectory=python/nwis_client
 
 # Install _restclient
-$ python3 -m pip install git+https://github.com/NOAA-OWP/evaluation_tools.git#subdirectory=python/_restclient
+$ python3 -m pip install git+https://github.com/NOAA-OWP/hydrotools.git#subdirectory=python/_restclient
 
 # Install events
-$ python3 -m pip install git+https://github.com/NOAA-OWP/evaluation_tools.git#subdirectory=python/events
+$ python3 -m pip install git+https://github.com/NOAA-OWP/hydrotools.git#subdirectory=python/events
 
 # Install metrics
-$ python3 -m pip install git+https://github.com/NOAA-OWP/evaluation_tools.git#subdirectory=python/metrics
+$ python3 -m pip install git+https://github.com/NOAA-OWP/hydrotools.git#subdirectory=python/metrics
 ```
 
 ## Categorical Data Types
 
-`evaluation_tools` uses `pandas.Dataframe` that contain `pandas.Categorical` values to increase memory efficiency. Depending upon your use-case, these values may require special consideration. To see if a `Dataframe` returned by `evaluation_tools` contains `pandas.Categorical` you can use `pandas.Dataframe.info` like so:
+`hydrotools` uses `pandas.Dataframe` that contain `pandas.Categorical` values to increase memory efficiency. Depending upon your use-case, these values may require special consideration. To see if a `Dataframe` returned by `hydrotools` contains `pandas.Categorical` you can use `pandas.Dataframe.info` like so:
 
 ```python
 print(my_dataframe.info())
