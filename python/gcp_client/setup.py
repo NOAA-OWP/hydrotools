@@ -37,7 +37,7 @@ setup(
     namespace_packages=[NAMESPACE_PACKAGE_NAME],
     packages=find_namespace_packages(include=[f"{NAMESPACE_PACKAGE_NAME}.*"]),
     package_data={
-        "evaluation_tools.gcp_client": [
+        "hydrotools.gcp_client": [
             "data/nwm_2_0_feature_id_with_usgs_site.csv",
         ]
     },
