@@ -13,7 +13,7 @@ SUBPACKAGE_NAME = "metrics"
 SUBPACKAGE_SLUG = f"{NAMESPACE_PACKAGE_NAME}.{SUBPACKAGE_NAME}"
 
 # Subpackage version
-VERSION = "0.1.1+1"
+VERSION = "0.1.2+1"
 
 # Package author information
 AUTHOR = "Jason Regina"
