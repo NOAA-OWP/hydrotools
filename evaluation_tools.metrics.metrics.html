@@ -158,6 +158,8 @@
 <li><p>percent_correct</p></li>
 <li><p>base_chance</p></li>
 <li><p>equitable_threat_score</p></li>
+<li><p>mean_squared_error</p></li>
+<li><p>nash_sutcliffe_efficiency</p></li>
 </ul>
 </div></blockquote>
 <dl class="py function">
@@ -189,8 +191,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>observed</strong> (<em>pandas.Series</em><em>, </em><em>required</em>) – pandas.Series of boolean pandas.Categorical values indicating observed occurences</p></li>
-<li><p><strong>simulated</strong> (<em>pandas.Series</em><em>, </em><em>required</em>) – pandas.Series of boolean pandas.Categorical values indicating simulated occurences</p></li>
+<li><p><strong>observed</strong> (<em>pandas.Series</em><em>, </em><em>required</em>) – pandas.Series of boolean pandas.Categorical values indicating observed occurrences</p></li>
+<li><p><strong>simulated</strong> (<em>pandas.Series</em><em>, </em><em>required</em>) – pandas.Series of boolean pandas.Categorical values indicating simulated occurrences</p></li>
 <li><p><strong>true_positive_key</strong> (<em>str</em><em>, </em><em>optional</em><em>, </em><em>default 'true_positive'</em>) – Label to use for true positives.</p></li>
 <li><p><strong>false_positive_key</strong> (<em>str</em><em>, </em><em>optional</em><em>, </em><em>default 'false_positive'</em>) – Label to use for false positives.</p></li>
 <li><p><strong>false_negative_key</strong> (<em>str</em><em>, </em><em>optional</em><em>, </em><em>default 'false_negative'</em>) – Label to use for false negatives.</p></li>
@@ -249,6 +251,60 @@ true_negative_key; and int or float values</p></li>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt id="evaluation_tools.metrics.metrics.mean_squared_error">
+<code class="sig-prename descclassname"><span class="pre">evaluation_tools.metrics.metrics.</span></code><code class="sig-name descname"><span class="pre">mean_squared_error</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">complex</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.generic</span><span class="p"><span class="pre">,</span> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">complex</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.generic</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.typing._array_like._SupportsArray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">complex</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.generic</span><span class="p"><span class="pre">,</span> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">complex</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.generic</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.typing._array_like._SupportsArray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> → <span class="pre">float</span><a class="headerlink" href="#evaluation_tools.metrics.metrics.mean_squared_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the mean squared error, or optionally root mean squared error.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_true</strong> (<em>array-like of shape</em><em> (</em><em>n_samples</em><em>,</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Ground truth (correct) target values, also called observations, measurements, or observed values.</p></li>
+<li><p><strong>y_pred</strong> (<em>pandas.Series</em><em>, </em><em>required</em>) – Estimated target values, also called simulations or modeled values.</p></li>
+<li><p><strong>root</strong> (<em>bool</em><em>, </em><em>default False</em>) – When True, return the root mean squared error.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>error</strong> – Mean squared error or root mean squared error.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt id="evaluation_tools.metrics.metrics.nash_sutcliffe_efficiency">
+<code class="sig-prename descclassname"><span class="pre">evaluation_tools.metrics.metrics.</span></code><code class="sig-name descname"><span class="pre">nash_sutcliffe_efficiency</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">complex</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.generic</span><span class="p"><span class="pre">,</span> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">complex</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.generic</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.typing._array_like._SupportsArray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">complex</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.generic</span><span class="p"><span class="pre">,</span> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">complex</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.generic</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.typing._array_like._SupportsArray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalized</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> → <span class="pre">float</span><a class="headerlink" href="#evaluation_tools.metrics.metrics.nash_sutcliffe_efficiency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the Nash–Sutcliffe model efficiency coefficient (NSE), also called the
+mean squared error skill score or the R^2 (coefficient of determination) regression score.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_true</strong> (<em>array-like of shape</em><em> (</em><em>n_samples</em><em>,</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Ground truth (correct) target values, also called observations, measurements, or observed values.</p></li>
+<li><p><strong>y_pred</strong> (<em>pandas.Series</em><em>, </em><em>required</em>) – Estimated target values, also called simulations or modeled values.</p></li>
+<li><p><strong>log</strong> (<em>bool</em><em>, </em><em>default False</em>) – Apply numpy.log (natural logarithm) to y_true and y_pred
+before computing the NSE.</p></li>
+<li><p><strong>normalized</strong> (<em>bool</em><em>, </em><em>default False</em>) – When True, normalize the final NSE value using the method from
+Nossent &amp; Bauwens, 2012.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>score</strong> – Nash–Sutcliffe model efficiency coefficient</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<dl class="simple">
+<dt>Nash, J. E., &amp; Sutcliffe, J. V. (1970). River flow forecasting through</dt><dd><p>conceptual models part I—A discussion of principles. Journal of
+hydrology, 10(3), 282-290.</p>
+</dd>
+<dt>Nossent, J., &amp; Bauwens, W. (2012, April). Application of a normalized</dt><dd><p>Nash-Sutcliffe efficiency to improve the accuracy of the Sobol’
+sensitivity analysis of a hydrological model. In EGU General Assembly
+Conference Abstracts (p. 237).</p>
 </dd>
 </dl>
 </dd></dl>
