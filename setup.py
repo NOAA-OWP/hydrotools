@@ -56,6 +56,53 @@ REQUIREMENTS = []
 DEVELOPMENT_REQUIREMENTS = ["pytest"]
 
 
+def get_subpackage_names() -> List[str]:
+    # This assumes that each subpackage has a setup.py and is located under python/
+    root_dir = Path(__file__).resolve().parent
+    path_to_subpackages = list(root_dir.glob("{}/*/setup.py".format(SRC_ROOT)))
+
+    # Empty list. No subpackages found, may want to raise an exception here given the
+    # context
+    if not path_to_subpackages:
+        return path_to_subpackages
+
+    # Assumes directory structure `python/{{ sub-package name }}/setup.py`
+    return [subpackage.parts[-2] for subpackage in path_to_subpackages]
+
+
+def get_subpackage_slugs(subpackage_names: List[str]) -> List[str]:
+    return [
+        "{}.{}".format(NAMESPACE_PACKAGE_NAME, subpackage)
+        for subpackage in subpackage_names
+    ]
+
+
+def build_subpackage_requirements() -> List[str]:
+    subpackage_names = get_subpackage_names()
+    subpackage_slugs = get_subpackage_slugs(subpackage_names)
+
+    requirements = []
+    for idx, slug in enumerate(subpackage_slugs):
+        requirement_path = (
+            "{slug}@ git+{URL}.git#subdirectory={SRC_ROOT}/{subpackage}".format(
+                slug=slug, URL=URL, SRC_ROOT=SRC_ROOT, subpackage=subpackage_names[idx]
+            )
+        )
+        requirements.append(requirement_path)
+
+    return requirements
+
+
+def build_subpackage_mapping() -> Dict[str, str]:
+    subpackage_names = get_subpackage_names()
+
+    subpackage_mapping = {}
+    for name in subpackage_names:
+        subpackage_mapping[name] = "{}/{}".format(SRC_ROOT, name)
+
+    return subpackage_mapping
+
+
 def install_subpackages(sources: dict, develop_flag: bool = False) -> None:
     """Install all subpackages in a namespace package
 
