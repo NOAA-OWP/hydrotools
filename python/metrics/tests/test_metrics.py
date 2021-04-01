@@ -1,5 +1,5 @@
 import pytest
-from evaluation_tools.metrics import metrics
+from hydrotools.metrics import metrics
 
 import pandas as pd
 from math import isclose
