@@ -1,5 +1,5 @@
 import pytest
-from evaluation_tools.nwis_client import iv
+from hydrotools.nwis_client import iv
 
 # Datetime test related imports
 from datetime import datetime
@@ -103,7 +103,7 @@ def test_get_raw_with_mock(setup_iv, monkeypatch):
     """Test data retrieval and parsing"""
     import json
     from pathlib import Path
-    from evaluation_tools._restclient import RestClient
+    from hydrotools._restclient import RestClient
 
     def requests_mock(*args, **kwargs):
         json_text = json.loads(
@@ -144,7 +144,7 @@ def test_handle_response(setup_iv, monkeypatch):
 def test_get_and_handle_response(setup_iv, monkeypatch):
     import json
     from pathlib import Path
-    from evaluation_tools._restclient import RestClient
+    from hydrotools._restclient import RestClient
     import requests
 
     def mock_json(*args, **kwargs):
@@ -166,7 +166,7 @@ def test_get_and_handle_response(setup_iv, monkeypatch):
 def test_multiprocessing_get(setup_iv, monkeypatch):
     import json
     from pathlib import Path
-    from evaluation_tools._restclient import RestClient
+    from hydrotools._restclient import RestClient
     import requests
 
     sites = [
