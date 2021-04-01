@@ -42,7 +42,7 @@ def nwm_routelink_extract_usgs_sites(
 
     Examples
     --------
-    >>> from evaluation_tools.gcp_client import utils
+    >>> from hydrotools.gcp_client import utils
     >>> df = utils.nwm_routelink_extract_usgs_sites("RouteLink_NHDPLUS.nc")
     >>> import csv
     >>> df.to_csv("nwm_feature_id_with_usgs_site.csv", index=False, quoting=csv.QUOTE_NONNUMERIC)
@@ -89,7 +89,7 @@ def crosswalk(
 
     Examples
     --------
-    >>> from evaluation_tools.gcp_client import utils
+    >>> from hydrotools.gcp_client import utils
     >>> cribbs_creek = "02465292"
     >>> crx_walk = utils.crosswalk(usgs_site_codes=cribbs_creek)
 
