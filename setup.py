@@ -26,7 +26,7 @@ MAINTAINER = "Austin Raney"
 MAINTAINER_EMAIL = "arthur.raney@noaa.gov"
 
 # Namespace package version
-VERSION = "1.3.5+1"
+VERSION = "1.3.5+2"
 URL = "https://github.com/NOAA-OWP/evaluation_tools"
 
 # Map subpackage namespace to relative location
