@@ -75,7 +75,8 @@ def nash_sutcliffe_efficiency(
     y_pred: pandas.Series, required
         Estimated target values, also called simulations or modeled values.
     log: bool, default False
-        When True, take the log of y_true and y_pred before computing the NSE.
+        Apply numpy.log (natural logarithm) to y_true and y_pred 
+        before computing the NSE.
     normalized: bool, default False
         When True, normalize the final NSE value using the method from 
         Nossent & Bauwens, 2012.
