@@ -1,5 +1,5 @@
 import pytest
-from evaluation_tools._restclient import RestClient
+from hydrotools._restclient import RestClient
 
 
 @pytest.mark.parametrize(
@@ -61,7 +61,12 @@ def test_get_empty_constructor(empty_restclient):
 @pytest.mark.parametrize(
     "provided,expected",
     [
-        ({"url": "http://test-url.test",}, "http://test-url.test/"),
+        (
+            {
+                "url": "http://test-url.test",
+            },
+            "http://test-url.test/",
+        ),
         (
             {
                 "url": "http://test-url.test",
