@@ -167,5 +167,5 @@ setup(
     install_requires=REQUIREMENTS,
     extras_require={"test": DEVELOPMENT_REQUIREMENTS},
     python_requires=">=3.7",
-    cmdclass={"install": Install, "develop": Develop},
+    cmdclass={"develop": Develop},
 )
