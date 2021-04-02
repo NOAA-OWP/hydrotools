@@ -1,4 +1,4 @@
-``hydrotools``
+``HydroTools``
 =====================
 
 Tools for retrieving hydrological data
@@ -49,15 +49,15 @@ What’s here?
 ------------
 
 We’ve taken a grab-and-go approach to installation and usage of
-Hydro tools. This means, in line with a standard toolbox, you will
+Hydrotools. This means, in line with a standard toolbox, you will
 typically install just the tool or tools that get your job done without
 having to install all the other tools available. This means a lighter
 installation load and that tools can be added to the toolbox, without
 affecting your workflows!
 
-It should be noted, we commonly refer to individual tools in hydro
-tools as a subpackage or by their name (e.g. ``nwis_client``). You will
-find this lingo in both issues and documentation.
+It should be noted, we commonly refer to individual tools in HydroTools as a
+subpackage or by their name (e.g. ``nwis_client``). You will find this lingo in both
+issues and documentation.
 
 Currently the repository has the following subpackages:
 
@@ -97,7 +97,7 @@ work just fine (``conda``, ``pipenv``, etc. ).
 UTC Time
 --------
 
-Note: the canonical ``pandas.DataFrames`` used by hydrotools use
+Note: the canonical ``pandas.DataFrames`` used by HydroTools use
 time-zone naive datetimes that assume UTC time. In general, do not
 assume methods are compatible with time-zone aware datetimes or
 timestamps. Expect methods to transform time-zone aware datetimes and
