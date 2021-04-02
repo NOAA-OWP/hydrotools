@@ -28,8 +28,7 @@ REQUIREMENTS = [
     "numpy",
     "requests",
     "requests-cache",
-    # TODO: Temp fix for tests. This will not work once the branch is deleted
-    "hydrotools._restclient@ git+https://github.com/NOAA-OWP/hydrotools.git@move-namespace-to-hydrotools#subdirectory=python/_restclient",
+    "hydrotools._restclient@ git+https://github.com/NOAA-OWP/hydrotools.git#subdirectory=python/_restclient",
 ]
 
 setup(
