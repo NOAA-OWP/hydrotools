@@ -1,0 +1,4 @@
+pandas
+xarray
+google-cloud-storage
+h5netcdf

@@ -1,0 +1,10 @@
+pyproject.toml
+setup.py
+hydrotools._restclient.egg-info/PKG-INFO
+hydrotools._restclient.egg-info/SOURCES.txt
+hydrotools._restclient.egg-info/dependency_links.txt
+hydrotools._restclient.egg-info/namespace_packages.txt
+hydrotools._restclient.egg-info/requires.txt
+hydrotools._restclient.egg-info/top_level.txt
+hydrotools/_restclient/__init__.py
+hydrotools/_restclient/_restclient.py

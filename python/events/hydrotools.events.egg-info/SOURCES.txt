@@ -1,0 +1,10 @@
+pyproject.toml
+setup.py
+hydrotools.events.egg-info/PKG-INFO
+hydrotools.events.egg-info/SOURCES.txt
+hydrotools.events.egg-info/dependency_links.txt
+hydrotools.events.egg-info/namespace_packages.txt
+hydrotools.events.egg-info/requires.txt
+hydrotools.events.egg-info/top_level.txt
+hydrotools/events/event_detection/__init__.py
+hydrotools/events/event_detection/decomposition.py

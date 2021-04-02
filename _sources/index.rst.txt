@@ -1,4 +1,4 @@
-``evaluation_tools``
+``HydroTools``
 =====================
 
 Tools for retrieving hydrological data
@@ -8,17 +8,17 @@ Tools for retrieving hydrological data
    :maxdepth: 2
    :caption: API:
 
-   evaluation_tools.nwis_client
-   evaluation_tools.gcp_client
-   evaluation_tools._restclient
-   evaluation_tools.metrics
-   evaluation_tools.events.event_detection
+   hydrotools.nwis_client
+   hydrotools.gcp_client
+   hydrotools._restclient
+   hydrotools.metrics
+   hydrotools.events.event_detection
 
 
 Motivation
 ----------
 
-We developed evaluation_tools with data scientists in mind. We attempted
+We developed hydrotools with data scientists in mind. We attempted
 to ensure the simplest methods such as ``get`` both accepted and
 returned data structures frequently used by data scientists using
 scientific Python. Specifically, this means that
@@ -27,7 +27,7 @@ scientific Python. Specifically, this means that
 and
 |numpy.arrays|_
 are the most frequently encountered data structures when using
-evaluation_tools. The majority of methods include sensible defaults that
+hydrotools. The majority of methods include sensible defaults that
 cover the majority of use-cases, but allow customization if required.
 
 We also attempted to adhere to organizational (NOAA-OWP) data standards
@@ -49,15 +49,15 @@ What’s here?
 ------------
 
 We’ve taken a grab-and-go approach to installation and usage of
-Evaluation tools. This means, in line with a standard toolbox, you will
+Hydrotools. This means, in line with a standard toolbox, you will
 typically install just the tool or tools that get your job done without
 having to install all the other tools available. This means a lighter
 installation load and that tools can be added to the toolbox, without
 affecting your workflows!
 
-It should be noted, we commonly refer to individual tools in evaluation
-tools as a subpackage or by their name (e.g. ``nwis_client``). You will
-find this lingo in both issues and documentation.
+It should be noted, we commonly refer to individual tools in HydroTools as a
+subpackage or by their name (e.g. ``nwis_client``). You will find this lingo in both
+issues and documentation.
 
 Currently the repository has the following subpackages:
 
@@ -86,18 +86,18 @@ work just fine (``conda``, ``pipenv``, etc. ).
    $ python3 -m pip install --upgrade pip
 
    # Install nwis_client
-   $ python3 -m pip install git+https://github.com/NOAA-OWP/evaluation_tools.git#subdirectory=python/nwis_client
+   $ python3 -m pip install git+https://github.com/NOAA-OWP/hydrotools.git#subdirectory=python/nwis_client
 
    # Install _restclient
-   $ python3 -m pip install git+https://github.com/NOAA-OWP/evaluation_tools.git#subdirectory=python/_restclient
+   $ python3 -m pip install git+https://github.com/NOAA-OWP/hydrotools.git#subdirectory=python/_restclient
 
    # Install metrics
-   $ python3 -m pip install git+https://github.com/NOAA-OWP/evaluation_tools.git#subdirectory=python/metrics
+   $ python3 -m pip install git+https://github.com/NOAA-OWP/hydrotools.git#subdirectory=python/metrics
 
 UTC Time
 --------
 
-Note: the canonical ``pandas.DataFrames`` used by evaluation_tools use
+Note: the canonical ``pandas.DataFrames`` used by HydroTools use
 time-zone naive datetimes that assume UTC time. In general, do not
 assume methods are compatible with time-zone aware datetimes or
 timestamps. Expect methods to transform time-zone aware datetimes and

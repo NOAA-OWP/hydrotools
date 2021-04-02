@@ -1,0 +1,8 @@
+hydrotools.metrics@ git+https://github.com/NOAA-OWP/hydrotools.git#subdirectory=python/metrics
+hydrotools.nwis_client@ git+https://github.com/NOAA-OWP/hydrotools.git#subdirectory=python/nwis_client
+hydrotools.events@ git+https://github.com/NOAA-OWP/hydrotools.git#subdirectory=python/events
+hydrotools.gcp_client@ git+https://github.com/NOAA-OWP/hydrotools.git#subdirectory=python/gcp_client
+hydrotools._restclient@ git+https://github.com/NOAA-OWP/hydrotools.git#subdirectory=python/_restclient
+
+[test]
+pytest
