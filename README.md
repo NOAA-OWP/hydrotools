@@ -1,14 +1,14 @@
-# Hydro Tools
+# HydroTools
 
 Tools for retrieving and evaluating hydrological data.
 
 ## Documentation
 
-[Hydro tools](https://noaa-owp.github.io/hydrotools/) GitHub pages documentation
+[HydroTools](https://noaa-owp.github.io/hydrotools/) GitHub pages documentation
 
 ## Motivation
 
-We developed hydrotools with data scientists in mind. We attempted to ensure
+We developed HydroTools with data scientists in mind. We attempted to ensure
 the simplest methods such as `get` both accepted and returned data structures
 frequently used by data scientists using scientific Python. Specifically, this means
 that
@@ -16,7 +16,7 @@ that
 [`geopandas.GeoDataFrames`](https://geopandas.readthedocs.io/en/latest/docs/user_guide/data_structures.html#geodataframe),
 and
 [`numpy.arrays`](https://numpy.org/doc/stable/reference/arrays.html#array-objects)
-are the most frequently encountered data structures when using hydrotools. The
+are the most frequently encountered data structures when using HydroTools. The
 majority of methods include sensible defaults that cover the majority of use-cases,
 but allow customization if required.
 
@@ -51,7 +51,7 @@ Currently the repository has the following subpackages:
 
 ## UTC Time
 
-Note: the canonical `pandas.DataFrames` used by hydrotools use time-zone naive
+Note: the canonical `pandas.DataFrames` used by HydroTools use time-zone naive
 datetimes that assume UTC time. In general, do not assume methods are compatible with
 time-zone aware datetimes or timestamps. Expect methods to transform time-zone aware
 datetimes and timestamps into their timezone naive counterparts at UTC time.
