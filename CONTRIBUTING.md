@@ -173,19 +173,4 @@ requires = [
 
 ```
 
-5. The _package_ level (not subpackage) `setup.py` dictionary `SUBPACKAGES`
-should be updated to include the subpackage slug (i.e.
-`hydrotools.my_subpackage`) and the relative path to the subpackage
-(i.e. `python/my_subpackage`).
-
-Example:
-```python
-# setup.py
-
-SUBPACKAGES ={
-    ...,
-    "hydrotools.my_subpackage": "python/my_subpackage",
-}
-```
-
 Further explanation of the rational behind this pattern and more verbose explanation can be found in #12.
