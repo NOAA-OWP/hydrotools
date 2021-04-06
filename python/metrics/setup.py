@@ -25,6 +25,7 @@ DESCRIPTION = "Variety of standard model evaluation metrics."
 # Package dependency requirements
 REQUIREMENTS = [
     "pandas",
+    "numpy>=1.20.0"
 ]
 
 setup(
