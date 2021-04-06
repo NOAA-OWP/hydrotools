@@ -20,7 +20,9 @@ AUTHOR = "Austin Raney"
 AUTHOR_EMAIL = "arthur.raney@noaa.gov"
 
 # Short sub-package description
-DESCRIPTION = ""
+DESCRIPTION = (
+    "A convenient interface to the USGS NWIS Instantaneous Values (IV) REST Service API"
+)
 
 # Package dependency requirements
 REQUIREMENTS = [
