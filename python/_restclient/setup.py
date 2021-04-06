@@ -20,7 +20,7 @@ AUTHOR = "Austin Raney"
 AUTHOR_EMAIL = "arthur.raney@noaa.gov"
 
 # Short sub-package description
-DESCRIPTION = "Abstract REST client with built in request caching and retries"
+DESCRIPTION = "Abstract REST api client with built in request caching and retries"
 
 # Package dependency requirements
 REQUIREMENTS = ["requests", "requests_cache"]
