@@ -26,7 +26,7 @@ MAINTAINER = "Austin Raney"
 MAINTAINER_EMAIL = "arthur.raney@noaa.gov"
 
 # Namespace package version
-VERSION = "2.0.0-alpha.0"
+VERSION = "2.0.0-alpha.1"
 URL = "https://github.com/NOAA-OWP/hydrotools"
 
 # Short sub-package description
