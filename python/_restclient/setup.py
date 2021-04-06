@@ -30,9 +30,7 @@ setup(
     version=VERSION,
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,
-    classifiers=[
-        "Private :: Do Not Upload to pypi server",
-    ],
+    classifiers=[],
     description=DESCRIPTION,
     namespace_packages=[NAMESPACE_PACKAGE_NAME],
     packages=find_namespace_packages(include=[f"{NAMESPACE_PACKAGE_NAME}.*"]),
