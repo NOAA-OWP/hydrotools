@@ -24,6 +24,7 @@ $ python3 -m pip install hydrotools.metrics
 
 The following example demonstrates how one might use `hydrotools.metrics` to compute a Threat Score, also called the Critical Success Index, by comparing a persistence forecast to USGS streamflow observations. This example also requires the `hydrotools.nwis_client` package.
 
+### Code
 ```python
 from hydrotools.metrics import metrics
 from hydrotools.nwis_client.iv import IVDataService
@@ -79,7 +80,10 @@ print(contingency_table)
 # Compute threat score/critical success index
 TS = metrics.threat_score(contingency_table)
 print('Threat Score: {:.2f}'.format(TS))
+```
 
+### Output
+```console
 Contingency Table Components
 ============================
 true_positive      148
