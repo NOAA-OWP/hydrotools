@@ -16,7 +16,7 @@ $ python3 -m venv venv
 $ source venv/bin/activate
 $ python3 -m pip install --upgrade pip
 
-# Install metrics
+# Install nwis_client
 $ python3 -m pip install hydrotools.nwis_client
 ```
 
