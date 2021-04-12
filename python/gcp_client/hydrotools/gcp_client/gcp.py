@@ -165,7 +165,7 @@ class NWMDataService:
         configuration: str,
         reference_time: str,
         must_contain: str = 'channel_rt'
-        ):
+        ) -> list:
         """List available blobs with provided parameters.
 
         Parameters
@@ -212,24 +212,23 @@ class NWMDataService:
         # Return blob names
         return [b.name for b in list(blobs) if must_contain in b.name]
 
+    def get_blob(self, blob_name: str) -> bytes:
+        """Retrieve a blob from the data service as bytes.
 
-    # def get_blob(self, blob_name) -> bytes:
-    #     """Retrieve a blob from the data service as bytes.
+        Parameters
+        ----------
+        blob_name : str, required
+            Name of blob to retrieve.
 
-    #     Parameters
-    #     ----------
-    #     blob_name : str, required
-    #         Name of blob to retrieve.
-
-    #     Returns
-    #     -------
-    #     data : bytes
-    #         The data stored in the blob.
+        Returns
+        -------
+        data : bytes
+            The data stored in the blob.
         
-    #     """
-    #     client = storage.Client.create_anonymous_client()
-    #     bucket = client.bucket(self.bucket_name)
-    #     return bucket.blob(blob_name).download_as_bytes(timeout=120)
+        """
+        client = storage.Client.create_anonymous_client()
+        bucket = client.bucket(self.bucket_name)
+        return bucket.blob(blob_name).download_as_bytes(timeout=120)
 
     # def get_DataFrame(self, blob_name, **kwargs) -> pd.DataFrame:
     #     """Retrieve a blob from the data service as a pandas.DataFrame.
