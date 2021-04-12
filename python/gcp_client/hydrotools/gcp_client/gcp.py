@@ -286,6 +286,11 @@ class NWMDataService:
                 warnings.warn("Invalid feature_id_filter")
                 return ds
 
+        # Return default filtered Dataset
+        if feature_id_filter == True:
+            feature_id_filter = list(self.crosswalk.index)
+            return ds.sel(feature_id=feature_id_filter)
+
         # Return unfiltered Dataset
         if feature_id_filter == False:
             return ds
