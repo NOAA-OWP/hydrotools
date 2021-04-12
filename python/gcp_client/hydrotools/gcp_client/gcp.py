@@ -294,6 +294,62 @@ class NWMDataService:
         # Return unfiltered Dataset
         if feature_id_filter == False:
             return ds
+            
+    def get_DataFrame(
+        self,
+        *args,
+        drop_variables=[
+            'crs',
+            'nudge',
+            'velocity',
+            'qSfcLatRunoff',
+            'qBucket',
+            'qBtmVertRunoff'
+            ],
+        **kwargs
+        ) -> pd.DataFrame:
+        """Retrieve a blob from the data service as pandas.DataFrame
+
+        Parameters
+        ----------
+        args : 
+            Positional arguments passed to get_Dataset
+        drop_variables : list
+            Variables to drop from datasets. By default keeps only streamflow.
+        kwargs : 
+            Keyword arguments passed to get_Dataset
+
+        Returns
+        -------
+        df : pandas.DataFrame
+            The data stored in the blob.
+        
+        """
+        # Retrieve the dataset
+        ds = self.get_Dataset(*args, **kwargs).drop_vars(drop_variables)
+
+        # Transform to DataFrame
+        df = ds.to_dataframe().reset_index()
+
+        # Release resources
+        ds.close()
+
+        # Rename columns
+        df = df.rename(columns={
+            'time': 'value_date',
+            'feature_id': 'nwm_feature_id'
+        })
+
+        # Categorize feature id
+        df['nwm_feature_id'] = df['nwm_feature_id'].astype(str).astype(dtype="category")
+        
+        # Downcast floats
+        df_float = df.select_dtypes(include=["float"])
+        converted_float = df_float.apply(pd.to_numeric, downcast="float")
+        df[converted_float.columns] = converted_float
+
+        # Return DataFrame
+        return df
 
     # def get_DataFrame(self, blob_name, **kwargs) -> pd.DataFrame:
     #     """Retrieve a blob from the data service as a pandas.DataFrame.
