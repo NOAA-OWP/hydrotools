@@ -19,6 +19,12 @@ def test_crosswalk(setup_gcp):
     assert setup_gcp.crosswalk['usgs_site_code'].count() > 4000
     assert setup_gcp.crosswalk['usgs_site_code'].count() < 8000
 
+def test_cache(setup_gcp):
+    assert str(setup_gcp.cache) == 'gcp_cache.h5'
+
+    setup_gcp.cache = 'custom_cache.h5'
+    assert str(setup_gcp.cache) == 'custom_cache.h5'
+
 @pytest.mark.slow
 def test_list_blobs(setup_gcp):
     blob_list = setup_gcp.list_blobs(
