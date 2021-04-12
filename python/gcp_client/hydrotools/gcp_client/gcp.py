@@ -14,7 +14,7 @@ Classes
 
 """
 
-# from google.cloud import storage
+from google.cloud import storage
 # from io import BytesIO
 # import xarray as xr
 # import pandas as pd
@@ -159,6 +159,59 @@ class NWMDataService:
             self._max_procs = max_processes
         else:
             self._max_procs = cpu_count() - 2
+
+    def list_blobs(
+        self,
+        configuration: str,
+        reference_time: str,
+        must_contain: str = 'channel_rt'
+        ):
+        """List available blobs with provided parameters.
+
+        Parameters
+        ----------
+        configuration : str, required
+            Particular model simulation or forecast configuration.
+        reference_time : str, required
+            Model simulation or forecast issuance/reference time in 
+            YYYYmmddTHHZ format.
+        must_contain : str, optional, default 'channel_rt'
+            Optional substring found in each blob name.
+
+        Returns
+        -------
+        blob_list : list
+            A list of blob names that satisfy the criteria set by the
+            parameters.
+
+        Examples
+        --------
+        >>> from hydrotools.gcp_client import gcp
+        >>> model_data_service = gcp.NWMDataService()
+        >>> blob_list = model_data_service(
+        ...     configuration = "short_range",
+        ...     reference_time = "20210101T01Z"
+        ...     )
+        
+        """
+        # Break-up reference time
+        tokens = reference_time.split('T')
+        issue_date = tokens[0]
+        issue_time = tokens[1].lower()
+
+        # Connect to bucket with anonymous client
+        client = storage.Client.create_anonymous_client()
+        bucket = client.bucket(self.bucket_name)
+
+        # Get list of blobs
+        blobs = client.list_blobs(
+            bucket,
+            prefix=f'nwm.{issue_date}/{configuration}/nwm.t{issue_time}'
+            )
+
+        # Return blob names
+        return [b.name for b in list(blobs) if must_contain in b.name]
+
 
     # def get_blob(self, blob_name) -> bytes:
     #     """Retrieve a blob from the data service as bytes.
