@@ -135,9 +135,9 @@ class NWMDataService:
 
         Parameters
         ----------
-        bucket_name : str, required
+        bucket_name : str, required, default 'national-water-model'
             Name of Google Cloud Bucket
-        max_processes : int, optional
+        max_processes : int, optional, default os.cpu_count() - 2
             Maximum number of simultaneous requests/connections.
 
         Returns
