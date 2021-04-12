@@ -21,7 +21,8 @@ import warnings
 import pandas as pd
 from os import cpu_count
 from multiprocessing import Pool
-# from typing import Union, Iterable
+from typing import Union
+import numpy.typing as npt
 from pathlib import Path
 from collections.abc import Iterable
 
@@ -189,7 +190,8 @@ class NWMDataService:
     def get_Dataset(
         self, 
         blob_name: str,
-        feature_id_filter=True) -> xr.Dataset:
+        feature_id_filter: Union[npt.ArrayLike, bool] = True
+        ) -> xr.Dataset:
         """Retrieve a blob from the data service as xarray.Dataset
 
         Parameters
