@@ -41,16 +41,33 @@ forecast_data = model_data_service.get(
     )
 
 # Look at the data
-print(forecast_data.head())
+print(forecast_data.info(memory_usage='deep'))
+print(forecast_data[['valid_time', 'value']].head())
 ```
 ### Output
 ```console
-           value_date variable_name usgs_site_code measurement_unit   value qualifiers  series
-0 2019-08-01 04:00:00    streamflow       01646500            ft3/s  4170.0        [A]       0
-1 2019-08-01 04:15:00    streamflow       01646500            ft3/s  4170.0        [A]       0
-2 2019-08-01 04:30:00    streamflow       01646500            ft3/s  4170.0        [A]       0
-3 2019-08-01 04:45:00    streamflow       01646500            ft3/s  4170.0        [A]       0
-4 2019-08-01 05:00:00    streamflow       01646500            ft3/s  4170.0        [A]       0
+<class 'pandas.core.frame.DataFrame'>
+Int64Index: 135738 entries, 0 to 135737
+Data columns (total 8 columns):
+ #   Column            Non-Null Count   Dtype         
+---  ------            --------------   -----         
+ 0   nwm_feature_id    135738 non-null  category      
+ 1   reference_time    135738 non-null  datetime64[ns]
+ 2   valid_time        135738 non-null  datetime64[ns]
+ 3   value             135720 non-null  float32       
+ 4   usgs_site_code    135738 non-null  category      
+ 5   configuration     135738 non-null  category      
+ 6   measurement_unit  135738 non-null  category      
+ 7   variable_name     135738 non-null  category      
+dtypes: category(5), datetime64[ns](2), float32(1)
+memory usage: 6.0 MB
+None
+           valid_time      value
+0 2021-01-01 02:00:00  16.940001
+1 2021-01-01 03:00:00  25.570000
+2 2021-01-01 04:00:00  37.590000
+3 2021-01-01 05:00:00  52.279999
+4 2021-01-01 06:00:00  67.869995
 ```
 ### System Requirements
 We employ several methods to make sure the resulting `pandas.DataFrame` produced by `gcp_client` are as efficient and manageable as possible. Nonetheless, this package can potentially use a large amount of memory.
