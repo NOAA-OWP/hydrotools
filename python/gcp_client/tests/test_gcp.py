@@ -38,9 +38,10 @@ def test_get_blob(setup_gcp):
 def test_get_Dataset(setup_gcp):
     blob_name = "nwm.20210101/short_range/nwm.t01z.short_range.channel_rt.f001.conus.nc"
     
-    # Test default
+    # Test default filter
     ds = setup_gcp.get_Dataset(blob_name)
-    assert ds.feature_id.size != 0
+    assert ds.feature_id.size > 4000
+    assert ds.feature_id.size < 8000
 
     # Test filter with list
     ds = setup_gcp.get_Dataset(blob_name, 
@@ -58,11 +59,10 @@ def test_get_Dataset(setup_gcp):
         feature_id_filter=features)
     assert ds.feature_id.size == 2
 
-    # Test default filter
+    # Test no filter
     ds = setup_gcp.get_Dataset(blob_name, 
-        feature_id_filter=True)
-    assert ds.feature_id.size > 4000
-    assert ds.feature_id.size < 8000
+        feature_id_filter=False)
+    assert ds.feature_id.size > 8000
 
 # @pytest.mark.slow
 # def test_get(setup_gcp):
