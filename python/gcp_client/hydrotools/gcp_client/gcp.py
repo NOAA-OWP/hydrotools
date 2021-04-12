@@ -321,9 +321,8 @@ class NWMDataService:
         
         """
         # Check cache
-        # TODO Numpy complains about deprecated np.objects
-        # Looks like pytables fixed this, but it hasn't made into the 
-        #  latest release. We can remove the catch_warning once tables updates
+        # TODO Numpy complains about deprecated np.objects, downstream
+        #  packages haven't caught up yet, in this case tables and/or pandas
         key = f'{configuration}/DT{reference_time}'
         if self.cache.exists():
             with pd.HDFStore(self.cache) as store:
@@ -352,11 +351,37 @@ class NWMDataService:
 
         # Rename
         df = df.rename(columns={'streamflow': 'value'})
+
+        # Reformat crosswalk
+        xwalk = self.crosswalk.reset_index()
+
+        # Additional columns
+        xwalk['configuration'] = configuration
+        xwalk['measurement_unit'] = 'm3/s'
+        xwalk['variable_name'] = 'streamflow'
+
+        # Categorize
+        xwalk = xwalk.astype(str).astype('category')
+        xwalk = xwalk.set_index('nwm_feature_id')
+
+        # Apply crosswalk metadata
+        for col in xwalk:
+            df[col] = df['nwm_feature_id'].map(xwalk[col])
+
+        # Sort values
+        df = df.sort_values(
+            by=['nwm_feature_id', 'valid_time'],
+            ignore_index=True
+            )
         
         # Cache
+        # TODO Remove warning when tables/pandas catches up to Numpy
         with pd.HDFStore(self.cache) as store:
             if key not in store:
-                store.put(key, value=df, format='table')
+                with warnings.catch_warnings():
+                    warnings.filterwarnings("ignore", category=DeprecationWarning)
+
+                    store.put(key, value=df, format='table')
 
         # Return all data
         return df
