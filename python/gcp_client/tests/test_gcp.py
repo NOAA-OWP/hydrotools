@@ -58,6 +58,12 @@ def test_get_Dataset(setup_gcp):
         feature_id_filter=features)
     assert ds.feature_id.size == 2
 
+    # Test default filter
+    ds = setup_gcp.get_Dataset(blob_name, 
+        feature_id_filter=True)
+    assert ds.feature_id.size > 4000
+    assert ds.feature_id.size < 8000
+
 # @pytest.mark.slow
 # def test_get(setup_gcp):
 #     # TODO
