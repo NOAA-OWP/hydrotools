@@ -18,19 +18,19 @@ from google.cloud import storage
 from io import BytesIO
 import xarray as xr
 import warnings
-# import pandas as pd
+import pandas as pd
 # from functools import partial
 from os import cpu_count
 # from multiprocessing import Pool
 # from typing import Union, Iterable
-# from pathlib import Path
+from pathlib import Path
 from collections.abc import Iterable
 
-# # Global singletons for holding location and df/None of NWM feature id to usgs site
-# # code mapping
-# _FEATURE_ID_TO_USGS_SITE_MAP_FILE = (
-#     Path(__file__).resolve().parent / "data/nwm_2_0_feature_id_with_usgs_site.csv"
-# )
+# Global singletons for holding location and df/None of NWM feature id to usgs site
+# code mapping
+_FEATURE_ID_TO_USGS_SITE_MAP_FILE = (
+    Path(__file__).resolve().parent / "data/nwm_2_0_feature_id_with_usgs_site.csv"
+)
 # _FEATURE_ID_TO_USGS_SITE_MAP = None
 
 
@@ -131,7 +131,8 @@ class NWMDataService:
     def __init__(
         self, 
         bucket_name: str = 'national-water-model', 
-        max_processes: int = None
+        max_processes: int = None,
+        default_site_map: pd.DataFrame = None
         ):
         """Instantiate NWM Data Service.
 
@@ -141,6 +142,9 @@ class NWMDataService:
             Name of Google Cloud Bucket
         max_processes : int, optional, default os.cpu_count() - 2
             Maximum number of simultaneous requests/connections.
+        default_site_map : pandas.DataFrame with nwm_feature_id Index and
+            columns of alternative site identifiers. Defaults to 7500+ usgs_site_code
+            used by the NWM for data assimilation.
 
         Returns
         -------
@@ -161,6 +165,15 @@ class NWMDataService:
             self._max_procs = max_processes
         else:
             self._max_procs = cpu_count() - 2
+
+        # Set default site mapping
+        if default_site_map != None:
+            self._crosswalk = default_site_map
+        else:
+            self._crosswalk = pd.read_csv(
+                _FEATURE_ID_TO_USGS_SITE_MAP_FILE,
+                dtype={"nwm_feature_id": int, "usgs_site_code": str},
+            ).set_index('nwm_feature_id')
 
     def list_blobs(
         self,
@@ -401,4 +414,8 @@ class NWMDataService:
     @property
     def max_processes(self) -> int:
         return self._max_procs
+
+    @property
+    def crosswalk(self) -> pd.DataFrame:
+        return self._crosswalk
     
