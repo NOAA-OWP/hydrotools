@@ -21,7 +21,7 @@ import warnings
 import pandas as pd
 # from functools import partial
 from os import cpu_count
-# from multiprocessing import Pool
+from multiprocessing import Pool
 # from typing import Union, Iterable
 from pathlib import Path
 from collections.abc import Iterable
@@ -203,7 +203,7 @@ class NWMDataService:
         --------
         >>> from hydrotools.gcp_client import gcp
         >>> model_data_service = gcp.NWMDataService()
-        >>> blob_list = model_data_service(
+        >>> blob_list = model_data_service.list_blobs(
         ...     configuration = "short_range",
         ...     reference_time = "20210101T01Z"
         ...     )
@@ -298,14 +298,7 @@ class NWMDataService:
     def get_DataFrame(
         self,
         *args,
-        drop_variables=[
-            'crs',
-            'nudge',
-            'velocity',
-            'qSfcLatRunoff',
-            'qBucket',
-            'qBtmVertRunoff'
-            ],
+        streamflow_only: bool = True,
         **kwargs
         ) -> pd.DataFrame:
         """Retrieve a blob from the data service as pandas.DataFrame
@@ -314,8 +307,8 @@ class NWMDataService:
         ----------
         args : 
             Positional arguments passed to get_Dataset
-        drop_variables : list
-            Variables to drop from datasets. By default keeps only streamflow.
+        streamflow_only : bool, optional, default True
+            Only return streamflow and omit other variables.
         kwargs : 
             Keyword arguments passed to get_Dataset
 
@@ -326,17 +319,20 @@ class NWMDataService:
         
         """
         # Retrieve the dataset
-        ds = self.get_Dataset(*args, **kwargs).drop_vars(drop_variables)
+        ds = self.get_Dataset(*args, **kwargs)
 
         # Transform to DataFrame
-        df = ds.to_dataframe().reset_index()
+        if streamflow_only:
+            df = ds[['reference_time', 'time', 'streamflow']].to_dataframe().reset_index()
+        else:
+            df = ds.to_dataframe().reset_index()
 
         # Release resources
         ds.close()
 
         # Rename columns
         df = df.rename(columns={
-            'time': 'value_date',
+            'time': 'valid_time',
             'feature_id': 'nwm_feature_id'
         })
 
@@ -349,6 +345,60 @@ class NWMDataService:
         df[converted_float.columns] = converted_float
 
         # Return DataFrame
+        return df
+
+    def get(
+        self,
+        configuration: str,
+        reference_time: str
+        ) -> pd.DataFrame:
+        """Return streamflow data for a single model cycle in a pandas DataFrame.
+
+        Parameters
+        ----------
+        configuration : str, required
+            Particular model simulation or forecast configuration.
+        reference_time : str, required
+            Model simulation or forecast issuance/reference time in 
+            YYYYmmddTHHZ format.
+
+        Returns
+        -------
+        df : pandas.DataFrame
+            Simluted or forecasted streamflow data associated with a single
+            run of the National Water Model.
+
+        Examples
+        --------
+        >>> from hydrotools.gcp_client import gcp
+        >>> model_data_service = gcp.NWMDataService()
+        >>> forecast_data = model_data_service.get(
+        ...     configuration = "short_range",
+        ...     reference_time = "20210101T01Z"
+        ...     )
+        
+        """
+        # Get list of blob names
+        blob_list = self.list_blobs(
+            configuration=configuration,
+            reference_time=reference_time
+        )
+
+        # Check for empty list
+        if len(blob_list) == 0:
+            raise ValueError("Config/Time combination returned no data")
+
+        # Retrieve data
+        with Pool(processes=self.max_processes) as pool:
+            dataframes = pool.map(self.get_DataFrame, blob_list)
+        
+        # Concatenate data
+        df = pd.concat(dataframes)
+
+        # Rename
+        df = df.rename(columns={'streamflow': 'value'})
+
+        # Return all data
         return df
 
     # def get_DataFrame(self, blob_name, **kwargs) -> pd.DataFrame:
