@@ -113,3 +113,11 @@ def test_get(setup_gcp):
         reference_time="20210101T06Z"
     )
     assert df['valid_time'].unique().size == 120
+
+def test_invalid_configuration_exception(setup_gcp):
+    # Test invalid configuration
+    with pytest.raises(Exception):
+        df = setup_gcp.get(
+            configuration="medium_range",
+            reference_time="20210101T06Z"
+        )
