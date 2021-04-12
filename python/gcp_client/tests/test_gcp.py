@@ -19,8 +19,15 @@ def test_list_blobs(setup_gcp):
         configuration="short_range",
         reference_time="20210101T01Z"
     )
+    print(blob_list[0])
 
     assert len(blob_list) == 18
+
+@pytest.mark.slow
+def test_get_blob(setup_gcp):
+    blob_name = "nwm.20210101/short_range/nwm.t01z.short_range.channel_rt.f001.conus.nc"
+    blob_data = setup_gcp.get_blob(blob_name)
+    assert type(blob_data) == bytes
 
 # @pytest.mark.slow
 # def test_get(setup_gcp):
