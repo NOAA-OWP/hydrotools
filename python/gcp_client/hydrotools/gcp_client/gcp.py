@@ -15,8 +15,8 @@ Classes
 """
 
 from google.cloud import storage
-# from io import BytesIO
-# import xarray as xr
+from io import BytesIO
+import xarray as xr
 # import pandas as pd
 # from functools import partial
 from os import cpu_count
@@ -226,9 +226,37 @@ class NWMDataService:
             The data stored in the blob.
         
         """
+        # Setup anonymous client and retrieve blob data
         client = storage.Client.create_anonymous_client()
         bucket = client.bucket(self.bucket_name)
         return bucket.blob(blob_name).download_as_bytes(timeout=120)
+
+    def get_Dataset(self, blob_name: str) -> xr.Dataset:
+        """Retrieve a blob from the data service as xarray.Dataset
+
+        Parameters
+        ----------
+        blob_name : str, required
+            Name of blob to retrieve.
+
+        Returns
+        -------
+        ds : xarray.Dataset
+            The data stored in the blob.
+        
+        """
+        # Get raw bytes
+        raw_bytes = self.get_blob(blob_name)
+
+        # Create Dataset
+        ds = xr.load_dataset(
+            BytesIO(raw_bytes),
+            engine='h5netcdf',
+            mask_and_scale=True
+            )
+
+        # Return Dataset
+        return ds
 
     # def get_DataFrame(self, blob_name, **kwargs) -> pd.DataFrame:
     #     """Retrieve a blob from the data service as a pandas.DataFrame.
