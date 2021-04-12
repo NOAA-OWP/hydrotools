@@ -249,7 +249,7 @@ class NWMDataService:
     def get_Dataset(
         self, 
         blob_name: str,
-        feature_id_filter=False) -> xr.Dataset:
+        feature_id_filter=True) -> xr.Dataset:
         """Retrieve a blob from the data service as xarray.Dataset
 
         Parameters
