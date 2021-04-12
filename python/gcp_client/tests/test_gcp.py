@@ -77,12 +77,39 @@ def test_get_DataFrame(setup_gcp):
     df = setup_gcp.get_DataFrame(blob_name, drop_variables=[])
     assert len(df.columns) > 4
 
-# @pytest.mark.slow
-# def test_get(setup_gcp):
-#     # TODO
-#     """Test data retrieval and parsing"""
-#     df = setup_gcp.get(
-#         configuration='analysis_assim_extend',
-#         reference_time='20201209T16Z'
-#     )
-#     assert not df.empty
+@pytest.mark.slow
+def test_get(setup_gcp):
+    # Test ANA
+    df = setup_gcp.get(
+        configuration="analysis_assim",
+        reference_time="20210101T01Z"
+    )
+    assert df['valid_time'].unique().size == 3
+
+    # Test Ext. ANA
+    df = setup_gcp.get(
+        configuration="analysis_assim_extend",
+        reference_time="20210101T16Z"
+    )
+    assert df['valid_time'].unique().size == 28
+
+    # Test short range
+    df = setup_gcp.get(
+        configuration="short_range",
+        reference_time="20210101T01Z"
+    )
+    assert df['valid_time'].unique().size == 18
+
+    # Test medium range
+    df = setup_gcp.get(
+        configuration="medium_range_mem1",
+        reference_time="20210101T06Z"
+    )
+    assert df['valid_time'].unique().size == 80
+
+    # Test long range
+    df = setup_gcp.get(
+        configuration="long_range_mem1",
+        reference_time="20210101T06Z"
+    )
+    assert df['valid_time'].unique().size == 120
