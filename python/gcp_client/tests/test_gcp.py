@@ -76,11 +76,10 @@ def test_get_DataFrame(setup_gcp):
     
     # Test default
     df = setup_gcp.get_DataFrame(blob_name)
-    print(df.info())
     assert len(df.columns) == 4
 
     # Test all variables
-    df = setup_gcp.get_DataFrame(blob_name, drop_variables=[])
+    df = setup_gcp.get_DataFrame(blob_name, streamflow_only=False)
     assert len(df.columns) > 4
 
 @pytest.mark.slow
