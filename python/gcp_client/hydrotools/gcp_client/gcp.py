@@ -17,12 +17,14 @@ Classes
 from google.cloud import storage
 from io import BytesIO
 import xarray as xr
+import warnings
 # import pandas as pd
 # from functools import partial
 from os import cpu_count
 # from multiprocessing import Pool
 # from typing import Union, Iterable
 # from pathlib import Path
+from collections.abc import Iterable
 
 # # Global singletons for holding location and df/None of NWM feature id to usgs site
 # # code mapping
@@ -231,13 +233,20 @@ class NWMDataService:
         bucket = client.bucket(self.bucket_name)
         return bucket.blob(blob_name).download_as_bytes(timeout=120)
 
-    def get_Dataset(self, blob_name: str) -> xr.Dataset:
+    def get_Dataset(
+        self, 
+        blob_name: str,
+        feature_id_filter=False) -> xr.Dataset:
         """Retrieve a blob from the data service as xarray.Dataset
 
         Parameters
         ----------
         blob_name : str, required
             Name of blob to retrieve.
+        feature_id_filter : bool or array-like, optional, default False
+            If True, filter data using default list of feature ids (USGS gaging locations).
+            Alternatively, limit data returned to feature ids in feature_id_filter 
+            list.
 
         Returns
         -------
@@ -255,8 +264,18 @@ class NWMDataService:
             mask_and_scale=True
             )
 
-        # Return Dataset
-        return ds
+        # Attempt to filter Dataset
+        if isinstance(feature_id_filter, Iterable):
+            try:
+                feature_id_filter = list(feature_id_filter)
+                return ds.sel(feature_id=feature_id_filter)
+            except:
+                warnings.warn("Invalid feature_id_filter")
+                return ds
+
+        # Return unfiltered Dataset
+        if feature_id_filter == False:
+            return ds
 
     # def get_DataFrame(self, blob_name, **kwargs) -> pd.DataFrame:
     #     """Retrieve a blob from the data service as a pandas.DataFrame.
