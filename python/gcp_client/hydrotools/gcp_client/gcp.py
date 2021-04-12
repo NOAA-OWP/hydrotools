@@ -107,6 +107,9 @@ class NWMDataService:
                 dtype={"nwm_feature_id": int, "usgs_site_code": str},
             ).set_index('nwm_feature_id')
 
+        # Set default dataframe cache
+        self._cache = Path('gcp_cache.h5')
+
     def list_blobs(
         self,
         configuration: str,
@@ -315,6 +318,19 @@ class NWMDataService:
         ...     )
         
         """
+        # Check cache
+        # TODO Numpy complains about deprecated np.objects
+        # Looks like pytables fixed this, but it hasn't made into the 
+        #  latest release. We can remove the catch_warning once tables updates
+        key = f'{configuration}/DT{reference_time}'
+        if self.cache.exists():
+            with pd.HDFStore(self.cache) as store:
+                if key in store:
+                    with warnings.catch_warnings():
+                        warnings.filterwarnings("ignore", category=DeprecationWarning)
+            
+                        return store[key]
+
         # Get list of blob names
         blob_list = self.list_blobs(
             configuration=configuration,
@@ -334,6 +350,11 @@ class NWMDataService:
 
         # Rename
         df = df.rename(columns={'streamflow': 'value'})
+        
+        # Cache
+        with pd.HDFStore(self.cache) as store:
+            if key not in store:
+                store.put(key, value=df, format='table')
 
         # Return all data
         return df
@@ -349,4 +370,12 @@ class NWMDataService:
     @property
     def crosswalk(self) -> pd.DataFrame:
         return self._crosswalk
+        
+    @property
+    def cache(self):
+        return self._cache
+
+    @cache.setter
+    def cache(self, filepath):
+        self._cache = Path(filepath)
     
