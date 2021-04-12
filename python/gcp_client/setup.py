@@ -23,7 +23,7 @@ AUTHOR_EMAIL = "jason.regina@noaa.gov"
 DESCRIPTION = "Retrieve National Water Model data from Google Cloud Platform."
 
 # Package dependency requirements
-REQUIREMENTS = ["pandas", "xarray", "google-cloud-storage", "h5netcdf", "tables"]
+REQUIREMENTS = ["pandas", "xarray", "google-cloud-storage", "h5netcdf", "tables", "numpy>=1.20.0"]
 
 setup(
     name=SUBPACKAGE_SLUG,
