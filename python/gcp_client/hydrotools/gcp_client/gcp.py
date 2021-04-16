@@ -399,7 +399,7 @@ class NWMDataService:
         return self._crosswalk
         
     @property
-    def cache(self):
+    def cache(self) -> Path:
         return self._cache
 
     @cache.setter
