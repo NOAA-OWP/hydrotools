@@ -74,7 +74,14 @@ class Alias:
         return value in self.valid_value
 
     def __getitem__(self, value) -> Any:
-        return self.get(value)
+        key = self.get(value)
+
+        if key is None:
+            raise ValueError(
+                "Invalid value %s. Valid values are %s" % (value, self.valid_value)
+            )
+
+        return key
 
     def __str__(self):
         return str(self.key)
