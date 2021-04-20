@@ -66,3 +66,12 @@ def test_get(alias_fixture):
 
 def test__getitem__(alias_fixture):
     assert alias_fixture.key == alias_fixture["value"]
+
+
+def test_get_none(alias_fixture):
+    assert alias_fixture.get("None") is None
+
+
+def test__getitem__raises_value_error(alias_fixture):
+    with pytest.raises(ValueError):
+        alias_fixture["None"]
