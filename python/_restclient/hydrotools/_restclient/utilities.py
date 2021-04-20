@@ -51,13 +51,24 @@ class Alias:
             self.__dict__["valid_value"] = self.valid_value | self.key.valid_value
             self.__dict__["key"] = self.key.key
 
-    def get(self, value) -> Any:
+    def get(self, value: Hashable) -> Union[Any, None]:
+        """Get key given a valid alias value. If a valid key is not provided, return
+        None.
+
+        Parameters
+        ----------
+        value : Hashable
+            Valid alias value
+
+        Returns
+        -------
+        Union[Any, None]
+           alias key if valid value, else None
+        """
         if value in self:
             return self.key
 
-        raise ValueError(
-            "Invalid value %s. Valid values are %s" % (value, self.valid_value)
-        )
+        return None
 
     def __contains__(self, value) -> bool:
         return value in self.valid_value
