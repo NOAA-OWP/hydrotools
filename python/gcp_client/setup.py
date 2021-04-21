@@ -13,7 +13,7 @@ SUBPACKAGE_NAME = "gcp_client"
 SUBPACKAGE_SLUG = f"{NAMESPACE_PACKAGE_NAME}.{SUBPACKAGE_NAME}"
 
 # Subpackage version
-VERSION = "1.0.0-alpha.0"
+VERSION = "2.0.0-alpha.0"
 
 # Package author information
 AUTHOR = "Jason Regina"
@@ -23,7 +23,7 @@ AUTHOR_EMAIL = "jason.regina@noaa.gov"
 DESCRIPTION = "Retrieve National Water Model data from Google Cloud Platform."
 
 # Package dependency requirements
-REQUIREMENTS = ["pandas", "xarray", "google-cloud-storage", "h5netcdf"]
+REQUIREMENTS = ["pandas", "xarray", "google-cloud-storage", "h5netcdf", "tables", "numpy>=1.20.0"]
 
 setup(
     name=SUBPACKAGE_SLUG,

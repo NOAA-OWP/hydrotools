@@ -57,6 +57,7 @@ cover/
 
 # Request-cache stuff:
 *.sqlite
+*.h5
 
 # Django stuff:
 *.log
