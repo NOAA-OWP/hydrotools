@@ -91,6 +91,30 @@ class Alias:
 
 
 class AliasGroup:
+    """Create a group of Alias objects that are treated like a single Alias. This
+    comes in handy to cut down on conditional statements when developing for example,
+    rest api libraries. This is clearest shown through an example.
+
+    Example:
+        base_url = "www.api.org"
+
+        # In the below, both path-1 and path-2 are different entities.
+        # api.org/path-1/cool-feature
+        # api.org/path-2/cool-feature
+
+        path_1 = Alias("path-1", [1, "1"])
+        path_2 = Alias("path-2", [2, "2"])
+        path_group = GroupAlias([path_1, path_2])
+
+        def get_cool_feature(path: Union[int, str]):
+            path = path_group[path] # ValueError thrown if invalid path
+
+            url = f"{base_url}/{path}/cool-feature"
+
+            response = requests.get(url)
+            return response.json()
+    """
+
     def __init__(self, alias: List[Alias]) -> None:
 
         self._option_groups = (
@@ -115,6 +139,19 @@ class AliasGroup:
             raise ValueError(f"Repeated valid_value {duplicate_value} not allowed")
 
     def get(self, value):
+        """Get singular Alias key from group when provided valid alias value. If a
+        valid key is not provided, return None.
+
+        Parameters
+        ----------
+        value : Hashable
+            Valid alias value
+
+        Returns
+        -------
+        Union[Any, None]
+           alias key if valid value, else None
+        """
         option = self.option_map.get(value)
 
         if option is None:
