@@ -89,6 +89,8 @@ class NWMDataService:
         # Set default dataframe cache
         self._cache = Path('gcp_cache.h5')
 
+    # TODO find publicly available authoritative source of service
+    #  compatible valid model configuration strings
     def list_blobs(
         self,
         configuration: str,
@@ -100,7 +102,8 @@ class NWMDataService:
         Parameters
         ----------
         configuration : str, required
-            Particular model simulation or forecast configuration.
+            Particular model simulation or forecast configuration. For a list 
+            of available configurations see NWMDataService.configurations
         reference_time : str, required
             Model simulation or forecast issuance/reference time in 
             YYYYmmddTHHZ format.
@@ -277,7 +280,8 @@ class NWMDataService:
         Parameters
         ----------
         configuration : str, required
-            Particular model simulation or forecast configuration.
+            Particular model simulation or forecast configuration. For a list 
+            of available configurations see NWMDataService.configurations
         reference_time : str, required
             Model simulation or forecast issuance/reference time in 
             YYYYmmddTHHZ format.
