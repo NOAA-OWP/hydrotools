@@ -75,3 +75,27 @@ def test_get_none(alias_fixture):
 def test__getitem__raises_value_error(alias_fixture):
     with pytest.raises(ValueError):
         alias_fixture["None"]
+
+
+def test_alias_group():
+    true = utilities.Alias(True, [True, 1, "true"])
+    false = utilities.Alias(False, [False, 0, "false"])
+
+    assert true.get(True) is True
+
+    group = utilities.AliasGroup([true, false])
+    assert group[True] is True
+    assert group[1] is True
+    assert group["true"] is True
+
+    assert group.get(True) is True
+    assert group.get(1) is True
+    assert group.get("true") is True
+
+    assert group[False] is False
+    assert group[0] is False
+    assert group["false"] is False
+
+    assert group.get(False) is False
+    assert group.get(0) is False
+    assert group.get("false") is False
