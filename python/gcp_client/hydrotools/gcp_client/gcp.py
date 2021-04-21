@@ -43,7 +43,7 @@ class NWMDataService:
         self, 
         bucket_name: str = 'national-water-model', 
         max_processes: int = None,
-        default_site_map: pd.DataFrame = None
+        location_metadata_mapping: pd.DataFrame = None
         ):
         """Instantiate NWM Data Service.
 
@@ -53,8 +53,8 @@ class NWMDataService:
             Name of Google Cloud Bucket
         max_processes : int, optional, default os.cpu_count() - 2
             Maximum number of simultaneous requests/connections.
-        default_site_map : pandas.DataFrame with nwm_feature_id Index and
-            columns of alternative site identifiers. Defaults to 7500+ usgs_site_code
+        location_metadata_mapping : pandas.DataFrame with nwm_feature_id Index and
+            columns of corresponding site metadata. Defaults to 7500+ usgs_site_code
             used by the NWM for data assimilation.
 
         Returns
@@ -78,8 +78,8 @@ class NWMDataService:
             self._max_procs = cpu_count() - 2
 
         # Set default site mapping
-        if default_site_map != None:
-            self._crosswalk = default_site_map
+        if location_metadata_mapping != None:
+            self._crosswalk = location_metadata_mapping
         else:
             self._crosswalk = pd.read_csv(
                 _FEATURE_ID_TO_USGS_SITE_MAP_FILE,
