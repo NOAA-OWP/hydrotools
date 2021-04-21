@@ -138,7 +138,7 @@ class AliasGroup:
         if duplicate_value:
             raise ValueError(f"Repeated valid_value {duplicate_value} not allowed")
 
-    def get(self, value):
+    def get(self, value: Hashable) -> Union[Any, None]:
         """Get singular Alias key from group when provided valid alias value. If a
         valid key is not provided, return None.
 
