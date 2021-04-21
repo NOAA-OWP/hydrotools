@@ -2,7 +2,7 @@
 
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import Any, Hashable, Iterable, Literal, Union
+from typing import Any, Hashable, Iterable, List, Union
 
 # local import
 from ._iterable_nonstring import IterableNonStringLike
@@ -88,3 +88,57 @@ class Alias:
 
     def __repr__(self):
         return f"{str(self.key)}: {str(self.valid_value)}"
+
+
+class AliasGroup:
+    def __init__(self, alias: List[Alias]) -> None:
+
+        self._option_groups = (
+            frozenset(alias)
+            if isinstance(alias, IterableNonStringLike)
+            else frozenset([alias])
+        )
+
+        symmetric_differences, union = frozenset(), frozenset()
+        self.option_map = {}
+
+        for member in self._option_groups:
+            symmetric_differences = member.valid_value ^ symmetric_differences
+            union = member.valid_value | union
+
+            for valid_value in member.valid_value:
+                self.option_map[valid_value] = member
+
+        duplicate_value = union - symmetric_differences
+
+        if duplicate_value:
+            raise ValueError(f"Repeated valid_value {duplicate_value} not allowed")
+
+    def get(self, value):
+        option = self.option_map.get(value)
+
+        if option is None:
+            return None
+
+        return option.key
+
+    @property
+    def option_groups(self):
+        return self._option_groups
+
+    def __getitem__(self, value):
+        option = self.get(value)
+
+        if option is None:
+            raise ValueError(
+                "Invalid value %s. Valid values are %s"
+                % (value, self.option_map.keys())
+            )
+
+        return option
+
+    def __str__(self) -> str:
+        return str(self.option_groups)
+
+    def __repr__(self) -> str:
+        return str(self.option_groups)
