@@ -32,28 +32,6 @@ _FEATURE_ID_TO_USGS_SITE_MAP_FILE = (
     Path(__file__).resolve().parent / "data/nwm_2_0_feature_id_with_usgs_site.csv"
 )
 
-# Valid configurations compatible with this client
-# TODO Find crosswalk for Hawaii, Puerto Rico, and US Virgin Islands
-_valid_configurations = [
-    'analysis_assim',
-    'analysis_assim_extend',
-    # 'analysis_assim_hawaii',
-    'analysis_assim_long',
-    'long_range_mem1',
-    'long_range_mem2',
-    'long_range_mem3',
-    'long_range_mem4',
-    'medium_range_mem1',
-    'medium_range_mem2',
-    'medium_range_mem3',
-    'medium_range_mem4',
-    'medium_range_mem5',
-    'medium_range_mem6',
-    'medium_range_mem7',
-    'short_range',
-    # 'short_range_hawaii'
-    ]
-
 class NWMDataService:
     """A Google Cloud Storage client class.
     The NWMDataService class provides various methods for constructing 
@@ -146,8 +124,8 @@ class NWMDataService:
         
         """
         # Validate configuration
-        if configuration not in _valid_configurations:
-            message = f'Invalid configuration. Must select from {str(_valid_configurations)}'
+        if configuration not in self.configurations:
+            message = f'Invalid configuration. Must select from {str(self.configurations)}'
             raise ValueError(message)
 
         # Break-up reference time
@@ -405,4 +383,28 @@ class NWMDataService:
     @cache.setter
     def cache(self, filepath):
         self._cache = Path(filepath)
-    
+
+    @property
+    def configurations(self) -> list:
+        # Valid configurations compatible with this client
+        # TODO Find crosswalk for Alaska, Hawaii, Puerto Rico, and US Virgin Islands
+        return [
+            'analysis_assim',
+            'analysis_assim_extend',
+            # 'analysis_assim_hawaii',
+            'analysis_assim_long',
+            'long_range_mem1',
+            'long_range_mem2',
+            'long_range_mem3',
+            'long_range_mem4',
+            'medium_range_mem1',
+            'medium_range_mem2',
+            'medium_range_mem3',
+            'medium_range_mem4',
+            'medium_range_mem5',
+            'medium_range_mem6',
+            'medium_range_mem7',
+            'short_range',
+            # 'short_range_hawaii'
+            ]
+            
