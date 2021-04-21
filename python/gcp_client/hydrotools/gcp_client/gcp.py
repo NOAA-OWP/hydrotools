@@ -197,7 +197,7 @@ class NWMDataService:
         ds = xr.load_dataset(
             BytesIO(raw_bytes),
             engine='h5netcdf',
-            mask_and_scale=True
+            mask_and_scale=False
             )
 
         # Attempt to filter Dataset
@@ -246,7 +246,14 @@ class NWMDataService:
 
         # Transform to DataFrame
         if streamflow_only:
+            # Convert to DataFrame
             df = ds[['reference_time', 'time', 'streamflow']].to_dataframe().reset_index()
+            
+            # Extract scale factor
+            scale_factor = ds['streamflow'].scale_factor[0]
+            
+            # Scale data
+            df.loc[:, 'streamflow'] = df['streamflow'].mul(scale_factor)
         else:
             df = ds.to_dataframe().reset_index()
 
