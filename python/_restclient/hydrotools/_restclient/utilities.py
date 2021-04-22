@@ -97,6 +97,13 @@ class Alias:
 
         return value
 
+    def __or__(self, b):
+        if not isinstance(b, Alias):
+            error_message = f"{b} must be type Alias"
+            raise TypeError(error_message)
+
+        return AliasGroup([self, b])
+
     def __str__(self):
         return str(self.value)
 
