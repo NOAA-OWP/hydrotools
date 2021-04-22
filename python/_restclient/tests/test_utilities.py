@@ -31,7 +31,7 @@ def test_cannot_alter_alias_key(alias_fixture):
         alias_fixture.key = "that"
 
 
-def test_cannot_alter_alias_key(alias_fixture):
+def test_cannot_alter_alias_value(alias_fixture):
     from dataclasses import FrozenInstanceError
 
     with pytest.raises(FrozenInstanceError):
