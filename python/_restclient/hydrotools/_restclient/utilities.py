@@ -33,10 +33,19 @@ class Alias:
         result = foo_alias["bar"]()
     """
 
-    value: Union[int, float, str, bytes, bool, Callable, None]
+    value: Union[int, float, str, bytes, bool, Callable, tuple, frozenset, None]
     keys: Union[Iterable, Hashable]
 
     def __post_init__(self):
+
+        scalar_or_callable = Union[
+            int, float, str, bytes, bool, Callable, tuple, frozenset, None
+        ]
+
+        if not isinstance(self.value, scalar_or_callable.__args__):
+            error_message = f"value must be type {str(scalar_or_callable.__args__)}"
+            raise ValueError(error_message)
+
         # Create deep copy so a ref to a mutable value could not change keys implicitly
         self.__dict__["value"] = deepcopy(self.value)
 
@@ -54,7 +63,7 @@ class Alias:
 
     def get(
         self, value: Hashable
-    ) -> Union[int, float, str, bytes, bool, Callable, None]:
+    ) -> Union[int, float, str, bytes, bool, Callable, tuple, frozenset, None]:
         """Get value given a valid alias value. If a valid value is not provided, return
         None.
 
@@ -65,7 +74,7 @@ class Alias:
 
         Returns
         -------
-        Union[int, float, str, bytes, bool, Callable, None]
+        Union[int, float, str, bytes, bool, Callable, tuple, frozenset, None]
            alias value if valid value, else None
         """
         if value in self:
@@ -76,7 +85,9 @@ class Alias:
     def __contains__(self, value) -> bool:
         return value in self.keys
 
-    def __getitem__(self, value) -> Union[int, float, str, bytes, bool, Callable, None]:
+    def __getitem__(
+        self, value
+    ) -> Union[int, float, str, bytes, bool, Callable, tuple, frozenset, None]:
         value = self.get(value)
 
         if value is None:
@@ -148,7 +159,7 @@ class AliasGroup:
 
     def get(
         self, value: Hashable
-    ) -> Union[int, float, str, bytes, bool, Callable, None]:
+    ) -> Union[int, float, str, bytes, bool, Callable, tuple, frozenset, None]:
         """Get singular Alias value from group when provided valid alias value. If a
         valid value is not provided, return None.
 
@@ -159,7 +170,7 @@ class AliasGroup:
 
         Returns
         -------
-        Union[int, float, str, bytes, bool, Callable, None]
+        Union[int, float, str, bytes, bool, Callable, tuple, frozenset, None]
            alias value if valid value, else None
         """
         option = self.option_map.get(value)
