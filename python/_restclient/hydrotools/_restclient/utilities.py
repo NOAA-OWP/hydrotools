@@ -32,12 +32,12 @@ class Alias:
         result = foo_alias["bar"]()
     """
 
-    key: Any
+    value: Any
     valid_value: Union[Iterable, Hashable]
 
     def __post_init__(self):
-        # Create deep copy so a ref to a mutable key could not change value implicitly
-        self.__dict__["key"] = deepcopy(self.key)
+        # Create deep copy so a ref to a mutable value could not change keys implicitly
+        self.__dict__["value"] = deepcopy(self.value)
 
         # If non- str/bytes collection, frozenset, else frozenset([valid_value])
         self.__dict__["valid_value"] = (
@@ -46,13 +46,13 @@ class Alias:
             else frozenset([self.valid_value])
         )
 
-        if isinstance(self.key, Alias):
-            # Alias is passed as key, use contents to extend into new instance
-            self.__dict__["valid_value"] = self.valid_value | self.key.valid_value
-            self.__dict__["key"] = self.key.key
+        if isinstance(self.value, Alias):
+            # Alias is passed as value, use contents to extend into new instance
+            self.__dict__["valid_value"] = self.valid_value | self.value.valid_value
+            self.__dict__["value"] = self.value.value
 
     def get(self, value: Hashable) -> Union[Any, None]:
-        """Get key given a valid alias value. If a valid key is not provided, return
+        """Get value given a valid alias value. If a valid value is not provided, return
         None.
 
         Parameters
@@ -63,10 +63,10 @@ class Alias:
         Returns
         -------
         Union[Any, None]
-           alias key if valid value, else None
+           alias value if valid value, else None
         """
         if value in self:
-            return self.key
+            return self.value
 
         return None
 
@@ -74,20 +74,20 @@ class Alias:
         return value in self.valid_value
 
     def __getitem__(self, value) -> Any:
-        key = self.get(value)
+        value = self.get(value)
 
-        if key is None:
+        if value is None:
             raise ValueError(
                 "Invalid value %s. Valid values are %s" % (value, self.valid_value)
             )
 
-        return key
+        return value
 
     def __str__(self):
-        return str(self.key)
+        return str(self.value)
 
     def __repr__(self):
-        return f"{str(self.key)}: {str(self.valid_value)}"
+        return f"{str(self.value)}: {str(self.valid_value)}"
 
 
 class AliasGroup:
@@ -144,8 +144,8 @@ class AliasGroup:
             raise ValueError(f"Repeated valid_value {duplicate_value} not allowed")
 
     def get(self, value: Hashable) -> Union[Any, None]:
-        """Get singular Alias key from group when provided valid alias value. If a
-        valid key is not provided, return None.
+        """Get singular Alias value from group when provided valid alias value. If a
+        valid value is not provided, return None.
 
         Parameters
         ----------
@@ -155,14 +155,14 @@ class AliasGroup:
         Returns
         -------
         Union[Any, None]
-           alias key if valid value, else None
+           alias value if valid value, else None
         """
         option = self.option_map.get(value)
 
         if option is None:
             return None
 
-        return option.key
+        return option.value
 
     @property
     def option_groups(self):
