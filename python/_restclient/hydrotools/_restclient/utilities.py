@@ -117,6 +117,11 @@ class AliasGroup:
 
     def __init__(self, alias: List[Alias]) -> None:
 
+        for item in alias:
+            if not isinstance(item, Alias):
+                error_message = "All items must be type `Alias`"
+                raise ValueError(error_message)
+
         self._option_groups = (
             frozenset(alias)
             if isinstance(alias, IterableNonStringLike)
