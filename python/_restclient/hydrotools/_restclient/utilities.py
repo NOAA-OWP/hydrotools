@@ -14,11 +14,11 @@ class Alias:
     useful in a variety of applications when the API differs from the backend value.
     This is also useful when writing factories patterns.
 
-    A value can be any scalar or callable type. At construction, value is deepcopied,
-    meaning a value cannot be mutated by reference. Valid alias keys are scalar types
-    and collections of scalar types. Keys are stored in a frozenset, so in the case
-    of passing a dictionary as the keys arg, only the dictionary keys from the passed
-    dictionary will be considered as keys.
+    A value can be any scalar, callable, tuple, or frozenset type. At construction,
+    value is deepcopied, meaning a value cannot be mutated by reference. Valid alias
+    keys are scalar types and collections of scalar types. Keys are stored in a
+    frozenset, so in the case of passing a dictionary as the keys arg, only the
+    dictionary keys from the passed dictionary will be considered as keys.
 
     Examples:
         cms = Alias("cms", ["CMS", "m^3/s"])
