@@ -33,22 +33,22 @@ class Alias:
     """
 
     value: Any
-    valid_value: Union[Iterable, Hashable]
+    keys: Union[Iterable, Hashable]
 
     def __post_init__(self):
         # Create deep copy so a ref to a mutable value could not change keys implicitly
         self.__dict__["value"] = deepcopy(self.value)
 
-        # If non- str/bytes collection, frozenset, else frozenset([valid_value])
-        self.__dict__["valid_value"] = (
-            frozenset(self.valid_value)
-            if isinstance(self.valid_value, IterableNonStringLike)
-            else frozenset([self.valid_value])
+        # If non- str/bytes collection, frozenset, else frozenset([keys])
+        self.__dict__["keys"] = (
+            frozenset(self.keys)
+            if isinstance(self.keys, IterableNonStringLike)
+            else frozenset([self.keys])
         )
 
         if isinstance(self.value, Alias):
             # Alias is passed as value, use contents to extend into new instance
-            self.__dict__["valid_value"] = self.valid_value | self.value.valid_value
+            self.__dict__["keys"] = self.keys | self.value.keys
             self.__dict__["value"] = self.value.value
 
     def get(self, value: Hashable) -> Union[Any, None]:
@@ -71,14 +71,14 @@ class Alias:
         return None
 
     def __contains__(self, value) -> bool:
-        return value in self.valid_value
+        return value in self.keys
 
     def __getitem__(self, value) -> Any:
         value = self.get(value)
 
         if value is None:
             raise ValueError(
-                "Invalid value %s. Valid values are %s" % (value, self.valid_value)
+                "Invalid value %s. Valid values are %s" % (value, self.keys)
             )
 
         return value
@@ -87,7 +87,7 @@ class Alias:
         return str(self.value)
 
     def __repr__(self):
-        return f"{str(self.value)}: {str(self.valid_value)}"
+        return f"{str(self.value)}: {str(self.keys)}"
 
 
 class AliasGroup:
@@ -132,11 +132,11 @@ class AliasGroup:
         self.option_map = {}
 
         for member in self._option_groups:
-            symmetric_differences = member.valid_value ^ symmetric_differences
-            union = member.valid_value | union
+            symmetric_differences = member.keys ^ symmetric_differences
+            union = member.keys | union
 
-            for valid_value in member.valid_value:
-                self.option_map[valid_value] = member
+            for key in member.keys:
+                self.option_map[key] = member
 
         duplicate_value = union - symmetric_differences
 
