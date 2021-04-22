@@ -6,7 +6,7 @@ from hydrotools._restclient import utilities
 
 @pytest.fixture
 def alias_fixture():
-    return utilities.Alias("key", "value")
+    return utilities.Alias("value", "keys")
 
 
 test_instance_args = [
@@ -18,17 +18,10 @@ test_instance_args = [
 ]
 
 
-@pytest.mark.parametrize("key,value", test_instance_args)
-def test_instance_alias(key, value):
+@pytest.mark.parametrize("value,keys", test_instance_args)
+def test_instance_alias(value, keys):
     """ Test inputs that can instantiate the class"""
-    utilities.Alias(key, value)
-
-
-def test_cannot_alter_alias_key(alias_fixture):
-    from dataclasses import FrozenInstanceError
-
-    with pytest.raises(FrozenInstanceError):
-        alias_fixture.key = "that"
+    utilities.Alias(value, keys)
 
 
 def test_cannot_alter_alias_value(alias_fixture):
@@ -38,18 +31,25 @@ def test_cannot_alter_alias_value(alias_fixture):
         alias_fixture.value = "that"
 
 
-def test_pass_mutable_as_key_then_try_to_change_implicitly_by_ref():
-    mute = ["mutable"]
-    inst = utilities.Alias(mute, "value")
+def test_cannot_alter_alias_keys(alias_fixture):
+    from dataclasses import FrozenInstanceError
 
-    assert "mutable" in inst.key
-
-    mute.pop()
-
-    assert "mutable" in inst.key
+    with pytest.raises(FrozenInstanceError):
+        alias_fixture.keys = "that"
 
 
 def test_pass_mutable_as_value_then_try_to_change_implicitly_by_ref():
+    mute = ["mutable"]
+    inst = utilities.Alias(mute, "value")
+
+    assert "mutable" in inst.value
+
+    mute.pop()
+
+    assert "mutable" in inst.value
+
+
+def test_pass_mutable_as_keys_then_try_to_change_implicitly_by_ref():
     mute = ["mutable"]
     inst = utilities.Alias("key", mute)
 
@@ -61,11 +61,11 @@ def test_pass_mutable_as_value_then_try_to_change_implicitly_by_ref():
 
 
 def test_get(alias_fixture):
-    assert alias_fixture.key == alias_fixture.get("value")
+    assert alias_fixture.value == alias_fixture.get("keys")
 
 
 def test__getitem__(alias_fixture):
-    assert alias_fixture.key == alias_fixture["value"]
+    assert alias_fixture.value == alias_fixture["keys"]
 
 
 def test_get_none(alias_fixture):
@@ -100,10 +100,10 @@ def test_alias_group():
     assert group.get(0) is False
     assert group.get("false") is False
 
+
 def test_if_all_items_in_AliasGroup_not_Alias_should_ValueError():
     true = utilities.Alias(True, [True, 1, "true"])
     false = False
 
     with pytest.raises(ValueError):
         utilities.AliasGroup([true, false])
-
