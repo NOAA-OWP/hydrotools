@@ -96,3 +96,8 @@ def test_if_all_items_in_AliasGroup_not_Alias_should_ValueError():
 
     with pytest.raises(ValueError):
         utilities.AliasGroup([true, false])
+
+
+def test_raise_ValueError_if_non_scalar_or_callable_in_Alias_constructor():
+    with pytest.raises(ValueError):
+        utilities.Alias(["should-fail"], "please-fail")
