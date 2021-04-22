@@ -2,7 +2,7 @@
 
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import Any, Hashable, Iterable, List, Union
+from typing import Callable, Hashable, Iterable, List, Union
 
 # local import
 from ._iterable_nonstring import IterableNonStringLike
@@ -33,7 +33,7 @@ class Alias:
         result = foo_alias["bar"]()
     """
 
-    value: Any
+    value: Union[int, float, str, bytes, bool, Callable, None]
     keys: Union[Iterable, Hashable]
 
     def __post_init__(self):
@@ -52,7 +52,9 @@ class Alias:
             self.__dict__["keys"] = self.keys | self.value.keys
             self.__dict__["value"] = self.value.value
 
-    def get(self, value: Hashable) -> Union[Any, None]:
+    def get(
+        self, value: Hashable
+    ) -> Union[int, float, str, bytes, bool, Callable, None]:
         """Get value given a valid alias value. If a valid value is not provided, return
         None.
 
@@ -63,7 +65,7 @@ class Alias:
 
         Returns
         -------
-        Union[Any, None]
+        Union[int, float, str, bytes, bool, Callable, None]
            alias value if valid value, else None
         """
         if value in self:
@@ -74,7 +76,7 @@ class Alias:
     def __contains__(self, value) -> bool:
         return value in self.keys
 
-    def __getitem__(self, value) -> Any:
+    def __getitem__(self, value) -> Union[int, float, str, bytes, bool, Callable, None]:
         value = self.get(value)
 
         if value is None:
@@ -144,7 +146,9 @@ class AliasGroup:
         if duplicate_value:
             raise ValueError(f"Repeated valid_value {duplicate_value} not allowed")
 
-    def get(self, value: Hashable) -> Union[Any, None]:
+    def get(
+        self, value: Hashable
+    ) -> Union[int, float, str, bytes, bool, Callable, None]:
         """Get singular Alias value from group when provided valid alias value. If a
         valid value is not provided, return None.
 
@@ -155,7 +159,7 @@ class AliasGroup:
 
         Returns
         -------
-        Union[Any, None]
+        Union[int, float, str, bytes, bool, Callable, None]
            alias value if valid value, else None
         """
         option = self.option_map.get(value)
