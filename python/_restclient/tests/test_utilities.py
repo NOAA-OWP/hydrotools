@@ -99,3 +99,11 @@ def test_alias_group():
     assert group.get(False) is False
     assert group.get(0) is False
     assert group.get("false") is False
+
+def test_if_all_items_in_AliasGroup_not_Alias_should_ValueError():
+    true = utilities.Alias(True, [True, 1, "true"])
+    false = False
+
+    with pytest.raises(ValueError):
+        utilities.AliasGroup([true, false])
+
