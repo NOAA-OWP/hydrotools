@@ -38,17 +38,6 @@ def test_cannot_alter_alias_keys(alias_fixture):
         alias_fixture.keys = "that"
 
 
-def test_pass_mutable_as_value_then_try_to_change_implicitly_by_ref():
-    mute = ["mutable"]
-    inst = utilities.Alias(mute, "value")
-
-    assert "mutable" in inst.value
-
-    mute.pop()
-
-    assert "mutable" in inst.value
-
-
 def test_pass_mutable_as_keys_then_try_to_change_implicitly_by_ref():
     mute = ["mutable"]
     inst = utilities.Alias("key", mute)
