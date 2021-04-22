@@ -92,7 +92,7 @@ class Alias:
 
         if value is None:
             raise ValueError(
-                "Invalid value %s. Valid values are %s" % (value, self.keys)
+                f"Invalid value {str(value)}. Valid values are {str(self.keys)}"
             )
 
         return value
