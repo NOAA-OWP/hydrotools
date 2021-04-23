@@ -77,25 +77,30 @@ class Alias:
         Union[int, float, str, bytes, bool, Callable, tuple, frozenset, None]
            alias value if valid key, value, or `Alias` instance, else None
         """
-        if value in self:
+        if key in self:
             return self.value
 
         return None
 
-    def __contains__(self, value) -> bool:
-        return value in self.keys
+    def __contains__(self, key) -> bool:
+        def instance_and_value(k):
+            if isinstance(k, Alias):
+                return k.value == self.value
+            return False
+
+        return key in self.keys or key == self.value or instance_and_value(key)
 
     def __getitem__(
-        self, value
+        self, key
     ) -> Union[int, float, str, bytes, bool, Callable, tuple, frozenset, None]:
-        value = self.get(value)
+        key = self.get(key)
 
-        if value is None:
+        if key is None:
             raise ValueError(
-                f"Invalid value {str(value)}. Valid values are {str(self.keys)}"
+                f"Invalid value {str(key)}. Valid values are {str(self.keys)}"
             )
 
-        return value
+        return key
 
     def __or__(self, b):
         if not isinstance(b, Alias):
