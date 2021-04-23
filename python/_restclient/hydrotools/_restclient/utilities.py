@@ -219,9 +219,9 @@ class AliasGroup:
         Returns
         -------
         Union[int, float, str, bytes, bool, Callable, tuple, frozenset, None]
-           alias value if valid value, else None
+           alias value if valid key, value, or Alias instance, else None
         """
-        option = self.option_map.get(value)
+        option = self.option_map.get(key)
 
         if option is None:
             return None
@@ -230,15 +230,20 @@ class AliasGroup:
 
     @property
     def option_groups(self):
+        """ Mapping of Alias keys's to Alias value's """
         return self._option_groups
 
-    def __getitem__(self, value):
-        option = self.get(value)
+    @property
+    def values(self):
+        """ Frozenset of present Alias value's """
+        return self._values
+
+    def __getitem__(self, key):
+        option = self.get(key)
 
         if option is None:
             raise ValueError(
-                "Invalid value %s. Valid values are %s"
-                % (value, self.option_map.keys())
+                f"Invalid value {str(key)}. Valid values are {str(self.option_map.keys())}"
             )
 
         return option
