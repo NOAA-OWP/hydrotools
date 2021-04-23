@@ -102,10 +102,14 @@ class Alias:
 
         return key
 
-    def __or__(self, b):
+    def __or__(self, b) -> Union["Alias", "AliasGroup"]:
         if not isinstance(b, Alias):
             error_message = f"{b} must be type Alias"
             raise TypeError(error_message)
+
+        # value is same between both objects, return new Alias containing union of keys
+        if b.value == self.value:
+            return Alias(self.value, self.keys | b.keys)
 
         return AliasGroup([self, b])
 
