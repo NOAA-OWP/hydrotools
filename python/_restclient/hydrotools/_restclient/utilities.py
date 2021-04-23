@@ -148,30 +148,59 @@ class AliasGroup:
             return response.json()
     """
 
-    def __init__(self, alias: List[Alias]) -> None:
-
-        for item in alias:
-            if not isinstance(item, Alias):
-                error_message = "All items must be type `Alias`"
-                raise ValueError(error_message)
-
-        self._option_groups = (
-            frozenset(alias)
-            if isinstance(alias, IterableNonStringLike)
-            else frozenset([alias])
-        )
-
-        symmetric_differences, union = frozenset(), frozenset()
+    def __init__(self, alias: List[Union[Alias, "AliasGroup"]]) -> None:
+        # Instance objects
+        self._option_groups = frozenset()
+        self._values = frozenset()
         self.option_map = {}
 
-        for member in self._option_groups:
-            symmetric_differences = member.keys ^ symmetric_differences
-            union = member.keys | union
+        accepted_types = (Alias, AliasGroup)
 
-            for key in member.keys:
-                self.option_map[key] = member
+        # {alias value: alias object} map
+        value_map = {}
 
-        duplicate_value = union - symmetric_differences
+        for item in alias:
+            # type check for Alias or AliasGroup
+            if not isinstance(item, accepted_types):
+                error_message = "Items must be type `Alias` or `AliasGroup`"
+                raise ValueError(error_message)
+
+            if isinstance(item, AliasGroup):
+
+                # duplicate alias value in AliasGroup get instanced as new Alias
+                # containing keys from both parent objects
+                for inner_item in item.option_groups:
+
+                    if inner_item.value in value_map:
+                        inner_item |= value_map[inner_item.value]
+
+                    value_map[inner_item.value] = inner_item
+
+            else:
+                # duplicate alias value in AliasGroup get instanced as new Alias
+                # containing keys from both parent objects
+                if item.value in value_map:
+                    item |= value_map[item.value]
+
+                value_map[item.value] = item
+
+        union, symmetric_difference = frozenset(), frozenset()
+
+        # {value: alias}
+        for value, alias_o in value_map.items():
+            union |= alias_o.keys
+            symmetric_difference ^= alias_o.keys
+
+            # frozenset of Alias value's
+            self._values |= {value}
+
+            # frozenset of Alias objects
+            self._option_groups |= {alias_o}
+
+            # many to one map of keys to value
+            self.option_map.update({keys: alias_o for keys in alias_o.keys})
+
+        duplicate_value = union - symmetric_difference
 
         if duplicate_value:
             raise ValueError(f"Repeated valid_value {duplicate_value} not allowed")
