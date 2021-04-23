@@ -248,6 +248,23 @@ class AliasGroup:
 
         return option
 
+    def __contains__(self, key) -> bool:
+        def instance_and_value(k):
+            if isinstance(k, Alias):
+                return k.value in self.values
+            return False
+
+        return key in self.option_map or key in self.values or instance_and_value(key)
+
+    def __or__(self, b) -> "AliasGroup":
+        accepted_types = (Alias, AliasGroup)
+
+        if not isinstance(b, accepted_types):
+            error_message = f"{b} must be type `Alias` or `AliasGroup`"
+            raise TypeError(error_message)
+
+        return AliasGroup([self, b])
+
     def __str__(self) -> str:
         return str(self.option_groups)
 
