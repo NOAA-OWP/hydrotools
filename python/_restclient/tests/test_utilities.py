@@ -101,3 +101,20 @@ def test_if_all_items_in_AliasGroup_not_Alias_should_ValueError():
 def test_raise_ValueError_if_non_scalar_or_callable_in_Alias_constructor():
     with pytest.raises(ValueError):
         utilities.Alias(["should-fail"], "please-fail")
+
+
+def test_build_AliasGroup_with_or():
+    true = utilities.Alias(True, [True, 1, "true"])
+    false = utilities.Alias(False, [False, 0, "false"])
+
+    group = true | false
+
+    assert isinstance(group, utilities.AliasGroup)
+
+
+def test_build_AliasGroup_with_or_fail_wrong_type():
+    true = utilities.Alias(True, [True, 1, "true"])
+    false = False
+
+    with pytest.raises(TypeError):
+        group = true | false

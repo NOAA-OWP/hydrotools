@@ -10,9 +10,9 @@ from ._iterable_nonstring import IterableNonStringLike
 
 @dataclass(frozen=True)
 class Alias:
-    """Create an immutable one to many relationship where a set of keys alias some value. This is often
-    useful in a variety of applications when the API differs from the backend value.
-    This is also useful when writing factories patterns.
+    """Create an immutable many to one relationship where a set of keys alias some
+    value. This is often useful in a variety of applications when the API differs
+    from the backend value. This is also useful when writing factories patterns.
 
     A value can be any scalar, callable, tuple, or frozenset type. At construction,
     value is deepcopied, meaning a value cannot be mutated by reference. Valid alias
@@ -39,7 +39,7 @@ class Alias:
     def __post_init__(self):
 
         scalar_or_callable = Union[
-            int, float, str, bytes, bool, Callable, tuple, frozenset, None
+            int, float, str, bytes, bool, Callable, tuple, frozenset, Alias, None
         ]
 
         if not isinstance(self.value, scalar_or_callable.__args__):
@@ -62,10 +62,10 @@ class Alias:
             self.__dict__["value"] = self.value.value
 
     def get(
-        self, value: Hashable
+        self, key: Hashable
     ) -> Union[int, float, str, bytes, bool, Callable, tuple, frozenset, None]:
-        """Get value given a valid alias value. If a valid value is not provided, return
-        None.
+        """Get value given a valid key. Providing the value or an `Alias` instance is
+        also supported. If a valid value is not provided, return None.
 
         Parameters
         ----------
@@ -75,7 +75,7 @@ class Alias:
         Returns
         -------
         Union[int, float, str, bytes, bool, Callable, tuple, frozenset, None]
-           alias value if valid value, else None
+           alias value if valid key, value, or `Alias` instance, else None
         """
         if value in self:
             return self.value
@@ -125,7 +125,10 @@ class AliasGroup:
 
         path_1 = Alias("path-1", [1, "1"])
         path_2 = Alias("path-2", [2, "2"])
-        path_group = GroupAlias([path_1, path_2])
+        path_group = path_1 or path_2
+
+        # or equivalently (using `or` opporator is recommended):
+        # path_group = GroupAlias([path_1, path_2])
 
         def get_cool_feature(path: Union[int, str]):
             path = path_group[path] # ValueError thrown if invalid path
@@ -165,10 +168,10 @@ class AliasGroup:
             raise ValueError(f"Repeated valid_value {duplicate_value} not allowed")
 
     def get(
-        self, value: Hashable
+        self, key: Hashable
     ) -> Union[int, float, str, bytes, bool, Callable, tuple, frozenset, None]:
-        """Get singular Alias value from group when provided valid alias value. If a
-        valid value is not provided, return None.
+        """Get value of Alias in group from a corresponding key, alias value, or
+        alias instance. If corresponding Alias value is not present, return None.
 
         Parameters
         ----------
