@@ -39,15 +39,16 @@ class RestClient:
         self,
         base_url: Union[str, None] = None,
         headers: Union[dict, None] = None,
-        requests_cache_filename: Union[str, None] = None,
+        requests_cache_filename: Union[str, None] = "cache",
         requests_cache_expire_after: int = 43200,
         retries: int = 3,
+        enable_cache: bool = True,
     ):
         self._base_url = base_url
         self._headers = headers
         self._retires = retries
 
-        if requests_cache_filename:
+        if enable_cache:
             try:
                 # Cache requests for 12 hours
                 requests_cache.install_cache(
