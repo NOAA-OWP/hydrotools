@@ -2,7 +2,7 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="hydrotools.metrics subpackage" href="hydrotools.metrics.html" /><link rel="prev" title="hydrotools.gcp_client.utils module" href="hydrotools.gcp_client.utils.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="hydrotools._restclient._restclient module" href="hydrotools._restclient._restclient.html" /><link rel="prev" title="hydrotools.gcp_client.utils module" href="hydrotools.gcp_client.utils.html" />
 
     <meta name="generator" content="sphinx-3.5.4, furo 2021.04.11.beta34"/>
         <title>hydrotools._restclient subpackage - Hydro Tools 2.0.0-alpha.0 documentation</title>
@@ -89,7 +89,7 @@
       <a href="index.html"><div class="brand">Hydro Tools 2.0.0-alpha.0 documentation</div></a>
     </div>
     <div class="header-right">
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
     </div>
@@ -115,12 +115,16 @@
 <li class="toctree-l2"><a class="reference internal" href="hydrotools.gcp_client.utils.html">hydrotools.gcp_client.utils module</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">hydrotools._restclient subpackage</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="hydrotools.metrics.html">hydrotools.metrics subpackage</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label for="toctree-checkbox-2"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">hydrotools._restclient subpackage</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label for="toctree-checkbox-2"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools._restclient._restclient.html">hydrotools._restclient._restclient module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools._restclient.utilities.html">hydrotools._restclient.utilities module</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="hydrotools.metrics.html">hydrotools.metrics subpackage</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label for="toctree-checkbox-3"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="hydrotools.metrics.metrics.html">hydrotools.metrics.metrics module</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="hydrotools.events.event_detection.html">hydrotools.events.event_detection subpackage</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label for="toctree-checkbox-3"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="hydrotools.events.event_detection.html">hydrotools.events.event_detection subpackage</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label for="toctree-checkbox-4"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="hydrotools.events.event_detection.decomposition.html">hydrotools.events.event_detection.decomposition module</a></li>
 </ul>
 </li>
@@ -135,110 +139,35 @@
   <main class="main">
     <div class="content">
       <article role="main">
-        <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+        <label class="toc-overlay-icon toc-content-icon" for="__toc">
           <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
         </label>
-        <div class="section" id="module-hydrotools._restclient._restclient">
-<span id="hydrotools-restclient-subpackage"></span><h1>hydrotools._restclient subpackage<a class="headerlink" href="#module-hydrotools._restclient._restclient" title="Permalink to this headline">¶</a></h1>
-<p>Generic REST Api client usable/inheritable for general usage and adaptable to more
-specific use cases.</p>
-<p># TODO: Add more information about the class here</p>
-<dl class="py class">
-<dt id="hydrotools._restclient._restclient.RestClient">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">hydrotools._restclient._restclient.</span></code><code class="sig-name descname"><span class="pre">RestClient</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_url</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">requests_cache_filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">requests_cache_expire_after</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">43200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retries</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hydrotools._restclient._restclient.RestClient" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Provides various methods for constructing requests, retrieving data, and
-parsing responses from the NWIS IV Service.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>processes</strong> (<em>int</em>) – Max multiprocessing processes, default 3</p></li>
-<li><p><strong>retry</strong> (<em>int</em>) – Max number of, per request retries, default 3</p></li>
+        <div class="section" id="hydrotools-restclient-subpackage">
+<h1>hydrotools._restclient subpackage<a class="headerlink" href="#hydrotools-restclient-subpackage" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="hydrotools._restclient._restclient.html">hydrotools._restclient._restclient module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hydrotools._restclient.utilities.html">hydrotools._restclient.utilities module</a></li>
 </ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt id="hydrotools._restclient._restclient.RestClient.Get">
-<code class="sig-name descname"><span class="pre">Get</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">requests.models.PreparedRequest</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> → <span class="pre">requests.models.Response</span><a class="headerlink" href="#hydrotools._restclient._restclient.RestClient.Get" title="Permalink to this definition">¶</a></dt>
-<dd><p>Thin request.Session.get wrapper. Take prepared request and get
-response handling errors along the way. Only requests status codes
-200 and 201 returned.If the initial request fails, <cite>self._retries</cite>
-number retries are attempted with a 0.1 backoff factor.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>request</strong> (<em>requests.PreparedRequest</em>) – Prepared request object. Header and url are included</p></li>
-<li><p><strong>kwargs</strong> – Keyword arguments passed to requests.Session().send
-See: <a class="reference external" href="https://requests.readthedocs.io/en/latest/_modules/requests/sessions/#Session.send">https://requests.readthedocs.io/en/latest/_modules/requests/sessions/#Session.send</a></p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>request.Session.get response.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>requests.Response</p>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>requests.exceptions.ConnectionError</strong> – Raise if receive non 200 or 201 response</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py method">
-<dt id="hydrotools._restclient._restclient.RestClient.Request">
-<code class="sig-name descname"><span class="pre">Request</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_delimiter</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> → <span class="pre">requests.models.PreparedRequest</span><a class="headerlink" href="#hydrotools._restclient._restclient.RestClient.Request" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create Prepared Request from url and parameters and headers. Parameter
-concatenation behavior can be changed by passing a different
-<cite>parameter_delimiter</cite> argument. For example, a comma could be specified for
-USGS. (i.e. <a class="reference external" href="https://example-site.com/?var=1,2,3">https://example-site.com/?var=1,2,3</a>)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>url</strong> (<em>str</em><em>, </em><em>optional</em>) – url on which parameters are appended, by default self._base_url</p></li>
-<li><p><strong>parameters</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Union</em><em>[</em><em>str</em><em>, </em><em>List</em><em>[</em><em>Any</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – parameters to append to url, by default None</p></li>
-<li><p><strong>parameter_delimiter</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>None</em><em>]</em><em>, </em><em>optional</em>) – delimiter to separate parameters.
-None will resume normal Requests behavior, by default “,”</p></li>
-<li><p><strong>headers</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>, </em><em>optional</em>) – headers, by default None</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Prepared requests object</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>requests.PreparedRequest</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="go">&gt;&gt;&gt;</span>
-</pre></div>
 </div>
-</dd></dl>
-<dl class="py method">
-<dt id="hydrotools._restclient._restclient.RestClient.base_url">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">base_url</span></code><a class="headerlink" href="#hydrotools._restclient._restclient.RestClient.base_url" title="Permalink to this definition">¶</a></dt>
-<dd><p>Base url</p>
-</dd></dl>
-<dl class="py method">
-<dt id="hydrotools._restclient._restclient.RestClient.get">
-<code class="sig-name descname"><span class="pre">get</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_delimeter</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hydrotools._restclient._restclient.RestClient.get" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-<dl class="py method">
-<dt id="hydrotools._restclient._restclient.RestClient.headers">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">headers</span></code><a class="headerlink" href="#hydrotools._restclient._restclient.RestClient.headers" title="Permalink to this definition">¶</a></dt>
-<dd><p>GET request headers</p>
-</dd></dl>
-</dd></dl>
+</div>
+<div class="section" id="module-hydrotools._restclient">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-hydrotools._restclient" title="Permalink to this headline">¶</a></h2>
+</div>
 </div>
 
       </article>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="hydrotools.metrics.html">
+          <a class="next-page" href="hydrotools._restclient._restclient.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">hydrotools.metrics subpackage</div>
+                <div class="title">hydrotools._restclient._restclient module</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -271,8 +200,28 @@ None will resume normal Requests behavior, by default “,”</p></li>
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">hydrotools._restclient subpackage</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-hydrotools._restclient">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
