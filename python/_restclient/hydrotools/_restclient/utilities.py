@@ -134,9 +134,9 @@ class AliasGroup:
 
         path_1 = Alias("path-1", [1, "1"])
         path_2 = Alias("path-2", [2, "2"])
-        path_group = path_1 or path_2
+        path_group = path_1 | path_2
 
-        # or equivalently (using `or` opporator is recommended):
+        # or equivalently (using logical or `|` opporator is recommended):
         # path_group = GroupAlias([path_1, path_2])
 
         def get_cool_feature(path: Union[int, str]):
