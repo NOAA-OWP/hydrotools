@@ -234,9 +234,14 @@ class AliasGroup:
         return self._option_groups
 
     @property
-    def values(self):
+    def values(self) -> frozenset:
         """ Frozenset of present Alias value's """
         return self._values
+
+    @property
+    def keys(self) -> set:
+        """ Alias keys """
+        return set(self.option_map.keys())
 
     def __getitem__(self, key):
         option = self.get(key)
