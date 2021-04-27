@@ -118,7 +118,7 @@ class RestClient:
 
         Examples
         --------
-        >>> 
+        >>>
         """
 
         # Handle default headers.
@@ -139,8 +139,12 @@ class RestClient:
         # Build GET request url
         return requests.Request("GET", url, params=parameters).prepare()
 
-    def Get(self, request: requests.PreparedRequest, **kwargs,) -> requests.Response:
-        """ Thin request.Session.get wrapper. Take prepared request and get
+    def Get(
+        self,
+        request: requests.PreparedRequest,
+        **kwargs,
+    ) -> requests.Response:
+        """Thin request.Session.get wrapper. Take prepared request and get
         response handling errors along the way. Only requests status codes
         200 and 201 returned.If the initial request fails, `self._retries`
         number retries are attempted with a 0.1 backoff factor.
@@ -152,7 +156,7 @@ class RestClient:
         kwargs :
             Keyword arguments passed to requests.Session().send
             See: https://requests.readthedocs.io/en/latest/_modules/requests/sessions/#Session.send
-            
+
 
         Returns
         -------
