@@ -109,10 +109,12 @@ def prepared_request_patch(*args, status_code=404, **kwargs):
 
 @pytest.mark.parametrize("status_code", [200, 201])
 def test_get_request(empty_restclient, monkeypatch, status_code):
-    import requests
+    import requests_cache
 
     monkeypatch.setattr(
-        requests.Session, "send", prepared_request_patch(status_code=status_code)
+        requests_cache.CachedSession,
+        "send",
+        prepared_request_patch(status_code=status_code),
     )
 
     assert empty_restclient.Get(None).status_code == status_code
@@ -122,11 +124,14 @@ def test_get_request(empty_restclient, monkeypatch, status_code):
 def test_get_request_exceptions(empty_restclient, monkeypatch, status_code):
     """ Verify that requests.exceptions.ConnectionError is raised """
     import requests
+    import requests_cache
 
     with pytest.raises(requests.exceptions.ConnectionError):
         req = requests.Request("GET", "http://test-url.test/")
 
         monkeypatch.setattr(
-            requests.Session, "send", prepared_request_patch(status_code=status_code)
+            requests_cache.CachedSession,
+            "send",
+            prepared_request_patch(status_code=status_code),
         )
         empty_restclient.Get(req)
