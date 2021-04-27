@@ -51,8 +51,8 @@ class RestClient:
         if enable_cache:
             try:
                 # Cache requests for 12 hours
-                requests_cache.install_cache(
-                    requests_cache_filename,
+                self._session = requests_cache.CachedSession(
+                    cache_name=requests_cache_filename,
                     backend="sqlite",
                     expire_after=requests_cache_expire_after,
                 )
@@ -61,6 +61,8 @@ class RestClient:
                 error_message = "Something went wrong with setting up `requests_cache`."
                 BaseException(error_message)
                 raise
+        else:
+            self._session = requests.Session()
 
     def get(
         self,
@@ -192,7 +194,7 @@ class RestClient:
             Session
         """
 
-        with requests.Session() as session:
+        with self._session as session:
 
             # retry times and backoff factor (how long to sleep in between
             # retries)
