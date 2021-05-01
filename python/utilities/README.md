@@ -78,6 +78,14 @@ print()
 # Delete the cache
 Path('interim_data.h5').unlink()
 print('Cache deleted')
+print()
+
+# Report times
+print('Execution Times')
+print('===============')
+for idx, t in enumerate(execution_times):
+    print(f"({idx}) {t:.3f} s")
+
 ```
 #### Output
 ```console
@@ -126,6 +134,12 @@ Recover cached result without running the process
 9  9  9
 
 Cache deleted
+
+Execution Times
+===============
+(0) 1.002 s
+(1) 1.137 s
+(2) 0.006 s
 ```
 
 ### Stock DataFrames
