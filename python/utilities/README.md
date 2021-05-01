@@ -1,11 +1,11 @@
 # HydroTools :: Utilities
 
-This subpackage implements an various methods commonly used by other `hydrotools` packages. A list of current utilities is given below. See the [Utilities Documentation](https://noaa-owp.github.io/hydrotools/hydrotools.utilities.html) for a complete list and description of the currently available methods. To report bugs or request new features, submit an issue through the [HydroTools Issue Tracker](https://github.com/NOAA-OWP/hydrotools/issues) on GitHub.
+This subpackage implements various methods commonly used by other `hydrotools` packages. A list of current utilities is given below. See the [Utilities Documentation](https://noaa-owp.github.io/hydrotools/hydrotools.utilities.html) for a complete list and description of the currently available methods. To report bugs or request new features, submit an issue through the [HydroTools Issue Tracker](https://github.com/NOAA-OWP/hydrotools/issues) on GitHub.
 
 ## List of Utility Modules
 
-1. `stock_dataframes`
-2. `hdf_cache`
+1. `hdf_cache`: Add caching features to methods that return `pandas.DataFrame`
+2. `stock_dataframes`: Generate dummy `pandas.DataFrame` for testing
 
 ## Installation
 
@@ -29,48 +29,207 @@ $ python3 -m pip install hydrotools.utilities
 
 The following example demonstrates how one might use `hydrotools.utilities` to generate random `DataFrame` and cache `DataFrame` results for later retrieval.
 
-### Code
+### HDF Cache
+#### Code
 ```python
 # Import the Utilities
-from hydrotools.gcp_client import gcp
+from hydrotools.utilities.hdf_cache import hdf_cache
+import pandas as pd
+from pathlib import Path
+import time
 
-# Instantiate model data service
-model_data_service = gcp.NWMDataService()
+# Create a caching function
+@hdf_cache
+def long_running_process(n=10):
+    time.sleep(1.0)
+    return pd.DataFrame({
+        'A': [i for i in range(n)],
+        'B': [i for i in range(n)]
+    })
 
-# Retrieve forecast data
-#  By default, only retrieves data at USGS gaging sites in
-#  CONUS that are used for model assimilation
-forecast_data = model_data_service.get(
-    configuration = "short_range",
-    reference_time = "20210101T01Z"
-    )
+# Call the function without caching
+df = long_running_process()
+print('Run process, no caching')
+print('=======================')
+print(df)
+print()
 
-# Look at the data
-print(forecast_data.info(memory_usage='deep'))
-print(forecast_data[['valid_time', 'value']].head())
+# Call the function with caching
+df = long_running_process(
+    hdf_cache_path='interim_data.h5',
+    hdf_cache_key='/data/results/AB'
+)
+print('Run the process and cache')
+print('=========================')
+print(df)
+print()
+
+# This second call with caching will check the cache first, 
+#  then only run the process if it can't find a cached DataFrame
+df = long_running_process(
+    hdf_cache_path='interim_data.h5',
+    hdf_cache_key='/data/results/AB'
+)
+print('Recover cached result without running the process')
+print('=================================================')
+print(df)
+print()
+
+# Delete the cache
+Path('interim_data.h5').unlink()
+print('Cache deleted')
 ```
-### Output
+#### Output
 ```console
-<class 'pandas.core.frame.DataFrame'>
-Int64Index: 135738 entries, 0 to 135737
-Data columns (total 8 columns):
- #   Column            Non-Null Count   Dtype         
----  ------            --------------   -----         
- 0   nwm_feature_id    135738 non-null  category      
- 1   reference_time    135738 non-null  datetime64[ns]
- 2   valid_time        135738 non-null  datetime64[ns]
- 3   value             135720 non-null  float32       
- 4   usgs_site_code    135738 non-null  category      
- 5   configuration     135738 non-null  category      
- 6   measurement_unit  135738 non-null  category      
- 7   variable_name     135738 non-null  category      
-dtypes: category(5), datetime64[ns](2), float32(1)
-memory usage: 6.0 MB
-None
-           valid_time      value
-0 2021-01-01 02:00:00  16.940001
-1 2021-01-01 03:00:00  25.570000
-2 2021-01-01 04:00:00  37.590000
-3 2021-01-01 05:00:00  52.279999
-4 2021-01-01 06:00:00  67.869995
+UserWarning: long_running_process caching disabled. Enable by setting hdf_cache_path and hdf_cache_key
+  warnings.warn(message)
+Run process, no caching
+=======================
+   A  B
+0  0  0
+1  1  1
+2  2  2
+3  3  3
+4  4  4
+5  5  5
+6  6  6
+7  7  7
+8  8  8
+9  9  9
+
+Run the process and cache
+=========================
+   A  B
+0  0  0
+1  1  1
+2  2  2
+3  3  3
+4  4  4
+5  5  5
+6  6  6
+7  7  7
+8  8  8
+9  9  9
+
+Recover cached result without running the process
+=================================================
+   A  B
+0  0  0
+1  1  1
+2  2  2
+3  3  3
+4  4  4
+5  5  5
+6  6  6
+7  7  7
+8  8  8
+9  9  9
+
+Cache deleted
+```
+
+### Stock DataFrames
+#### Code
+```python
+# Import the Utilities
+from hydrotools.utilities.stock_dataframes import random_dataframe
+import pandas as pd
+
+# Create a DataFrame with random data, do not cache
+#  Note random_dataframe is a caching method, so it will raise
+#  a warning if caching is not enabled.
+df = random_dataframe()
+print('Uncached DataFrame')
+print('==================')
+print(df)
+print()
+
+# Create a DataFrame with random data and cache
+df = random_dataframe(
+    hdf_cache_path='random_dataframes.h5',
+    hdf_cache_key='/data/random/A'
+)
+print('Cached DataFrame')
+print('==================')
+print(df)
+print()
+
+# We can retrieve the same DataFrame by rerunning the
+#  previous method with same parameters
+df = random_dataframe(
+    hdf_cache_path='random_dataframes.h5',
+    hdf_cache_key='/data/random/A'
+)
+print('Cached DataFrame (2nd run)')
+print('==========================')
+print(df)
+print()
+
+# We can also retrieve the DataFrame manually using the key
+df = pd.read_hdf('random_dataframes.h5', key='/data/random/A')
+print('Cached DataFrame (pandas.read_hdf)')
+print('==================================')
+print(df)
+```
+#### Output
+```console
+UserWarning: random_dataframe caching disabled. Enable by setting hdf_cache_path and hdf_cache_key
+  warnings.warn(message)
+Uncached DataFrame
+==================
+           value_time     value
+0 1970-01-01 01:00:00  0.937773
+1 1970-01-01 02:00:00  0.468992
+2 1970-01-01 03:00:00  0.734990
+3 1970-01-01 04:00:00  0.757705
+4 1970-01-01 05:00:00  0.198859
+5 1970-01-01 06:00:00  0.655419
+6 1970-01-01 07:00:00  0.083886
+7 1970-01-01 08:00:00  0.761608
+8 1970-01-01 09:00:00  0.296274
+9 1970-01-01 10:00:00  0.971867
+
+Cached DataFrame
+==================
+           value_time     value
+0 1970-01-01 01:00:00  0.425507
+1 1970-01-01 02:00:00  0.697758
+2 1970-01-01 03:00:00  0.932153
+3 1970-01-01 04:00:00  0.839545
+4 1970-01-01 05:00:00  0.166794
+5 1970-01-01 06:00:00  0.105933
+6 1970-01-01 07:00:00  0.523726
+7 1970-01-01 08:00:00  0.859374
+8 1970-01-01 09:00:00  0.815113
+9 1970-01-01 10:00:00  0.767973
+
+Cached DataFrame (2nd run)
+==================
+           value_time     value
+0 1970-01-01 01:00:00  0.425507
+1 1970-01-01 02:00:00  0.697758
+2 1970-01-01 03:00:00  0.932153
+3 1970-01-01 04:00:00  0.839545
+4 1970-01-01 05:00:00  0.166794
+5 1970-01-01 06:00:00  0.105933
+6 1970-01-01 07:00:00  0.523726
+7 1970-01-01 08:00:00  0.859374
+8 1970-01-01 09:00:00  0.815113
+9 1970-01-01 10:00:00  0.767973
+
+Cached DataFrame (pandas.read_hdf)
+==================
+           value_time     value
+0 1970-01-01 01:00:00  0.425507
+1 1970-01-01 02:00:00  0.697758
+2 1970-01-01 03:00:00  0.932153
+3 1970-01-01 04:00:00  0.839545
+4 1970-01-01 05:00:00  0.166794
+5 1970-01-01 06:00:00  0.105933
+6 1970-01-01 07:00:00  0.523726
+7 1970-01-01 08:00:00  0.859374
+8 1970-01-01 09:00:00  0.815113
+9 1970-01-01 10:00:00  0.767973
+
+Cache deleted
 ```
