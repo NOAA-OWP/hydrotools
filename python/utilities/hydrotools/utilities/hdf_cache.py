@@ -86,4 +86,3 @@ def hdf_cache(function: Callable) -> Callable:
         warnings.warn(message)
         return function(*args, **kwargs)
     return dataframe_caching_function
-    
