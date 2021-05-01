@@ -37,6 +37,7 @@ from hydrotools.utilities.hdf_cache import hdf_cache
 import pandas as pd
 from pathlib import Path
 import time
+execution_times = [0, 0, 0]
 
 # Create a caching function
 @hdf_cache
@@ -48,30 +49,36 @@ def long_running_process(n=10):
     })
 
 # Call the function without caching
+start = time.perf_counter()
 df = long_running_process()
-print('Run process, no caching')
+execution_times[0] = time.perf_counter() - start
+print('(1) Run process, no caching')
 print('=======================')
 print(df)
 print()
 
 # Call the function with caching
+start = time.perf_counter()
 df = long_running_process(
     hdf_cache_path='interim_data.h5',
     hdf_cache_key='/data/results/AB'
 )
-print('Run the process and cache')
+execution_times[1] = time.perf_counter() - start
+print('(2) Run the process and cache')
 print('=========================')
 print(df)
 print()
 
 # This second call with caching will check the cache first, 
 #  then only run the process if it can't find a cached DataFrame
+start = time.perf_counter()
 df = long_running_process(
     hdf_cache_path='interim_data.h5',
     hdf_cache_key='/data/results/AB'
 )
-print('Recover cached result without running the process')
-print('=================================================')
+execution_times[2] = time.perf_counter() - start
+print('(3) Recover cached result without running the process')
+print('=====================================================')
 print(df)
 print()
 
