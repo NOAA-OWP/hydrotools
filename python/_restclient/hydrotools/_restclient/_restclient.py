@@ -227,3 +227,27 @@ class RestClient(AsyncToSerialHelper):
     def headers(self) -> dict:
         """ GET request headers """
         return self._headers
+
+
+class Variadic(str):
+    """Specify list or tuple as delimeted str. The is useful when specifying arguments
+    in a URL that do not conform to the &key=value&key=value2 convention.
+
+    Example:
+        url = "https://www.test.gov",
+        async with ClientSession() as session:
+            async with session.get(url,
+                params={"this": Variadic(["that", "the", "other"])},
+            ) as req:
+                print(req.url) # Returns, https://www.test.gov/?this=that,the,other
+
+    """
+
+    def __init__(self, values: Union[List, Tuple], *, delimeter: str = ",") -> None:
+        self.values = delimeter.join([str(v) for v in values])
+
+    def __repr__(self):
+        return self.values
+
+    def __str__(self) -> str:
+        return repr(self)
