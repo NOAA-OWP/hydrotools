@@ -139,6 +139,21 @@ def test_get(setup_gcp):
     )
     assert df['valid_time'].unique().size == 60
 
+    # Test Puerto Rico ANA
+    df = setup_gcp.get(
+        configuration="analysis_assim_puertorico",
+        reference_time="20210501T00Z"
+    )
+    assert df['valid_time'].unique().size == 3
+
+    # Test Puerto Rico Short Range
+    df = setup_gcp.get(
+        configuration="short_range_puertorico",
+        reference_time="20210501T06Z"
+    )
+    assert df['valid_time'].unique().size == 48
+    print(df)
+
 def test_invalid_configuration_exception(setup_gcp):
     # Test invalid configuration
     with pytest.raises(Exception):
