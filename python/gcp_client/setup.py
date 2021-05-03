@@ -13,7 +13,7 @@ SUBPACKAGE_NAME = "gcp_client"
 SUBPACKAGE_SLUG = f"{NAMESPACE_PACKAGE_NAME}.{SUBPACKAGE_NAME}"
 
 # Subpackage version
-VERSION = "2.0.1"
+VERSION = "2.1.1"
 
 # Package author information
 AUTHOR = "Jason Regina"
@@ -38,7 +38,7 @@ setup(
     packages=find_namespace_packages(include=[f"{NAMESPACE_PACKAGE_NAME}.*"]),
     package_data={
         "hydrotools.gcp_client": [
-            "data/nwm_2_0_feature_id_with_usgs_site.csv",
+            "data/RouteLink_NWMv2.0.csv",
         ]
     },
     install_requires=REQUIREMENTS,
