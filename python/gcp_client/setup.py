@@ -13,7 +13,7 @@ SUBPACKAGE_NAME = "gcp_client"
 SUBPACKAGE_SLUG = f"{NAMESPACE_PACKAGE_NAME}.{SUBPACKAGE_NAME}"
 
 # Subpackage version
-VERSION = "2.2.3"
+VERSION = "2.3.3"
 
 # Package author information
 AUTHOR = "Jason Regina"
