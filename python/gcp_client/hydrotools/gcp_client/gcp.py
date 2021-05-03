@@ -439,6 +439,14 @@ class NWMDataService:
             'medium_range_mem7',
             'short_range',
             'short_range_hawaii',
-            'short_range_puertorico'
+            'short_range_puertorico',
+            'analysis_assim_no_da',
+            'analysis_assim_extend_no_da',
+            'analysis_assim_hawaii_no_da',
+            'analysis_assim_long_no_da',
+            'analysis_assim_puertorico_no_da',
+            'medium_range_no_da',
+            'short_range_hawaii_no_da',
+            'short_range_puertorico_no_da'
             ]
             
