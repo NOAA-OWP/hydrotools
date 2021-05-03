@@ -29,7 +29,7 @@ from collections.abc import Iterable
 # Global singletons for holding location and df/None of NWM feature id to usgs site
 # code mapping
 _FEATURE_ID_TO_USGS_SITE_MAP_FILE = (
-    Path(__file__).resolve().parent / "data/nwm_2_0_feature_id_with_usgs_site.csv"
+    Path(__file__).resolve().parent / "data/RouteLink_NWMv2.0.csv"
 )
 
 class NWMDataService:
@@ -84,7 +84,8 @@ class NWMDataService:
             self._crosswalk = pd.read_csv(
                 _FEATURE_ID_TO_USGS_SITE_MAP_FILE,
                 dtype={"nwm_feature_id": int, "usgs_site_code": str},
-            ).set_index('nwm_feature_id')
+                comment='#'
+            ).set_index('nwm_feature_id')[['usgs_site_code']]
 
         # Set default dataframe cache
         self._cache = Path('gcp_cache.h5')
