@@ -17,7 +17,7 @@ def test_max_processes(setup_gcp):
 
 def test_crosswalk(setup_gcp):
     assert setup_gcp.crosswalk['usgs_site_code'].count() > 4000
-    assert setup_gcp.crosswalk['usgs_site_code'].count() < 8000
+    assert setup_gcp.crosswalk['usgs_site_code'].count() < 9000
 
     with pytest.raises(Exception):
         setup_gcp.crosswalk = 0
