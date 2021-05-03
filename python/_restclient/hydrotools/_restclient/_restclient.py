@@ -7,13 +7,19 @@ specific use cases.
 
 from typing import Any, Dict, List, Union
 from collections.abc import Iterable
+import asyncio
+from aiohttp_client_cache import SQLiteBackend
 
 import requests
 import requests_cache
 from urllib3.util.retry import Retry
 
+# local imports
+from .async_client import ClientSession
+from .async_helpers import AsyncToSerialHelper
 
-class RestClient:
+
+class RestClient(AsyncToSerialHelper):
     """Provides various methods for constructing requests, retrieving data, and
     parsing responses from the NWIS IV Service.
 
