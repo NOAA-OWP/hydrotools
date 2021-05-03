@@ -19,6 +19,12 @@ def test_crosswalk(setup_gcp):
     assert setup_gcp.crosswalk['usgs_site_code'].count() > 4000
     assert setup_gcp.crosswalk['usgs_site_code'].count() < 8000
 
+    with pytest.raises(Exception):
+        setup_gcp.crosswalk = 0
+
+    with pytest.raises(Exception):
+        setup_gcp.crosswalk = pd.DataFrame()
+
 def test_cache(setup_gcp):
     assert str(setup_gcp.cache) == 'gcp_cache.h5'
 
