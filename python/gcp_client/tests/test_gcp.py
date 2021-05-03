@@ -125,6 +125,20 @@ def test_get(setup_gcp):
     )
     assert df['valid_time'].unique().size == 120
 
+    # Test Hawaii ANA
+    df = setup_gcp.get(
+        configuration="analysis_assim_hawaii",
+        reference_time="20210101T01Z"
+    )
+    assert df['valid_time'].unique().size == 3
+
+    # Test Hawaii Short Range
+    df = setup_gcp.get(
+        configuration="short_range_hawaii",
+        reference_time="20210101T00Z"
+    )
+    assert df['valid_time'].unique().size == 60
+
 def test_invalid_configuration_exception(setup_gcp):
     # Test invalid configuration
     with pytest.raises(Exception):
