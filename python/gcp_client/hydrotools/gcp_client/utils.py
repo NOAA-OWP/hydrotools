@@ -122,18 +122,19 @@ def crosswalk(
 
     # Path to crosswalk file
     crosswalk_file = (
-        Path(__file__).resolve().parent / "data/nwm_2_0_feature_id_with_usgs_site.csv"
+        Path(__file__).resolve().parent / "data/RouteLink_NWMv2.0.csv"
     )
 
     # Read crosswalk file in as df, ensure its the right data types
     crosswalk_df = pd.read_csv(
         crosswalk_file,
         dtype={"nwm_feature_id": int, "usgs_site_code": str},
-    )
+        comment='#'
+    )[['nwm_feature_id', 'usgs_site_code']]
 
     # If passed site codes are singular or in string form convert to list
     if isinstance(crosswalk_values, six.string_types):
         crosswalk_values = crosswalk_values.split(",")
-
+    
     # Return df of nwm_feature_ids and matching usgs_site_codes
     return crosswalk_df[crosswalk_df[crosswalk_var].isin(crosswalk_values)]
