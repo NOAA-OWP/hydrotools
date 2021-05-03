@@ -40,9 +40,11 @@ class RestClient:
         *,
         base_url: Union[str, None] = None,
         headers: Union[dict, None] = None,
+        enable_cache: bool = True,
         requests_cache_filename: Union[str, None] = None,
         requests_cache_expire_after: int = 43200,
         retries: int = 3,
+        loop: asyncio.AbstractEventLoop = None,
     ):
         self._base_url = base_url
         self._headers = headers
