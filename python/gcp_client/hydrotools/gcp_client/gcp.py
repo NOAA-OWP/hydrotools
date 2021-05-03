@@ -30,7 +30,7 @@ from collections.abc import Iterable
 # Global singletons for holding location and df/None of NWM feature id to usgs site
 # code mapping
 _FEATURE_ID_TO_USGS_SITE_MAP_FILES = (
-    Path(__file__).resolve().parent / "data/RouteLink_NWMv2.0.csv",
+    Path(__file__).resolve().parent / "data/RouteLink_CONUS_NWMv2.1.6.csv",
     Path(__file__).resolve().parent / "data/RouteLink_PuertoRico_NWMv2.1_20191204.csv",
     Path(__file__).resolve().parent / "data/RouteLink_HI.csv",
 )
