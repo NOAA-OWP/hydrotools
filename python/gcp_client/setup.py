@@ -13,7 +13,7 @@ SUBPACKAGE_NAME = "gcp_client"
 SUBPACKAGE_SLUG = f"{NAMESPACE_PACKAGE_NAME}.{SUBPACKAGE_NAME}"
 
 # Subpackage version
-VERSION = "2.1.1"
+VERSION = "2.1.2"
 
 # Package author information
 AUTHOR = "Jason Regina"
@@ -39,6 +39,9 @@ setup(
     package_data={
         "hydrotools.gcp_client": [
             "data/RouteLink_NWMv2.0.csv",
+            "data/RouteLink_CONUS_NWMv2.1.6.csv",
+            "data/RouteLink_HI.csv",
+            "data/RouteLink_PuertoRico_NWMv2.1_20191204.csv",
         ]
     },
     install_requires=REQUIREMENTS,
