@@ -423,7 +423,7 @@ class NWMDataService:
         return [
             'analysis_assim',
             'analysis_assim_extend',
-            # 'analysis_assim_hawaii',
+            'analysis_assim_hawaii',
             'analysis_assim_long',
             'long_range_mem1',
             'long_range_mem2',
@@ -437,6 +437,6 @@ class NWMDataService:
             'medium_range_mem6',
             'medium_range_mem7',
             'short_range',
-            # 'short_range_hawaii'
+            'short_range_hawaii'
             ]
             
