@@ -79,16 +79,16 @@ class NWMDataService:
 
         # Set default site mapping
         if location_metadata_mapping != None:
-            self._crosswalk = location_metadata_mapping
+            self.crosswalk = location_metadata_mapping
         else:
-            self._crosswalk = pd.read_csv(
+            self.crosswalk = pd.read_csv(
                 _FEATURE_ID_TO_USGS_SITE_MAP_FILE,
                 dtype={"nwm_feature_id": int, "usgs_site_code": str},
                 comment='#'
             ).set_index('nwm_feature_id')[['usgs_site_code']]
 
         # Set default dataframe cache
-        self._cache = Path('gcp_cache.h5')
+        self.cache = Path('gcp_cache.h5')
 
     # TODO find publicly available authoritative source of service
     #  compatible valid model configuration strings
@@ -386,6 +386,11 @@ class NWMDataService:
     @property
     def crosswalk(self) -> pd.DataFrame:
         return self._crosswalk
+
+    @crosswalk.setter
+    def crosswalk(self, mapping):
+        print('Setting default')
+        self._crosswalk = mapping
         
     @property
     def cache(self) -> Path:
