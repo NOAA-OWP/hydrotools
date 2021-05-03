@@ -37,6 +37,7 @@ class RestClient:
 
     def __init__(
         self,
+        *,
         base_url: Union[str, None] = None,
         headers: Union[dict, None] = None,
         requests_cache_filename: Union[str, None] = None,
