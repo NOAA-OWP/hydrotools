@@ -154,6 +154,27 @@ def test_get(setup_gcp):
     assert df['valid_time'].unique().size == 48
     print(df)
 
+@pytest.mark.slow
+def test_get_no_da(setup_gcp):
+    # No DA Cycles
+    cycles = [
+        ('analysis_assim_no_da', "20210501T06Z", 3),
+        ('analysis_assim_extend_no_da', "20210501T16Z", 28),
+        ('analysis_assim_hawaii_no_da', "20210501T00Z", 12),
+        ('analysis_assim_long_no_da', "20210501T00Z", 12),
+        ('analysis_assim_puertorico_no_da', "20210501T00Z", 3),
+        ('medium_range_no_da', "20210501T00Z", 80),
+        ('short_range_hawaii_no_da', "20210501T00Z", 192),
+        ('short_range_puertorico_no_da', "20210501T06Z", 48)
+    ]
+    # Test
+    for cycle, ref_tm, validate in cycles:
+        df = setup_gcp.get(
+            configuration=cycle,
+            reference_time=ref_tm
+        )
+        assert df['valid_time'].unique().size == validate
+
 def test_invalid_configuration_exception(setup_gcp):
     # Test invalid configuration
     with pytest.raises(Exception):
