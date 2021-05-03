@@ -18,6 +18,7 @@ from google.cloud import storage
 from io import BytesIO
 import xarray as xr
 import warnings
+import numpy as np
 import pandas as pd
 from os import cpu_count
 from multiprocessing import Pool
@@ -28,8 +29,10 @@ from collections.abc import Iterable
 
 # Global singletons for holding location and df/None of NWM feature id to usgs site
 # code mapping
-_FEATURE_ID_TO_USGS_SITE_MAP_FILE = (
-    Path(__file__).resolve().parent / "data/RouteLink_NWMv2.0.csv"
+_FEATURE_ID_TO_USGS_SITE_MAP_FILES = (
+    Path(__file__).resolve().parent / "data/RouteLink_NWMv2.0.csv",
+    Path(__file__).resolve().parent / "data/RouteLink_PuertoRico_NWMv2.1_20191204.csv",
+    Path(__file__).resolve().parent / "data/RouteLink_HI.csv",
 )
 
 class NWMDataService:
@@ -81,11 +84,14 @@ class NWMDataService:
         if location_metadata_mapping != None:
             self.crosswalk = location_metadata_mapping
         else:
-            self.crosswalk = pd.read_csv(
-                _FEATURE_ID_TO_USGS_SITE_MAP_FILE,
+            dfs = []
+            for MAP_FILE in _FEATURE_ID_TO_USGS_SITE_MAP_FILES:
+                dfs.append(pd.read_csv(
+                MAP_FILE,
                 dtype={"nwm_feature_id": int, "usgs_site_code": str},
                 comment='#'
-            ).set_index('nwm_feature_id')[['usgs_site_code']]
+            ).set_index('nwm_feature_id')[['usgs_site_code']])
+            self.crosswalk = pd.concat(dfs)
 
         # Set default dataframe cache
         self.cache = Path('gcp_cache.h5')
@@ -215,7 +221,8 @@ class NWMDataService:
             return ds
 
         # Return default filtered Dataset
-        feature_id_filter = list(self.crosswalk.index)
+        check = np.isin(self.crosswalk.index, ds.feature_id)
+        feature_id_filter = self.crosswalk[check].index
         return ds.sel(feature_id=feature_id_filter)
             
     def get_DataFrame(
@@ -389,7 +396,16 @@ class NWMDataService:
 
     @crosswalk.setter
     def crosswalk(self, mapping):
-        print('Setting default')
+        # Validate mapping
+        if type(mapping) != pd.DataFrame:
+            message = "crosswalk must be a pandas.DataFrame with nwm_feature_id index and a usgs_site_code column"
+            raise Exception(message)
+
+        if 'usgs_site_code' not in mapping:
+            message = "DataFrame does not contain a usgs_site_code column"
+            raise Exception(message)
+
+        # Set crosswalk
         self._crosswalk = mapping
         
     @property
