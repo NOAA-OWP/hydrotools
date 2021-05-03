@@ -13,9 +13,14 @@
 #    Gage-to-flowline association changes made using: Bad_Gage_Associations.csv.
 #    Tidal-influenced gages removed using: TidalGageList_20170316.csv.
 #    Waterbody associations using spatial join with Lake feature class Waterbodies_V2_1km_plus_20181012.shp.
-# Extracted from NetCDF on 2021-05-03 14:43:20.449094+00:00
+# Extracted from NetCDF on 2021-05-03 15:46:23.642612+00:00
+# Some column names were changed when extracting from the original NetCDF format.
+# link -> nwm_feature_id
+# gages -> usgs_site_code
+# lat -> latitude
+# lon -> longitude
 # 
-nwm_feature_id,link,from,to,longitude,latitude,alt,order,Qi,MusK,MusX,Length,n,So,ChSlp,BtmWdth,NHDWaterbodyComID,time,usgs_site_code,Kchan,ascendingIndex,nCC,TopWdthCC,TopWdth
+feature_id,nwm_feature_id,from,to,longitude,latitude,alt,order,Qi,MusK,MusX,Length,n,So,ChSlp,BtmWdth,NHDWaterbodyComID,time,usgs_site_code,Kchan,ascendingIndex,nCC,TopWdthCC,TopWdth
 9206,7086109,0,7087369,-95.66818,48.98779,320.38,4,0.0,3600.0,0.2,2182.0,0.055,0.001,0.31050202,12.0640955,-9999,2000-01-01,05106000,0,1347733,0.11,60.320477,20.106825
 12736,7040481,0,7040415,-96.27213,47.7953,328.83,2,0.0,3600.0,0.2,4015.0,0.06,0.003,0.49536443,4.184831,-9999,2000-01-01,05078520,0,327676,0.12,20.924154,6.974718
 12777,7053819,0,7053689,-96.20325,47.74662,344.1,2,0.0,3600.0,0.2,2768.0,0.06,0.003,0.48774505,4.334479,-9999,2000-01-01,05078470,0,327697,0.12,21.672396,7.2241316
