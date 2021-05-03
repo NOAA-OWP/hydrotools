@@ -5,7 +5,7 @@ specific use cases.
 # TODO: Add more information about the class here
 """
 
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Tuple, Union
 from collections.abc import Iterable
 import asyncio
 from aiohttp_client_cache import SQLiteBackend
