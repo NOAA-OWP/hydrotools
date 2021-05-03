@@ -62,6 +62,9 @@ async def backoff(request, n: int = 3):
     for nth in range(n):
         resp = await request()
 
+        if nth == (n - 1):
+            break  # break early on last iteration
+
         if resp.status not in RETRY_STATUS_CODES:
             break  # break, return resp
         # Exponential backoff
