@@ -41,28 +41,30 @@ class RestClient:
         base_url: Union[str, None] = None,
         headers: Union[dict, None] = None,
         enable_cache: bool = True,
-        requests_cache_filename: Union[str, None] = None,
+        requests_cache_filename: str = "cache",
         requests_cache_expire_after: int = 43200,
+        retry: bool = True,
         retries: int = 3,
         loop: asyncio.AbstractEventLoop = None,
     ):
+        super().__init__(loop)  # implicitly adds self._loop
         self._base_url = base_url
         self._headers = headers
         self._retires = retries
+        self._cache_enabled = enable_cache
 
-        if requests_cache_filename:
-            try:
-                # Cache requests for 12 hours
-                requests_cache.install_cache(
-                    requests_cache_filename,
-                    backend="sqlite",
-                    expire_after=requests_cache_expire_after,
-                )
+        cache = None
+        if enable_cache is True:
+            cache = SQLiteBackend(
+                cache_name=requests_cache_filename,
+                expire_after=requests_cache_expire_after,
+                allowed_codes=[200],
+                allowed_methods=["GET"],
+            )
 
-            except Exception:
-                error_message = "Something went wrong with setting up `requests_cache`."
-                BaseException(error_message)
-                raise
+        self._session = self._add_to_loop(
+            ClientSession(cache=cache, retry=retry, n_retries=retries)
+        )
 
     def get(
         self,
