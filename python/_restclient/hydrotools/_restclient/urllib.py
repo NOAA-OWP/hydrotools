@@ -66,11 +66,11 @@ class Url:
 
     def __str__(self) -> str:
         """ unquoted string representation of url """
-        return repr(self)
+        return str(self)
 
     def __repr__(self) -> str:
         """ unquoted string representation of url """
-        return self._url.geturl()
+        return repr(self._url.geturl())
 
     def __eq__(self, o: object) -> bool:
         return self.url == o
@@ -189,7 +189,7 @@ class Url:
     @property
     def url(self) -> str:
         """ Unquoted string representation of url """
-        return repr(self)
+        return str(self)
 
     @property
     def quote_url(self) -> str:
