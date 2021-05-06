@@ -14,9 +14,9 @@ We also attempted to adhere to organizational (NOAA-OWP) data standards where th
 
 ## What's here?
 
-We've taken a grab-and-go approach to installation and usage of Hydro tools. This means, in line with a standard toolbox, you will typically install just the tool or tools that get your job done without having to install all the other tools available. This means a lighter installation load and that tools can be added to the toolbox, without affecting your workflows!
+We've taken a grab-and-go approach to installation and usage of HydroTools. This means, in line with a standard toolbox, you will typically install just the tool or tools that get your job done without having to install all the other tools available. This means a lighter installation load and that tools can be added to the toolbox, without affecting your workflows!
 
-It should be noted, we commonly refer to individual tools in hydro tools as a subpackage or by their name (e.g. `nwis_client`). You will find this lingo in both issues and documentation.
+It should be noted, we commonly refer to individual tools in HydroTools as a subpackage or by their name (e.g. `nwis_client`). You will find this lingo in both issues and documentation.
 
 Currently the repository has the following subpackages:
 
@@ -54,7 +54,7 @@ $ python3 -m pip install hydrotools.nwis_client
 
 ## Categorical Data Types
 
-`hydrotools` uses `pandas.Dataframe` that contain `pandas.Categorical` values to increase memory efficiency. Depending upon your use-case, these values may require special consideration. To see if a `Dataframe` returned by `hydrotools` contains `pandas.Categorical` you can use `pandas.Dataframe.info` like so:
+HydroTools uses `pandas.Dataframe` that contain `pandas.Categorical` values to increase memory efficiency. Depending upon your use-case, these values may require special consideration. To see if a `Dataframe` returned by a HydroTools subpackage contains `pandas.Categorical` you can use `pandas.Dataframe.info` like so:
 
 ```python
 print(my_dataframe.info())
