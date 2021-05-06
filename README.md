@@ -24,7 +24,7 @@ Currently the repository has the following subpackages:
 - `gcp_client`: Provides methods for retrieving National Water Model data hosted on [Google Cloud Platform](https://console.cloud.google.com/marketplace/details/noaa-public/national-water-model)
 - `metrics`: Variety of methods used to compute common evaluation metrics
 - `nwis_client`: Provides easy to use methods for retrieving data from the [USGS NWIS Instantaneous Values (IV) Web Service](https://waterservices.usgs.gov/rest/IV-Service.html)
-- `\_restclient`: A generic REST client with built in cache that make the construction and retrieval of GET requests painless
+- `_restclient`: A generic REST client with built in cache that make the construction and retrieval of GET requests painless
 
 ## UTC Time
 
