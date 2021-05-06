@@ -1,4 +1,4 @@
-![Unit Testing Status](https://github.com/noaa-owp/hydrotools/actions/workflows/run_unit_tests.yml/badge.svg)
+![Unit Testing Status](https://github.com/noaa-owp/hydrotools/actions/workflows/run_unit_tests.yml/badge.svg) [![DOI](https://zenodo.org/badge/332006393.svg)](https://zenodo.org/badge/latestdoi/332006393)
 
 ![](docs/banner.png)
 
