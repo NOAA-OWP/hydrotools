@@ -1,4 +1,4 @@
-# HydroTools
+# ![](.docs/HydroLogo.png) HydroTools
 
 Tools for retrieving and evaluating hydrological data.
 
