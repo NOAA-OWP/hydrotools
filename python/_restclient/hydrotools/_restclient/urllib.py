@@ -2,6 +2,7 @@
 
 import urllib.parse as parse
 from typing import Dict, List, Tuple, Union, TypeVar
+from collections import UserString
 import re
 
 # local imports
@@ -248,3 +249,19 @@ class Url:
 
 def _are_properties_set(obj: object, properties: Union[List[str], Tuple[str]]) -> bool:
     return all([getattr(obj, prop, None) for prop in properties])
+
+
+class Variadic(UserString, str):
+    """join list or tuple on some delimeter. The is useful when specifying arguments in
+    a URL that do not conform to the &key=value&key=value2 convention.
+
+    Example:
+        >>> from hydrotools.restclient import ClientSession, Url, Variadic
+        >>> url = Url("https://www.test.gov")
+        >>> url = url + {"this": Variadic(["that", "the", "other"])}
+        >>> print(url.url)
+        >>> https://www.test.gov/?this=that,the,other
+    """
+
+    def __init__(self, values: Union[List, Tuple], *, delimeter: str = ",") -> None:
+        self.data = delimeter.join([str(v) for v in values])
