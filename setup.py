@@ -20,7 +20,7 @@ NAMESPACE_PACKAGE_NAME = "hydrotools"
 SRC_ROOT = "python"
 
 # Package author information
-AUTHOR = "Jason Regina"
+AUTHOR = "Jason A. Regina & Austin Raney"
 AUTHOR_EMAIL = "jason.regina@noaa.gov"
 MAINTAINER = "Austin Raney"
 MAINTAINER_EMAIL = "arthur.raney@noaa.gov"
