@@ -69,7 +69,7 @@ class Url:
 
     def __str__(self) -> str:
         """ unquoted string representation of url """
-        return str(self)
+        return str(self._url.geturl())
 
     def __repr__(self) -> str:
         """ unquoted string representation of url """
