@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 import pytest
 
-from hydrotools._restclient.urllib import Url
+from hydrotools._restclient.urllib import Url, Variadic
 
 
 @pytest.mark.parametrize("url", ["http://www.fake.gov", "https://www.fake.gov"])
 def test_construction(url):
     inst = Url(url)
-    assert repr(inst) == url
+    assert repr(inst) == f"'{url}'"
     assert inst.url == url
     assert str(inst) == url
 
@@ -23,7 +23,7 @@ def test_implict_https_scheme():
     """ https scheme assumed if none passed at construction """
     url = "www.test.gov"
     inst = Url(url)
-    assert repr(inst) == f"https://{url}"
+    assert repr(inst) == f"'https://{url}'"
 
 
 def test_joinurl():
@@ -33,8 +33,8 @@ def test_joinurl():
     inst1 = inst.joinurl(path)
     inst2 = inst / path
 
-    assert repr(inst1) == f"{url}/{path}"
-    assert repr(inst2) == f"{url}/{path}"
+    assert repr(inst1) == f"'{url}/{path}'"
+    assert repr(inst2) == f"'{url}/{path}'"
     assert isinstance(inst1, Url)
     assert isinstance(inst2, Url)
 
@@ -45,7 +45,6 @@ def test_repeated_joinurl_with_truedivide():
     inst = Url(url)
 
     inst1 = inst / path / path
-    inst1
 
     assert inst1 == f"{url}/{path}/{path}"
 
@@ -75,3 +74,56 @@ def test_equivalency_between_quoted_url_and_unquoted_url():
     url2 = "https://www.test.gov/?this=%2712%27"
     inst2 = Url(url2)
     assert inst == inst2
+
+
+def test_contains():
+    url = "https://www.test.gov/?this='12'"
+    inst = Url(url)
+
+    assert "test" in inst
+
+
+variadic_test_input = [
+    [1, 2, 3],
+    ["1", "2", "3"],
+    [1, "2", "3"],
+    [1.0, 2, 3],
+    [True, False],
+]
+
+variadic_test_validation = [
+    "1,2,3",
+    "1,2,3",
+    "1,2,3",
+    "1.0,2,3",
+    "True,False",
+]
+
+
+@pytest.mark.parametrize("values", variadic_test_input)
+def test_variadic_construction(values):
+    assert isinstance(Variadic(values), Variadic)
+
+
+def test_variadic_is_string_subclass():
+    assert isinstance(Variadic([1]), str)
+
+
+@pytest.mark.parametrize(
+    "values, validation", zip(variadic_test_input, variadic_test_validation)
+)
+def test_variadic_str_and_repr(values, validation):
+    assert str(Variadic(values)) == validation
+    assert repr(Variadic(values)) == repr(validation)
+
+
+def test_variadic_contains():
+    inst = Variadic([1])
+    assert "1" in inst
+
+
+def test_variadic_integration_with_url():
+    validation = "http://www.google.com?key=a,b,c"
+    url = Url("http://www.google.com") + {"key": Variadic(["a", "b", "c"])}
+
+    assert url == validation
