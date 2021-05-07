@@ -78,6 +78,9 @@ class Url:
     def __eq__(self, o: object) -> bool:
         return self.url == o
 
+    def __contains__(self, o: object) -> bool:
+        return o in self.url
+
     def __add__(self, b: Dict[str, Union[str, List[str]]]) -> "Url":
         """Add/append query parameters to `Url` object using `+` operator. See `Url.add`
         for further details. Methods are equivalent.
