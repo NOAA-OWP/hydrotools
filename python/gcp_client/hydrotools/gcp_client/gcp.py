@@ -18,6 +18,7 @@ from google.cloud import storage
 from io import BytesIO
 import xarray as xr
 import warnings
+import numpy as np
 import pandas as pd
 from os import cpu_count
 from multiprocessing import Pool
@@ -28,8 +29,10 @@ from collections.abc import Iterable
 
 # Global singletons for holding location and df/None of NWM feature id to usgs site
 # code mapping
-_FEATURE_ID_TO_USGS_SITE_MAP_FILE = (
-    Path(__file__).resolve().parent / "data/nwm_2_0_feature_id_with_usgs_site.csv"
+_FEATURE_ID_TO_USGS_SITE_MAP_FILES = (
+    Path(__file__).resolve().parent / "data/RouteLink_CONUS_NWMv2.1.6.csv",
+    Path(__file__).resolve().parent / "data/RouteLink_PuertoRico_NWMv2.1_20191204.csv",
+    Path(__file__).resolve().parent / "data/RouteLink_HI.csv",
 )
 
 class NWMDataService:
@@ -79,15 +82,19 @@ class NWMDataService:
 
         # Set default site mapping
         if location_metadata_mapping != None:
-            self._crosswalk = location_metadata_mapping
+            self.crosswalk = location_metadata_mapping
         else:
-            self._crosswalk = pd.read_csv(
-                _FEATURE_ID_TO_USGS_SITE_MAP_FILE,
+            dfs = []
+            for MAP_FILE in _FEATURE_ID_TO_USGS_SITE_MAP_FILES:
+                dfs.append(pd.read_csv(
+                MAP_FILE,
                 dtype={"nwm_feature_id": int, "usgs_site_code": str},
-            ).set_index('nwm_feature_id')
+                comment='#'
+            ).set_index('nwm_feature_id')[['usgs_site_code']])
+            self.crosswalk = pd.concat(dfs)
 
         # Set default dataframe cache
-        self._cache = Path('gcp_cache.h5')
+        self.cache = Path('gcp_cache.h5')
 
     # TODO find publicly available authoritative source of service
     #  compatible valid model configuration strings
@@ -214,7 +221,8 @@ class NWMDataService:
             return ds
 
         # Return default filtered Dataset
-        feature_id_filter = list(self.crosswalk.index)
+        check = np.isin(self.crosswalk.index, ds.feature_id)
+        feature_id_filter = self.crosswalk[check].index
         return ds.sel(feature_id=feature_id_filter)
             
     def get_DataFrame(
@@ -385,6 +393,20 @@ class NWMDataService:
     @property
     def crosswalk(self) -> pd.DataFrame:
         return self._crosswalk
+
+    @crosswalk.setter
+    def crosswalk(self, mapping):
+        # Validate mapping
+        if type(mapping) != pd.DataFrame:
+            message = "crosswalk must be a pandas.DataFrame with nwm_feature_id index and a usgs_site_code column"
+            raise Exception(message)
+
+        if 'usgs_site_code' not in mapping:
+            message = "DataFrame does not contain a usgs_site_code column"
+            raise Exception(message)
+
+        # Set crosswalk
+        self._crosswalk = mapping
         
     @property
     def cache(self) -> Path:
@@ -397,12 +419,13 @@ class NWMDataService:
     @property
     def configurations(self) -> list:
         # Valid configurations compatible with this client
-        # TODO Find crosswalk for Alaska, Hawaii, Puerto Rico, and US Virgin Islands
+        # TODO Find crosswalk for Alaska
         return [
             'analysis_assim',
             'analysis_assim_extend',
-            # 'analysis_assim_hawaii',
+            'analysis_assim_hawaii',
             'analysis_assim_long',
+            'analysis_assim_puertorico',
             'long_range_mem1',
             'long_range_mem2',
             'long_range_mem3',
@@ -415,6 +438,14 @@ class NWMDataService:
             'medium_range_mem6',
             'medium_range_mem7',
             'short_range',
-            # 'short_range_hawaii'
+            'short_range_hawaii',
+            'short_range_puertorico',
+            'analysis_assim_no_da',
+            'analysis_assim_extend_no_da',
+            'analysis_assim_hawaii_no_da',
+            'analysis_assim_long_no_da',
+            'analysis_assim_puertorico_no_da',
+            'medium_range_no_da',
+            'short_range_hawaii_no_da',
+            'short_range_puertorico_no_da'
             ]
-            

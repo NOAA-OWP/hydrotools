@@ -17,7 +17,13 @@ def test_max_processes(setup_gcp):
 
 def test_crosswalk(setup_gcp):
     assert setup_gcp.crosswalk['usgs_site_code'].count() > 4000
-    assert setup_gcp.crosswalk['usgs_site_code'].count() < 8000
+    assert setup_gcp.crosswalk['usgs_site_code'].count() < 9000
+
+    with pytest.raises(Exception):
+        setup_gcp.crosswalk = 0
+
+    with pytest.raises(Exception):
+        setup_gcp.crosswalk = pd.DataFrame()
 
 def test_cache(setup_gcp):
     assert str(setup_gcp.cache) == 'gcp_cache.h5'
@@ -118,6 +124,55 @@ def test_get(setup_gcp):
         reference_time="20210101T06Z"
     )
     assert df['valid_time'].unique().size == 120
+
+    # Test Hawaii ANA
+    df = setup_gcp.get(
+        configuration="analysis_assim_hawaii",
+        reference_time="20210101T01Z"
+    )
+    assert df['valid_time'].unique().size == 3
+
+    # Test Hawaii Short Range
+    df = setup_gcp.get(
+        configuration="short_range_hawaii",
+        reference_time="20210101T00Z"
+    )
+    assert df['valid_time'].unique().size == 60
+
+    # Test Puerto Rico ANA
+    df = setup_gcp.get(
+        configuration="analysis_assim_puertorico",
+        reference_time="20210501T00Z"
+    )
+    assert df['valid_time'].unique().size == 3
+
+    # Test Puerto Rico Short Range
+    df = setup_gcp.get(
+        configuration="short_range_puertorico",
+        reference_time="20210501T06Z"
+    )
+    assert df['valid_time'].unique().size == 48
+
+@pytest.mark.slow
+def test_get_no_da(setup_gcp):
+    # No DA Cycles
+    cycles = [
+        ('analysis_assim_no_da', "20210501T06Z", 3),
+        ('analysis_assim_extend_no_da', "20210501T16Z", 28),
+        ('analysis_assim_hawaii_no_da', "20210501T00Z", 12),
+        ('analysis_assim_long_no_da', "20210501T00Z", 12),
+        ('analysis_assim_puertorico_no_da', "20210501T00Z", 3),
+        ('medium_range_no_da', "20210501T00Z", 80),
+        ('short_range_hawaii_no_da', "20210501T00Z", 192),
+        ('short_range_puertorico_no_da', "20210501T06Z", 48)
+    ]
+    # Test
+    for cycle, ref_tm, validate in cycles:
+        df = setup_gcp.get(
+            configuration=cycle,
+            reference_time=ref_tm
+        )
+        assert df['valid_time'].unique().size == validate
 
 def test_invalid_configuration_exception(setup_gcp):
     # Test invalid configuration
