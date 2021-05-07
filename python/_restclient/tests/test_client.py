@@ -30,6 +30,25 @@ async def basic_test_server(naked_server):
     return {"data": data, "uri": server.make_url("/")}
 
 
+@pytest.fixture
+async def mirror_server(naked_server):
+    """ query strings passed in url as serialized and returned as json content """
+    import json
+    from urllib import parse
+
+    async def handler(request):
+        query = parse.parse_qs(request.query_string) if request.query_string else {}
+
+        return web.Response(
+            status=200, text=json.dumps(query), content_type="application/json"
+        )
+
+    server = await naked_server(handler)
+
+    # return uri to server
+    return server.make_url("/")
+
+
 async def test_get(basic_test_server):
     async with ClientSession() as client:
         async with client.get(basic_test_server["uri"]) as resp:
@@ -102,3 +121,29 @@ def test_verify_client_session_signature():
 
     sig = forge.fsignature(ClientSession)
     assert {"retry", "n_retries", "cache", "headers"}.issubset(set(sig.parameters))
+
+
+########### Integration tests with _restclient.urllib ###########
+from hydrotools._restclient.urllib import Url, Variadic
+
+
+async def test_variadic_get(mirror_server):
+    params = {"hey": ["there"], "this": [Variadic(["that", "the", "other"])]}
+
+    async with ClientSession() as session:
+        async with session.get(
+            mirror_server,
+            params=params,
+        ) as req:
+            assert await req.json() == params
+
+
+async def test_variadic_get(mirror_server):
+
+    params = {"hey": ["there"], "this": [Variadic(["that", "the", "other"])]}
+    # mirror_server is type: yarl.URL which does not subclass str. requires cast
+    url = Url(str(mirror_server)) + params
+
+    async with ClientSession() as session:
+        async with session.get(url) as req:
+            assert await req.json() == params
