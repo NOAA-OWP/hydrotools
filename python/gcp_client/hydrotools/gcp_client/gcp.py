@@ -419,7 +419,7 @@ class NWMDataService:
     @property
     def configurations(self) -> list:
         # Valid configurations compatible with this client
-        # TODO Find crosswalk for Alaska, Hawaii, Puerto Rico, and US Virgin Islands
+        # TODO Find crosswalk for Alaska
         return [
             'analysis_assim',
             'analysis_assim_extend',
