@@ -103,7 +103,7 @@ class RestClient(AsyncToSerialHelper):
         # wrap ClientSession in coroutine and call in event loop
         self._session = self._add_to_loop(
             self._wrap_func_in_coro(
-                ClientSession, cache=cache, retry=retry, n_retries=retries
+                ClientSession, cache=cache, retry=retry, n_retries=n_retries
             )()
         )  # type: ClientSession
 
