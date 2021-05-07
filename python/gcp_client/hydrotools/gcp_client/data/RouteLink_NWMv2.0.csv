@@ -13,6 +13,7 @@
 #    Gage-to-flowline association changes made using: Bad_Gage_Associations.csv.
 #    Tidal-influenced gages removed using: TidalGageList_20170316.csv.
 #    Waterbody associations using spatial join with Lake feature class Waterbodies_V2_1km_plus_20181012.shp.
+# version: NWM v2.0
 # Extracted from NetCDF on 2021-05-03 15:46:23.642612+00:00
 # Some column names were changed when extracting from the original NetCDF format.
 # link -> nwm_feature_id
