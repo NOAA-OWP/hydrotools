@@ -152,7 +152,6 @@ def test_get(setup_gcp):
         reference_time="20210501T06Z"
     )
     assert df['valid_time'].unique().size == 48
-    print(df)
 
 @pytest.mark.slow
 def test_get_no_da(setup_gcp):
