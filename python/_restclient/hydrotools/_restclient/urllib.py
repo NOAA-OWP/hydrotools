@@ -13,7 +13,7 @@ __all__ = ["Url", "Variadic"]
 PRIMITIVE = TypeVar("PRIMITIVE", bool, float, int, str, None)
 
 
-class Url:
+class Url(UserString, str):
     """
     Treat urls analogous to pathlib.Path's treatment of paths.
 
@@ -66,20 +66,7 @@ class Url:
 
         self._validate_construction(self._url)
         self._url = self._clean_parse_result(self._url)
-
-    def __str__(self) -> str:
-        """ unquoted string representation of url """
-        return str(self._url.geturl())
-
-    def __repr__(self) -> str:
-        """ unquoted string representation of url """
-        return repr(self._url.geturl())
-
-    def __eq__(self, o: object) -> bool:
-        return self.url == o
-
-    def __contains__(self, o: object) -> bool:
-        return o in self.url
+        self.data = self._url.geturl()
 
     def __add__(self, b: Dict[str, Union[str, List[str]]]) -> "Url":
         """Add/append query parameters to `Url` object using `+` operator. See `Url.add`
