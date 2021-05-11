@@ -2,6 +2,8 @@
 
 from typing import Any, List, Union
 import asyncio
+from aiohttp.client_reqrep import ClientResponse
+from aiohttp_client_cache.response import CachedResponse
 from aiohttp_client_cache import SQLiteBackend
 import aiohttp
 import forge
@@ -172,6 +174,15 @@ class RestClient(AsyncToSerialHelper):
 
         resp = await self._session.get(url, headers=headers, **kwargs)
 
+        # Verify origin of response. Attr not in aiohttp.ClientSession, thus default None.
+        from_cache = getattr(resp, "from_cache", None)
+
+        # CachedResponses implement __slots__ and thus cannot be monkeypatched.
+        # see https://www.attrs.org/en/stable/glossary.html#term-slotted-classes
+        # Theirfore, wrapping coro's json() and text() cannot be achieved.
+        if from_cache:
+            resp = cached_response_to_client_response(resp, loop=self._loop)
+
         # implicitly sets resp._body which contains response data
         await resp.read()
 
@@ -231,3 +242,28 @@ class RestClient(AsyncToSerialHelper):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.close()
+
+
+def cached_response_to_client_response(
+    cached_response: CachedResponse, *, loop: asyncio.AbstractEventLoop
+):
+    """ Translation from aiohttp_client_cache.CachedResponse to aiohttp.ClientResponse """
+    # Naive 'casting' to ClientResponse. Likely needs work to cover all cases.
+    inst = ClientResponse(
+        cached_response.method,
+        cached_response.url,
+        writer=None,
+        continue100=False,
+        timer=None,
+        traces=[],
+        session=None,
+        request_info=cached_response.request_info,
+        loop=loop,
+    )
+    inst._body = cached_response._body
+    inst.version = cached_response.version
+    inst.status = cached_response.status
+    inst.reason = cached_response.reason
+    inst._headers = cached_response.headers
+    inst._raw_headers = cached_response.raw_headers
+    return inst
