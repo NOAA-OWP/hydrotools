@@ -1,28 +1,21 @@
 import pytest
 from hydrotools.caches.hdf import HDFCache
-
 import pandas as pd
-from time import sleep
+import numpy as np
+from pathlib import Path
+
+cache_path = Path('test_cache.h5')
 
 def test_cache():
-    # Some long running process that returns a pandas.DataFrame
-    def long_process(cols, rows):
-        sleep(1.0)
-        data = {f'col_{i}' : [j for j in range(rows)] for i in range(cols)}
-        return pd.DataFrame(data)
+    def random_dataframe():
+        return pd.DataFrame({
+            'A': np.random.random(100),
+            'B': np.random.random(100)
+        })
 
-    # Setup the cache with a context manager
-    #  Similar to setting up a pandas.HDFStore
-    with HDFCache(
-        path='test_cache.h5',
-        complevel=1,
-        complib='zlib',
-        fletcher32=True
-        ) as cache:
-        # The first call runs long_process and stores the result
-        df = cache.get(long_process, 'data/results', cols=10, rows=1000000)
+    with HDFCache('test_cache.h5') as cache:
+        df1 = cache.get(random_dataframe, 'data/results')
+        df2 = cache.get(random_dataframe, 'data/results')
+        assert df1.equals(df2)
 
-
-        # The second call retrieves the result from cache without 
-        #  running long_process
-        df = cache.get(long_process, 'data/results', cols=10, rows=1000000)
+    cache_path.unlink()
