@@ -55,6 +55,33 @@ async def test_get(basic_test_server):
             assert await resp.json() == basic_test_server["data"]
 
 
+async def test_get_check_cache(basic_test_server):
+    uri, data = basic_test_server
+    import tempfile
+    from aiohttp_client_cache import SQLiteBackend
+
+    temp_cachefile = tempfile.NamedTemporaryFile(suffix=".sqlite")
+    temp_cachefile_name = temp_cachefile.name
+
+    cache = SQLiteBackend(
+        cache_name=temp_cachefile_name,
+        expire_after=-1,
+        allowed_codes=[200],
+        allowed_methods=["GET"],
+    )
+
+    async with ClientSession(cache=cache) as client:
+        r = await client.get(basic_test_server["uri"])
+        r_json = await r.json()
+        r2 = await client.get(basic_test_server["uri"])
+        r2_json = await r2.json()
+        assert r_json == r2_json
+
+        # first not from cache, second is from cache
+        assert r.from_cache is False
+        assert r2.from_cache is True
+
+
 def test_get_non_async(basic_test_server, loop):
     with pytest.warns(DeprecationWarning):
         # throws DeprecationWarning b.c. session not create in async func
