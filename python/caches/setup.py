@@ -24,7 +24,8 @@ DESCRIPTION = "Variety of object caching utilities."
 
 # Package dependency requirements
 REQUIREMENTS = [
-    "pandas"
+    "pandas",
+    "tables"
 ]
 
 setup(
