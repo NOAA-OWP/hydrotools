@@ -108,7 +108,7 @@ class RestClient(AsyncToSerialHelper):
         )  # type: ClientSession
 
         # register session removal at normal exit
-        atexit.register(self.release_session)
+        atexit.register(self.close)
 
     @GET_SIGNATURE
     def get(self, url, *, parameters, headers, **kwargs):
@@ -217,11 +217,17 @@ class RestClient(AsyncToSerialHelper):
         """ GET request headers """
         return self._headers
 
-    def release_session(self) -> None:
+    def close(self) -> None:
         """ Release aiohttp.ClientSession """
         if not self._session.closed:
             self._add_to_loop(self._session.close())
 
     def __del__(self) -> None:
-        atexit.unregister(self.release_session)
-        self.release_session()
+        atexit.unregister(self.close)
+        self.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
