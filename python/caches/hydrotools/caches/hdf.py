@@ -15,7 +15,7 @@ import pandas as pd
 from typing import Callable
 
 class HDFCache:
-    def __init__(self, format:str='table', *args, **kwargs):
+    def __init__(self, path:str, format:str='table', *args, **kwargs):
         """
         Interface for caching pandas objects returned by long running 
         processes. The internal pandas.HDFStore is accessible 
@@ -23,6 +23,8 @@ class HDFCache:
 
         Parameters
         ----------
+        path: str
+            File path to HDF5 file.
         format : 'fixed(f)|table(t)', default is 'table'
             Format to use when storing object in HDFStore. Value can be one of:
             ``'fixed'``
@@ -37,8 +39,9 @@ class HDFCache:
         **kwargs
             Additional arguments passed to pandas.HDFStore
         """
+        self._path = path
         self._format = format
-        self._store = pd.HDFStore(*args, **kwargs)
+        self._store = pd.HDFStore(path, *args, **kwargs)
         
     def __enter__(self):
         return self
@@ -95,6 +98,10 @@ class HDFCache:
     @property
     def store(self):
         return self._store
+
+    @property
+    def path(self):
+        return self._path
 
     @property
     def format(self):
