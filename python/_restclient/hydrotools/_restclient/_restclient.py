@@ -37,9 +37,9 @@ class RestClient(AsyncToSerialHelper):
         Headers included in every request
     enable_cache: bool, default True
         Enable or disable caching
-    requests_cache_filename: str, default "cache"
+    cache_filename: str, default "cache"
         Cache filename with .sqlite filetype suffix
-    requests_cache_expire_after: int, default 43200
+    cache_expire_after: int, default 43200
         Cached request life in seconds
     retry: bool, default True
         Enable exponential backoff
@@ -78,8 +78,8 @@ class RestClient(AsyncToSerialHelper):
         base_url: Union[str, Url, None] = None,
         headers: dict = {},
         enable_cache: bool = True,
-        requests_cache_filename: str = "cache",
-        requests_cache_expire_after: int = 43200,
+        cache_filename: str = "cache",
+        cache_expire_after: int = 43200,
         retry: bool = True,
         n_retries: int = 3,
         loop: asyncio.AbstractEventLoop = None,
@@ -94,8 +94,8 @@ class RestClient(AsyncToSerialHelper):
         cache = None
         if enable_cache is True:
             cache = SQLiteBackend(
-                cache_name=requests_cache_filename,
-                expire_after=requests_cache_expire_after,
+                cache_name=cache_filename,
+                expire_after=cache_expire_after,
                 allowed_codes=[200],
                 allowed_methods=["GET"],
             )
