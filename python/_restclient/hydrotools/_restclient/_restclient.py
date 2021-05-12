@@ -172,7 +172,13 @@ class RestClient(AsyncToSerialHelper):
         # add query parameters and get quoted representation
         url = (Url(url) + parameters).quote_url
 
-        resp = await self._session.get(url, headers=headers, **kwargs)
+        # Fast way to merge dicts https://stackoverflow.com/a/1784128
+        # Create copy of instance headers, merge headers with instance header copy.
+        # Headers passed to _get have precedent over instance headers
+        _headers = dict(self.headers)
+        _headers.update(headers)
+
+        resp = await self._session.get(url, headers=_headers, **kwargs)
 
         # Verify origin of response. Attr not in aiohttp.ClientSession, thus default None.
         from_cache = getattr(resp, "from_cache", None)
