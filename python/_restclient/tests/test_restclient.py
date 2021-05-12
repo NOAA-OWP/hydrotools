@@ -1,132 +1,143 @@
+from aiohttp import web
 import pytest
 from hydrotools._restclient import RestClient
 
 
-@pytest.mark.parametrize(
-    "base,headers,rcf,ea,retries",
-    [
-        ("", None, None, 34, 1),
-        ("", None, None, 34, -1),
-        (
-            "http://www.google.com/",
-            {"Accept-Encoding": "gzip, compress"},
-            None,
-            None,
-            1,
-        ),
-        ("", None, "test", 34, 1),
-        ("", None, "test", 34, 3),
-    ],
-)
-def test_construction(base, headers, rcf, ea, retries):
-    """ Test RestClient construction """
-    return RestClient(
-        base_url=base,
-        headers=headers,
-        requests_cache_filename=rcf,
-        requests_cache_expire_after=ea,
-        retries=retries,
-    )
-
-
 @pytest.fixture
-def empty_restclient():
-    return RestClient()
-
-
-@pytest.mark.slow
-@pytest.fixture
-def restclient():
-    return RestClient(
-        base_url="https://jsonplaceholder.typicode.com/",
-        headers=None,
-        requests_cache_filename="test_google",
-    )
-
-
-@pytest.mark.slow
-def test_get_with_parameter(restclient):
-    url = "https://jsonplaceholder.typicode.com/comments"
-    parameters = {"postId": "1"}
-    verify = "https://jsonplaceholder.typicode.com/comments?postId=1"
-    assert restclient.get(url=url, parameters=parameters).url == verify
-
-
-def test_get_empty_constructor(empty_restclient):
-    """  test get empty constructor """
-    with pytest.raises(AttributeError):
-        empty_restclient.get()
-
-
-@pytest.mark.parametrize(
-    "provided,expected",
-    [
-        (
-            {
-                "url": "http://test-url.test",
-            },
-            "http://test-url.test/",
-        ),
-        (
-            {
-                "url": "http://test-url.test",
-                "parameters": {"test": [1, "2"]},
-                "parameter_delimiter": "",
-                "headers": "",
-            },
-            "http://test-url.test/?test=1&test=2",
-        ),
-        (
-            {
-                "url": "http://test-url.test",
-                "parameters": {"test": [1, 2]},
-                "parameter_delimiter": ",",
-                "headers": {},
-            },
-            "http://test-url.test/?test=1%2C2",
-        ),
-    ],
-)
-def test_url_generation(empty_restclient, provided, expected):
-    assert empty_restclient.Request(**provided).url == expected
-
-
-class MockPreparedRequests:
-    """ Mock Prepared Requests Object """
-
-    status_code: int = 404
-    url: str = "http://test-url.test/"
-
-
-def prepared_request_patch(*args, status_code=404, **kwargs):
-    def wrap(*args, status_code=status_code, **kwargs):
-        mocker_object = MockPreparedRequests()
-        mocker_object.status_code = status_code
-        return mocker_object
+async def naked_server(aiohttp_raw_server):
+    async def wrap(handler):
+        server = await aiohttp_raw_server(handler)
+        return server
 
     return wrap
 
 
-@pytest.mark.parametrize("status_code", [200, 201])
-def test_get_request(empty_restclient, monkeypatch, status_code):
-    import requests
+@pytest.fixture
+async def basic_test_server(naked_server):
+    import json
 
-    monkeypatch.setattr(
-        requests.Session, "send", prepared_request_patch(status_code=status_code)
-    )
+    data = {"this": "is a test"}
 
-    assert empty_restclient.Get(None).status_code == status_code
-
-
-@pytest.mark.parametrize("status_code", [304, 400, 403, 404, 500, 503])
-def test_get_request_exceptions(empty_restclient, monkeypatch, status_code):
-    """ Verify that requests.exceptions.ConnectionError is raised """
-    import requests
-
-    with pytest.raises(requests.exceptions.ConnectionError):
-        req = requests.Request("GET", "http://test-url.test/")
-
-        monkeypatch.setattr(
-            requests.Session, "send", prepared_request_patch(status_code=status_code)
+    async def handler(request):
+        return web.Response(
+            status=200,
+            text=json.dumps(data),
+            headers=request.headers,
+            content_type="application/json",
         )
-        empty_restclient.Get(req)
+
+    server = await naked_server(handler)
+
+    # return server uri, data served by server
+    return str(server.make_url("/")), data
+
+
+@pytest.fixture
+def temp_sqlite_db():
+    """ Yield a temp file with suffix .sqlite """
+    import tempfile
+
+    with tempfile.NamedTemporaryFile(suffix=".sqlite") as temp_db:
+        yield temp_db.name
+
+
+def test_get_without_cache(basic_test_server):
+    uri, data = basic_test_server
+    import json
+
+    client = RestClient(enable_cache=False)
+    r = client.get(uri)
+
+    r_json = r.json()
+    r_text = r.text()
+    assert r_json == data
+    assert r_text == json.dumps(data)
+    # needs to be explicitly closed for pytest. Each test gets it's own loop
+    client.close()
+
+
+def test_get_without_cache_using_context_manager(basic_test_server):
+    uri, data = basic_test_server
+    import json
+
+    with RestClient(enable_cache=False) as client:
+        r = client.get(uri)
+
+        r_json = r.json()
+        r_text = r.text()
+        assert r_json == data
+        assert r_text == json.dumps(data)
+
+
+def test_get_with_cache_using_context_manager(basic_test_server, temp_sqlite_db):
+    uri, data = basic_test_server
+    # import tempfile
+
+    with RestClient(
+        enable_cache=True, cache_filename=temp_sqlite_db, cache_expire_after=-1
+    ) as client:
+        r = client.get(uri)
+        r2 = client.get(uri)
+        r_json = r.json()
+        r2_json = r2.json()
+
+        assert r_json == data
+        assert r_json == r2_json
+
+    import sqlite3
+
+    with sqlite3.connect(temp_sqlite_db) as con:
+        cur = con.cursor()
+        response = cur.execute("SELECT * FROM responses").fetchall()
+
+        # There should only be one response in the db
+        assert len(response) == 1
+
+
+def test_mget_without_cache(basic_test_server):
+    uri, data = basic_test_server
+
+    with RestClient(enable_cache=False) as client:
+        rs = client.mget([uri for _ in range(10)])
+
+        assert all([x.json() == rs[0].json() for x in rs[1:]])
+
+
+def test_mget_with_cache_using_context_manager(basic_test_server, temp_sqlite_db):
+    uri, data = basic_test_server
+
+    with RestClient(
+        enable_cache=True, cache_filename=temp_sqlite_db, cache_expire_after=-1
+    ) as client:
+        rs = client.mget([uri for _ in range(10)])
+        assert all([x.json() == rs[0].json() for x in rs[1:]])
+
+    import sqlite3
+
+    with sqlite3.connect(temp_sqlite_db) as con:
+        cur = con.cursor()
+        response = cur.execute("SELECT * FROM responses").fetchall()
+
+        # There should only be one response in the db
+        assert len(response) == 1
+
+
+def test_headers(basic_test_server):
+    uri, _ = basic_test_server
+    headers = {"some": "headers"}
+
+    with RestClient(enable_cache=False, headers=headers) as client:
+        r = client.get(uri)
+        assert all(k_v_pair in r.headers.items() for k_v_pair in headers.items())
+
+
+def test_get_headers_have_precedent_over_instance(basic_test_server):
+    uri, _ = basic_test_server
+    instance_headers = {"some": "headers"}
+    method_headers = {"some": "other_header"}
+
+    with RestClient(enable_cache=False, headers=instance_headers) as client:
+        r = client.get(uri, headers=method_headers)
+
+        # verify in key, "some", "other_header" value in headers not "headers"
+        assert all(k_v_pair in r.headers.items() for k_v_pair in method_headers.items())
