@@ -13,7 +13,7 @@ def test_cache():
             'B': np.random.random(100)
         })
 
-    with HDFCache('test_cache.h5') as cache:
+    with HDFCache(cache_path) as cache:
         df1 = cache.get(random_dataframe, 'data/results')
         df2 = cache.get(random_dataframe, 'data/results')
         assert df1.equals(df2)
