@@ -1,13 +1,30 @@
 # HydroTools :: REST Client
 
-This subpackage contains classes and utilities suitable for quickly developing robust
-REST api interfaces. The primary feature of this subpackage is the generic
-`RestClient` class which offers sqlite database GET request caching, GET request
-backoff, and flexible url argument encoding. Immutable `Alias` and `AliasGroup`
-utility classes support common library development patterns aiding in the separation
-of backend and frontend code. See the [REST Client
-Documentation](https://noaa-owp.github.io/hydrotools/hydrotools._restclient.html) for
-a complete list and description of the currently available methods. To report bugs or
+Subpackage of objects and utilities suitable for quickly developing robust
+REST api libraries.
+
+Main features:
+
+- `RestClient`: a class which offers asynchronous performance via a convenient serial
+  wrapper, sqlite database GET request caching, GET request backoff, batch GET requests,
+  and flexible url argument encoding.
+
+- `Url`: Treat urls like to `pathlib.Path`s. Supports appending paths with `/` and
+  appending url query parameters with `+`.
+
+- `ClientSession`: Extension of
+  [`aiohttp_client_cache`](https://github.com/JWCook/aiohttp-client-cache) that adds
+  exponential backoff.
+
+- `Variadic`: Join list or tuple of objects on some delimiter. Useful when query
+  parameters utilize a non-`key=value&key=value2` pattern.
+
+- `Alias` and `AliasGroup`: Immutable utility classes that simplify common API library
+  development patterns (i.e. separation of backend uris from front end interfaces).
+
+See the [REST Client
+Documentation](https://noaa-owp.github.io/hydrotools/hydrotools._restclient.html) for a
+complete list and description of the currently available methods. To report bugs or
 request new features, submit an issue through the [HydroTools Issue
 Tracker](https://github.com/NOAA-OWP/hydrotools/issues) on GitHub.
 
@@ -55,9 +72,9 @@ class BaconIpsum:
     def __init__(self):
         self._restclient = _restclient.RestClient(
             self._base_url,
-            requests_cache_filename="bacon_ipsum_cache",
-            requests_cache_expire_after=43200,
-            retries=5,
+            cache_filename="bacon_ipsum_cache",
+            cache_expire_after=43200, # in seconds
+            n_retries=5,
         )
 
     @classmethod
