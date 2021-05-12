@@ -80,6 +80,11 @@ class HDFCache:
         object
             Retrieve object from file.
         """
+        # Validate key
+        if type(key) != str:
+            message = "key must be str type"
+            raise TypeError(message)
+
         # Check cache and return if available
         if key in self.store:
             return self.store[key]
