@@ -13,17 +13,21 @@ SUBPACKAGE_NAME = "_restclient"
 SUBPACKAGE_SLUG = f"{NAMESPACE_PACKAGE_NAME}.{SUBPACKAGE_NAME}"
 
 # Subpackage version
-VERSION = "2.1.0-alpha.0"
+VERSION = "3.0.0"
 
 # Package author information
 AUTHOR = "Austin Raney"
 AUTHOR_EMAIL = "arthur.raney@noaa.gov"
 
 # Short sub-package description
-DESCRIPTION = "Abstract REST api client with built in request caching and retries"
+DESCRIPTION = (
+    "Utilities adept for quickly and succinctly writing REST api client libraries."
+)
 
 # Package dependency requirements
-REQUIREMENTS = ["requests", "requests_cache"]
+REQUIREMENTS = ["aiohttp", "aiohttp_client_cache", "python-forge", "aiosqlite"]
+DEVELOPMENT_REQUIREMENTS = ["pytest", "pytest-aiohttp"]
+
 
 setup(
     name=SUBPACKAGE_SLUG,
@@ -35,4 +39,5 @@ setup(
     namespace_packages=[NAMESPACE_PACKAGE_NAME],
     packages=find_namespace_packages(include=[f"{NAMESPACE_PACKAGE_NAME}.*"]),
     install_requires=REQUIREMENTS,
+    extras_require={"develop": DEVELOPMENT_REQUIREMENTS},
 )
