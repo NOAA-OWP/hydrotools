@@ -5,7 +5,7 @@ import numpy as np
 import tempfile
 from pathlib import Path
 
-def test_cache():
+def test_cache_context():
     def random_dataframe():
         return pd.DataFrame({
             'A': np.random.random(100),
