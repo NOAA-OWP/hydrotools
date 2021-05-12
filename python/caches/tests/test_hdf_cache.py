@@ -2,9 +2,8 @@ import pytest
 from hydrotools.caches.hdf import HDFCache
 import pandas as pd
 import numpy as np
+import tempfile
 from pathlib import Path
-
-cache_path = Path('test_cache.h5')
 
 def test_cache():
     def random_dataframe():
@@ -13,9 +12,10 @@ def test_cache():
             'B': np.random.random(100)
         })
 
-    with HDFCache(cache_path) as cache:
-        df1 = cache.get(random_dataframe, 'data/results')
-        df2 = cache.get(random_dataframe, 'data/results')
-        assert df1.equals(df2)
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        cache_path = Path(tmpdirname) / 'test_cache.h5'
 
-    cache_path.unlink()
+        with HDFCache(cache_path) as cache:
+            df1 = cache.get(random_dataframe, 'data/results')
+            df2 = cache.get(random_dataframe, 'data/results')
+            assert df1.equals(df2)
