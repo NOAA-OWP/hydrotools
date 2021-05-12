@@ -115,7 +115,8 @@ class RestClient(AsyncToSerialHelper):
     @GET_SIGNATURE
     def get(self, url, *, parameters, headers, **kwargs):
         """Make GET request. If base url is set, url is appended to the base url.
-        Likewise for request headers.
+        Passed headers are given precedent over instance headers(if present), meaning
+        passed headers replace instance headers with matching keys.
 
         Parameters
         ----------
@@ -138,7 +139,9 @@ class RestClient(AsyncToSerialHelper):
     @MGET_SIGNATURE
     def mget(self, urls, *, parameters, headers, **kwargs):
         """Make multiple asynchronous GET request. If base url is set, each url is
-        appended to the base url.  Likewise for request headers.
+        appended to the base url. Passed headers are given precedent over instance
+        headers(if present), meaning passed headers replace instance headers with
+        matching keys.
 
         Parameters
         ----------
