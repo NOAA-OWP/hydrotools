@@ -49,6 +49,9 @@ class HDFCache:
     def __exit__(self, exc_type, exc_value, exc_traceback):
         self.close()
 
+    def __del__(self):
+        self.close()
+
     def close(self):
         """
         Close the Pandas HDFStore.
