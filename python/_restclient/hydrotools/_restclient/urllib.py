@@ -257,3 +257,12 @@ class Variadic(UserString, str):
 
     def __init__(self, values: Union[List, Tuple], *, delimeter: str = ",") -> None:
         self.data = delimeter.join([str(v) for v in values])
+
+    def encode(self, encoding: str = ..., errors: str = ...) -> bytes:
+        kwargs = {}
+        if encoding is not Ellipsis:
+            kwargs["encoding"] = encoding
+        if errors is not Ellipsis:
+            kwargs["errors"] = errors
+
+        return self.data.encode(**kwargs)
