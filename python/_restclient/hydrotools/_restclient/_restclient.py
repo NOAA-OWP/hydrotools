@@ -18,9 +18,9 @@ __all__ = ["RestClient"]
 
 class RestClient(AsyncToSerialHelper):
     """
-    Class adept for supporting and simplifying RESTful client libraries and retrieval
-    scripts. Behind the scenes requests are made asynchronously, however the API is
-    exposed using serial methods to simplify usage.
+    Class that simplifies writing RESTful client libraries and retrieval scripts. Behind
+    the scenes requests are made asynchronously, however the API is exposed using serial
+    methods to simplify usage.
 
     Features
     --------
