@@ -28,6 +28,9 @@ def forge_client_session(init):
 
 with warnings.catch_warnings():
     # Ignore aiohttp.ClientSession Inheritance warning
+    # This is the same approach that aiohttp_client_cache takes to implement their CachedSession object
+    # As noted by aiohttp_client_cache in their implementation:
+    # Since only _request() is overridden, there is minimal chance of breakage, but still possible
     warnings.filterwarnings(
         "ignore", category=DeprecationWarning, message="Inheritance class"
     )
