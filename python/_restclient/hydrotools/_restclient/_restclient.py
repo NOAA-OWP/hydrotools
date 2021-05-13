@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 from typing import Any, List, Union
 import asyncio
 from aiohttp.client_reqrep import ClientResponse

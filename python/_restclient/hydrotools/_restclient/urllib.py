@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import urllib.parse as parse
 from typing import Dict, List, Tuple, Union, TypeVar
 from collections import UserString

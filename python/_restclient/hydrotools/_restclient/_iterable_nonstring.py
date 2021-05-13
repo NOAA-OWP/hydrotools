@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 from abc import ABCMeta, abstractmethod
 
 __all__ = ["IterableNonStringLike"]

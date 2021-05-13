@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 from aiohttp_client_cache import CachedSession
 import asyncio
 import forge
