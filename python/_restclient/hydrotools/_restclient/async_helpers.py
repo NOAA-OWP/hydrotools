@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import asyncio
 from typing import Callable, Coroutine
 from functools import partial, wraps

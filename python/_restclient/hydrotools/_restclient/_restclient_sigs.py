@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import forge
 import aiohttp
 from typing import Dict, List, Union
