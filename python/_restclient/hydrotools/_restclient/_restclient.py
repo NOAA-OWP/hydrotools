@@ -136,7 +136,7 @@ class RestClient(AsyncToSerialHelper):
 
     @MGET_SIGNATURE
     def mget(self, urls, *, parameters, headers, **kwargs):
-        """Make multiple asynchronous GET request. If base url is set, each url is
+        """Make multiple asynchronous GET requests. If base url is set, each url is
         appended to the base url. Passed headers are given precedent over instance
         headers(if present), meaning passed headers replace instance headers with
         matching keys.
