@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 from copy import deepcopy
 from dataclasses import dataclass
 from typing import Callable, Hashable, Iterable, List, Union
