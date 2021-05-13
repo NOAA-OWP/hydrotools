@@ -176,8 +176,10 @@ class Url(UserString, str):
         >>> print(url)
         >>> https://www.test.gov/api
         """
-        path = f"{self._url.path}/{b}"
-        return self._build_parse_result_cast_to_url(self._url, path=path)
+        if isinstance(b, str):
+            path = f"{self._url.path}/{b}"
+            return self._build_parse_result_cast_to_url(self._url, path=path)
+        raise TypeError("Arg is required subclass string")
 
     @property
     def url(self) -> str:
