@@ -20,9 +20,7 @@ AUTHOR = "Austin Raney"
 AUTHOR_EMAIL = "arthur.raney@noaa.gov"
 
 # Short sub-package description
-DESCRIPTION = (
-    "Utilities adept for quickly and succinctly writing REST api client libraries."
-)
+DESCRIPTION = "General REST api client with built in request caching and retries."
 
 # Package dependency requirements
 REQUIREMENTS = ["aiohttp", "aiohttp_client_cache", "python-forge", "aiosqlite"]
