@@ -212,10 +212,26 @@ class RestClient(AsyncToSerialHelper):
     async def _mget(
         self,
         urls,
-        *args,
+        *,
+        parameters,
+        headers,
         **kwargs: Any,
     ) -> List[aiohttp.ClientResponse]:
-        return await asyncio.gather(*[self._get(url, *args, **kwargs) for url in urls])
+        if parameters:
+            assert len(parameters) == len(urls)
+        if headers:
+            assert len(headers) == len(urls)
+
+        return await asyncio.gather(
+            *[
+                self._get(
+                    url,
+                    parameters=parameters[idx] if parameters else {},
+                    headers=headers[idx] if headers else {},
+                )
+                for idx, url in enumerate(urls)
+            ]
+        )
 
     def _patch_get(
         self, client_response: aiohttp.ClientResponse
