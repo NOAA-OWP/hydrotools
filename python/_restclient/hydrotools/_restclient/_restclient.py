@@ -169,7 +169,13 @@ class RestClient(AsyncToSerialHelper):
         headers,
         **kwargs,
     ) -> aiohttp.ClientResponse:
-        if self.base_url is not None:
+        if url is None:
+            if self.base_url is None:
+                raise ValueError("no url provided and no base url set")
+            # only base url
+            url = self._base_url
+
+        elif self.base_url is not None:
             url = self._base_url / url
 
         # add query parameters and get quoted representation
