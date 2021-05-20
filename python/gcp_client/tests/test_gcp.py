@@ -25,11 +25,17 @@ def test_crosswalk(setup_gcp):
     with pytest.raises(Exception):
         setup_gcp.crosswalk = pd.DataFrame()
 
-# def test_cache(setup_gcp):
-#     assert str(setup_gcp.cache) == 'gcp_cache.h5'
+def test_cache_path(setup_gcp):
+    assert str(setup_gcp.cache_path) == 'gcp_client.h5'
 
-#     setup_gcp.cache = 'custom_cache.h5'
-#     assert str(setup_gcp.cache) == 'custom_cache.h5'
+    setup_gcp.cache_path = 'custom_cache.h5'
+    assert str(setup_gcp.cache_path) == 'custom_cache.h5'
+
+def test_cache_group(setup_gcp):
+    assert str(setup_gcp.cache_group) == 'gcp_client'
+
+    setup_gcp.cache_group = 'simulations'
+    assert str(setup_gcp.cache_group) == 'simulations'
 
 @pytest.mark.slow
 def test_list_blobs(setup_gcp):
