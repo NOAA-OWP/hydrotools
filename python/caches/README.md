@@ -36,7 +36,7 @@ def long_process(cols, rows):
 # Setup the cache with a context manager
 #  Similar to setting up a pandas.HDFStore
 with HDFCache(
-    path='test_cache.h5',
+    path='mycache.h5',
     complevel=1,
     complib='zlib',
     fletcher32=True
