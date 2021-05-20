@@ -103,6 +103,7 @@ def test_get_cycle(setup_gcp):
     )
     assert df['valid_time'].unique().size == 3
 
+@pytest.mark.slow
 def test_cache_disable(setup_gcp):
     setup_gcp.cache_path = 'disabled_cache.h5'
 
@@ -114,6 +115,21 @@ def test_cache_disable(setup_gcp):
     )
     assert df['valid_time'].unique().size == 3
     assert not setup_gcp.cache_path.exists()
+
+@pytest.mark.slow
+def test_cache_key(setup_gcp):
+    # Test ANA
+    df1 = setup_gcp.get(
+        configuration="analysis_assim",
+        reference_time="20210101T02Z",
+        cache_data=True
+    )
+    first = df1['valid_time'].unique().size
+
+    with pd.HDFStore(setup_gcp.cache_path) as store:
+        df2 = store[f"/{setup_gcp.cache_group}/analysis_assim/DT20210101T02Z"]
+        second = df2['valid_time'].unique().size
+    assert first == second
 
 @pytest.mark.slow
 def test_get(setup_gcp):
