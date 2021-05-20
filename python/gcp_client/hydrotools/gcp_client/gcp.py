@@ -93,9 +93,6 @@ class NWMDataService:
             ).set_index('nwm_feature_id')[['usgs_site_code']])
             self.crosswalk = pd.concat(dfs)
 
-        # Set default dataframe cache
-        self.cache = Path('gcp_cache.h5')
-
     # TODO find publicly available authoritative source of service
     #  compatible valid model configuration strings
     def list_blobs(
@@ -316,18 +313,6 @@ class NWMDataService:
         ...     )
         
         """
-        # Check cache
-        # TODO Numpy complains about deprecated np.objects, downstream
-        #  packages haven't caught up yet, in this case tables and/or pandas
-        key = f'{configuration}/DT{reference_time}'
-        if self.cache.exists():
-            with pd.HDFStore(self.cache) as store:
-                if key in store:
-                    with warnings.catch_warnings():
-                        warnings.filterwarnings("ignore", category=DeprecationWarning)
-            
-                        return store[key]
-
         # Get list of blob names
         blob_list = self.list_blobs(
             configuration=configuration,
@@ -369,15 +354,6 @@ class NWMDataService:
             by=['nwm_feature_id', 'valid_time'],
             ignore_index=True
             )
-        
-        # Cache
-        # TODO Remove warning when tables/pandas catches up to Numpy
-        with pd.HDFStore(self.cache) as store:
-            if key not in store:
-                with warnings.catch_warnings():
-                    warnings.filterwarnings("ignore", category=DeprecationWarning)
-
-                    store.put(key, value=df, format='table')
 
         # Return all data
         return df
@@ -407,14 +383,6 @@ class NWMDataService:
 
         # Set crosswalk
         self._crosswalk = mapping
-        
-    @property
-    def cache(self) -> Path:
-        return self._cache
-
-    @cache.setter
-    def cache(self, filepath):
-        self._cache = Path(filepath)
 
     @property
     def configurations(self) -> list:
