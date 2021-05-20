@@ -14,6 +14,8 @@ Classes
 
 """
 
+from hydrotools.caches.hdf import HDFCache
+
 from google.cloud import storage
 from io import BytesIO
 import xarray as xr
@@ -46,7 +48,10 @@ class NWMDataService:
         self, 
         bucket_name: str = 'national-water-model', 
         max_processes: int = None,
-        location_metadata_mapping: pd.DataFrame = None
+        location_metadata_mapping: pd.DataFrame = None,
+        cache_data: bool = True,
+        cache_path: Union[str, Path] = "gcp_client.h5",
+        cache_group: str = 'gcp_client'
         ):
         """Instantiate NWM Data Service.
 
@@ -59,6 +64,15 @@ class NWMDataService:
         location_metadata_mapping : pandas.DataFrame with nwm_feature_id Index and
             columns of corresponding site metadata. Defaults to 7500+ usgs_site_code
             used by the NWM for data assimilation.
+        cache_data : bool, optional, default True
+            If True use a local HDFStore to save retrieved data.
+        cache_path : str or pathlib.Path, optional, default 'gcp_client.h5'
+            Path to HDF5 file used to store data locally.
+        cache_group : str, optional, default 'gcp_client'
+            Root group inside cache_path used to store HDF5 datasets.
+            Structure defaults to storing pandas.DataFrames in PyTable format.
+            Individual DataFrames can be accessed directly using key patterns 
+            that look like '/{cache_group}/{configuration}/DT{reference_time}'
 
         Returns
         -------
@@ -92,6 +106,10 @@ class NWMDataService:
                 comment='#'
             ).set_index('nwm_feature_id')[['usgs_site_code']])
             self.crosswalk = pd.concat(dfs)
+
+        # Set caching options
+        self._cache_path = Path(cache_path)
+        self._cache_group = cache_group
 
     # TODO find publicly available authoritative source of service
     #  compatible valid model configuration strings
@@ -361,6 +379,22 @@ class NWMDataService:
     @property
     def bucket_name(self) -> str:
         return self._bucket_name
+
+    @property
+    def cache_path(self) -> Path:
+        return self._cache_path
+
+    @cache_path.setter
+    def cache_path(self, path):
+        self._cache_path = Path(path)
+
+    @property
+    def cache_group(self) -> str:
+        return self._cache_group
+
+    @cache_group.setter
+    def cache_group(self, group):
+        self._cache_group = group
 
     @property
     def max_processes(self) -> int:
