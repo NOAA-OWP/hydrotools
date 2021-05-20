@@ -14,6 +14,7 @@ Classes
 
 """
 
+from pandas.core.indexing import convert_from_missing_indexer_tuple
 from hydrotools.caches.hdf import HDFCache
 
 from google.cloud import storage
@@ -49,7 +50,6 @@ class NWMDataService:
         bucket_name: str = 'national-water-model', 
         max_processes: int = None,
         location_metadata_mapping: pd.DataFrame = None,
-        cache_data: bool = True,
         cache_path: Union[str, Path] = "gcp_client.h5",
         cache_group: str = 'gcp_client'
         ):
@@ -64,8 +64,6 @@ class NWMDataService:
         location_metadata_mapping : pandas.DataFrame with nwm_feature_id Index and
             columns of corresponding site metadata. Defaults to 7500+ usgs_site_code
             used by the NWM for data assimilation.
-        cache_data : bool, optional, default True
-            If True use a local HDFStore to save retrieved data.
         cache_path : str or pathlib.Path, optional, default 'gcp_client.h5'
             Path to HDF5 file used to store data locally.
         cache_group : str, optional, default 'gcp_client'
@@ -299,7 +297,7 @@ class NWMDataService:
         # Return DataFrame
         return df
 
-    def get(
+    def get_cycle(
         self,
         configuration: str,
         reference_time: str
@@ -375,6 +373,60 @@ class NWMDataService:
 
         # Return all data
         return df
+
+    def get(
+        self,
+        configuration: str,
+        reference_time: str,
+        cache_data: bool = True,
+        ) -> pd.DataFrame:
+        """Return streamflow data for a single model cycle in a pandas DataFrame.
+
+        Parameters
+        ----------
+        configuration : str, required
+            Particular model simulation or forecast configuration. For a list 
+            of available configurations see NWMDataService.configurations
+        reference_time : str, required
+            Model simulation or forecast issuance/reference time in 
+            YYYYmmddTHHZ format.
+        cache_data : bool, optional, default True
+            If True use a local HDFStore to save retrieved data.
+
+        Returns
+        -------
+        df : pandas.DataFrame
+            Simluted or forecasted streamflow data associated with a single
+            run of the National Water Model.
+
+        Examples
+        --------
+        >>> from hydrotools.gcp_client import gcp
+        >>> model_data_service = gcp.NWMDataService()
+        >>> forecast_data = model_data_service.get(
+        ...     configuration = "short_range",
+        ...     reference_time = "20210101T01Z"
+        ...     )
+        
+        """
+        # Return with caching
+        if cache_data:
+            key = f"/{self.cache_group}/{configuration}/DT{reference_time}"
+            with HDFCache(
+                path=self.cache_path,
+                complevel=1,
+                complib='zlib',
+                fletch32=True
+            ) as cache:
+                return cache.get(
+                    self.get_cycle,
+                    key,
+                    configuration=configuration,
+                    reference_time=reference_time
+                )
+
+        # Return without caching
+        return self.get_cycle(configuration, reference_time)
 
     @property
     def bucket_name(self) -> str:
