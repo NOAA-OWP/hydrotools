@@ -282,7 +282,7 @@ class NWMDataService:
 
         # Rename columns
         df = df.rename(columns={
-            'time': 'valid_time',
+            'time': 'value_time',
             'feature_id': 'nwm_feature_id'
         })
 
@@ -367,7 +367,7 @@ class NWMDataService:
 
         # Sort values
         df = df.sort_values(
-            by=['nwm_feature_id', 'valid_time'],
+            by=['nwm_feature_id', 'value_time'],
             ignore_index=True
             )
 
