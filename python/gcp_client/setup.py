@@ -28,7 +28,14 @@ with (Path(__file__).parent / "README.md").open('r') as f:
     LONG_DESCRIPTION = f.read()
 
 # Package dependency requirements
-REQUIREMENTS = ["pandas", "xarray", "google-cloud-storage", "hydrotools.caches==0.1.1", "numpy>=1.20.0"]
+REQUIREMENTS = [
+    "pandas",
+    "xarray",
+    "google-cloud-storage",
+    "hydrotools.caches==0.1.1",
+    "h5netcdf",
+    "numpy>=1.20.0"
+    ]
 
 setup(
     name=SUBPACKAGE_SLUG,
