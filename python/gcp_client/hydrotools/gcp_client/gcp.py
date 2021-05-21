@@ -49,6 +49,7 @@ class NWMDataService:
         self, 
         bucket_name: str = 'national-water-model', 
         max_processes: int = None,
+        *,
         location_metadata_mapping: pd.DataFrame = None,
         cache_path: Union[str, Path] = "gcp_client.h5",
         cache_group: str = 'gcp_client'
