@@ -157,7 +157,7 @@ from Google Cloud Platform.</p>
 </div></blockquote>
 <dl class="py class">
 <dt id="hydrotools.gcp_client.gcp.NWMDataService">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">hydrotools.gcp_client.gcp.</span></code><code class="sig-name descname"><span class="pre">NWMDataService</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bucket_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'national-water-model'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_processes</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location_metadata_mapping</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hydrotools.gcp_client.gcp.NWMDataService" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">hydrotools.gcp_client.gcp.</span></code><code class="sig-name descname"><span class="pre">NWMDataService</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bucket_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'national-water-model'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_processes</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location_metadata_mapping</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'gcp_client.h5'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_group</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'gcp_client'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hydrotools.gcp_client.gcp.NWMDataService" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A Google Cloud Storage client class.
 The NWMDataService class provides various methods for constructing
@@ -168,8 +168,12 @@ on Google Cloud Platform.</p>
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">bucket_name</span></code><a class="headerlink" href="#hydrotools.gcp_client.gcp.NWMDataService.bucket_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 <dl class="py method">
-<dt id="hydrotools.gcp_client.gcp.NWMDataService.cache">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">cache</span></code><a class="headerlink" href="#hydrotools.gcp_client.gcp.NWMDataService.cache" title="Permalink to this definition">¶</a></dt>
+<dt id="hydrotools.gcp_client.gcp.NWMDataService.cache_group">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">cache_group</span></code><a class="headerlink" href="#hydrotools.gcp_client.gcp.NWMDataService.cache_group" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt id="hydrotools.gcp_client.gcp.NWMDataService.cache_path">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">cache_path</span></code><a class="headerlink" href="#hydrotools.gcp_client.gcp.NWMDataService.cache_path" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 <dl class="py method">
 <dt id="hydrotools.gcp_client.gcp.NWMDataService.configurations">
@@ -181,7 +185,7 @@ on Google Cloud Platform.</p>
 <dd></dd></dl>
 <dl class="py method">
 <dt id="hydrotools.gcp_client.gcp.NWMDataService.get">
-<code class="sig-name descname"><span class="pre">get</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_time</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> → <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#hydrotools.gcp_client.gcp.NWMDataService.get" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_time</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> → <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#hydrotools.gcp_client.gcp.NWMDataService.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return streamflow data for a single model cycle in a pandas DataFrame.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -190,6 +194,7 @@ on Google Cloud Platform.</p>
 of available configurations see NWMDataService.configurations</p></li>
 <li><p><strong>reference_time</strong> (<em>str</em><em>, </em><em>required</em>) – Model simulation or forecast issuance/reference time in
 YYYYmmddTHHZ format.</p></li>
+<li><p><strong>cache_data</strong> (<em>bool</em><em>, </em><em>optional</em><em>, </em><em>default True</em>) – If True use a local HDFStore to save retrieved data.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -266,6 +271,37 @@ list.</p></li>
 <dd class="field-odd"><p>bytes</p>
 </dd>
 </dl>
+</dd></dl>
+<dl class="py method">
+<dt id="hydrotools.gcp_client.gcp.NWMDataService.get_cycle">
+<code class="sig-name descname"><span class="pre">get_cycle</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_time</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> → <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#hydrotools.gcp_client.gcp.NWMDataService.get_cycle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return streamflow data for a single model cycle in a pandas DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>configuration</strong> (<em>str</em><em>, </em><em>required</em>) – Particular model simulation or forecast configuration. For a list
+of available configurations see NWMDataService.configurations</p></li>
+<li><p><strong>reference_time</strong> (<em>str</em><em>, </em><em>required</em>) – Model simulation or forecast issuance/reference time in
+YYYYmmddTHHZ format.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>df</strong> – Simluted or forecasted streamflow data associated with a single
+run of the National Water Model.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hydrotools.gcp_client</span> <span class="kn">import</span> <span class="n">gcp</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model_data_service</span> <span class="o">=</span> <span class="n">gcp</span><span class="o">.</span><span class="n">NWMDataService</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">forecast_data</span> <span class="o">=</span> <span class="n">model_data_service</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">configuration</span> <span class="o">=</span> <span class="s2">"short_range"</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">reference_time</span> <span class="o">=</span> <span class="s2">"20210101T01Z"</span>
+<span class="gp">... </span>    <span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 <dl class="py method">
 <dt id="hydrotools.gcp_client.gcp.NWMDataService.list_blobs">
