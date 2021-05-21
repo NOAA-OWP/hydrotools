@@ -14,7 +14,7 @@ SUBPACKAGE_NAME = "gcp_client"
 SUBPACKAGE_SLUG = f"{NAMESPACE_PACKAGE_NAME}.{SUBPACKAGE_NAME}"
 
 # Subpackage version
-VERSION = "2.3.4"
+VERSION = "3.0.0"
 
 # Package author information
 AUTHOR = "Jason Regina"
@@ -28,7 +28,14 @@ with (Path(__file__).parent / "README.md").open('r') as f:
     LONG_DESCRIPTION = f.read()
 
 # Package dependency requirements
-REQUIREMENTS = ["pandas", "xarray", "google-cloud-storage", "h5netcdf", "tables", "numpy>=1.20.0"]
+REQUIREMENTS = [
+    "pandas",
+    "xarray",
+    "google-cloud-storage",
+    "hydrotools.caches==0.1.1",
+    "h5netcdf",
+    "numpy>=1.20.0"
+    ]
 
 setup(
     name=SUBPACKAGE_SLUG,

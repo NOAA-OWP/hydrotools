@@ -25,11 +25,17 @@ def test_crosswalk(setup_gcp):
     with pytest.raises(Exception):
         setup_gcp.crosswalk = pd.DataFrame()
 
-def test_cache(setup_gcp):
-    assert str(setup_gcp.cache) == 'gcp_cache.h5'
+def test_cache_path(setup_gcp):
+    assert str(setup_gcp.cache_path) == 'gcp_client.h5'
 
-    setup_gcp.cache = 'custom_cache.h5'
-    assert str(setup_gcp.cache) == 'custom_cache.h5'
+    setup_gcp.cache_path = 'custom_cache.h5'
+    assert str(setup_gcp.cache_path) == 'custom_cache.h5'
+
+def test_cache_group(setup_gcp):
+    assert str(setup_gcp.cache_group) == 'gcp_client'
+
+    setup_gcp.cache_group = 'simulations'
+    assert str(setup_gcp.cache_group) == 'simulations'
 
 @pytest.mark.slow
 def test_list_blobs(setup_gcp):
@@ -87,6 +93,43 @@ def test_get_DataFrame(setup_gcp):
     # Test all variables
     df = setup_gcp.get_DataFrame(blob_name, streamflow_only=False)
     assert len(df.columns) > 4
+
+@pytest.mark.slow
+def test_get_cycle(setup_gcp):
+    # Test ANA
+    df = setup_gcp.get_cycle(
+        configuration="analysis_assim",
+        reference_time="20210101T01Z"
+    )
+    assert df['valid_time'].unique().size == 3
+
+@pytest.mark.slow
+def test_cache_disable(setup_gcp):
+    setup_gcp.cache_path = 'disabled_cache.h5'
+
+    # Test ANA
+    df = setup_gcp.get(
+        configuration="analysis_assim",
+        reference_time="20210101T01Z",
+        cache_data=False
+    )
+    assert df['valid_time'].unique().size == 3
+    assert not setup_gcp.cache_path.exists()
+
+@pytest.mark.slow
+def test_cache_key(setup_gcp):
+    # Test ANA
+    df1 = setup_gcp.get(
+        configuration="analysis_assim",
+        reference_time="20210101T02Z",
+        cache_data=True
+    )
+    first = df1['valid_time'].unique().size
+
+    with pd.HDFStore(setup_gcp.cache_path) as store:
+        df2 = store[f"/{setup_gcp.cache_group}/analysis_assim/DT20210101T02Z"]
+        second = df2['valid_time'].unique().size
+    assert first == second
 
 @pytest.mark.slow
 def test_get(setup_gcp):

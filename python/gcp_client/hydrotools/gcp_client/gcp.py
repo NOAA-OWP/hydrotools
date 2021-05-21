@@ -14,6 +14,9 @@ Classes
 
 """
 
+from pandas.core.indexing import convert_from_missing_indexer_tuple
+from hydrotools.caches.hdf import HDFCache
+
 from google.cloud import storage
 from io import BytesIO
 import xarray as xr
@@ -46,7 +49,10 @@ class NWMDataService:
         self, 
         bucket_name: str = 'national-water-model', 
         max_processes: int = None,
-        location_metadata_mapping: pd.DataFrame = None
+        *,
+        location_metadata_mapping: pd.DataFrame = None,
+        cache_path: Union[str, Path] = "gcp_client.h5",
+        cache_group: str = 'gcp_client'
         ):
         """Instantiate NWM Data Service.
 
@@ -59,6 +65,13 @@ class NWMDataService:
         location_metadata_mapping : pandas.DataFrame with nwm_feature_id Index and
             columns of corresponding site metadata. Defaults to 7500+ usgs_site_code
             used by the NWM for data assimilation.
+        cache_path : str or pathlib.Path, optional, default 'gcp_client.h5'
+            Path to HDF5 file used to store data locally.
+        cache_group : str, optional, default 'gcp_client'
+            Root group inside cache_path used to store HDF5 datasets.
+            Structure defaults to storing pandas.DataFrames in PyTable format.
+            Individual DataFrames can be accessed directly using key patterns 
+            that look like '/{cache_group}/{configuration}/DT{reference_time}'
 
         Returns
         -------
@@ -93,8 +106,9 @@ class NWMDataService:
             ).set_index('nwm_feature_id')[['usgs_site_code']])
             self.crosswalk = pd.concat(dfs)
 
-        # Set default dataframe cache
-        self.cache = Path('gcp_cache.h5')
+        # Set caching options
+        self._cache_path = Path(cache_path)
+        self._cache_group = cache_group
 
     # TODO find publicly available authoritative source of service
     #  compatible valid model configuration strings
@@ -269,7 +283,7 @@ class NWMDataService:
 
         # Rename columns
         df = df.rename(columns={
-            'time': 'valid_time',
+            'time': 'value_time',
             'feature_id': 'nwm_feature_id'
         })
 
@@ -284,7 +298,7 @@ class NWMDataService:
         # Return DataFrame
         return df
 
-    def get(
+    def get_cycle(
         self,
         configuration: str,
         reference_time: str
@@ -316,18 +330,6 @@ class NWMDataService:
         ...     )
         
         """
-        # Check cache
-        # TODO Numpy complains about deprecated np.objects, downstream
-        #  packages haven't caught up yet, in this case tables and/or pandas
-        key = f'{configuration}/DT{reference_time}'
-        if self.cache.exists():
-            with pd.HDFStore(self.cache) as store:
-                if key in store:
-                    with warnings.catch_warnings():
-                        warnings.filterwarnings("ignore", category=DeprecationWarning)
-            
-                        return store[key]
-
         # Get list of blob names
         blob_list = self.list_blobs(
             configuration=configuration,
@@ -366,25 +368,86 @@ class NWMDataService:
 
         # Sort values
         df = df.sort_values(
-            by=['nwm_feature_id', 'valid_time'],
+            by=['nwm_feature_id', 'value_time'],
             ignore_index=True
             )
-        
-        # Cache
-        # TODO Remove warning when tables/pandas catches up to Numpy
-        with pd.HDFStore(self.cache) as store:
-            if key not in store:
-                with warnings.catch_warnings():
-                    warnings.filterwarnings("ignore", category=DeprecationWarning)
-
-                    store.put(key, value=df, format='table')
 
         # Return all data
         return df
 
+    def get(
+        self,
+        configuration: str,
+        reference_time: str,
+        cache_data: bool = True,
+        ) -> pd.DataFrame:
+        """Return streamflow data for a single model cycle in a pandas DataFrame.
+
+        Parameters
+        ----------
+        configuration : str, required
+            Particular model simulation or forecast configuration. For a list 
+            of available configurations see NWMDataService.configurations
+        reference_time : str, required
+            Model simulation or forecast issuance/reference time in 
+            YYYYmmddTHHZ format.
+        cache_data : bool, optional, default True
+            If True use a local HDFStore to save retrieved data.
+
+        Returns
+        -------
+        df : pandas.DataFrame
+            Simluted or forecasted streamflow data associated with a single
+            run of the National Water Model.
+
+        Examples
+        --------
+        >>> from hydrotools.gcp_client import gcp
+        >>> model_data_service = gcp.NWMDataService()
+        >>> forecast_data = model_data_service.get(
+        ...     configuration = "short_range",
+        ...     reference_time = "20210101T01Z"
+        ...     )
+        
+        """
+        # Return with caching
+        if cache_data:
+            key = f"/{self.cache_group}/{configuration}/DT{reference_time}"
+            with HDFCache(
+                path=self.cache_path,
+                complevel=1,
+                complib='zlib',
+                fletch32=True
+            ) as cache:
+                return cache.get(
+                    self.get_cycle,
+                    key,
+                    configuration=configuration,
+                    reference_time=reference_time
+                )
+
+        # Return without caching
+        return self.get_cycle(configuration, reference_time)
+
     @property
     def bucket_name(self) -> str:
         return self._bucket_name
+
+    @property
+    def cache_path(self) -> Path:
+        return self._cache_path
+
+    @cache_path.setter
+    def cache_path(self, path):
+        self._cache_path = Path(path)
+
+    @property
+    def cache_group(self) -> str:
+        return self._cache_group
+
+    @cache_group.setter
+    def cache_group(self, group):
+        self._cache_group = group
 
     @property
     def max_processes(self) -> int:
@@ -407,14 +470,6 @@ class NWMDataService:
 
         # Set crosswalk
         self._crosswalk = mapping
-        
-    @property
-    def cache(self) -> Path:
-        return self._cache
-
-    @cache.setter
-    def cache(self, filepath):
-        self._cache = Path(filepath)
 
     @property
     def configurations(self) -> list:
