@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from setuptools import setup, find_namespace_packages
+from pathlib import Path
 
 # python namespace subpackage
 # this namespace package follows PEP420
@@ -13,7 +14,7 @@ SUBPACKAGE_NAME = "events"
 SUBPACKAGE_SLUG = f"{NAMESPACE_PACKAGE_NAME}.{SUBPACKAGE_NAME}"
 
 # Subpackage version
-VERSION = "1.0.0-alpha.0"
+VERSION = "1.0.1"
 
 # Package author information
 AUTHOR = "Jason Regina"
@@ -21,6 +22,10 @@ AUTHOR_EMAIL = "jason.regina@noaa.gov"
 
 # Short sub-package description
 DESCRIPTION = "Various methods to support event-based evaluations."
+
+# Long description
+with (Path(__file__).parent / "README.md").open('r') as f:
+    LONG_DESCRIPTION = f.read()
 
 # Package dependency requirements
 REQUIREMENTS = [
@@ -33,11 +38,19 @@ setup(
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,
     classifiers=[
-        "",
+        "Development Status :: 3 - Alpha",
+        "Intended Audience :: Education",
+        "Intended Audience :: Science/Research",
+        "License :: Free To Use But Restricted",
+        "Programming Language :: Python :: 3",
+        "Topic :: Scientific/Engineering :: Hydrology"
     ],
     description=DESCRIPTION,
+    long_description=LONG_DESCRIPTION,
+    long_description_content_type='text/markdown',
+    url="https://www.github.com/NOAA-OWP/hydrotools",
+    license="USDOC",
     namespace_packages=[NAMESPACE_PACKAGE_NAME],
     packages=find_namespace_packages(include=[f"{NAMESPACE_PACKAGE_NAME}.*"]),
-    package_data={},
     install_requires=REQUIREMENTS,
 )
