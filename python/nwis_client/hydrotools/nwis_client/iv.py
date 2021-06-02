@@ -48,14 +48,13 @@ class IVDataService:
     _requests_cache_filename = "nwisiv_cache"
     _headers = {"Accept-Encoding": "gzip, compress"}
 
-    def __init__(self, processes: int = 3, retries: int = 3):
-        self._procs = processes
-
+    def __init__(self, *, enable_cache: bool = True, cache_expire_after: int = 43200):
         self._restclient = RestClient(
             base_url=self._base_url,
             headers=self._headers,
-            requests_cache_filename=self._requests_cache_filename,
-            retries=retries,
+            enable_cache=enable_cache,
+            cache_filename=self._requests_cache_filename,
+            cache_expire_after=cache_expire_after,
         )
 
     @classmethod
