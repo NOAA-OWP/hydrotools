@@ -661,6 +661,20 @@ class IVDataService:
         TypeError
             If any input is non-string or
         """
+        args = {"startDT": startDT, "endDT": endDT, "period": period}
+        accepted = [set(), {"startDT", "endDT"}, {"startDT"}, {"period"}]
+        error_message = (
+            "Invalid set of datetime related arguments.\n"
+            "Cannot only supply:\n"
+            "`period` and `startDT` and `endDT`\n"
+            "`period` and `startDT`\n"
+            "`period` and `endDT`\n"
+            "`endDT`"
+        )
+
+        valid_args = validate_optional_combinations(
+            arg_mapping=args, valid_arg_keys=accepted, exception_message=error_message
+        )
 
         def is_string_or_non_string_iterable(x) -> bool:
             # Return True if x is a string or non-iterable
@@ -668,33 +682,38 @@ class IVDataService:
                 return True
             return not isinstance(x, Iterable)
 
-        # Boolean addition. For valid input, should equal 3
-        N_VALID_ARGS = (
-            is_string_or_non_string_iterable(startDT)
-            + is_string_or_non_string_iterable(endDT)
-            + is_string_or_non_string_iterable(period)
-        )
+        for arg in valid_args.values():
+            if not is_string_or_non_string_iterable(arg):
+                error_message = "Non-string iterable type cannot be passed."
+                raise TypeError(error_message)
 
-        if N_VALID_ARGS != 3:
-            error_message = "Non-string iterable type cannot be passed."
-            raise TypeError(error_message)
+        # # Boolean addition. For valid input, should equal 3
+        # N_VALID_ARGS = (
+        #     is_string_or_non_string_iterable(startDT)
+        #     + is_string_or_non_string_iterable(endDT)
+        #     + is_string_or_non_string_iterable(period)
+        # )
+
+        # if N_VALID_ARGS != 3:
+        #     error_message = "Non-string iterable type cannot be passed."
+        #     raise TypeError(error_message)
 
         params = {}
 
         # Handle startDT, endDT, and period optional arguments.
         if startDT is None and endDT is None and period is None:
             # Return IV case
-            ...
+            return params
 
         # startDT and optionally endDT is included logic
         elif startDT and period is None:
 
             startDT = self._handle_date(startDT)
-            params.update({"startDT": startDT})
+            params["startDT"] = startDT
 
-            if endDT:
+            if endDT is not None:
                 endDT = self._handle_date(endDT)
-                params.update({"endDT": endDT})
+                params["endDT"] = endDT
 
         # period logic
         elif period and startDT is None and endDT is None:
