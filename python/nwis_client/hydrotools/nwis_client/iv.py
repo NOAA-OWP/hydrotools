@@ -961,11 +961,6 @@ class IVDataService:
         return True if re.fullmatch(pattern, period) else False
 
     @property
-    def procs(self) -> int:
-        """ Number of max multiprocessing processes """
-        return self._procs
-
-    @property
     def base_url(self) -> str:
         """ API Baseurl """
         return self._base_url
