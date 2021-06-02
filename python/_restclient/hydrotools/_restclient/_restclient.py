@@ -1,16 +1,21 @@
-from typing import Any, List, Union
-import asyncio
 from aiohttp.client_reqrep import ClientResponse
 from aiohttp_client_cache.response import CachedResponse
 from aiohttp_client_cache import SQLiteBackend
 import aiohttp
 import forge
 import atexit
+from functools import reduce
+
+# Type hints
+from typing import Any, Dict, List, Union
+import pandas as pd
+import numpy as np
+import asyncio
 
 # local imports
 from .async_client import ClientSession
 from .async_helpers import AsyncToSerialHelper
-from .urllib import Url
+from .urllib import PRIMITIVE, Url
 from ._restclient_sigs import GET_SIGNATURE, MGET_SIGNATURE
 
 __all__ = ["RestClient"]
