@@ -141,3 +141,12 @@ def test_get_headers_have_precedent_over_instance(basic_test_server):
 
         # verify in key, "some", "other_header" value in headers not "headers"
         assert all(k_v_pair in r.headers.items() for k_v_pair in method_headers.items())
+
+
+def test_build_url(loop):
+    base_url = "http://www.test.gov/"
+    query_params = {"key": "value"}
+    with RestClient(enable_cache=False, loop=loop) as client:
+
+        assert client.build_url(base_url) == base_url
+        assert client.build_url(base_url, query_params) == f"{base_url}?key=value"
