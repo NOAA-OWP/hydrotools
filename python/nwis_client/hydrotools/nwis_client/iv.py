@@ -974,3 +974,103 @@ class IVDataService:
     def datetime_format(self) -> str:
         """ API's expected datetime format """
         return self._datetime_format
+
+
+def validate_optional_combinations(
+    arg_mapping: Dict[str, T],
+    valid_arg_keys: List[Set[str]],
+    sentinel=None,
+    exception: Exception = KeyError,
+    exception_message=None,
+) -> Dict[str, T]:
+    filtered = {k: v for k, v in arg_mapping.items() if v is not sentinel}
+    n_valid_sets = 0
+    arg_keys = set(filtered.keys())
+
+    for comb in valid_arg_keys:
+        n_valid_sets += arg_keys == comb
+
+    if n_valid_sets != 1:
+        if exception_message is None:
+            exception_message = f"Invalid combination of arguments passed: {arg_keys}.\n Valid combinations are {valid_arg_keys}"
+        raise exception(exception_message)
+
+    return filtered
+
+
+def sequence_scientific_array_like(values: T) -> bool:
+    ACCEPTED_MRO = (Sequence, pd.Series, np.ndarray)
+
+    if not isinstance(values, ACCEPTED_MRO):
+        error_message = f"Must be {ACCEPTED_MRO}. values type: {type(values)}."
+        raise TypeError(error_message)
+
+
+def split(
+    key: str, values, split_threshold: int, join_on: str = None
+) -> List[Dict[str, List[str]]]:
+
+    # Fail fast if not valid type
+    sequence_scientific_array_like(values)
+
+    if isinstance(values, str):
+        values = values.split(",")
+
+    # convert to str
+    values = [str(i) for i in values]
+
+    if len(values) > split_threshold:
+        mod = len(values) % split_threshold != 0
+        n_groups = len(values) // split_threshold + mod
+
+        values = np.array_split(values, n_groups)
+
+        return [
+            {key: sublist if join_on is None else join_on.join(sublist)}
+            for sublist in values
+        ]  # type: List[Dict]
+
+    return [
+        {key: values if join_on is None else join_on.join(values)}
+    ]  # type: List[Dict]
+
+
+def _bbox_split(values: Union[str, list, tuple, pd.Series, np.ndarray]) -> List[str]:
+    # Fail fast if not valid type
+    sequence_scientific_array_like(values)
+
+    if isinstance(values, str):
+        values = values.split(",")
+
+    else:
+        # must be nested sequence of items
+        def flatten_and_stringify(v):
+            """ Flatten to list of strings """
+            VALID_COLLECTIONS_MRO = (list, tuple, pd.Series, np.ndarray)
+
+            l = []
+            for item in v:
+                if isinstance(item, str):
+                    l += item.split(",")
+                elif isinstance(item, VALID_COLLECTIONS_MRO):
+                    item = list(map(str, item))
+                    l += flatten_and_stringify(item)
+                else:
+                    l += [str(item)]
+            return l
+
+        values = flatten_and_stringify(values)
+
+    # Must be divisible by 4
+    if len(values) % 4 != 0:
+        error_message = f"values: {values} must be divisible by 4"
+        raise ValueError(error_message)
+
+    # cast members to strings
+    values = list(map(str, values))
+
+    # split values in list of sublists each with len 4
+    n_groups = len(values) // 4
+    value_groups = np.array_split(values, n_groups)
+
+    return list(map(lambda i: ",".join(i), value_groups))
