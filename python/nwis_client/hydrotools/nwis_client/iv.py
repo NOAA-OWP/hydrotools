@@ -14,7 +14,7 @@ import datetime
 from collections.abc import Iterable
 from multiprocessing import Pool
 from functools import partial
-from typing import List, Tuple, Union, Iterable
+from typing import Dict, List, Set, T, Tuple, Union, Iterable
 import re
 import requests
 import six
@@ -23,6 +23,8 @@ import warnings
 import numpy as np
 import pandas as pd
 from hydrotools._restclient import RestClient
+from collections.abc import Sequence
+
 from .constants import US_STATE_AND_TERRITORY_ABBREVIATIONS
 
 
