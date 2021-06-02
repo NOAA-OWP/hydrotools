@@ -172,17 +172,8 @@ class RestClient(AsyncToSerialHelper):
         headers,
         **kwargs,
     ) -> aiohttp.ClientResponse:
-        if url is None:
-            if self.base_url is None:
-                raise ValueError("no url provided and no base url set")
-            # only base url
-            url = self._base_url
-
-        elif self.base_url is not None:
-            url = self._base_url / url
-
-        # add query parameters and get quoted representation
-        url = (Url(url) + parameters).quote_url
+        # quote and build url
+        url = self.build_url(url, parameters)
 
         # Fast way to merge dicts https://stackoverflow.com/a/1784128
         # Create copy of instance headers, merge headers with instance header copy.
@@ -251,6 +242,23 @@ class RestClient(AsyncToSerialHelper):
         client_response.text = text
         client_response.json = json
         return client_response
+
+    def build_url(
+        self,
+        url: Union[str, None] = None,
+        parameters: Dict[str, Union[PRIMITIVE, List[PRIMITIVE]]] = {},
+    ):
+        if url is None:
+            if self.base_url is None:
+                raise ValueError("no url provided and no base url set")
+            # only base url
+            url = self._base_url
+
+        elif self.base_url is not None:
+            url = self._base_url / url
+
+        # add query parameters and get quoted representation
+        return (Url(url) + parameters).quote_url
 
     @property
     def base_url(self) -> str:
