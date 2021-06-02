@@ -278,7 +278,7 @@ class IVDataService:
         ] = None,
         period: Union[str, None] = None,
         siteStatus: str = "all",
-        max_sites_per_request: int = 100,
+        max_sites_per_request: int = 20,
         **params,
     ) -> List[requests.Response]:
         """
@@ -331,49 +331,79 @@ class IVDataService:
         >>> data = service.get(sites='01646500')
 
         """
-        # This method is basically a factory and can be thought of it in that way.
-        # In the future it may be appropriate to move this to a designated factory.
-
-        # Filtered copy of local args with values that are None filtered out and not
-        # "self"
-        local_kwargs = locals().copy()
-        local_kwargs = {
-            k: v for k, v in local_kwargs.items() if v is not None and k != "self"
-        }
-
-        # Drop key, params which is a dictionary of the actual **kwargs. Append the two
-        # dictionaries together
-        kwargs = local_kwargs.pop("params")
-        local_kwargs.update(kwargs)
-
-        # major keys and their associated methods
-        major_filters_mapping = {
-            "sites": self.get_raw_sites,
-            "stateCd": self.get_raw_stateCd,
-            "huc": self.get_raw_huc,
-            "bBox": self.get_raw_bBox,
-            "countyCd": self.get_raw_countyCd,
-        }
-
-        # major filters set intersection with locals. This will return the kwarg keys
-        # that are also in major_filters_mappings keys
-        local_major_set_intersection = set(local_kwargs.keys()).intersection(
-            set(major_filters_mapping.keys())
+        # handle start, end, and period parameters
+        kwargs = self._handle_start_end_period_url_params(
+            startDT=startDT, endDT=endDT, period=period
         )
 
-        if len(local_major_set_intersection) > 1:
-            error_message = f"Only one major filter is allowed. Provided {local_major_set_intersection}"
-            raise KeyError(error_message)
+        # might want to move this to an enum in the future
+        factory_members = (
+            (
+                sites,
+                partial(
+                    split,
+                    values=sites,
+                    key="sites",
+                    split_threshold=max_sites_per_request,
+                    join_on=",",
+                ),
+            ),  # type: Union[Dict[str, str], List[Dict[str, str]]]
+            # NWIS IV API allows 1 state per api call
+            (
+                stateCd,
+                partial(split, values=stateCd, key="stateCd", split_threshold=1),
+            ),
+            # NWIS IV API allows 10 hucs per api call
+            (
+                huc,
+                partial(split, values=huc, key="huc", split_threshold=10, join_on=","),
+            ),
+            (
+                bBox,
+                lambda *args, **kwargs: [{"bBox": item} for item in _bbox_split(bBox)],
+            ),
+            # NWIS IV API allows 20 counties per api call
+            (
+                countyCd,
+                partial(
+                    split,
+                    values=countyCd,
+                    key="countyCd",
+                    split_threshold=20,
+                    join_on=",",
+                ),
+            ),
+        )
 
-        # Major filter provided as arg to factory
-        major_filter = list(local_major_set_intersection)[0]
+        filtered_members = [
+            member for member in factory_members if member[0] is not None
+        ]
 
-        # get_raw_sites is the only factory member that supports max_sites_per_requests
-        if major_filter == "sites":
-            local_kwargs.pop("max_sites_per_request")
+        # Verify the correct number of args being passed
+        assert len(filtered_members) == 1
 
-        func = major_filters_mapping[major_filter]
-        return func(**local_kwargs)
+        # Callable method from factory
+        _, func = filtered_members.pop()
+        query_params = func()  # type: list[dict]
+
+        # Fill dictionary of
+        params.update(kwargs)
+        params.update(
+            {
+                "parameterCd": parameterCd,
+                "siteStatus": siteStatus,
+                "format": "json",
+            }
+        )
+
+        for query_params_dict in query_params:
+            query_params_dict.update(params)
+
+        # return query_params
+        results = self._restclient.mget(parameters=query_params, headers=self._headers)
+
+        # flatten list of lists
+        return [item for r in results for item in self._handle_response(r)]
 
     def get_raw_sites(
         self,
