@@ -211,19 +211,35 @@ class RestClient(AsyncToSerialHelper):
         headers,
         **kwargs: Any,
     ) -> List[aiohttp.ClientResponse]:
-        if parameters:
-            assert len(parameters) == len(urls)
-        if headers:
-            assert len(headers) == len(urls)
+        ACCEPTED_MRO = (list, tuple, pd.Series, np.ndarray)
+        if urls is None and not parameters and not headers:
+            raise ValueError("Must provide urls, parameters, and/or headers.")
+
+        collection = None
+        _collections = []
+        for arg in [urls, parameters, headers]:
+            if isinstance(arg, ACCEPTED_MRO):
+                collection = arg
+                _collections.append(arg)
+
+        if collection is None:
+            raise ValueError("Must provide list of urls, parameters, and/or headers.")
+
+        # ensure if collection of args passed, their lengths' are equal
+        assert reduce(lambda x, y: x == y, map(len, _collections))
 
         return await asyncio.gather(
             *[
                 self._get(
-                    url,
-                    parameters=parameters[idx] if parameters else {},
-                    headers=headers[idx] if headers else {},
+                    url=urls[idx] if isinstance(urls, ACCEPTED_MRO) else urls,
+                    parameters=parameters[idx]
+                    if isinstance(parameters, ACCEPTED_MRO)
+                    else parameters,
+                    headers=headers[idx]
+                    if isinstance(headers, ACCEPTED_MRO)
+                    else headers,
                 )
-                for idx, url in enumerate(urls)
+                for idx in range(len((collection)))
             ]
         )
 
