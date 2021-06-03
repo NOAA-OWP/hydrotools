@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
+from urllib import parse
 import pytest
 
 from hydrotools._restclient.urllib import Url, Variadic
+from hydrotools._restclient.urllib_types import Quote
 
 
 @pytest.mark.parametrize("url", ["http://www.fake.gov", "https://www.fake.gov"])
@@ -127,3 +129,22 @@ def test_variadic_integration_with_url():
     url = Url("http://www.google.com") + {"key": Variadic(["a", "b", "c"])}
 
     assert url == validation
+
+
+def test_construct_url_with_unquote_treatment():
+    base_url = "http://www.fake.gov/"
+    suffix = "?key="
+    url = base_url + suffix + "a+b"
+    url_with_space = base_url + suffix + "a b"
+    url_with_quoted_space = base_url + suffix + "a%20b"
+
+    inst = Url(url, quote_treatment=Quote.QUOTE)
+    assert inst.url == url
+    assert inst.quote_url == url_with_quoted_space
+
+    inst2 = Url(inst, quote_treatment=Quote.QUOTE_PLUS)
+    assert inst2.url == url_with_space
+    assert inst2.quote_url == url
+
+    assert inst.quote_treatment == Quote.QUOTE
+    assert inst2.quote_treatment == Quote.QUOTE_PLUS
