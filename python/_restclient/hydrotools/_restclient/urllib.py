@@ -5,6 +5,7 @@ import re
 
 # local imports
 from ._iterable_nonstring import IterableNonStringLike
+from .urllib_types import Quote, QUOTE_PLUS_OR_CARRY
 
 __all__ = ["Url", "Variadic"]
 
@@ -53,8 +54,36 @@ class Url(UserString, str):
 
     """
 
-    def __init__(self, url: Union[str, "Url"]) -> None:
-        if isinstance(url, Url):
+    def __new__(
+        cls,
+        url: Union[str, "Url"],
+        *,
+        quote_treatment: Quote = QUOTE_PLUS_OR_CARRY,
+    ):
+        # Overload so unquote_treatment kwarg does not raise TypeError for str()
+        return str.__new__(cls, url)
+
+    def __init__(
+        self,
+        url: Union[str, "Url"],
+        *,
+        quote_treatment: Quote = QUOTE_PLUS_OR_CARRY,
+    ) -> None:
+        is_url_instance = isinstance(url, Url)
+
+        # py3.8+ checking with `is` throws warning if is literal. Using == instead
+        if quote_treatment == QUOTE_PLUS_OR_CARRY:
+            # set default: carry quote treatment if url is Url instance, else quote_plus
+            quote_treatment = (
+                Quote.QUOTE_PLUS if not is_url_instance else url._quote_treatment
+            )
+
+        # fail fast if invalid unquote_treatment
+        if not quote_treatment in Quote:
+            error_message = "quote_treatment must be member of Quote Enum."
+            raise ValueError(error_message)
+
+        if is_url_instance:
             url = url.url
 
         if not url.startswith("http://") and not url.startswith("https://"):
@@ -62,8 +91,11 @@ class Url(UserString, str):
 
         self._url = parse.urlparse(url)
 
+        self._quote_treatment = quote_treatment
         self._validate_construction(self._url)
-        self._url = self._clean_parse_result(self._url)
+        self._url = self._clean_parse_result(
+            self._url, unquote_treatment=self._quote_treatment
+        )
         self.data = self._url.geturl()
 
     def __add__(self, b: Dict[str, Union[str, List[str]]]) -> "Url":
@@ -120,7 +152,11 @@ class Url(UserString, str):
             query[k].extend(to_insert)
 
         # Transform query from dict to string of kwargs
-        query = parse.urlencode(query, doseq=True)
+        query = parse.urlencode(
+            query,
+            doseq=True,
+            quote_via=self._quote_treatment.quote_style,
+        )
         return self._build_parse_result_cast_to_url(self._url, query=query)
 
     def __truediv__(self, b: str) -> "Url":
@@ -180,6 +216,11 @@ class Url(UserString, str):
         raise TypeError("Arg is required subclass string")
 
     @property
+    def quote_treatment(self) -> str:
+        """ Method for handling quoted characters """
+        return self._quote_treatment
+
+    @property
     def url(self) -> str:
         """ Unquoted string representation of url """
         return str(self)
@@ -191,7 +232,11 @@ class Url(UserString, str):
         # serialized query from str/encoded to dict
         query = parse.parse_qs(self._url.query)  # type: dict[str, list[str]]
         # Note: list items treated as -> item=1&item=2 not item=%5B1%2C+2%5D
-        query = parse.urlencode(query, doseq=True)
+        query = parse.urlencode(
+            query,
+            doseq=True,
+            quote_via=self._quote_treatment.quote_style,
+        )
         return self._build_parse_result(self._url, query=query).geturl()
 
     @staticmethod
@@ -205,11 +250,16 @@ class Url(UserString, str):
             raise ValueError(f"invalid url, requires {required_properties}.")
 
     @staticmethod
-    def _clean_parse_result(url: parse.ParseResult) -> parse.ParseResult:
+    def _clean_parse_result(
+        url: parse.ParseResult,
+        unquote_treatment: Quote = Quote.QUOTE_PLUS,
+    ) -> parse.ParseResult:
+        assert unquote_treatment in Quote
+
         # remove repeated occurrence of /
         path = re.sub("//+", "/", url.path)
         # unquote query args for readability
-        query = parse.unquote_plus(url.query)
+        query = unquote_treatment.unquote(url.query)
 
         return Url._build_parse_result(url, path=path, query=query)
 
