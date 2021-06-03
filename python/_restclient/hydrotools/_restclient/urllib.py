@@ -40,10 +40,14 @@ class Url(UserString, str):
         >>> o2 = Url("https://www.test.gov/?quoted='args'")
         >>> assert o == o2 # True
 
-    Note:
-        Urls are quoted using urllib.parse.quote_plus, where spaces are replaced with
-        `+`s to support building queries. Likewise, urls are unquoted using
-        urllib.parse.unquote_plus to mirror the behavior when unquoting.
+        Note: By default, urls are quoted using urllib.parse.quote_plus, where spaces are
+        replaced with `+`s to support building queries. Likewise, urls are unquoted using
+        urllib.parse.unquote_plus to mirror the behavior when unquoting.  To change this
+        behavior, use the `quote_treatment` keyword argument and pass a member from
+        `hydrotools._restclient.Quote`. Options are `Quote.QUOTE`, `Quote.QUOTE_PLUS`, or
+        `Quote.QUOTE_FROM_BYTES`. `Url` instances passed to `Url` (e.g.
+        `Url(Url("http://www.test.gov", quote_treatment=Quote.QUOTE))` retain non-default
+        quote options unless a non-default `quote_treatment` is specified.
 
         urls are unquoted at construction time for `Url` object comparison sake
         equivalency and readability.
