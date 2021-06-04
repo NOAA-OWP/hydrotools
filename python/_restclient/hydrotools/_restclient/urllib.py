@@ -68,6 +68,7 @@ class Url(UserString, str):
         *,
         quote_treatment: Quote = QUOTE_PLUS_OR_CARRY,
         safe: str = FORWARD_SLASH,
+        quote_overide_map: Dict[str, str] = {},
     ):
         # Overload so unquote_treatment kwarg does not raise TypeError for str()
         return str.__new__(cls, url)
@@ -78,6 +79,7 @@ class Url(UserString, str):
         *,
         quote_treatment: Quote = QUOTE_PLUS_OR_CARRY,
         safe: str = FORWARD_SLASH,
+        quote_overide_map: Dict[str, str] = {},
     ) -> None:
         is_url_instance = isinstance(url, Url)
 
@@ -98,6 +100,9 @@ class Url(UserString, str):
             raise ValueError(error_message)
 
         if is_url_instance:
+            if not quote_overide_map:
+                # set default: carry safe characters if url is Url instance, else "/"
+                quote_overide_map = url._quote_overide_map
             url = url.url
 
         if not url.startswith("http://") and not url.startswith("https://"):
@@ -107,6 +112,7 @@ class Url(UserString, str):
 
         self._safe = safe
         self._quote_treatment = quote_treatment
+        self._quote_overide_map = quote_overide_map.copy()
         self._validate_construction(self._url)
         self._url = self._clean_parse_result(
             self._url, unquote_treatment=self._quote_treatment
@@ -178,6 +184,7 @@ class Url(UserString, str):
             query=query,
             quote_treatment=self._quote_treatment,
             safe=self._safe,
+            quote_overide_map=self._quote_overide_map,
         )
 
     def __truediv__(self, b: str) -> "Url":
@@ -238,6 +245,7 @@ class Url(UserString, str):
                 path=path,
                 quote_treatment=self._quote_treatment,
                 safe=self._safe,
+                quote_overide_map=self._quote_overide_map,
             )
         raise TypeError("Arg is required subclass string")
 
@@ -267,7 +275,11 @@ class Url(UserString, str):
             quote_via=self._quote_treatment.quote_style,
             safe=self._safe,
         )
-        return self._build_parse_result(self._url, path=path, query=query).geturl()
+        url = self._build_parse_result(self._url, path=path, query=query).geturl()
+        # Explicitly replace characters in url
+        for char, remap_char in self._quote_overide_map.items():
+            url = url.replace(char, remap_char)
+        return url
 
     @staticmethod
     def _validate_construction(url: parse.ParseResult):
@@ -319,10 +331,16 @@ class Url(UserString, str):
         *,
         quote_treatment: Quote = QUOTE_PLUS_OR_CARRY,
         safe: str = FORWARD_SLASH,
+        quote_overide_map: Dict[str, str] = {},
         **kwargs,
     ) -> "Url":
         result = Url._build_parse_result(url, **kwargs)
-        return Url(result.geturl(), quote_treatment=quote_treatment, safe=safe)
+        return Url(
+            result.geturl(),
+            quote_treatment=quote_treatment,
+            safe=safe,
+            quote_overide_map=quote_overide_map,
+        )
 
 
 def _are_properties_set(obj: object, properties: Union[List[str], Tuple[str]]) -> bool:
