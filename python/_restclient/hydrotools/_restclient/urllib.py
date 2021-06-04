@@ -84,6 +84,10 @@ class Url(UserString, str):
                 Quote.QUOTE_PLUS if not is_url_instance else url._quote_treatment
             )
 
+        if safe == FORWARD_SLASH:
+            # set default: carry safe characters if url is Url instance, else "/"
+            safe = "/" if not is_url_instance else url._safe
+
         # fail fast if invalid unquote_treatment
         if not quote_treatment in Quote:
             error_message = "quote_treatment must be member of Quote Enum."
@@ -97,6 +101,7 @@ class Url(UserString, str):
 
         self._url = parse.urlparse(url)
 
+        self._safe = safe
         self._quote_treatment = quote_treatment
         self._validate_construction(self._url)
         self._url = self._clean_parse_result(
@@ -162,8 +167,14 @@ class Url(UserString, str):
             query,
             doseq=True,
             quote_via=self._quote_treatment.quote_style,
+            safe=self._safe,
         )
-        return self._build_parse_result_cast_to_url(self._url, query=query)
+        return self._build_parse_result_cast_to_url(
+            self._url,
+            query=query,
+            quote_treatment=self._quote_treatment,
+            safe=self._safe,
+        )
 
     def __truediv__(self, b: str) -> "Url":
         """Append path to `Url` object url.  See `Url.joinurl` for further details.
@@ -218,7 +229,12 @@ class Url(UserString, str):
         """
         if isinstance(b, str):
             path = f"{self._url.path}/{b}"
-            return self._build_parse_result_cast_to_url(self._url, path=path)
+            return self._build_parse_result_cast_to_url(
+                self._url,
+                path=path,
+                quote_treatment=self._quote_treatment,
+                safe=self._safe,
+            )
         raise TypeError("Arg is required subclass string")
 
     @property
@@ -237,13 +253,17 @@ class Url(UserString, str):
         urllib.parse.quote_plus."""
         # serialized query from str/encoded to dict
         query = parse.parse_qs(self._url.query)  # type: dict[str, list[str]]
+
+        # quote url path
+        path = self._quote_treatment.quote(self._url.path, safe=self._safe)
         # Note: list items treated as -> item=1&item=2 not item=%5B1%2C+2%5D
         query = parse.urlencode(
             query,
             doseq=True,
             quote_via=self._quote_treatment.quote_style,
+            safe=self._safe,
         )
-        return self._build_parse_result(self._url, query=query).geturl()
+        return self._build_parse_result(self._url, path=path, query=query).geturl()
 
     @staticmethod
     def _validate_construction(url: parse.ParseResult):
@@ -290,9 +310,15 @@ class Url(UserString, str):
         )
 
     @staticmethod
-    def _build_parse_result_cast_to_url(url: parse.ParseResult, **kwargs) -> "Url":
+    def _build_parse_result_cast_to_url(
+        url: parse.ParseResult,
+        *,
+        quote_treatment: Quote = QUOTE_PLUS_OR_CARRY,
+        safe: str = FORWARD_SLASH,
+        **kwargs,
+    ) -> "Url":
         result = Url._build_parse_result(url, **kwargs)
-        return Url(result.geturl())
+        return Url(result.geturl(), quote_treatment=quote_treatment, safe=safe)
 
 
 def _are_properties_set(obj: object, properties: Union[List[str], Tuple[str]]) -> bool:
