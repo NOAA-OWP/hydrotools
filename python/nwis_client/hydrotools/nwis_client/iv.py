@@ -737,6 +737,9 @@ def split(
         mod = len(values) % split_threshold != 0
         n_groups = len(values) // split_threshold + mod
 
+        # sort values for caching purposes
+        values.sort()
+
         values = np.array_split(values, n_groups)
 
         return [
