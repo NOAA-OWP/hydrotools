@@ -27,17 +27,53 @@ from collections.abc import Sequence
 
 
 class IVDataService:
-    """A REST client class.
-    The IVDataService class provides various methods for constructing
-    requests, retrieving data, and parsing responses from the NWIS IV
-    Service.
+    """
+    Provides a programatic way to retrieve USGS Instantanous Value Service data in the
+    canonical hydrotools pandas dataframe format. The IVDataService implements an
+    sqlite3 request cache and asynchronous request backend that splits up and retrieves
+    requests concurrently.
 
     Parameters
     ----------
-    processes : int
-        Max multiprocessing processes, default 3
-    retry : int
-        Max number of, per request retries, default 3
+    enable_cache : bool
+        Toggle sqlite3 request caching
+    cache_expire_after : int
+        Cached item life length in seconds
+
+    Examples
+    --------
+    >>> from hydrotools.nwis_client import IVDataService
+    >>> df = IVDataService.get(sites='01646500', startDT="2021-01-01", endDT="2021-02-01")
+
+    >>> # Retrieve discharge data from all sites in Alabama over the past 5 days
+    >>> df = IVDataService.get(stateCd='AL', period="P5D")
+
+    >>> # Retrieve latest discharge data from a list of sites
+    >>> sites = ['02339495', '02342500', '023432415', '02361000', '02361500', '02362240', '02363000', '02364500', '02369800', '02371500']
+    >>> # Also works with np array's, pd.Series, and comma seperated string. Try it out!
+    >>> # sites = np.array(['02339495', '02342500', '023432415', '02361000', '02361500', '02362240', '02363000', '02364500', '02369800', '02371500'])
+    >>> # sites = pd.array(['02339495', '02342500', '023432415', '02361000', '02361500', '02362240', '02363000', '02364500', '02369800', '02371500'])
+    >>> # sites = '02339495,02342500,023432415,02361000,02361500,02362240,02363000,02364500,02369800,02371500'
+    >>> df = IVDataService.get(sites=sites)
+
+    >>> # Retrieve discharge data from sites within a bounding box from a point in the past until the present
+    >>> #
+    >>> bbox = "-83.0,36.5,-81.0,38.5"
+    >>> # or specify in list. It's possible to specify multiple bounding boxes using a list of comma seperated string or nested lists
+    >>> # np.array's and pd.Series's are accepted too!
+    >>> # bbox = [-83.,36.5,-81.,38.5]
+    >>> #
+    >>> # You can also specify start and end times using datetime, np.datetime64, timestamps!
+    >>> from datetime import datetime
+    >>> start = datetime(2021, 5, 1, 12)
+    >>> df = IVDataService.get(bBox=bbox, startDT=start)
+
+    >>> # Retrieve stage height data from sites within two counties for the past day
+    >>> counties = [36109, 36107]
+    >>> # Can specify as collection(list, np.array, pd.Series) of strings or ints or a comma seperated list of strings.
+    >>> # counties = ["36109", "36107"]
+    >>> # counties = "36109,36107"
+    >>> df = IVDataService.get(countyCd=counties, period='P5D')
     """
 
     # Class level variables
