@@ -289,7 +289,8 @@ class RestClient(AsyncToSerialHelper):
     def close(self) -> None:
         """ Release aiohttp.ClientSession """
         if not self._session.closed:
-            self._add_to_loop(self._session.close())
+            if not self._loop.is_closed():
+                self._add_to_loop(self._session.close())
 
     def __del__(self) -> None:
         atexit.unregister(self.close)
