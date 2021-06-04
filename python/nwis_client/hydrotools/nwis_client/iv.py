@@ -98,11 +98,27 @@ class IVDataService:
     @classmethod
     def get(
         cls,
-        sites: Union[str, List[str]] = None,
-        stateCd: str = None,
-        huc: Union[List[Union[int, str]], str, int] = None,
-        bBox: Union[List[Union[int, float]], str] = None,
-        countyCd: Union[List[int], str] = None,
+        sites: Union[
+            str,
+            Union[List[str]],
+            np.ndarray,
+            pd.Series,
+        ] = None,
+        stateCd: Union[str, Union[List[str]], np.ndarray, pd.Series] = None,
+        huc: Union[
+            str,
+            List[Union[str, int]],
+            np.ndarray,
+            pd.Series,
+        ] = None,
+        bBox: Union[
+            str,
+            List[Union[str, int]],
+            np.ndarray,
+            pd.Series,
+            Union[List[List[Union[str, int]]]],
+        ] = None,
+        countyCd: Union[str, List[Union[int, str]]] = None,
         parameterCd: str = "00060",
         startDT: Union[
             str,
@@ -251,11 +267,27 @@ class IVDataService:
 
     def get_raw(
         self,
-        sites: Union[str, List[str]] = None,
-        stateCd: str = None,
-        huc: Union[List[Union[int, str]], str, int] = None,
-        bBox: Union[List[Union[int, float]], str] = None,
-        countyCd: Union[List[int], str] = None,
+        sites: Union[
+            str,
+            List[str],
+            np.ndarray,
+            pd.Series,
+        ] = None,
+        stateCd: Union[str, List[str], np.ndarray, pd.Series] = None,
+        huc: Union[
+            str,
+            List[Union[str, int]],
+            np.ndarray,
+            pd.Series,
+        ] = None,
+        bBox: Union[
+            str,
+            List[Union[str, int]],
+            np.ndarray,
+            pd.Series,
+            Union[List[List[Union[str, int]]]],
+        ] = None,
+        countyCd: Union[str, List[Union[int, str]]] = None,
         parameterCd: str = "00060",
         startDT: Union[
             str,
