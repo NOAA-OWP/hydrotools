@@ -40,14 +40,18 @@ class Url(UserString, str):
         >>> o2 = Url("https://www.test.gov/?quoted='args'")
         >>> assert o == o2 # True
 
-        Note: By default, urls are quoted using urllib.parse.quote_plus, where spaces are
-        replaced with `+`s to support building queries. Likewise, urls are unquoted using
-        urllib.parse.unquote_plus to mirror the behavior when unquoting.  To change this
-        behavior, use the `quote_treatment` keyword argument and pass a member from
-        `hydrotools._restclient.Quote`. Options are `Quote.QUOTE`, `Quote.QUOTE_PLUS`, or
-        `Quote.QUOTE_FROM_BYTES`. `Url` instances passed to `Url` (e.g.
-        `Url(Url("http://www.test.gov", quote_treatment=Quote.QUOTE))` retain non-default
-        quote options unless a non-default `quote_treatment` is specified.
+        Note:
+        By default, the "/" is treated as a safe character that is not escaped in url
+        path's and query's. This can be changed with the `safe` key word argument.
+        Likewise, url path's and query's are quoted using urllib.parse.quote_plus, where
+        spaces are replaced with `+`s to support building queries. Urls are unquoted
+        using urllib.parse.unquote_plus to mirror the behavior when unquoting.  To
+        change this behavior, use the `quote_treatment` keyword argument and pass a
+        member from the `hydrotools._restclient.Quote` enum. Options are `Quote.QUOTE`,
+        `Quote.QUOTE_PLUS`, or `Quote.QUOTE_FROM_BYTES`. `Url` instances passed to `Url`
+        (e.g.  `Url(Url("http://www.test.gov", quote_treatment=Quote.QUOTE, safe="/+"))`
+        retain non-default quote and safe options unless a non-default
+        `quote_treatment` / `safe` value is specified respectively.
 
         urls are unquoted at construction time for `Url` object comparison sake
         equivalency and readability.
