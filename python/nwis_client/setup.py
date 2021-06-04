@@ -13,7 +13,7 @@ SUBPACKAGE_NAME = "nwis_client"
 SUBPACKAGE_SLUG = f"{NAMESPACE_PACKAGE_NAME}.{SUBPACKAGE_NAME}"
 
 # Subpackage version
-VERSION = "2.0.0-alpha.0"
+VERSION = "3.0.0"
 
 # Package author information
 AUTHOR = "Austin Raney"
@@ -28,8 +28,6 @@ DESCRIPTION = (
 REQUIREMENTS = [
     "pandas",
     "numpy",
-    "requests",
-    "requests-cache",
     "hydrotools._restclient",
 ]
 
