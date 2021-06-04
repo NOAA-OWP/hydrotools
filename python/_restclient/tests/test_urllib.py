@@ -198,3 +198,18 @@ def test_quote_treatment():
 
     assert url == url2
     assert url.quote_url != url2.quote_url
+
+
+def test_plus():
+    base_url = "http://www.fake.gov"
+    params = {"key": "+12"}
+    url = Url(base_url, quote_treatment=Quote.QUOTE) + params
+    print(url.quote_url)
+
+
+def test_quote_overide_map():
+    base_url = "http://www.fake.gov"
+    params = {"key": "+12"}
+    quote_remap = {"+": "%2B"}
+    url = Url(base_url, quote_overide_map=quote_remap) + params
+    assert url.quote_url == f"{base_url}?key=%2B12"
