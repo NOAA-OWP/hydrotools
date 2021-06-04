@@ -22,7 +22,7 @@ import warnings
 
 import numpy as np
 import pandas as pd
-from hydrotools._restclient import RestClient
+from hydrotools._restclient import RestClient, Url
 from collections.abc import Sequence
 
 from .constants import US_STATE_AND_TERRITORY_ABBREVIATIONS
@@ -44,7 +44,11 @@ class IVDataService:
 
     # Class level variables
     _datetime_format = "%Y-%m-%dT%H:%M%z"
-    _base_url = "https://waterservices.usgs.gov/nwis/iv/"
+    _base_url = Url(
+        "https://waterservices.usgs.gov/nwis/iv/",
+        safe="/:",
+        quote_overide_map={"+": "%2B"},
+    )
     _requests_cache_filename = "nwisiv_cache"
     _headers = {"Accept-Encoding": "gzip, compress"}
 
