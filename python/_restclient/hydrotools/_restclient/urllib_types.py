@@ -10,6 +10,10 @@ __all__ = ["Quote"]
 # between a true default of value vs a non-default value (Quote enum)
 QUOTE_PLUS_OR_CARRY = object()
 
+# descriptive sentienl value used by Url `safe` kwarg for distinction.
+# default value is "/"
+FORWARD_SLASH = object()
+
 
 @dataclass(frozen=True)
 class QuoteStyle:
