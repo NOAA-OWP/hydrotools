@@ -7,28 +7,6 @@ import numpy as np
 import pandas as pd
 
 
-def test_raw_get_with_mget():
-    inst = iv.IVDataService(enable_cache=False)
-    # print(inst.get_raw(sites=pd.Series(["01646500"])))
-    print(inst.get_raw(stateCd=["AL", "NY"], siteStatus="active"))
-
-
-def test_get__():
-    inst = iv.IVDataService(enable_cache=False)
-    print(
-        inst.get(
-            sites=pd.Series(["01646500"]), startDT="2021-01-01", endDT="2021-01-05"
-        )
-    )
-    # print(inst.get(sites=pd.Series(["01646500"]), period="P10D"))
-    # print(
-    #     inst.get(
-    #         bBox=["-83.000000,36.500000,-81.000000,38.500000"], siteStatus="active"
-    #     )
-    # )
-    # print(inst.get_raw(stateCd="AL,", siteStatus="active"))
-
-
 split_params = [
     ("key", [1, 2, 3], 4, None, [{"key": ["1", "2", "3"]}]),
     ("key", [1, 2, 3], 4, ",", [{"key": "1,2,3"}]),
@@ -96,8 +74,10 @@ class MockRequests:
 
 
 @pytest.fixture
-def setup_iv():
-    return iv.IVDataService()
+def setup_iv(loop):
+    o = iv.IVDataService()
+    yield o
+    o._restclient.close()
 
 
 simplify_variable_test_data = [
@@ -130,7 +110,7 @@ def request_status_setter(status: int = 404):
     return partial(MockRequests, **requests_testable_attributes)
 
 
-def test_get_throw_warning(monkeypatch):
+def test_get_throw_warning(setup_iv, monkeypatch):
     def wrapper(*args, **kwargs):
         return []
 
@@ -138,7 +118,7 @@ def test_get_throw_warning(monkeypatch):
     monkeypatch.setattr(iv.IVDataService, "get_raw", wrapper)
 
     with pytest.warns(UserWarning):
-        assert iv.IVDataService.get(sites="04233255").empty is True
+        assert setup_iv.get(sites="04233255").empty is True
 
 
 GET_PARAM_SITES = [
@@ -366,13 +346,6 @@ def test_get_raw_stateCd(setup_iv):
     df = setup_iv.get_raw(stateCd="AL", parameterCd="00060")
     sites = {item["usgs_site_code"] for item in df}
     assert "02339495" in sites
-
-
-# def test_get_raw_stateCd_invalid_state_value_error(setup_iv):
-#     """Test data retrieval and parsing"""
-#     with pytest.raises(ValueError):
-#         # Invalid stateCd name
-#         setup_iv.get_raw_stateCd(stateCd="NA", parameterCd="00060")
 
 
 @pytest.mark.slow
