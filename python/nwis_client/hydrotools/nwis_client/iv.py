@@ -25,8 +25,6 @@ import pandas as pd
 from hydrotools._restclient import RestClient, Url
 from collections.abc import Sequence
 
-from .constants import US_STATE_AND_TERRITORY_ABBREVIATIONS
-
 
 class IVDataService:
     """A REST client class.
