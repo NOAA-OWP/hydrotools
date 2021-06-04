@@ -48,10 +48,15 @@ class Url(UserString, str):
         using urllib.parse.unquote_plus to mirror the behavior when unquoting.  To
         change this behavior, use the `quote_treatment` keyword argument and pass a
         member from the `hydrotools._restclient.Quote` enum. Options are `Quote.QUOTE`,
-        `Quote.QUOTE_PLUS`, or `Quote.QUOTE_FROM_BYTES`. `Url` instances passed to `Url`
-        (e.g.  `Url(Url("http://www.test.gov", quote_treatment=Quote.QUOTE, safe="/+"))`
-        retain non-default quote and safe options unless a non-default
-        `quote_treatment` / `safe` value is specified respectively.
+        `Quote.QUOTE_PLUS`, or `Quote.QUOTE_FROM_BYTES`. The `quote_overide_map` option
+        allows explicit remapping of a character or set of characters in the encoded
+        form of the url. An example use of `quote_overide_map` is to remap `+` to `%2B`,
+        its escaped literal form. This behavior is not supported in `urllib.parse` which
+        either does not escape `+` or escapes it as `%20`.  `Url` instances passed to
+        `Url` (e.g.  `Url(Url("http://www.test.gov", quote_treatment=Quote.QUOTE,
+        safe="/+"))` retain non-default quote and safe options unless a non-default
+        `quote_treatment` / `safe` / `quote_overide_map` value is specified
+        respectively.
 
         urls are unquoted at construction time for `Url` object comparison sake
         equivalency and readability.
