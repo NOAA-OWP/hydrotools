@@ -7,6 +7,57 @@ import numpy as np
 import pandas as pd
 
 
+def test_raw_get_with_mget():
+    inst = iv.IVDataService(enable_cache=False)
+    # print(inst.get_raw(sites=pd.Series(["01646500"])))
+    print(inst.get_raw(stateCd=["AL", "NY"], siteStatus="active"))
+
+
+def test_get__():
+    inst = iv.IVDataService(enable_cache=False)
+    print(
+        inst.get(
+            sites=pd.Series(["01646500"]), startDT="2021-01-01", endDT="2021-01-05"
+        )
+    )
+    # print(inst.get(sites=pd.Series(["01646500"]), period="P10D"))
+    # print(
+    #     inst.get(
+    #         bBox=["-83.000000,36.500000,-81.000000,38.500000"], siteStatus="active"
+    #     )
+    # )
+    # print(inst.get_raw(stateCd="AL,", siteStatus="active"))
+
+
+split_params = [
+    ("key", [1, 2, 3], 4, None, [{"key": ["1", "2", "3"]}]),
+    ("key", [1, 2, 3], 4, ",", [{"key": "1,2,3"}]),
+    (
+        "key",
+        [1, 2, 3, 4],
+        2,
+        None,
+        [{"key": ["1", "2"]}, {"key": ["3", "4"]}],
+    ),
+    ("key", [1, 2, 3, 4], 2, ",", [{"key": "1,2"}, {"key": "3,4"}]),
+]
+
+
+@pytest.mark.parametrize("key,values,split_threshold,join_on,validation", split_params)
+def test_split(key, values, split_threshold, join_on, validation):
+    r = iv.split(
+        key=key, values=values, split_threshold=split_threshold, join_on=join_on
+    )  # type: list[dict]
+
+    for idx, item in enumerate(validation):
+        for k, v in item.items():
+            a = r[idx][k]
+            if isinstance(a, np.ndarray):
+                assert (a == v).all()
+            else:
+                assert a == v
+
+
 class MockRequests:
     """Mock of requests object
 
@@ -90,13 +141,20 @@ def test_get_throw_warning(monkeypatch):
         assert iv.IVDataService.get(sites="04233255").empty is True
 
 
+GET_PARAM_SITES = [
+    ("01646500,02140991", ["01646500", "02140991"]),
+    (["01646500", "02140991"], ["01646500", "02140991"]),
+    (np.array(["01646500", "02140991"]), ["01646500", "02140991"]),
+    (pd.Series(["01646500", "02140991"]), ["01646500", "02140991"]),
+]
+
+
 @pytest.mark.slow
-def test_get(setup_iv):
-    # TODO
+@pytest.mark.parametrize("sites,validation", GET_PARAM_SITES)
+def test_get(setup_iv, sites, validation):
     """Test data retrieval and parsing"""
-    df = setup_iv.get(sites="01646500,02140991", parameterCd="00060,00065")
-    assert "01646500" in df["usgs_site_code"].values
-    assert "02140991" in df["usgs_site_code"].values
+    df = setup_iv.get(sites=sites, parameterCd="00060")
+    assert df["usgs_site_code"].isin(validation).all()
 
 
 def test_get_raw_with_mock(setup_iv, monkeypatch):
@@ -118,12 +176,6 @@ def test_get_raw_with_mock(setup_iv, monkeypatch):
     assert data[0]["usgs_site_code"] == "01646500"
 
 
-@pytest.mark.parametrize("unchunked", [list(range(200)), str(list(range(200)))[1:-1]])
-def test_chunk_request(setup_iv, unchunked):
-
-    assert len(setup_iv._chunk_request(unchunked)) == 3
-
-
 def test_handle_response(setup_iv, monkeypatch):
     import json
     from pathlib import Path
@@ -139,77 +191,6 @@ def test_handle_response(setup_iv, monkeypatch):
     assert (
         setup_iv._handle_response(requests.Response)[0]["usgs_site_code"] == "01646500"
     )
-
-
-def test_get_and_handle_response(setup_iv, monkeypatch):
-    import json
-    from pathlib import Path
-    from hydrotools._restclient import RestClient
-    import requests
-
-    def mock_json(*args, **kwargs):
-        json_text = json.loads(
-            (Path(__file__).resolve().parent / "nwis_test_data.json").read_text()
-        )
-        key_word_args = {"_json": json_text}
-        return MockRequests(**key_word_args)
-
-    monkeypatch.setattr(RestClient, "get", mock_json)
-
-    assert (
-        setup_iv._get_and_handle_response(requests.Response)[0]["usgs_site_code"]
-        == "01646500"
-    )
-
-
-@pytest.mark.slow
-def test_multiprocessing_get(setup_iv, monkeypatch):
-    import json
-    from pathlib import Path
-    from hydrotools._restclient import RestClient
-    import requests
-
-    sites = [
-        "01646500",
-        "01646500",
-        "01646500",
-    ]
-    parameters = {
-        "parameterCd": "00060",
-        "siteStatus": "active",
-        "format": "json",
-    }
-
-    def mock_json(*args, **kwargs):
-        json_text = json.loads(
-            (Path(__file__).resolve().parent / "nwis_test_data.json").read_text()
-        )
-        key_word_args = {"_json": json_text}
-        return MockRequests(**key_word_args)
-
-    monkeypatch.setattr(RestClient, "get", mock_json)
-    print(
-        setup_iv._multiprocessing_get(
-            sites, parameters=parameters, partition_max_size=2
-        )
-    )
-
-
-unique_test_data = [
-    ([1, 2, 3], [1, 2, 3]),
-    ([2, 1, 3], [1, 2, 3]),
-    ([3, 2, 1], [1, 2, 3]),
-    ([1, 3, 2], [1, 2, 3]),
-    ([2, 3, 1], [1, 2, 3]),
-    ([3, 1, 2], [1, 2, 3]),
-    ([3, 3, 3], [3]),
-    (["4"], ["4"]),
-]
-
-
-@pytest.mark.parametrize("collection,validation", unique_test_data)
-def test_unique(setup_iv, collection, validation):
-    assert setup_iv._unique(collection) == validation
 
 
 test_get_startDT_endDT_scenarios = [
@@ -253,25 +234,9 @@ def test_get_slow(setup_iv):
     site = "01646500"
     start, end = "2020-01-01", "2020-01-01T06:15"
     df = setup_iv.get(site, startDT=start, endDT=end)
-    assert df["value_date"][0].isoformat() == f"{start}T00:00:00"
-
-
-datetime_keyword_test_data = [
-    {"startDT": "2020-08-20"},
-    {"startDT": "2020-08-20", "endDT": "2020-08-21"},
-    {"period": "P2D"},
-]
-
-
-@pytest.mark.parametrize("test_data", datetime_keyword_test_data)
-def test_startDT_endDT_period_in_get_raw(setup_iv, monkeypatch, test_data):
-    """ Test datetime keyword argument behavior in `get_raw` """
-
-    def handler(*args, **kwargs):
-        return 1
-
-    monkeypatch.setattr(iv.IVDataService, "_get_and_handle_response", handler)
-    assert setup_iv.get_raw(sites="01646500", **test_data) == 1
+    # IV api seems to send different start based on daylights saving time.
+    # Test is less prescriptive, but still should suffice
+    assert df["value_date"][0].isoformat().startswith(start)
 
 
 datetime_keyword_test_data_should_fail = [
@@ -290,7 +255,6 @@ def test_startDT_endDT_period_in_get_raw_should_fail(setup_iv, monkeypatch, test
         return 1
 
     with pytest.raises(KeyError):
-        monkeypatch.setattr(iv.IVDataService, "_get_and_handle_response", handler)
         setup_iv.get_raw(sites="01646500", **test_data)
 
 
@@ -399,22 +363,22 @@ def test__handle_start_end_period_url_params_should_throw(setup_iv, input, error
 @pytest.mark.slow
 def test_get_raw_stateCd(setup_iv):
     """Test data retrieval and parsing"""
-    df = setup_iv.get_raw_stateCd(stateCd="AL", parameterCd="00060")
+    df = setup_iv.get_raw(stateCd="AL", parameterCd="00060")
     sites = {item["usgs_site_code"] for item in df}
     assert "02339495" in sites
 
 
-def test_get_raw_stateCd_invalid_state_value_error(setup_iv):
-    """Test data retrieval and parsing"""
-    with pytest.raises(ValueError):
-        # Invalid stateCd name
-        setup_iv.get_raw_stateCd(stateCd="NA", parameterCd="00060")
+# def test_get_raw_stateCd_invalid_state_value_error(setup_iv):
+#     """Test data retrieval and parsing"""
+#     with pytest.raises(ValueError):
+#         # Invalid stateCd name
+#         setup_iv.get_raw_stateCd(stateCd="NA", parameterCd="00060")
 
 
 @pytest.mark.slow
 def test_get_raw_huc(setup_iv):
     """Test data retrieval and parsing"""
-    df = setup_iv.get_raw_huc(huc="02070010", parameterCd="00060")
+    df = setup_iv.get_raw(huc="02070010", parameterCd="00060")
     sites = {item["usgs_site_code"] for item in df}
     assert "01647850" in sites
 
@@ -430,7 +394,7 @@ RAW_BBOX_PARAMS = [
 @pytest.mark.parametrize("test,validation", RAW_BBOX_PARAMS)
 def test_get_raw_bBox(setup_iv, test, validation):
     """Test data retrieval and parsing"""
-    df = setup_iv.get_raw_bBox(bBox=test, parameterCd="00060")
+    df = setup_iv.get_raw(bBox=test, parameterCd="00060")
     sites = {item["usgs_site_code"] for item in df}
     assert validation in sites
 
@@ -438,6 +402,30 @@ def test_get_raw_bBox(setup_iv, test, validation):
 @pytest.mark.slow
 def test_get_raw_countyCd(setup_iv):
     """Test data retrieval and parsing"""
-    df = setup_iv.get_raw_countyCd(countyCd=51059, parameterCd="00060")
+    df = setup_iv.get_raw(countyCd="51059", parameterCd="00060")
     sites = {item["usgs_site_code"] for item in df}
     assert "01645704" in sites
+
+
+SPLITTING_BBOX_PARAMS = (
+    ("3,3,3,3", ["3,3,3,3"]),
+    (("3", "3", "3", "3"), ["3,3,3,3"]),
+    ((3, 3, 3, 3), ["3,3,3,3"]),
+    [np.array((3, 3, 3, 3)), ["3,3,3,3"]],
+    [pd.Series((3, 3, 3, 3)), ["3,3,3,3"]],
+    ("3,3,3,3,3,3,3,3", ["3,3,3,3", "3,3,3,3"]),
+    (("3,3,3,3", "3,3,3,3"), ["3,3,3,3", "3,3,3,3"]),
+    (np.array(("3,3,3,3", "3,3,3,3")), ["3,3,3,3", "3,3,3,3"]),
+    (pd.Series(("3,3,3,3", "3,3,3,3")), ["3,3,3,3", "3,3,3,3"]),
+    (pd.Series((["3,3,3,3"], [3, 3, 3, 3])), ["3,3,3,3", "3,3,3,3"]),
+    (["3,3,3,3"], ["3,3,3,3"]),
+    ((["3,3,3,3"], [3, 3, 3, 3]), ["3,3,3,3", "3,3,3,3"]),
+    ((["3,3,3,3"], ["3,3,3,3"]), ["3,3,3,3", "3,3,3,3"]),
+    ((["3,3,3,3", 3, 3, 3, 3], ["3,3,3,3"]), ["3,3,3,3", "3,3,3,3", "3,3,3,3"]),
+)
+
+
+@pytest.mark.parametrize("test,validation", SPLITTING_BBOX_PARAMS)
+def test_splitting_bbox(test, validation):
+    v = iv._bbox_split(test)
+    assert v == validation
