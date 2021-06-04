@@ -5,7 +5,7 @@ import re
 
 # local imports
 from ._iterable_nonstring import IterableNonStringLike
-from .urllib_types import Quote, QUOTE_PLUS_OR_CARRY
+from .urllib_types import Quote, QUOTE_PLUS_OR_CARRY, FORWARD_SLASH
 
 __all__ = ["Url", "Variadic"]
 
@@ -63,6 +63,7 @@ class Url(UserString, str):
         url: Union[str, "Url"],
         *,
         quote_treatment: Quote = QUOTE_PLUS_OR_CARRY,
+        safe: str = FORWARD_SLASH,
     ):
         # Overload so unquote_treatment kwarg does not raise TypeError for str()
         return str.__new__(cls, url)
@@ -72,6 +73,7 @@ class Url(UserString, str):
         url: Union[str, "Url"],
         *,
         quote_treatment: Quote = QUOTE_PLUS_OR_CARRY,
+        safe: str = FORWARD_SLASH,
     ) -> None:
         is_url_instance = isinstance(url, Url)
 
