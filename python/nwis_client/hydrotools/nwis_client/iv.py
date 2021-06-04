@@ -142,29 +142,30 @@ class IVDataService:
 
         Parameters
         ----------
-        sites: str, list, pandas.Series, or numpy.Array, required
-            Comma separated list of sites in string format or iterable.
-        stateCd: str, optional
-            Single 2 character U.S. State of Territory abbreviation
-        huc: str, int, List[int], List[str], optional
-            Hydrologic Unit Codes. Full list https://water.usgs.gov/GIS/huc_name.html
-        bBox: str, List[int], List[float], optional
-            lat, lon in format: west, south, east, north
-        countyCd: str, List[int]
-            County codes, no more than 20. Full list: https://help.waterdata.usgs.gov/code/county_query?fmt=html
+        sites: str, List[str], pandas.Series[str], or numpy.Array[str], optional
+            Single site, comma separated string list of sites, or iterable collection of string sites
+        stateCd: str, List[str], optional
+            2 character U.S. State of Territory abbreviation single, comma seperated string, or iterable collection of strings
+        huc: str, List[int], List[str], optional
+           Hydrologic Unit Codes as single string, comma seperated string, or iterable collection of strings or ints.
+           Full list https://water.usgs.gov/GIS/huc_name.html
+        bBox: str, List[str, int, float], List[List[str, int, float]], optional
+            lat, lon in format: west, south, east, north. Accepted as comma seperated string, list of str, int, float, or nested list of str, int, float
+        countyCd: str, List[int, str]
+            Single, comma seperated string, or iterable collection of strings or integers of U.S. county codes
+            Full list: https://help.waterdata.usgs.gov/code/county_query?fmt=html
         parameterCd: str, optional, default '00060' (Discharge)
             Comma separated list of parameter codes in string format.
-        startDT: str, datetime.datetime, np.datetime64, pd.Timestamp, or None
-                 optional, default None
-            Observation record start time. If timezone information not provided,
-            defaults to UTC.
-        endDT: str, datetime.datetime, np.datetime64, pd.Timestamp, or None
-                 optional, default None
+            Full list: https://nwis.waterdata.usgs.gov/usa/nwis/pmcodes?radio_pm_search=param_group&pm_group=All+--+include+all+parameter+groups&pm_search=&casrn_search=&srsname_search=&format=html_table&show=parameter_group_nm&show=parameter_nm&show=casrn&show=srsname&show=parameter_units
+        startDT: str, datetime.datetime, np.datetime64, pd.Timestamp, or None, optional, default None
+            Observation record start time. If timezone information not provided, defaults to UTC.
+        endDT: str, datetime.datetime, np.datetime64, pd.Timestamp, or None, optional, default None
+            Observation record end time. If timezone information not provided, defaults to UTC.
         period: str, None
-            Observation record for period until current time. Uses ISO 8601
-            period time.
+            Observation record for period until current time. Uses ISO 8601 period time.
         siteStatus: str, optional, default 'all'
-            Site status in string format
+            Site status in string format.
+            Options: 'all', 'active', 'inactive'
         params:
             Additional parameters passed directly to service.
 
@@ -175,8 +176,38 @@ class IVDataService:
 
         Examples
         --------
-        >>> from hydrotools.nwis_client.iv import IVDataService
-        >>> data = IVDataService.get(sites='01646500')
+        >>> from hydrotools.nwis_client import IVDataService
+        >>> df = IVDataService.get(sites='01646500', startDT="2021-01-01", endDT="2021-02-01")
+
+        >>> # Retrieve discharge data from all sites in Alabama over the past 5 days
+        >>> df = IVDataService.get(stateCd='AL', period="P5D")
+
+        >>> # Retrieve latest discharge data from a list of sites
+        >>> sites = ['02339495', '02342500', '023432415', '02361000', '02361500', '02362240', '02363000', '02364500', '02369800', '02371500']
+        >>> # Also works with np array's, pd.Series, and comma seperated string. Try it out!
+        >>> # sites = np.array(['02339495', '02342500', '023432415', '02361000', '02361500', '02362240', '02363000', '02364500', '02369800', '02371500'])
+        >>> # sites = pd.array(['02339495', '02342500', '023432415', '02361000', '02361500', '02362240', '02363000', '02364500', '02369800', '02371500'])
+        >>> # sites = '02339495,02342500,023432415,02361000,02361500,02362240,02363000,02364500,02369800,02371500'
+        >>> df = IVDataService.get(sites=sites)
+
+        >>> # Retrieve discharge data from sites within a bounding box from a point in the past until the present
+        >>> #
+        >>> bbox = "-83.0,36.5,-81.0,38.5"
+        >>> # or specify in list. It's possible to specify multiple bounding boxes using a list of comma seperated string or nested lists
+        >>> # np.array's and pd.Series's are accepted too!
+        >>> # bbox = [-83.,36.5,-81.,38.5]
+        >>> #
+        >>> # You can also specify start and end times using datetime, np.datetime64, timestamps!
+        >>> from datetime import datetime
+        >>> start = datetime(2021, 5, 1, 12)
+        >>> df = IVDataService.get(bBox=bbox, startDT=start)
+
+        >>> # Retrieve stage height data from sites within two counties for the past day
+        >>> counties = [36109, 36107]
+        >>> # Can specify as collection(list, np.array, pd.Series) of strings or ints or a comma seperated list of strings.
+        >>> # counties = ["36109", "36107"]
+        >>> # counties = "36109,36107"
+        >>> df = IVDataService.get(countyCd=counties, period='P5D')
         """
         iv_data_service = cls()
         raw_data = iv_data_service.get_raw(
@@ -310,53 +341,7 @@ class IVDataService:
     ) -> List[requests.Response]:
         """
         Return raw requests data from the NWIS IV Rest API in a list.
-
-        Parameters
-        ----------
-        sites: str, list, pandas.Series, or numpy.Array, optional
-            Comma separated list of sites in string format or iterable.
-        stateCd: str, optional
-            Single 2 character U.S. State of Territory abbreviation
-        huc: str, int, List[int], List[str], optional
-            Hydrologic Unit Codes. Full list https://water.usgs.gov/GIS/huc_name.html
-        bBox: str, List[int], List[float], optional
-            lat, lon in format: west, south, east, north
-        countyCd: str, List[int]
-            County codes, no more than 20. Full list: https://help.waterdata.usgs.gov/code/county_query?fmt=html
-        parameterCd: str, optional, default '00060' (Discharge)
-            Comma separated list of parameter codes in string format.
-        startDT: str, datetime.datetime, np.datetime64, pd.Timestamp, or None
-                 optional, default None
-            Observation record start time. If timezone information not provided,
-            defaults to UTC.
-        endDT: str, datetime.datetime, np.datetime64, pd.Timestamp, or None
-                 optional, default None
-            Observation record end time. If timezone information not provided,
-            defaults to UTC.
-        period: str, None
-            Observation record for period until current time. Uses ISO 8601
-            period time.
-        siteStatus: str, optional, default 'all'
-            Site status in string format
-        max_sites_per_request: int, optional, default 100
-            Generally should not be changed. Maximum number of sites in any single
-            `requests.get` call. Any number greater will cause sites to be divided
-            evenly amongst parallel
-            `requests.get` calls.
-        kwargs:
-            Additional parameters passed directly to service.
-
-        Returns
-        -------
-        List[requests.Response] :
-            A list of retrieved requests objects
-
-        Examples
-        --------
-        >>> from hydrotools.nwis_client import iv
-        >>> service = iv.IVDataService()
-        >>> data = service.get(sites='01646500')
-
+        See `IVDataService.get` for argument documentation.
         """
         # handle start, end, and period parameters
         kwargs = self._handle_start_end_period_url_params(
