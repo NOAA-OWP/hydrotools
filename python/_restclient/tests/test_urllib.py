@@ -148,3 +148,53 @@ def test_construct_url_with_unquote_treatment():
 
     assert inst.quote_treatment == Quote.QUOTE
     assert inst2.quote_treatment == Quote.QUOTE_PLUS
+
+
+def test_safe():
+    base_url = "http://www.fake.gov"
+    safe = "/:"
+    path = "pa:th"
+    url = Url(base_url, safe=safe)
+    url2 = Url(url)
+    url3 = url2 / path
+    url4 = url2 + {"key": "1:2"}
+    url5 = url4 / path
+    url6 = url2 / path + {"key": "1:2"}
+
+    assert url._safe == safe
+    assert url2._safe == safe
+    assert url3._safe == safe
+    assert url4._safe == safe
+
+    assert url3.quote_url == f"{base_url}/{path}"
+    assert url4.quote_url == f"{base_url}?key=1:2"
+    assert url5.quote_url == f"{base_url}/{path}?key=1:2"
+    assert url6.quote_url == f"{base_url}/{path}?key=1:2"
+
+
+def test_safe_reinstantiate_with_new_safe():
+    base_url = "http://www.test.gov"
+    o = Url(base_url, safe="/:") / "te:st"
+    assert o.quote_url == "http://www.test.gov/te:st"
+
+    o2 = Url(o, safe="/")
+
+    assert o2.quote_url == "http://www.test.gov/te%3Ast"
+
+
+def test_quote_treatment():
+    base_url = "http://www.fake.gov"
+    path = "office of water prediction"
+    params = {"key": "+12"}
+
+    url = Url(base_url, quote_treatment=Quote.QUOTE) / path
+    url2 = Url(base_url, quote_treatment=Quote.QUOTE_PLUS) / path
+
+    assert url == url2
+    assert url.quote_url != url2.quote_url
+
+    url += params
+    url2 += params
+
+    assert url == url2
+    assert url.quote_url != url2.quote_url
