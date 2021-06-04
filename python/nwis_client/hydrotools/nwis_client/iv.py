@@ -691,17 +691,6 @@ class IVDataService:
                 error_message = "Non-string iterable type cannot be passed."
                 raise TypeError(error_message)
 
-        # # Boolean addition. For valid input, should equal 3
-        # N_VALID_ARGS = (
-        #     is_string_or_non_string_iterable(startDT)
-        #     + is_string_or_non_string_iterable(endDT)
-        #     + is_string_or_non_string_iterable(period)
-        # )
-
-        # if N_VALID_ARGS != 3:
-        #     error_message = "Non-string iterable type cannot be passed."
-        #     raise TypeError(error_message)
-
         params = {}
 
         # Handle startDT, endDT, and period optional arguments.
