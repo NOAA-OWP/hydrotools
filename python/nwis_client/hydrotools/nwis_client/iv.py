@@ -12,9 +12,8 @@ Classes
 
 import datetime
 from collections.abc import Iterable
-from multiprocessing import Pool
 from functools import partial
-from typing import Dict, List, Set, T, Tuple, Union, Iterable
+from typing import Dict, List, Set, T, Union, Iterable
 import re
 import requests
 import six
