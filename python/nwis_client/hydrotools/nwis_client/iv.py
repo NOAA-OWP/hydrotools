@@ -87,10 +87,11 @@ class IVDataService:
     _headers = {"Accept-Encoding": "gzip, compress"}
 
     def __init__(self, *, enable_cache: bool = True, cache_expire_after: int = 43200):
+        self._cache_enabled = enable_cache
         self._restclient = RestClient(
             base_url=self._base_url,
             headers=self._headers,
-            enable_cache=enable_cache,
+            enable_cache=self._cache_enabled,
             cache_filename=self._requests_cache_filename,
             cache_expire_after=cache_expire_after,
         )
@@ -676,6 +677,11 @@ class IVDataService:
     def base_url(self) -> str:
         """ API Baseurl """
         return self._base_url
+
+    @property
+    def cache_enabled(self) -> bool:
+        """ Is cache enabled"""
+        return self._cache_enabled
 
     @property
     def headers(self) -> dict:
