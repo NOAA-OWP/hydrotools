@@ -774,7 +774,6 @@ def _bbox_split(values: Union[str, list, tuple, pd.Series, np.ndarray]) -> List[
                 if isinstance(item, str):
                     l += item.split(",")
                 elif isinstance(item, VALID_COLLECTIONS_MRO):
-                    item = list(map(str, item))
                     l += flatten_and_stringify(item)
                 else:
                     l += [str(item)]
@@ -786,9 +785,6 @@ def _bbox_split(values: Union[str, list, tuple, pd.Series, np.ndarray]) -> List[
     if len(values) % 4 != 0:
         error_message = f"values: {values} must be divisible by 4"
         raise ValueError(error_message)
-
-    # cast members to strings
-    values = list(map(str, values))
 
     # split values in list of sublists each with len 4
     n_groups = len(values) // 4
