@@ -42,10 +42,11 @@ class IVDataService:
     Examples
     --------
     >>> from hydrotools.nwis_client import IVDataService
-    >>> df = IVDataService.get(sites='01646500', startDT="2021-01-01", endDT="2021-02-01")
+    >>> service = IVDataService()
+    >>> df = service.get(sites='01646500', startDT="2021-01-01", endDT="2021-02-01")
 
     >>> # Retrieve discharge data from all sites in Alabama over the past 5 days
-    >>> df = IVDataService.get(stateCd='AL', period="P5D")
+    >>> df = service.get(stateCd='AL', period="P5D")
 
     >>> # Retrieve latest discharge data from a list of sites
     >>> sites = ['02339495', '02342500', '023432415', '02361000', '02361500', '02362240', '02363000', '02364500', '02369800', '02371500']
@@ -53,7 +54,7 @@ class IVDataService:
     >>> # sites = np.array(['02339495', '02342500', '023432415', '02361000', '02361500', '02362240', '02363000', '02364500', '02369800', '02371500'])
     >>> # sites = pd.array(['02339495', '02342500', '023432415', '02361000', '02361500', '02362240', '02363000', '02364500', '02369800', '02371500'])
     >>> # sites = '02339495,02342500,023432415,02361000,02361500,02362240,02363000,02364500,02369800,02371500'
-    >>> df = IVDataService.get(sites=sites)
+    >>> df = service.get(sites=sites)
 
     >>> # Retrieve discharge data from sites within a bounding box from a point in the past until the present
     >>> #
@@ -65,14 +66,14 @@ class IVDataService:
     >>> # You can also specify start and end times using datetime, np.datetime64, timestamps!
     >>> from datetime import datetime
     >>> start = datetime(2021, 5, 1, 12)
-    >>> df = IVDataService.get(bBox=bbox, startDT=start)
+    >>> df = service.get(bBox=bbox, startDT=start)
 
     >>> # Retrieve stage height data from sites within two counties for the past day
     >>> counties = [36109, 36107]
     >>> # Can specify as collection(list, np.array, pd.Series) of strings or ints or a comma seperated list of strings.
     >>> # counties = ["36109", "36107"]
     >>> # counties = "36109,36107"
-    >>> df = IVDataService.get(countyCd=counties, period='P5D')
+    >>> df = service.get(countyCd=counties, period='P5D')
     """
 
     # Class level variables
@@ -175,10 +176,11 @@ class IVDataService:
         Examples
         --------
         >>> from hydrotools.nwis_client import IVDataService
-        >>> df = IVDataService.get(sites='01646500', startDT="2021-01-01", endDT="2021-02-01")
+        >>> service = IVDataService()
+        >>> df = service.get(sites='01646500', startDT="2021-01-01", endDT="2021-02-01")
 
         >>> # Retrieve discharge data from all sites in Alabama over the past 5 days
-        >>> df = IVDataService.get(stateCd='AL', period="P5D")
+        >>> df = service.get(stateCd='AL', period="P5D")
 
         >>> # Retrieve latest discharge data from a list of sites
         >>> sites = ['02339495', '02342500', '023432415', '02361000', '02361500', '02362240', '02363000', '02364500', '02369800', '02371500']
@@ -186,7 +188,7 @@ class IVDataService:
         >>> # sites = np.array(['02339495', '02342500', '023432415', '02361000', '02361500', '02362240', '02363000', '02364500', '02369800', '02371500'])
         >>> # sites = pd.array(['02339495', '02342500', '023432415', '02361000', '02361500', '02362240', '02363000', '02364500', '02369800', '02371500'])
         >>> # sites = '02339495,02342500,023432415,02361000,02361500,02362240,02363000,02364500,02369800,02371500'
-        >>> df = IVDataService.get(sites=sites)
+        >>> df = service.get(sites=sites)
 
         >>> # Retrieve discharge data from sites within a bounding box from a point in the past until the present
         >>> #
@@ -198,14 +200,14 @@ class IVDataService:
         >>> # You can also specify start and end times using datetime, np.datetime64, timestamps!
         >>> from datetime import datetime
         >>> start = datetime(2021, 5, 1, 12)
-        >>> df = IVDataService.get(bBox=bbox, startDT=start)
+        >>> df = service.get(bBox=bbox, startDT=start)
 
         >>> # Retrieve stage height data from sites within two counties for the past day
         >>> counties = [36109, 36107]
         >>> # Can specify as collection(list, np.array, pd.Series) of strings or ints or a comma seperated list of strings.
         >>> # counties = ["36109", "36107"]
         >>> # counties = "36109,36107"
-        >>> df = IVDataService.get(countyCd=counties, period='P5D')
+        >>> df = service.get(countyCd=counties, period='P5D')
         """
         raw_data = self.get_raw(
             sites=sites,
