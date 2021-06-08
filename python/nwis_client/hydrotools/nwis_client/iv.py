@@ -94,9 +94,8 @@ class IVDataService:
             cache_expire_after=cache_expire_after,
         )
 
-    @classmethod
     def get(
-        cls,
+        self,
         sites: Union[
             str,
             Union[List[str]],
@@ -208,8 +207,7 @@ class IVDataService:
         >>> # counties = "36109,36107"
         >>> df = IVDataService.get(countyCd=counties, period='P5D')
         """
-        iv_data_service = cls()
-        raw_data = iv_data_service.get_raw(
+        raw_data = self.get_raw(
             sites=sites,
             stateCd=stateCd,
             huc=huc,
@@ -253,10 +251,8 @@ class IVDataService:
             dfs["dateTime"], utc=True, infer_datetime_format=True
         ).dt.tz_localize(None)
 
-        # # Simplify variable name
-        dfs["variable_name"] = dfs["variableName"].apply(
-            iv_data_service.simplify_variable_name
-        )
+        # Simplify variable name
+        dfs["variable_name"] = dfs["variableName"].apply(self.simplify_variable_name)
 
         # Sort DataFrame
         dfs = dfs.sort_values(
