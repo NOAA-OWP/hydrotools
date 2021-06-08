@@ -25,21 +25,25 @@ $ python3 -m pip install hydrotools.nwis_client
 The following example demonstrates how one might use `hydrotools.nwis_client` to retrieve USGS streamflow observations.
 
 ### Code
+
 ```python
 # Import the NWIS IV Client
 from hydrotools.nwis_client.iv import IVDataService
 
 # Retrieve data from a single site
-observations_data = IVDataService.get(
-    sites='01646500', 
-    startDT='2019-08-01', 
+service = IVDataService()
+observations_data = service.get(
+    sites='01646500',
+    startDT='2019-08-01',
     endDT='2020-08-01'
     )
 
 # Look at the data
 print(observations_data.head())
 ```
+
 ### Output
+
 ```console
            value_date variable_name usgs_site_code measurement_unit   value qualifiers  series
 0 2019-08-01 04:00:00    streamflow       01646500            ft3/s  4170.0        [A]       0
