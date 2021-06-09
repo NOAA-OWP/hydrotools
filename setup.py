@@ -87,9 +87,7 @@ def build_subpackage_mapping() -> Dict[str, str]:
     return subpackage_mapping
 
 
-def install_subpackages(
-    sources: dict,
-) -> None:
+def install_subpackages(sources: dict, develop_flag: bool = False) -> None:
     """Install all subpackages in a namespace package
 
     Parameters
@@ -104,6 +102,8 @@ def install_subpackages(
     for k, v in sources.items():
         try:
             subpackage_dir = str(ROOT_DIR / v)
+            if develop_flag:
+                subpackage_dir = f"{subpackage_dir}[develop]"
             subprocess.check_call(
                 [
                     sys.executable,
@@ -125,12 +125,7 @@ SUBPACKAGES = build_subpackage_mapping()
 # Development installation
 class Develop(develop):
     def run(self):
-        install_subpackages(SUBPACKAGES)
-        # Install development requirements
-        for dev_requirement in DEVELOPMENT_REQUIREMENTS:
-            subprocess.check_call(
-                [sys.executable, "-m", "pip", "install", dev_requirement]
-            )
+        install_subpackages(SUBPACKAGES, develop_flag=True)
 
 
 setup(
@@ -152,7 +147,6 @@ setup(
     url=URL,
     license=LICENSE,
     install_requires=REQUIREMENTS,
-    extras_require={"test": DEVELOPMENT_REQUIREMENTS},
     python_requires=">=3.7",
     cmdclass={"develop": Develop},
 )
