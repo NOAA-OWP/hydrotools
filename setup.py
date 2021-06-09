@@ -39,9 +39,6 @@ DESCRIPTION = (
 LONG_DESCRIPTION = Path("README.md").read_text()
 LICENSE = Path("LICENSE").read_text()
 
-# Development requirements
-DEVELOPMENT_REQUIREMENTS = ["pytest"]
-
 
 def get_subpackage_names() -> List[str]:
     # This assumes that each subpackage has a setup.py and is located under python/
