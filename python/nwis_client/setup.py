@@ -29,6 +29,7 @@ REQUIREMENTS = [
     "pandas",
     "numpy",
     "hydrotools._restclient",
+    "aiohttp"
 ]
 
 # Development requirements
