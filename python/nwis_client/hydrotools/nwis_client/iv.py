@@ -15,7 +15,7 @@ from collections.abc import Iterable
 from functools import partial
 from typing import Dict, List, Set, T, Union, Iterable
 import re
-import requests
+import aiohttp
 import six
 import warnings
 
@@ -336,7 +336,7 @@ class IVDataService:
         siteStatus: str = "all",
         max_sites_per_request: int = 20,
         **params,
-    ) -> List[requests.Response]:
+    ) -> List[aiohttp.ClientResponse]:
         """
         Return raw requests data from the NWIS IV Rest API in a list.
         See `IVDataService.get` for argument documentation.
@@ -523,7 +523,7 @@ class IVDataService:
         return params
 
     @staticmethod
-    def _handle_response(raw_response: requests.Response) -> List[dict]:
+    def _handle_response(raw_response: aiohttp.ClientResponse) -> List[dict]:
         """From a raw response, return a list of extracted sites in dictionary form.
         Relevant dictionary keys are:
             "usgs_site_code"
@@ -534,7 +534,7 @@ class IVDataService:
 
         Parameters
         ----------
-        raw_response : requests.Response
+        raw_response : aiohttp.ClientResponse 
             Request GET response
 
         Returns
