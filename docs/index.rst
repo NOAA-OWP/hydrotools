@@ -6,6 +6,12 @@ Tools for retrieving hydrological data
 .. toctree::
    :hidden:
    :maxdepth: 2
+
+   examples
+
+.. toctree::
+   :hidden:
+   :maxdepth: 2
    :caption: API:
 
    hydrotools.nwis_client
