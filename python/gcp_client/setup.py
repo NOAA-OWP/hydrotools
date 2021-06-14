@@ -37,6 +37,9 @@ REQUIREMENTS = [
     "numpy>=1.20.0"
     ]
 
+# Development requirements
+DEVELOPMENT_REQUIREMENTS = ["pytest"]
+
 setup(
     name=SUBPACKAGE_SLUG,
     version=VERSION,
@@ -66,4 +69,5 @@ setup(
         ]
     },
     install_requires=REQUIREMENTS,
+    extras_require={"develop": DEVELOPMENT_REQUIREMENTS},
 )

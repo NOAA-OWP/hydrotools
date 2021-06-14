@@ -145,6 +145,9 @@ DESCRIPTION = "{{ SHORT_DESCRIPTION }}"
 # Package dependency requirements
 REQUIREMENTS = []
 
+# Development requirements
+DEVELOPMENT_REQUIREMENTS = ["pytest"]
+
 setup(
     name=SUBPACKAGE_SLUG,
     version=VERSION,
@@ -157,6 +160,7 @@ setup(
         include=[f"{NAMESPACE_PACKAGE_NAME}.*"]
     ),
     install_requires=REQUIREMENTS,
+    extras_require={"develop": DEVELOPMENT_REQUIREMENTS},
 )
 ```
 
