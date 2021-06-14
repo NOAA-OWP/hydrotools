@@ -92,3 +92,14 @@ usgs_site_code
                37 2020-09-27 01:00:00 2020-09-27 03:00:00
                38 2020-09-28 05:00:00 2020-09-28 11:00:00
 ```
+
+### Event Detection Tips
+The `evaluation_tools.events.event_detection.decomposition` method has two main parameters: `halflife` and `window`. These parameters are passed directly to underlying filters used to remove noise and model the trend in a streamflow time series (also called *baseflow*). Significant contiguous deviations from this trend are flagged as "events". This method was originally conceived to detect rainfall-driven runoff events in small watersheds from records of volumetric discharge or total runoff. Before using decomposition you will want to have some idea of the event timescales you hope to detect.
+
+In general you'll want to consider the following:
+
+1. Ensure your time series is monotonically increasing with a frequency significantly less than the frequency of events and fill missing data
+2. Use a `pandas.Timedelta` compatible `str` to specify `halflife` and `window`. See the [pandas docs](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Timedelta.html)
+3. Specify a `halflife` larger than the expected frequency of noise, but smaller than the event timescale
+4. Specify a `window` larger than the event timescale, but at least 4 to 5 times smaller than the entire length of the time series
+5. Filter the final list of events to remove false positive events, particularly in noisy signals. You could filter on peak event flow, event duration, or other event characteristics
