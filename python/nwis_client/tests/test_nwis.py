@@ -103,7 +103,6 @@ def test_get_headers(setup_iv):
 
 
 def request_status_setter(status: int = 404):
-    import requests
     from functools import partial
 
     requests_testable_attributes = {"status_code": status}
@@ -159,17 +158,17 @@ def test_get_raw_with_mock(setup_iv, monkeypatch):
 def test_handle_response(setup_iv, monkeypatch):
     import json
     from pathlib import Path
-    import requests
+    import aiohttp
 
     def mock_json(*args, **kwargs):
         return json.loads(
             (Path(__file__).resolve().parent / "nwis_test_data.json").read_text()
         )
 
-    monkeypatch.setattr(requests.Response, "json", mock_json)
+    monkeypatch.setattr(aiohttp.ClientResponse, "json", mock_json)
 
     assert (
-        setup_iv._handle_response(requests.Response)[0]["usgs_site_code"] == "01646500"
+        setup_iv._handle_response(aiohttp.ClientResponse)[0]["usgs_site_code"] == "01646500"
     )
 
 
