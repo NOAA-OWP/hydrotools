@@ -28,7 +28,7 @@ DESCRIPTION = (
 REQUIREMENTS = [
     "pandas",
     "numpy",
-    "hydrotools._restclient",
+    "hydrotools._restclient>=3.0.0",
     "aiohttp"
 ]
 
