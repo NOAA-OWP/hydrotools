@@ -136,9 +136,12 @@ setup(
     maintainer=MAINTAINER,
     maintainer_email=MAINTAINER_EMAIL,
     classifiers=[
-        "Private :: Do Not Upload to pypi server",
+        "Intended Audience :: Education",
+        "Intended Audience :: Science/Research",
+        "License :: Free To Use But Restricted",
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
+        "Topic :: Scientific/Engineering :: Hydrology"
+        "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
     ],
     description=DESCRIPTION,
