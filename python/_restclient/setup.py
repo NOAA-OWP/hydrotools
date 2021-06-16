@@ -34,6 +34,8 @@ setup(
     author_email=AUTHOR_EMAIL,
     classifiers=[],
     description=DESCRIPTION,
+    url="https://www.github.com/NOAA-OWP/hydrotools",
+    license="USDOC",
     namespace_packages=[NAMESPACE_PACKAGE_NAME],
     packages=find_namespace_packages(include=[f"{NAMESPACE_PACKAGE_NAME}.*"]),
     install_requires=REQUIREMENTS,
