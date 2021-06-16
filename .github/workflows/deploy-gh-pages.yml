@@ -22,7 +22,7 @@ jobs:
         python -m pip install --upgrade pip Sphinx furo
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         pip install -e "python/_restclient[develop]"
-        python -m pip install -e .
+        python setup.py develop
     - name: Build Sphinx documentation
       run: |
         cd docs/
