@@ -178,10 +178,6 @@ test_get_startDT_endDT_scenarios = [
     (datetime(2020, 8, 10), "2020-08-10T00:00+0000"),
     (np.datetime64("2020-08-10"), "2020-08-10T00:00+0000"),
     (pd.to_datetime("2020-08-10"), "2020-08-10T00:00+0000"),
-    # Non green light test
-    ("2020-08-10T04:15-05:00", "2020-08-10T09:15+0000"),
-    # Strange behavior here in #6. np converts dt string w/ tzinfo to UTC by default
-    (pd.to_datetime("2020-08-10T04:15-05:00"), "2020-08-10T09:15+0000"),
 ]
 
 
@@ -191,6 +187,19 @@ def test_handle_dates(setup_iv, test, validation):
     date = setup_iv._handle_date(test)
     assert date == validation
 
+test_get_startDT_endDT_scenarios_should_warn = [
+    # Non green light test
+    ("2020-08-10T04:15-05:00", "2020-08-10T09:15+0000"),
+    # Strange behavior here in #6. np converts dt string w/ tzinfo to UTC by default
+    (pd.to_datetime("2020-08-10T04:15-05:00"), "2020-08-10T09:15+0000"),
+]
+
+@pytest.mark.parametrize("test,validation", test_get_startDT_endDT_scenarios_should_warn)
+def test_handle_dates_raise_deprecation_warning(setup_iv, test, validation):
+    """ Input dates should be output as strings in UTC tz """
+    with pytest.warns(DeprecationWarning):
+        date = setup_iv._handle_date(test)
+        assert date == validation
 
 test_get_startDT_endDT_scenarios_as_list = [
     (["2020-01-01", "2020-02-01"], ["2020-01-01T00:00+0000", "2020-02-01T00:00+0000"]),
