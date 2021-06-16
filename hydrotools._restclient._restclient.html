@@ -144,91 +144,114 @@
         </label>
         <div class="section" id="module-hydrotools._restclient._restclient">
 <span id="hydrotools-restclient-restclient-module"></span><h1>hydrotools._restclient._restclient module<a class="headerlink" href="#module-hydrotools._restclient._restclient" title="Permalink to this headline">¶</a></h1>
-<p>Generic REST Api client usable/inheritable for general usage and adaptable to more
-specific use cases.</p>
-<p># TODO: Add more information about the class here</p>
 <dl class="py class">
 <dt id="hydrotools._restclient._restclient.RestClient">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">hydrotools._restclient._restclient.</span></code><code class="sig-name descname"><span class="pre">RestClient</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_url</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">requests_cache_filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">requests_cache_expire_after</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">43200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retries</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hydrotools._restclient._restclient.RestClient" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Provides various methods for constructing requests, retrieving data, and
-parsing responses from the NWIS IV Service.</p>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">hydrotools._restclient._restclient.</span></code><code class="sig-name descname"><span class="pre">RestClient</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_url</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">hydrotools._restclient.urllib.Url</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_cache</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'cache'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_expire_after</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">43200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_retries</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">asyncio.events.AbstractEventLoop</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hydrotools._restclient._restclient.RestClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">hydrotools._restclient.async_helpers.AsyncToSerialHelper</span></code></p>
+<p>Class that simplifies writing RESTful client libraries and retrieval scripts. Behind
+the scenes requests are made asynchronously, however the API is exposed using serial
+methods to simplify usage.</p>
+<ul class="simple">
+<li><p>Base url</p></li>
+<li><p>SQLite request cache</p></li>
+<li><p>Retry exponential backoff</p></li>
+<li><p>Serial wrapper methods that make requests asynchronously (see <cite>RestClient.mget</cite>)</p></li>
+</ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>processes</strong> (<em>int</em>) – Max multiprocessing processes, default 3</p></li>
-<li><p><strong>retry</strong> (<em>int</em>) – Max number of, per request retries, default 3</p></li>
+<li><p><strong>base_url</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Url</em><em>, </em><em>None</em><em>]</em><em>, </em><em>default None</em>) – Request base url</p></li>
+<li><p><strong>headers</strong> (<em>dict</em><em>, </em><em>default {}</em>) – Headers included in every request</p></li>
+<li><p><strong>enable_cache</strong> (<em>bool</em><em>, </em><em>default True</em>) – Enable or disable caching</p></li>
+<li><p><strong>cache_filename</strong> (<em>str</em><em>, </em><em>default "cache"</em>) – Cache filename with .sqlite filetype suffix</p></li>
+<li><p><strong>cache_expire_after</strong> (<em>int</em><em>, </em><em>default 43200</em>) – Cached request life in seconds</p></li>
+<li><p><strong>retry</strong> (<em>bool</em><em>, </em><em>default True</em>) – Enable exponential backoff</p></li>
+<li><p><strong>n_retries</strong> (<em>int</em><em>, </em><em>default 3</em>) – Attempt retries n times before failing</p></li>
+<li><p><strong>loop</strong> (<em>asyncio.AbstractEventLoop</em><em>, </em><em>default None</em>) – Async event loop</p></li>
 </ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt id="hydrotools._restclient._restclient.RestClient.Get">
-<code class="sig-name descname"><span class="pre">Get</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">requests.models.PreparedRequest</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> → <span class="pre">requests.models.Response</span><a class="headerlink" href="#hydrotools._restclient._restclient.RestClient.Get" title="Permalink to this definition">¶</a></dt>
-<dd><p>Thin request.Session.get wrapper. Take prepared request and get
-response handling errors along the way. Only requests status codes
-200 and 201 returned.If the initial request fails, <cite>self._retries</cite>
-number retries are attempted with a 0.1 backoff factor.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>request</strong> (<em>requests.PreparedRequest</em>) – Prepared request object. Header and url are included</p></li>
-<li><p><strong>kwargs</strong> – Keyword arguments passed to requests.Session().send
-See: <a class="reference external" href="https://requests.readthedocs.io/en/latest/_modules/requests/sessions/#Session.send">https://requests.readthedocs.io/en/latest/_modules/requests/sessions/#Session.send</a></p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>request.Session.get response.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>requests.Response</p>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>requests.exceptions.ConnectionError</strong> – Raise if receive non 200 or 201 response</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py method">
-<dt id="hydrotools._restclient._restclient.RestClient.Request">
-<code class="sig-name descname"><span class="pre">Request</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_delimiter</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> → <span class="pre">requests.models.PreparedRequest</span><a class="headerlink" href="#hydrotools._restclient._restclient.RestClient.Request" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create Prepared Request from url and parameters and headers. Parameter
-concatenation behavior can be changed by passing a different
-<cite>parameter_delimiter</cite> argument. For example, a comma could be specified for
-USGS. (i.e. <a class="reference external" href="https://example-site.com/?var=1,2,3">https://example-site.com/?var=1,2,3</a>)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>url</strong> (<em>str</em><em>, </em><em>optional</em>) – url on which parameters are appended, by default self._base_url</p></li>
-<li><p><strong>parameters</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Union</em><em>[</em><em>str</em><em>, </em><em>List</em><em>[</em><em>Any</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – parameters to append to url, by default None</p></li>
-<li><p><strong>parameter_delimiter</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>None</em><em>]</em><em>, </em><em>optional</em>) – delimiter to separate parameters.
-None will resume normal Requests behavior, by default “,”</p></li>
-<li><p><strong>headers</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>, </em><em>optional</em>) – headers, by default None</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Prepared requests object</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>requests.PreparedRequest</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="go">&gt;&gt;&gt;</span>
-</pre></div>
-</div>
-</dd></dl>
+<p>Simple Request
+&gt;&gt;&gt; from hydrotools._restclient import RestClient
+&gt;&gt;&gt;
+&gt;&gt;&gt; client = RestClient()
+&gt;&gt;&gt; resp = client.get(“weather.gov”)
+&gt;&gt;&gt; print(resp.text())</p>
+<p>USGS NLDI Requests
+&gt;&gt;&gt; from hydrotools._restclient import RestClient
+&gt;&gt;&gt;
+&gt;&gt;&gt; base_url = “<a class="reference external" href="https://labs.waterdata.usgs.gov/api/nldi/linked-data/nwissite/">https://labs.waterdata.usgs.gov/api/nldi/linked-data/nwissite/</a>”
+&gt;&gt;&gt; headers = {“Accept”: “<em>/</em>”, “Accept-Encoding”: “gzip, compress”}
+&gt;&gt;&gt; client = RestClient(base_url=base_url, headers=headers)
+&gt;&gt;&gt;
+&gt;&gt;&gt; sites = [“0423360405”, “05106000”,”05078520”,”05078470”,”05125039”,”05124982”]
+&gt;&gt;&gt; site_urls = [f”/USGS-{site}/navigation/UT/flowlines” for site in sites]
+&gt;&gt;&gt; requests = client.mget(site_urls)
+&gt;&gt;&gt; requests = [resp.json() for resp in requests]</p>
 <dl class="py method">
 <dt id="hydrotools._restclient._restclient.RestClient.base_url">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">base_url</span></code><a class="headerlink" href="#hydrotools._restclient._restclient.RestClient.base_url" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base url</p>
 </dd></dl>
 <dl class="py method">
-<dt id="hydrotools._restclient._restclient.RestClient.get">
-<code class="sig-name descname"><span class="pre">get</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_delimeter</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hydrotools._restclient._restclient.RestClient.get" title="Permalink to this definition">¶</a></dt>
+<dt id="hydrotools._restclient._restclient.RestClient.build_url">
+<code class="sig-name descname"><span class="pre">build_url</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">PRIMITIVE</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">PRIMITIVE</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hydrotools._restclient._restclient.RestClient.build_url" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+<dl class="py method">
+<dt id="hydrotools._restclient._restclient.RestClient.close">
+<code class="sig-name descname"><span class="pre">close</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> → <span class="pre">None</span><a class="headerlink" href="#hydrotools._restclient._restclient.RestClient.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Release aiohttp.ClientSession</p>
+</dd></dl>
+<dl class="py method">
+<dt id="hydrotools._restclient._restclient.RestClient.get">
+<code class="sig-name descname"><span class="pre">get</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">yarl.URL</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_redirects</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> → <span class="pre">aiohttp.client_reqrep.ClientResponse</span><a class="headerlink" href="#hydrotools._restclient._restclient.RestClient.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make GET request. If base url is set, url is appended to the base url.
+Passed headers are given precedent over instance headers(if present), meaning
+passed headers replace instance headers with matching keys.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> (<em>str</em><em>, </em><em>Url</em>) – Request url</p></li>
+<li><p><strong>parameters</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Union</em><em>[</em><em>str</em><em>, </em><em>List</em><em>[</em><em>str</em><em>, </em><em>int</em><em>, </em><em>float</em><em>]</em><em>]</em><em>]</em>) – Query parameters</p></li>
+<li><p><strong>headers</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – Request headers, if RestClient headers set provided headers are appended</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>aiohttp.ClientResponse</p>
+</dd>
+</dl>
+</dd></dl>
 <dl class="py method">
 <dt id="hydrotools._restclient._restclient.RestClient.headers">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">headers</span></code><a class="headerlink" href="#hydrotools._restclient._restclient.RestClient.headers" title="Permalink to this definition">¶</a></dt>
 <dd><p>GET request headers</p>
+</dd></dl>
+<dl class="py method">
+<dt id="hydrotools._restclient._restclient.RestClient.mget">
+<code class="sig-name descname"><span class="pre">mget</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">urls</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">yarl.URL</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_redirects</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> → <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">aiohttp.client_reqrep.ClientResponse</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#hydrotools._restclient._restclient.RestClient.mget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make multiple asynchronous GET requests. If base url is set, each url is
+appended to the base url. Passed headers are given precedent over instance
+headers(if present), meaning passed headers replace instance headers with
+matching keys.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>urls</strong> (<em>List</em><em>[</em><em>Union</em><em>[</em><em>str</em><em>, </em><em>Url</em><em>]</em><em>]</em>) – Request urls</p></li>
+<li><p><strong>parameters</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Union</em><em>[</em><em>str</em><em>, </em><em>List</em><em>[</em><em>str</em><em>, </em><em>int</em><em>, </em><em>float</em><em>]</em><em>]</em><em>]</em>) – Query parameters</p></li>
+<li><p><strong>headers</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – Request headers, if RestClient headers set provided headers are appended</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[aiohttp.ClientResponse]</p>
+</dd>
+</dl>
 </dd></dl>
 </dd></dl>
 </div>
