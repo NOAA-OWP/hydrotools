@@ -288,6 +288,11 @@ class RestClient(AsyncToSerialHelper):
 
     def close(self) -> None:
         """ Release aiohttp.ClientSession """
+        # Session never instantiated, thus cannot be closed
+        session = getattr(self, "_session", None)
+        if session is None:
+            return
+
         if not self._session.closed:
             if not self._loop.is_closed():
                 self._add_to_loop(self._session.close())
