@@ -101,7 +101,7 @@ def test_get_cycle(setup_gcp):
         configuration="analysis_assim",
         reference_time="20210101T01Z"
     )
-    assert df['valid_time'].unique().size == 3
+    assert df['value_time'].unique().size == 3
 
 @pytest.mark.slow
 def test_cache_disable(setup_gcp):
@@ -113,7 +113,7 @@ def test_cache_disable(setup_gcp):
         reference_time="20210101T01Z",
         cache_data=False
     )
-    assert df['valid_time'].unique().size == 3
+    assert df['value_time'].unique().size == 3
     assert not setup_gcp.cache_path.exists()
 
 @pytest.mark.slow
@@ -124,11 +124,11 @@ def test_cache_key(setup_gcp):
         reference_time="20210101T02Z",
         cache_data=True
     )
-    first = df1['valid_time'].unique().size
+    first = df1['value_time'].unique().size
 
     with pd.HDFStore(setup_gcp.cache_path) as store:
         df2 = store[f"/{setup_gcp.cache_group}/analysis_assim/DT20210101T02Z"]
-        second = df2['valid_time'].unique().size
+        second = df2['value_time'].unique().size
     assert first == second
 
 @pytest.mark.slow
@@ -138,63 +138,63 @@ def test_get(setup_gcp):
         configuration="analysis_assim",
         reference_time="20210101T01Z"
     )
-    assert df['valid_time'].unique().size == 3
+    assert df['value_time'].unique().size == 3
 
     # Test Ext. ANA
     df = setup_gcp.get(
         configuration="analysis_assim_extend",
         reference_time="20210101T16Z"
     )
-    assert df['valid_time'].unique().size == 28
+    assert df['value_time'].unique().size == 28
 
     # Test short range
     df = setup_gcp.get(
         configuration="short_range",
         reference_time="20210101T01Z"
     )
-    assert df['valid_time'].unique().size == 18
+    assert df['value_time'].unique().size == 18
 
     # Test medium range
     df = setup_gcp.get(
         configuration="medium_range_mem1",
         reference_time="20210101T06Z"
     )
-    assert df['valid_time'].unique().size == 80
+    assert df['value_time'].unique().size == 80
 
     # Test long range
     df = setup_gcp.get(
         configuration="long_range_mem1",
         reference_time="20210101T06Z"
     )
-    assert df['valid_time'].unique().size == 120
+    assert df['value_time'].unique().size == 120
 
     # Test Hawaii ANA
     df = setup_gcp.get(
         configuration="analysis_assim_hawaii",
         reference_time="20210101T01Z"
     )
-    assert df['valid_time'].unique().size == 3
+    assert df['value_time'].unique().size == 3
 
     # Test Hawaii Short Range
     df = setup_gcp.get(
         configuration="short_range_hawaii",
         reference_time="20210101T00Z"
     )
-    assert df['valid_time'].unique().size == 60
+    assert df['value_time'].unique().size == 60
 
     # Test Puerto Rico ANA
     df = setup_gcp.get(
         configuration="analysis_assim_puertorico",
         reference_time="20210501T00Z"
     )
-    assert df['valid_time'].unique().size == 3
+    assert df['value_time'].unique().size == 3
 
     # Test Puerto Rico Short Range
     df = setup_gcp.get(
         configuration="short_range_puertorico",
         reference_time="20210501T06Z"
     )
-    assert df['valid_time'].unique().size == 48
+    assert df['value_time'].unique().size == 48
 
 @pytest.mark.slow
 def test_get_no_da(setup_gcp):
@@ -215,7 +215,7 @@ def test_get_no_da(setup_gcp):
             configuration=cycle,
             reference_time=ref_tm
         )
-        assert df['valid_time'].unique().size == validate
+        assert df['value_time'].unique().size == validate
 
 def test_invalid_configuration_exception(setup_gcp):
     # Test invalid configuration
