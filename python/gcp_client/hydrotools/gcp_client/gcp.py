@@ -101,7 +101,7 @@ class NWMDataService:
             for MAP_FILE in _FEATURE_ID_TO_USGS_SITE_MAP_FILES:
                 dfs.append(pd.read_csv(
                 MAP_FILE,
-                dtype={"nwm_feature_id": int, "usgs_site_code": str},
+                dtype={"nwm_feature_id": str, "usgs_site_code": str},
                 comment='#'
             ).set_index('nwm_feature_id')[['usgs_site_code']])
             self.crosswalk = pd.concat(dfs)
