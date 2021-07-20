@@ -2,13 +2,14 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="hydrotools._restclient subpackage" href="hydrotools._restclient.html" /><link rel="prev" title="hydrotools.gcp_client.gcp module" href="hydrotools.gcp_client.gcp.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="hydrotools._restclient subpackage" href="hydrotools._restclient.html" /><link rel="prev" title="hydrotools.gcp_client.gcp module" href="hydrotools.gcp_client.gcp.html" />
 
-    <meta name="generator" content="sphinx-3.5.4, furo 2021.04.11.beta34"/>
+    <meta name="generator" content="sphinx-4.1.1, furo 2021.07.05.beta38"/>
         <title>hydrotools.gcp_client.utils module - Hydro Tools 2.0.0-alpha.0 documentation</title>
-      <link rel="stylesheet" href="_static/styles/furo.css?digest=59ab60ac09ea94ccfe6deddff6d715cce948a6fc">
-    <link rel="stylesheet" href="_static/pygments.css">
-    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css">
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css" />
     
 
 
@@ -37,7 +38,7 @@
   --color-code-foreground: #d0d0d0;
   
   }
-</style><link rel="stylesheet" href="_static/styles/furo-extensions.css?digest=d391b54134226e4196576da3bdb6dddb7e05ba2b"></head>
+</style><link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css"></head>
   <body dir="">
     
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -107,7 +108,7 @@
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption"><span class="caption-text">API:</span></p>
+  <p class="caption" role="heading"><span class="caption-text">API:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="hydrotools.nwis_client.html">hydrotools.nwis_client subpackage</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="hydrotools.gcp_client.html">hydrotools.gcp_client package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
@@ -142,17 +143,17 @@
         <label class="toc-overlay-icon toc-content-icon" for="__toc">
           <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
         </label>
-        <div class="section" id="module-hydrotools.gcp_client.utils">
+        <section id="module-hydrotools.gcp_client.utils">
 <span id="hydrotools-gcp-client-utils-module"></span><h1>hydrotools.gcp_client.utils module<a class="headerlink" href="#module-hydrotools.gcp_client.utils" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="google-cloud-platform-nwm-client">
+<section id="google-cloud-platform-nwm-client">
 <h2>Google Cloud Platform NWM Client<a class="headerlink" href="#google-cloud-platform-nwm-client" title="Permalink to this headline">¶</a></h2>
 <p>This module provides methods for handling common model parameter files that can be
 used in part with the other portions of this subpackage. One pragmatic use of this
 module is to extract nhdPlus links associated with usgs sites to filter stations of
 interest.</p>
 <dl class="py function">
-<dt id="hydrotools.gcp_client.utils.crosswalk">
-<code class="sig-prename descclassname"><span class="pre">hydrotools.gcp_client.utils.</span></code><code class="sig-name descname"><span class="pre">crosswalk</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">usgs_site_codes</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwm_feature_ids</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> → <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#hydrotools.gcp_client.utils.crosswalk" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hydrotools.gcp_client.utils.crosswalk">
+<span class="sig-prename descclassname"><span class="pre">hydrotools.gcp_client.utils.</span></span><span class="sig-name descname"><span class="pre">crosswalk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">usgs_site_codes</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwm_feature_ids</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#hydrotools.gcp_client.utils.crosswalk" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the nwm_feature_id(s) OR usgs_site_codes for one or more provided
 usgs_sites_codes or nwm_feature_ids.</p>
 <dl class="field-list simple">
@@ -189,8 +190,8 @@ usgs_sites_codes or nwm_feature_ids.</p>
 </div>
 </dd></dl>
 <dl class="py function">
-<dt id="hydrotools.gcp_client.utils.nwm_routelink_extract_usgs_sites">
-<code class="sig-prename descclassname"><span class="pre">hydrotools.gcp_client.utils.</span></code><code class="sig-name descname"><span class="pre">nwm_routelink_extract_usgs_sites</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">routelink_file_or_url</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> → <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#hydrotools.gcp_client.utils.nwm_routelink_extract_usgs_sites" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hydrotools.gcp_client.utils.nwm_routelink_extract_usgs_sites">
+<span class="sig-prename descclassname"><span class="pre">hydrotools.gcp_client.utils.</span></span><span class="sig-name descname"><span class="pre">nwm_routelink_extract_usgs_sites</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">routelink_file_or_url</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#hydrotools.gcp_client.utils.nwm_routelink_extract_usgs_sites" title="Permalink to this definition">¶</a></dt>
 <dd><p>From a NWM routelink file, extract nwm_feature_id’s that have associated USGS
 NWIS Stations, returning a df with cols <cite>nwm_feature_id</cite> and <cite>usgs_site_code</cite>.</p>
 <p>Routelink files can be obtained from nomads production server:
@@ -215,8 +216,8 @@ NWIS Stations, returning a df with cols <cite>nwm_feature_id</cite> and <cite>us
 </pre></div>
 </div>
 </dd></dl>
-</div>
-</div>
+</section>
+</section>
 
       </article>
       <footer>
@@ -285,10 +286,10 @@ NWIS Stations, returning a df with cols <cite>nwm_feature_id</cite> and <cite>us
       
     </aside>
   </main>
-</div>
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></body>
+    <script src="_static/scripts/main.js"></script>
+    </body>
 </html>

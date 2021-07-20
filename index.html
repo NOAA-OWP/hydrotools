@@ -2,13 +2,14 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="hydrotools.nwis_client subpackage" href="hydrotools.nwis_client.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="hydrotools.nwis_client subpackage" href="hydrotools.nwis_client.html" />
 
-    <meta name="generator" content="sphinx-3.5.4, furo 2021.04.11.beta34"/>
+    <meta name="generator" content="sphinx-4.1.1, furo 2021.07.05.beta38"/>
         <title>Home - Hydro Tools 2.0.0-alpha.0 documentation</title>
-      <link rel="stylesheet" href="_static/styles/furo.css?digest=59ab60ac09ea94ccfe6deddff6d715cce948a6fc">
-    <link rel="stylesheet" href="_static/pygments.css">
-    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css">
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css" />
     
 
 
@@ -37,7 +38,7 @@
   --color-code-foreground: #d0d0d0;
   
   }
-</style><link rel="stylesheet" href="_static/styles/furo-extensions.css?digest=d391b54134226e4196576da3bdb6dddb7e05ba2b"></head>
+</style><link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css"></head>
   <body dir="">
     
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -107,7 +108,7 @@
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption"><span class="caption-text">API:</span></p>
+  <p class="caption" role="heading"><span class="caption-text">API:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="hydrotools.nwis_client.html">hydrotools.nwis_client subpackage</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="hydrotools.gcp_client.html">hydrotools.gcp_client package</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -142,12 +143,12 @@
         <label class="toc-overlay-icon toc-content-icon" for="__toc">
           <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
         </label>
-        <div class="section" id="hydrotools">
+        <section id="hydrotools">
 <h1><code class="docutils literal notranslate"><span class="pre">HydroTools</span></code><a class="headerlink" href="#hydrotools" title="Permalink to this headline">¶</a></h1>
 <p>Tools for retrieving hydrological data</p>
 <div class="toctree-wrapper compound">
 </div>
-<div class="section" id="motivation">
+<section id="motivation">
 <h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">¶</a></h2>
 <p>We developed hydrotools with data scientists in mind. We attempted
 to ensure the simplest methods such as <code class="docutils literal notranslate"><span class="pre">get</span></code> both accepted and
@@ -167,8 +168,8 @@ labels like <code class="docutils literal notranslate"><span class="pre">usgs_si
 conventions. Our intent is to make retrieving, evaluating, and exporting
 data as easy and reproducible as possible for scientists, practitioners
 and other hydrological experts.</p>
-</div>
-<div class="section" id="whats-here">
+</section>
+<section id="whats-here">
 <h2>What’s here?<a class="headerlink" href="#whats-here" title="Permalink to this headline">¶</a></h2>
 <p>We’ve taken a grab-and-go approach to installation and usage of
 Hydrotools. This means, in line with a standard toolbox, you will
@@ -188,8 +189,8 @@ Service</a>.</p></li>
 construction and retrieval of GET requests painless.</p></li>
 <li><p>metrics: Variety of methods used to compute common evaluation metrics.</p></li>
 </ul>
-</div>
-<div class="section" id="installation">
+</section>
+<section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>In accordance with the python community, we support and advise the usage
 of virtual environments in any workflow using python. In the following
@@ -212,16 +213,16 @@ $ python3 -m pip install git+https://github.com/NOAA-OWP/hydrotools.git#subdirec
 $ python3 -m pip install git+https://github.com/NOAA-OWP/hydrotools.git#subdirectory<span class="o">=</span>python/metrics
 </pre></div>
 </div>
-</div>
-<div class="section" id="utc-time">
+</section>
+<section id="utc-time">
 <h2>UTC Time<a class="headerlink" href="#utc-time" title="Permalink to this headline">¶</a></h2>
 <p>Note: the canonical <code class="docutils literal notranslate"><span class="pre">pandas.DataFrames</span></code> used by HydroTools use
 time-zone naive datetimes that assume UTC time. In general, do not
 assume methods are compatible with time-zone aware datetimes or
 timestamps. Expect methods to transform time-zone aware datetimes and
 timestamps into their timezone naive counterparts at UTC time.</p>
-</div>
-</div>
+</section>
+</section>
 
       </article>
       <footer>
@@ -283,10 +284,10 @@ timestamps into their timezone naive counterparts at UTC time.</p>
       
     </aside>
   </main>
-</div>
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></body>
+    <script src="_static/scripts/main.js"></script>
+    </body>
 </html>
