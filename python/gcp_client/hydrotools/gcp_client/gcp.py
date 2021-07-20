@@ -287,9 +287,6 @@ class NWMDataService:
             'feature_id': 'nwm_feature_id'
         })
 
-        # Categorize feature id
-        df['nwm_feature_id'] = df['nwm_feature_id'].astype(str).astype(dtype="category")
-        
         # Downcast floats
         df_float = df.select_dtypes(include=["float"])
         converted_float = df_float.apply(pd.to_numeric, downcast="float")
@@ -351,20 +348,22 @@ class NWMDataService:
         df = df.rename(columns={'streamflow': 'value'})
 
         # Reformat crosswalk
-        xwalk = self.crosswalk.reset_index()
-
+        xwalk = self.crosswalk
+        
         # Additional columns
         xwalk['configuration'] = configuration
         xwalk['measurement_unit'] = 'm3/s'
         xwalk['variable_name'] = 'streamflow'
 
-        # Categorize
-        xwalk = xwalk.astype(str).astype('category')
-        xwalk = xwalk.set_index('nwm_feature_id')
-
         # Apply crosswalk metadata
         for col in xwalk:
             df[col] = df['nwm_feature_id'].map(xwalk[col])
+
+        # Categorize
+        df['configuration'] = df['configuration'].astype("category")
+        df['measurement_unit'] = df['measurement_unit'].astype("category")
+        df['variable_name'] = df['variable_name'].astype("category")
+        df['usgs_site_code'] = df['usgs_site_code'].astype("category")
 
         # Sort values
         df = df.sort_values(
