@@ -110,7 +110,7 @@ def detrend_streamflow(
 
     # Smooth series
     smooth = series.ewm(halflife=halflife, times=series.index, 
-        adjust=False).mean()
+        adjust=True).mean()
     
     # Estimate a trend using a rolling minimum
     trend = rolling_minimum(smooth, window)
