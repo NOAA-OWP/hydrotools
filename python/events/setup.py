@@ -14,7 +14,7 @@ SUBPACKAGE_NAME = "events"
 SUBPACKAGE_SLUG = f"{NAMESPACE_PACKAGE_NAME}.{SUBPACKAGE_NAME}"
 
 # Subpackage version
-VERSION = "1.0.2"
+VERSION = "1.1.2"
 
 # Package author information
 AUTHOR = "Jason Regina"
