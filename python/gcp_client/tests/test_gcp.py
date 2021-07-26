@@ -12,7 +12,7 @@ def test_bucket_name(setup_gcp):
     assert (setup_gcp.bucket_name) == "national-water-model"
 
 def test_max_processes(setup_gcp):
-    count = cpu_count() - 2
+    count = max(cpu_count() - 2, 1)
     assert (setup_gcp.max_processes) == count
 
 def test_crosswalk(setup_gcp):
