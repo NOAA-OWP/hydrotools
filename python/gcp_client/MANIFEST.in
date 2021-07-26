@@ -1,3 +1,2 @@
 include LICENSE
-
-
+include src/hydrotools/gcp_client/data/*
