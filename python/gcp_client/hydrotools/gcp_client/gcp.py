@@ -24,7 +24,7 @@ import warnings
 import numpy as np
 import pandas as pd
 from os import cpu_count
-from multiprocessing import Pool
+from concurrent.futures import ProcessPoolExecutor
 from typing import Union
 import numpy.typing as npt
 from pathlib import Path
@@ -337,9 +337,17 @@ class NWMDataService:
         if len(blob_list) == 0:
             raise ValueError("Config/Time combination returned no data")
 
+        # Compute chunksize
+        chunksize = (len(blob_list) // self.max_processes) + 1
+
         # Retrieve data
-        with Pool(processes=self.max_processes) as pool:
-            dataframes = pool.map(self.get_DataFrame, blob_list)
+        with ProcessPoolExecutor(
+            max_workers=self.max_processes) as executor:
+            dataframes = executor.map(
+                self.get_DataFrame, 
+                blob_list,
+                chunksize=chunksize
+                )
         
         # Concatenate data
         df = pd.concat(dataframes)
