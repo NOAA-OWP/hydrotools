@@ -73,3 +73,22 @@ None
 We employ several methods to make sure the resulting `pandas.DataFrame` produced by `gcp_client` are as efficient and manageable as possible. Nonetheless, this package can potentially use a large amount of memory.
 
 The National Water Model generates multiple forecasts per day at over 3.7 million locations across the United States. A single forecast could be spread across hundreds of files and require repeated calls to Google Cloud Platform. The intermediate steps of retrieving and processing these files into leaner `DataFrame` may use several GB of memory. As such, recommended minimum requirements to use this package are a 4-core consumer processor and 8 GB of RAM.
+
+## Development
+
+This package uses a setup configuration file (`setup.cfg`) and assumes use of the `setuptools` backend to build the package. To install the package for development use:
+```bash
+$ python3 -m venv env
+$ source env/bin/activate
+$ python3 -m pip install -U pip
+$ python3 -m pip install -U setuptools
+$ python3 -m pip install -e .[develop]
+```
+
+To generate a source distribution:
+```bash
+$ python3 -m pip install -U wheel build
+$ python3 -m build
+```
+
+The packages generated in `dist/` can be installed directly with `pip` or uploaded to PyPI using `twine`.
