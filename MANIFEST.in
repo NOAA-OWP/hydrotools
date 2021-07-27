@@ -1,4 +1,1 @@
 include LICENSE
-graft python/*/hydrotools/**
-include python/*/setup.py python/*/setup.cfg python/*/pyproject.toml
-
