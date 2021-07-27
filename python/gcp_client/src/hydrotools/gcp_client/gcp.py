@@ -89,9 +89,9 @@ class NWMDataService:
 
         # Set max processes
         if max_processes:
-            self._max_procs = max_processes
+            self._max_procs = max(max_processes, 1)
         else:
-            self._max_procs = cpu_count() - 2
+            self._max_procs = max((cpu_count() - 2), 1)
 
         # Set default site mapping
         if location_metadata_mapping != None:

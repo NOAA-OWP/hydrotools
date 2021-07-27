@@ -1,6 +1,9 @@
-name: Run Unit Tests
+name: Run Slow Unit Tests
 
-on: [push, pull_request]
+on:
+    schedule:
+        # Run at 10 am every monday at 5 am cst (10 am utc)
+        - cron: '0 10 * * 1'
 
 jobs:
   unittests:
@@ -29,4 +32,4 @@ jobs:
         python3 -m pip install --use-feature=in-tree-build ./python/metrics[develop]
     - name: Run all unittests 
       run: |
-        python3 -m pytest -s -m "not slow"
+        python3 -m pytest -s
