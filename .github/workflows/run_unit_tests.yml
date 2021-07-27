@@ -21,7 +21,7 @@ jobs:
     - name: Install dependencies
       run: |
         python3 -m pip install -U pip
-        python3 -m pip install --use-feature=in-tree-build ./python/metrics[develop]
+        python3 -m pip install --use-feature=in-tree-build ./python/_restclient[develop]
     - name: Run all unittests 
       run: |
-        python3 -m pytest -s ./python/metrics
+        python3 -m pytest -s ./python/_restclient
