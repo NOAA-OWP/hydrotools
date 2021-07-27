@@ -1,0 +1,35 @@
+name: Run Slow Unit Tests
+
+on:
+    schedule:
+        # Run at 10 am every monday at 5 am cst (10 am utc)
+        - cron: '0 10 * * 1'
+
+jobs:
+  unittests:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7, 3.8, 3.9]
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python3 -m pip install -U pip
+        python3 -m pip install --use-feature=in-tree-build ./python/_restclient[develop]
+        python3 -m pip install --use-feature=in-tree-build ./python/nwis_client[develop]
+        python3 -m pip install --use-feature=in-tree-build ./python/caches[develop]
+        python3 -m pip install --use-feature=in-tree-build ./python/gcp_client[develop]
+        python3 -m pip install --use-feature=in-tree-build ./python/events[develop]
+        python3 -m pip install --use-feature=in-tree-build ./python/metrics[develop]
+    - name: Run all unittests 
+      run: |
+        python3 -m pytest -s
