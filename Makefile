@@ -1,9 +1,12 @@
 PYENV=env
 PYTHON=$(PYENV)/bin/python3
 
-.PHONY: tests install clean
+.PHONY: all-tests tests install clean
 
 tests: install
+	$(PYTHON) -m pytest -s -m "not slow"
+
+all-tests: install
 	$(PYTHON) -m pytest -s
 
 install: $(PYENV)/bin/activate
