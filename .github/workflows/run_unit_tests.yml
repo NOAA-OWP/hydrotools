@@ -21,8 +21,12 @@ jobs:
     - name: Install dependencies
       run: |
         python3 -m pip install -U pip
-        python3 -m pip install --use-feature=in-tree-build ./python/_restclient
+        python3 -m pip install --use-feature=in-tree-build ./python/_restclient[develop]
         python3 -m pip install --use-feature=in-tree-build ./python/nwis_client[develop]
+        python3 -m pip install --use-feature=in-tree-build ./python/caches[develop]
+        python3 -m pip install --use-feature=in-tree-build ./python/gcp_client[develop]
+        python3 -m pip install --use-feature=in-tree-build ./python/events[develop]
+        python3 -m pip install --use-feature=in-tree-build ./python/metrics[develop]
     - name: Run all unittests 
       run: |
-        python3 -m pytest -s ./python/nwis_client
+        python3 -m pytest -s
