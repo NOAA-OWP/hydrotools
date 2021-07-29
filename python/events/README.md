@@ -39,7 +39,8 @@ def list_events_helper(mi_series, level, halflife, window):
     return ev.list_events(mi_series.droplevel(level), halflife, window)
 
 # Retrieve streamflow observations for two sites
-observations = IVDataService.get(
+service = IVDataService()
+observations = service.get(
     sites='02146750,0214676115,09489000', 
     startDT='2019-10-01', 
     endDT='2020-09-30'
