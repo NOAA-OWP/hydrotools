@@ -1,0 +1,9 @@
+aiohttp
+aiohttp_client_cache
+python-forge
+aiosqlite
+pandas
+
+[develop]
+pytest
+pytest-aiohttp

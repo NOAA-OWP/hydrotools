@@ -1,0 +1,8 @@
+pandas
+numpy
+hydrotools._restclient>=3.0.0
+aiohttp
+
+[develop]
+pytest
+pytest-aiohttp

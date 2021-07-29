@@ -1,0 +1,9 @@
+numpy>=1.20.0
+pandas
+xarray
+h5netcdf
+hydrotools.caches
+google-cloud-storage
+
+[develop]
+pytest
