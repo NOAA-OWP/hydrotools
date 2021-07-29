@@ -200,7 +200,7 @@ Classes
 </div></blockquote>
 <dl class="py class">
 <dt class="sig sig-object py" id="hydrotools.nwis_client.iv.IVDataService">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hydrotools.nwis_client.iv.</span></span><span class="sig-name descname"><span class="pre">IVDataService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_cache</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_expire_after</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">43200</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hydrotools.nwis_client.iv.IVDataService" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hydrotools.nwis_client.iv.</span></span><span class="sig-name descname"><span class="pre">IVDataService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_cache</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_expire_after</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">43200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_time_label</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hydrotools.nwis_client.iv.IVDataService" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Provides a programatic way to retrieve USGS Instantanous Value Service data in the
 canonical hydrotools pandas dataframe format. The IVDataService implements an
@@ -211,6 +211,7 @@ requests concurrently.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>enable_cache</strong> (<em>bool</em>) – Toggle sqlite3 request caching</p></li>
 <li><p><strong>cache_expire_after</strong> (<em>int</em>) – Cached item life length in seconds</p></li>
+<li><p><strong>value_time_label</strong> (<em>str</em><em>, </em><em>default 'value_date'</em>) – Label to use for datetime column returned by IVDataService.get</p></li>
 </ul>
 </dd>
 </dl>
@@ -371,6 +372,11 @@ result lowered.</p>
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="hydrotools.nwis_client.iv.IVDataService.value_time_label">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">value_time_label</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#hydrotools.nwis_client.iv.IVDataService.value_time_label" title="Permalink to this definition">¶</a></dt>
+<dd><p>Label to use for datetime column</p>
 </dd></dl>
 </dd></dl>
 <dl class="py function">
