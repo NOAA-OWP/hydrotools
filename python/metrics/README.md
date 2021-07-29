@@ -31,7 +31,8 @@ from hydrotools.nwis_client.iv import IVDataService
 import pandas as pd
 
 # Get observed data
-observed = IVDataService.get(
+service = IVDataService()
+observed = service.get(
     sites='01646500',
     startDT='2020-01-01',
     endDT='2021-01-01'
@@ -41,12 +42,19 @@ observed = IVDataService.get(
 observed = observed[['value_date', 'value']]
 observed = observed.drop_duplicates(['value_date'])
 observed = observed.set_index('value_date')
-observed = observed.resample('H').nearest()
 
 # Simulate a 10-day persistence forecast
 issue_frequency = pd.Timedelta('6H')
 forecast_length = pd.Timedelta('10D')
 forecasts = observed.resample(issue_frequency).nearest()
+forecasts = forecasts.rename(columns={"value": "sim"})
+
+# Find observed maximum during forecast period
+values = []
+for idx, sim in forecasts.itertuples():
+    obs = observed.loc[idx:idx+forecast_length, "value"].max()
+    values.append(obs)
+forecasts["obs"] = values
 
 # Apply flood criteria using a "Hit Window" approach
 #  A flood is observed or simluated if any value within the
@@ -54,23 +62,16 @@ forecasts = observed.resample(issue_frequency).nearest()
 # 
 # Apply flood_criteria to forecasts
 flood_criteria = 19200.0
-forecasts['simulated_flood'] = (forecasts['value'] >= flood_criteria)
-
-# Apply flood_criteria to observations
-for row in forecasts.itertuples():
-    obs = observed.loc[row.Index:row.Index+forecast_length, 'value'].max()
-    observed.loc[row.Index, 'observed_flood'] = (obs >= flood_criteria)
-
-# Drop non-forecast times
-observed = observed.dropna()
+forecasts['simulated_flood'] = (forecasts['sim'] >= flood_criteria)
+forecasts['observed_flood'] = (forecasts['obs'] >= flood_criteria)
 
 # Convert boolean columns to Categoricals
 forecasts['simulated_flood'] = forecasts['simulated_flood'].astype('category')
-observed['observed_flood'] = observed['observed_flood'].astype('category')
+forecasts['observed_flood'] = forecasts['observed_flood'].astype('category')
 
 # Compute contingency table
 contingency_table = metrics.compute_contingency_table(
-    observed['observed_flood'],
+    forecasts['observed_flood'],
     forecasts['simulated_flood']
 )
 print('Contingency Table Components')
