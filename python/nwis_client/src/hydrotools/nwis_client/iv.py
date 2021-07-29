@@ -38,6 +38,8 @@ class IVDataService:
         Toggle sqlite3 request caching
     cache_expire_after : int
         Cached item life length in seconds
+    value_time_label: str, default 'value_date'
+        Label to use for datetime column returned by IVDataService.get
 
     Examples
     --------
