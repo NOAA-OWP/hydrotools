@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Regina"
+  given-names: "Jason A."
+  orcid: "https://orcid.org/0000-0002-4091-8647"
+- family-names: "Raney"
+  given-names: "Austin"
+  orcid: "https://orcid.org/0000-0002-7670-1298"
+title: "OWPHydroTools"
+version: 2.1.1
+date-released: 2021-07-29
+url: "https://github.com/noaa-owp/hydrotools"
