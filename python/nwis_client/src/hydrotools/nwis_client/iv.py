@@ -38,6 +38,8 @@ class IVDataService:
         Toggle sqlite3 request caching
     cache_expire_after : int
         Cached item life length in seconds
+    value_time_label: str, default 'value_date'
+        Label to use for datetime column returned by IVDataService.get
 
     Examples
     --------
@@ -85,8 +87,13 @@ class IVDataService:
     )
     _requests_cache_filename = "nwisiv_cache"
     _headers = {"Accept-Encoding": "gzip, compress"}
+    _value_time_label = None
 
-    def __init__(self, *, enable_cache: bool = True, cache_expire_after: int = 43200):
+    def __init__(self, *, 
+        enable_cache: bool = True, 
+        cache_expire_after: int = 43200,
+        value_time_label: str = None
+        ):
         self._cache_enabled = enable_cache
         self._restclient = RestClient(
             base_url=self._base_url,
@@ -95,6 +102,12 @@ class IVDataService:
             cache_filename=self._requests_cache_filename,
             cache_expire_after=cache_expire_after,
         )
+        if value_time_label == None:
+            self._value_time_label = "value_date"
+            warning_message = "Setting value_time_label to value_date. Future versions will default to value_time. To silence this warning set value_time_label."
+            warnings.warn(warning_message, UserWarning)
+        else:
+            self._value_time_label = value_time_label
 
     def get(
         self,
@@ -237,8 +250,6 @@ class IVDataService:
 
         # Empty list. No data was returned in the request
         if not list_of_frames:
-            import warnings
-
             warning_message = "No data was returned by the request."
             warnings.warn(warning_message)
             return pd.DataFrame(None)
@@ -250,7 +261,7 @@ class IVDataService:
         dfs.loc[:, "value"] = pd.to_numeric(dfs["value"], downcast="float")
 
         # Convert all times to UTC
-        dfs["value_date"] = pd.to_datetime(
+        dfs[self.value_time_label] = pd.to_datetime(
             dfs["dateTime"], utc=True, infer_datetime_format=True
         ).dt.tz_localize(None)
 
@@ -259,7 +270,7 @@ class IVDataService:
 
         # Sort DataFrame
         dfs = dfs.sort_values(
-            ["usgs_site_code", "measurement_unit", "value_date"], ignore_index=True
+            ["usgs_site_code", "measurement_unit", self.value_time_label], ignore_index=True
         )
 
         # Fill NaNs
@@ -284,7 +295,7 @@ class IVDataService:
         # DataFrame in semi-WRES compatible format
         return dfs[
             [
-                "value_date",
+                self.value_time_label,
                 "variable_name",
                 "usgs_site_code",
                 "measurement_unit",
@@ -692,6 +703,11 @@ class IVDataService:
     def datetime_format(self) -> str:
         """ API's expected datetime format """
         return self._datetime_format
+
+    @property
+    def value_time_label(self) -> str:
+        """ Label to use for datetime column """
+        return self._value_time_label
 
 
 def validate_optional_combinations(
