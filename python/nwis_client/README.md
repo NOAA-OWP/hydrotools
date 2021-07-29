@@ -31,7 +31,9 @@ The following example demonstrates how one might use `hydrotools.nwis_client` to
 from hydrotools.nwis_client.iv import IVDataService
 
 # Retrieve data from a single site
-service = IVDataService()
+service = IVDataService(
+    value_time_label="value_time"
+)
 observations_data = service.get(
     sites='01646500',
     startDT='2019-08-01',
