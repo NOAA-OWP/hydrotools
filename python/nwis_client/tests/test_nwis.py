@@ -79,6 +79,12 @@ def setup_iv(loop):
     yield o
     o._restclient.close()
 
+@pytest.fixture
+def setup_iv_value_time(loop):
+    o = iv.IVDataService(value_time_label="value_time")
+    yield o
+    o._restclient.close()
+
 
 simplify_variable_test_data = [
     ("test", ",", "test"),
@@ -135,6 +141,13 @@ def test_get(setup_iv, sites, validation):
     df = setup_iv.get(sites=sites, parameterCd="00060")
     assert df["usgs_site_code"].isin(validation).all()
 
+@pytest.mark.slow
+@pytest.mark.parametrize("sites,validation", GET_PARAM_SITES)
+def test_get_value_time(setup_iv_value_time, sites, validation):
+    """Test data retrieval and parsing"""
+    df = setup_iv_value_time.get(sites=sites, parameterCd="00060")
+    assert df["usgs_site_code"].isin(validation).all()
+    assert "value_time" in df
 
 def test_get_raw_with_mock(setup_iv, monkeypatch):
     """Test data retrieval and parsing"""
