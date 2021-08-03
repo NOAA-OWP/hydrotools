@@ -1,5 +1,5 @@
 import pytest
-from hydrotools.gcp_client import gcp
+from hydrotools.nwm_client import gcp
 from os import cpu_count
 import numpy as np
 import pandas as pd
