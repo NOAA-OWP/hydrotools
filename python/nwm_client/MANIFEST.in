@@ -1,2 +1,2 @@
 include LICENSE
-include src/hydrotools/http_client/data/*
+include src/hydrotools/nwm_client/data/*
