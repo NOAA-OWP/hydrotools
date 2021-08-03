@@ -178,15 +178,15 @@ class NWMDataService:
         # Parse content
         soup = BeautifulSoup(html_doc, 'html.parser')
         
-        # Get text
-        text = soup.get_text()
+        # Get links
+        elements = soup.select("a[href]")
 
         # Generate list
         blob_list = []
-        for line in text.splitlines():
-            if line.startswith(f"nwm.t{issue_time}"):
-                cols = line.split()
-                full_path = directory + cols[0]
+        for e in elements:
+            filename = e.get("href")
+            if filename.startswith(f"nwm.t{issue_time}"):
+                full_path = directory + filename
                 blob_list.append(full_path)
 
         return [b for b in blob_list if must_contain in b]
