@@ -80,7 +80,7 @@ None
 ### System Requirements
 We employ several methods to make sure the resulting `pandas.DataFrame` produced by `nwm_client` are as efficient and manageable as possible. Nonetheless, this package can potentially use a large amount of memory.
 
-The National Water Model generates multiple forecasts per day at over 3.7 million locations across the United States. A single forecast could be spread across hundreds of files and require repeated calls to Google Cloud Platform. The intermediate steps of retrieving and processing these files into leaner `DataFrame` may use several GB of memory. As such, recommended minimum requirements to use this package are a 4-core consumer processor and 8 GB of RAM.
+The National Water Model generates multiple forecasts per day at over 3.7 million locations across the United States. A single forecast could be spread across hundreds of files and require repeated calls to the data source. The intermediate steps of retrieving and processing these files into leaner `DataFrame` may use several GB of memory. As such, recommended minimum requirements to use this package are a 4-core consumer processor and 8 GB of RAM.
 
 ## Development
 
