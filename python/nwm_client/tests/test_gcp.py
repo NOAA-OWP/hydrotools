@@ -1,5 +1,5 @@
 import pytest
-from hydrotools.gcp_client import gcp
+from hydrotools.nwm_client import gcp
 from os import cpu_count
 import numpy as np
 import pandas as pd
@@ -28,13 +28,13 @@ def test_crosswalk(setup_gcp):
     assert setup_gcp.crosswalk.loc[6186112, "usgs_site_code"] == "01360640"
 
 def test_cache_path(setup_gcp):
-    assert str(setup_gcp.cache_path) == 'gcp_client.h5'
+    assert str(setup_gcp.cache_path) == 'nwm_client.h5'
 
     setup_gcp.cache_path = 'custom_cache.h5'
     assert str(setup_gcp.cache_path) == 'custom_cache.h5'
 
 def test_cache_group(setup_gcp):
-    assert str(setup_gcp.cache_group) == 'gcp_client'
+    assert str(setup_gcp.cache_group) == 'nwm_client'
 
     setup_gcp.cache_group = 'simulations'
     assert str(setup_gcp.cache_group) == 'simulations'
