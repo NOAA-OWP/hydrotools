@@ -55,32 +55,31 @@ $ python3 -m pip install hydrotools.nwis_client
 
 ## OWPHydroTools Canonical Format
 
-"Canonical" labels are protected and part of a fixed lexicon. Canonical labels are shared among all `hydrotools` subpackages. Subpackage methods should avoid changing or redefining these columns where they appear to encourage cross-compatibility.
+"Canonical" labels are protected and part of a fixed lexicon. Canonical labels are shared among all `hydrotools` subpackages. Subpackage methods should avoid changing or redefining these columns where they appear to encourage cross-compatibility. Existing canonical labels are listed below:
 
-### OWPHydroTools Canonical DataFrame Column Labels
-`value` [*float32*]: Indicates the real value of an individual measurement or simulated quantity.
-`value_time` [*datetime64[ns]*]: formerly `value_date`, this indicates the valid time of `value`.
-`variable_name` [*category*]:  string category that indicates the real-world type of `value` (e.g. streamflow, gage height, temperature).
-`measurement_unit` [*category*]: string category indicating the measurement unit (SI or standard) of `value`
-`qualifiers` [*category*]: string category that indicates any special qualifying codes or messages that apply to `value`
-`series` [*integer32*]: Use to disambiguate multiple coincident time series returned by a data source.
-`configuration` [*category*]: string category used as a label for a particular time series, often used to distinguish types of model runs (e.g. short_range, medium_range, assimilation)
-`reference_time` [*datetime64[ns]*]: formerly, `start_date`, some reference time for a particular model simulation. Could be considered an issue time, start time, end time, or other meaningful reference time. Interpretation is simulation or forecast specific.
-`longitude` [*category*]: float32 category, WGS84 decimal longitude
-`latitude` [*category*]: float32 category, WGS84 decimal latitude
-`crs` [*category*]: string category, Coordinate Reference System, typically `"EPSG:4326"`
-`geometry` [*geometry*]: `GeoPandas` compatible `GeoSeries` used as the default "geometry" column
+ - `value` [*float32*]: Indicates the real value of an individual measurement or simulated quantity.
+ - `value_time` [*datetime64[ns]*]: formerly `value_date`, this indicates the valid time of `value`.
+ - `variable_name` [*category*]:  string category that indicates the real-world type of `value` (e.g. streamflow, gage height, temperature).
+ - `measurement_unit` [*category*]: string category indicating the measurement unit (SI or standard) of `value`
+ - `qualifiers` [*category*]: string category that indicates any special qualifying codes or messages that apply to `value`
+ - `series` [*integer32*]: Use to disambiguate multiple coincident time series returned by a data source.
+ - `configuration` [*category*]: string category used as a label for a particular time series, often used to distinguish types of model runs (e.g. short_range, medium_range, assimilation)
+ - `reference_time` [*datetime64[ns]*]: formerly, `start_date`, some reference time for a particular model simulation. Could be considered an issue time, start time, end time, or other meaningful reference time. Interpretation is simulation or forecast specific.
+ - `longitude` [*category*]: float32 category, WGS84 decimal longitude
+ - `latitude` [*category*]: float32 category, WGS84 decimal latitude
+ - `crs` [*category*]: string category, Coordinate Reference System, typically `"EPSG:4326"`
+ - `geometry` [*geometry*]: `GeoPandas` compatible `GeoSeries` used as the default "geometry" column
 
 ### Non-Canonical Column Labels
 
 "Non-Canonical" labels are subpackage specific extensions to the canonical standard. Packages may share these non-canonical lables, but cross-compatibility is not guaranteed. Examples of non-canonical labels are given below.
 
-`usgs_site_code` [*category*]: string category indicating the USGS Site Code/gage ID
-`nwm_feature_id` [*integer32*]: indicates the NWM reach feature ID/ComID
-`nws_lid` [*category*]: string category indicating the NWS Location ID/gage ID
-`usace_gage_id` [*category*]: string category indicating the USACE gage ID
-`start` [*datetime64[ns]*]: datetime returned by `event_detection` that indicates the beginning of an event
-`end` [*datetime64[ns]*]: datetime returned by `event_detection` that indicates the end of an event
+ - `usgs_site_code` [*category*]: string category indicating the USGS Site Code/gage ID
+ - `nwm_feature_id` [*integer32*]: indicates the NWM reach feature ID/ComID
+ - `nws_lid` [*category*]: string category indicating the NWS Location ID/gage ID
+ - `usace_gage_id` [*category*]: string category indicating the USACE gage ID
+ - `start` [*datetime64[ns]*]: datetime returned by `event_detection` that indicates the beginning of an event
+ - `end` [*datetime64[ns]*]: datetime returned by `event_detection` that indicates the end of an event
 
 ### Categorical Data Types
 
@@ -88,7 +87,9 @@ OWPHydroTools uses `pandas.Dataframe` that contain `pandas.Categorical` values t
 
 ```python
 print(my_dataframe.info())
+```
 
+```console
 <class 'pandas.core.frame.DataFrame'>
 Int64Index: 5706954 entries, 0 to 5706953
 Data columns (total 7 columns):
@@ -110,7 +111,7 @@ Columns with `Dtype` `category` are `pandas.Categorical`. In most cases, the beh
 
 Possible solutions include:
 
-### Cast `Categorical` to `str`
+#### Cast `Categorical` to `str`
 
 Casting to `str` will resolve all of the aformentioned issues including writing to geospatial formats.
 
@@ -118,7 +119,7 @@ Casting to `str` will resolve all of the aformentioned issues including writing 
 my_dataframe['usgs_site_code'] = my_dataframe['usgs_site_code'].apply(str)
 ```
 
-### Remove unused categories
+#### Remove unused categories
 
 This will remove categories from the `Series` for which no values are actually present.
 
@@ -126,7 +127,7 @@ This will remove categories from the `Series` for which no values are actually p
 my_dataframe['usgs_site_code'] = my_dataframe['usgs_site_code'].cat.remove_unused_categories()
 ```
 
-### Use `observed` option with `groupby`
+#### Use `observed` option with `groupby`
 
 This limits `groupby` operations to category values that actually appear in the `Series` or `DataFrame`.
 
