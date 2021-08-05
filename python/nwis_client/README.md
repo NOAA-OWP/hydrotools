@@ -1,6 +1,6 @@
-# HydroTools :: NWIS Client
+# OWPHydroTools :: NWIS Client
 
-This subpackage implements an interface to the USGS NWIS [Instantaneous Values Web Service](https://waterservices.usgs.gov/rest/IV-Service.html). The primary use for this tool is to populate `pandas.Dataframe` objects with USGS streamflow data. See the [NWIS Client Documentation](https://noaa-owp.github.io/hydrotools/hydrotools.nwis_client.html) for a complete list and description of the currently available methods. To report bugs or request new features, submit an issue through the [HydroTools Issue Tracker](https://github.com/NOAA-OWP/hydrotools/issues) on GitHub.
+This subpackage implements an interface to the USGS NWIS [Instantaneous Values Web Service](https://waterservices.usgs.gov/rest/IV-Service.html). The primary use for this tool is to populate `pandas.Dataframe` objects with USGS streamflow data. See the [NWIS Client Documentation](https://noaa-owp.github.io/hydrotools/hydrotools.nwis_client.html) for a complete list and description of the currently available methods. To report bugs or request new features, submit an issue through the [OWPHydroTools Issue Tracker](https://github.com/NOAA-OWP/hydrotools/issues) on GitHub.
 
 ## Installation
 

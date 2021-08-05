@@ -1,6 +1,6 @@
-# HydroTools :: Events
+# OWPHydroTools :: Events
 
-This subpackage implements methods to partition hydrometric times series into discrete "events." See the [Events Documentation](https://noaa-owp.github.io/hydrotools/hydrotools.events.event_detection.html) for a complete list and description of the currently available methods. To report bugs or request new methods, submit an issue through the [HydroTools Issue Tracker](https://github.com/NOAA-OWP/hydrotools/issues) on GitHub.
+This subpackage implements methods to partition hydrometric times series into discrete "events." See the [Events Documentation](https://noaa-owp.github.io/hydrotools/hydrotools.events.event_detection.html) for a complete list and description of the currently available methods. To report bugs or request new methods, submit an issue through the [OWPHydroTools Issue Tracker](https://github.com/NOAA-OWP/hydrotools/issues) on GitHub.
 
 ## Installation
 

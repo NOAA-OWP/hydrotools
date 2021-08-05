@@ -1,4 +1,4 @@
-# HydroTools :: REST Client
+# OWPHydroTools :: REST Client
 
 Subpackage of objects and utilities suitable for quickly developing robust
 REST api libraries.
@@ -25,7 +25,7 @@ Main features:
 See the [REST Client
 Documentation](https://noaa-owp.github.io/hydrotools/hydrotools._restclient.html) for a
 complete list and description of the currently available methods. To report bugs or
-request new features, submit an issue through the [HydroTools Issue
+request new features, submit an issue through the [OWPHydroTools Issue
 Tracker](https://github.com/NOAA-OWP/hydrotools/issues) on GitHub.
 
 ## Installation
