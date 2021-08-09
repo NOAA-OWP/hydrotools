@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-================================
-Google Cloud Platform NWM Client
-================================
+===================================
+National Water Model File Utilities
+===================================
 This module provides methods for handling common model parameter files that can be
 used in part with the other portions of this subpackage. One pragmatic use of this
 module is to extract nhdPlus links associated with usgs sites to filter stations of
@@ -42,7 +42,7 @@ def nwm_routelink_extract_usgs_sites(
 
     Examples
     --------
-    >>> from hydrotools.gcp_client import utils
+    >>> from hydrotools.nwm_client import utils
     >>> df = utils.nwm_routelink_extract_usgs_sites("RouteLink_NHDPLUS.nc")
     >>> import csv
     >>> df.to_csv("nwm_feature_id_with_usgs_site.csv", index=False, quoting=csv.QUOTE_NONNUMERIC)
@@ -89,7 +89,7 @@ def crosswalk(
 
     Examples
     --------
-    >>> from hydrotools.gcp_client import utils
+    >>> from hydrotool.nwm_client import utils
     >>> cribbs_creek = "02465292"
     >>> crx_walk = utils.crosswalk(usgs_site_codes=cribbs_creek)
 
