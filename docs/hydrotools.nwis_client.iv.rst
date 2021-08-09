@@ -1,7 +1,7 @@
-hydrotools.metrics.metrics module
+hydrotools.nwis\_client.iv module
 =================================
 
-.. automodule:: hydrotools.metrics.metrics
+.. automodule:: hydrotools.nwis_client.iv
    :members:
    :undoc-members:
    :show-inheritance:
