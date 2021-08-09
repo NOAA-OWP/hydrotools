@@ -141,3 +141,18 @@ def test_bad_time_series_idx():
     )
     with pytest.raises(Exception):
         events = ev.list_events(series, '6H', '7D')
+
+def test_null_warning():
+    series = pd.Series(
+        data=[1.0, 1.0, np.nan, 1.0, 1.0],
+        index=[
+            pd.to_datetime('2018-01-01 01:00'),
+            pd.to_datetime('2018-01-01 02:00'),
+            pd.to_datetime('2018-01-01 03:00'),
+            pd.to_datetime('2018-01-01 04:00'),
+            pd.to_datetime('2018-01-01 05:00')
+        ],
+        name='streamflow'
+    )
+    with pytest.warns(UserWarning):
+        events = ev.list_events(series, '6H', '7D')
