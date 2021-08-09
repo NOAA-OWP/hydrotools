@@ -24,6 +24,7 @@ import numpy as np
 import pandas as pd
 from typing import Union
 import datetime
+import warnings
 
 def rolling_minimum(
     series: pd.Series,
@@ -107,6 +108,10 @@ def detrend_streamflow(
 
     if series.index.has_duplicates:
         raise Exception("series index has duplicate timestamps")
+
+    # Check values
+    if series.isnull().any():
+        warnings.warn("Series contains null values.", UserWarning)
 
     # Smooth series
     smooth = series.ewm(halflife=halflife, times=series.index, 
