@@ -18,12 +18,12 @@ sys.path.insert(0, os.path.abspath("../python/"))
 
 # -- Project information -----------------------------------------------------
 
-project = 'Hydro Tools'
-copyright = '2020, Jason Regina and Austin Raney'
-author = 'Jason Regina and Austin Raney'
+project = 'OWPHydroTools'
+copyright = '2021, Jason A. Regina and Austin Raney'
+author = 'Jason A. Regina and Austin Raney'
 
 # The full version, including alpha/beta/rc tags
-release = '2.0.0-alpha.0'
+release = '2.1.2'
 
 
 # -- General configuration ---------------------------------------------------
