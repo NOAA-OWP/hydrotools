@@ -1,5 +1,5 @@
-hydrotools.metrics subpackage
-=============================
+hydrotools.caches subpackage
+============================
 
 Submodules
 ----------
@@ -7,12 +7,12 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
-   hydrotools.metrics.metrics
+   hydrotools.caches.hdf
 
 Module contents
 ---------------
 
-.. automodule:: hydrotools.metrics
+.. automodule:: hydrotools.caches
    :members:
    :undoc-members:
    :show-inheritance:

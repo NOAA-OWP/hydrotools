@@ -1,8 +1,19 @@
 hydrotools.nwis\_client subpackage
-=========================================
+==================================
 
-.. automodule:: hydrotools.nwis_client.iv
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   hydrotools.nwis_client.iv
+
+Module contents
+---------------
+
+.. automodule:: hydrotools.nwis_client
    :members:
    :undoc-members:
    :show-inheritance:
-
+   :private-members:

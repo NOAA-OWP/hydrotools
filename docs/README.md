@@ -46,26 +46,26 @@ amount of house keeping is required to adjust the bindings `Sphinx` generated.
 ### Generating the bindings
 
 Bindings are generated using `sphinx-apidoc`. The example below created bindings for
-the `gcp_client` and outputs them in the `docs/` directory.
+the `nwm_client` and outputs them in the `docs/` directory.
 
 ```python
 # Create bindings without a table of contents (toc), include private modules (start with _)
 # separate all modules into individual rst files, tell sphinx-apidoc that the
 # package is a namespace style package, output the bindings in docs/, generate bindings
-# for gcp_client, and ignore files that include the word test.
-sphinx-apidoc --no-toc --private --separate --implicit-namespaces -o docs/ python/gcp_client/hydrotools "*test?*"
+# for nwm_client, and ignore files that include the word test.
+sphinx-apidoc --no-toc --private --separate --implicit-namespaces -o docs/ python/nwm_client/src/hydrotools "*test?*"
 ```
 
 After running this, a few files should appear in the `docs/` directory. The one named
-`hydrotools.gcp_client.rst` is the package level file, there should be other
-appended with module names like `hydrotools.gcp_client.gcp.rst` for example. If
+`hydrotools.nwm_client.rst` is the package level file, there should be other
+appended with module names like `hydrotools.nwm_client.nwm.rst` for example. If
 the subpackage only has one file, you may just see one new binding, that's okay.
 
-Next, open the package level file, in this case `hydrotools.gcp_client.rst`.
+Next, open the package level file, in this case `hydrotools.nwm_client.rst`.
 The top should look something like the following:
 
 ```rst
-evaluation\_tools.gcp\_client package
+evaluation\_tools.nwm\_client package
 =====================================
 
 Submodules
@@ -73,7 +73,7 @@ Submodules
 ```
 
 All that is required is the word _package_ be replaced with _subpackage_, so
-`evaluation\_tools.gcp\_client subpackage`.
+`evaluation\_tools.nwm\_client subpackage`.
 
 Lastly, its required that the package level file be referenced in `docs/index.rst`. You do
 this by simply adding the filename without the extension to list of other modules
@@ -101,7 +101,7 @@ Becomes this:
 
    hydrotools.nwis_client
    hydrotools._restclient
-   hydrotools.gcp_client
+   hydrotools.nwm_client
 ```
 
 ## Verify that documentation was added properly

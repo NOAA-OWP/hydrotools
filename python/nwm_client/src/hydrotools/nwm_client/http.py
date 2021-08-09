@@ -1,12 +1,11 @@
 """
 ================================
-Google Cloud Platform NWM Client
+HTTP NWM Client
 ================================
 This module provides classes that offer a convenient 
 interface to retrieve National Water Model (NWM) data 
-from Google Cloud Platform.
-
-https://console.cloud.google.com/marketplace/details/noaa-public/national-water-model
+from generic webservers including NOMADS and python simple
+http servers.
 
 Classes
 -------
@@ -40,10 +39,10 @@ _FEATURE_ID_TO_USGS_SITE_MAP_FILES = (
 )
 
 class NWMDataService:
-    """A Google Cloud Storage client class.
-    The NWMDataService class provides various methods for constructing 
+    """An HTTP client class for NWM data.
+    This NWMDataService class provides various methods for constructing 
     requests, retrieving data, and parsing responses from the NWM dataset 
-    on Google Cloud Platform.
+    accessible from generic web servers.
     """
 
     def __init__(
@@ -61,17 +60,18 @@ class NWMDataService:
         Parameters
         ----------
         server : str, required, default 'national-water-model'
-            Name of Google Cloud Bucket
-        verify : str, required, default 'national-water-model'
-            Name of Google Cloud Bucket
+            Fully qualified path to web server endpoint. Example:
+            "https://nomads.ncep.noaa.gov/pub/data/nccf/com/nwm/prod/"
+        verify : str, optional, default None
+            Path to CA certificates used for https verification.
         max_processes : int, optional, default os.cpu_count() - 2
             Maximum number of simultaneous requests/connections.
         location_metadata_mapping : pandas.DataFrame with nwm_feature_id Index and
             columns of corresponding site metadata. Defaults to 7500+ usgs_site_code
             used by the NWM for data assimilation.
-        cache_path : str or pathlib.Path, optional, default 'gcp_client.h5'
+        cache_path : str or pathlib.Path, optional, default 'nwm_client.h5'
             Path to HDF5 file used to store data locally.
-        cache_group : str, optional, default 'gcp_client'
+        cache_group : str, optional, default 'nwm_client'
             Root group inside cache_path used to store HDF5 datasets.
             Structure defaults to storing pandas.DataFrames in PyTable format.
             Individual DataFrames can be accessed directly using key patterns 
@@ -79,13 +79,13 @@ class NWMDataService:
 
         Returns
         -------
-        data_service : gcp.NWMDataService
+        data_service http.NWMDataService
             A NWM data service object.
 
         Examples
         --------
-        >>> from hydrotools.gcp_client import gcp
-        >>> model_data_service = gcp.NWMDataService()
+        >>> from hydrotools.nwm_client import http as nwm
+        >>> model_data_service = nwm.NWMDataService()
         
         """
         # Set server name
@@ -144,8 +144,8 @@ class NWMDataService:
 
         Examples
         --------
-        >>> from hydrotools.gcp_client import gcp
-        >>> model_data_service = gcp.NWMDataService()
+        >>> from hydrotools.nwm_client import http as nwm
+        >>> model_data_service = nwm.NWMDataService()
         >>> blob_list = model_data_service.list_blobs(
         ...     configuration = "short_range",
         ...     reference_time = "20210101T01Z"
@@ -341,8 +341,8 @@ class NWMDataService:
 
         Examples
         --------
-        >>> from hydrotools.gcp_client import gcp
-        >>> model_data_service = gcp.NWMDataService()
+        >>> from hydrotools.nwm_client import http as nwm
+        >>> model_data_service = nwm.NWMDataService()
         >>> forecast_data = model_data_service.get(
         ...     configuration = "short_range",
         ...     reference_time = "20210101T01Z"
@@ -431,8 +431,8 @@ class NWMDataService:
 
         Examples
         --------
-        >>> from hydrotools.gcp_client import gcp
-        >>> model_data_service = gcp.NWMDataService()
+        >>> from hydrotools.nwm_client import http as nwm
+        >>> model_data_service = nwm.NWMDataService()
         >>> forecast_data = model_data_service.get(
         ...     configuration = "short_range",
         ...     reference_time = "20210101T01Z"

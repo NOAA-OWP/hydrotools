@@ -1,7 +1,7 @@
-hydrotools.metrics.metrics module
+hydrotools.nwm\_client.gcp module
 =================================
 
-.. automodule:: hydrotools.metrics.metrics
+.. automodule:: hydrotools.nwm_client.gcp
    :members:
    :undoc-members:
    :show-inheritance:

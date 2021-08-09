@@ -28,7 +28,7 @@ class RestClient(AsyncToSerialHelper):
     methods to simplify usage.
 
     Features
-    --------
+    
     - Base url
     - SQLite request cache
     - Retry exponential backoff
