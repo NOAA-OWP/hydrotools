@@ -9,11 +9,11 @@ Tools for retrieving hydrological data
    :caption: API:
 
    hydrotools.nwis_client
-   hydrotools.gcp_client
+   hydrotools.nwm_client
    hydrotools._restclient
    hydrotools.metrics
    hydrotools.events.event_detection
-
+   hydrotools.caches
 
 Motivation
 ----------

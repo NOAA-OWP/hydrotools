@@ -1,5 +1,5 @@
 hydrotools.metrics.metrics module
-========================================
+=================================
 
 .. automodule:: hydrotools.metrics.metrics
    :members:

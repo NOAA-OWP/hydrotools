@@ -5,3 +5,4 @@ hydrotools.\_restclient.utilities module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
