@@ -20,12 +20,7 @@ all-tests: install
 	$(PYTHON) -m pytest -s
 
 install: $(PYENV)/bin/activate
-	$(PYTHON) -m pip install --use-feature=in-tree-build ./python/_restclient[develop]
-	$(PYTHON) -m pip install --use-feature=in-tree-build ./python/nwis_client[develop]
-	$(PYTHON) -m pip install --use-feature=in-tree-build ./python/caches[develop]
-	$(PYTHON) -m pip install --use-feature=in-tree-build ./python/nwm_client[gcp,develop]
-	$(PYTHON) -m pip install --use-feature=in-tree-build ./python/events[develop]
-	$(PYTHON) -m pip install --use-feature=in-tree-build ./python/metrics[develop]
+	$(PYTHON) -m pip install --use-feature=in-tree-build $(SUBPACKAGES_PATHS)
 
 $(PYENV)/bin/activate:
 	test -d $(PYENV) || python3 -m venv $(PYENV)
