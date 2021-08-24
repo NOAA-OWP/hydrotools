@@ -11,7 +11,20 @@ SUBPACKAGES_WITHOUT_EXTRA_REQUIRE = $(shell echo $(SUBPACKAGES) | sed 's|\[[^][]
 # relative path to subpackages (e.g. ./python/nwis_client)
 SUBPACKAGES_PATHS := $(addprefix $(NAMESPACE_DIR), $(SUBPACKAGES))
 
-.PHONY: all-tests tests install clean
+.PHONY: help all-tests tests install uninstall develop clean
+
+help:
+	    @echo "HydroTools makefile commands:"
+	    @echo "  install : install all subpackages from local source code"
+	    @echo "  develop : install all subpackages in editable mode (pip -e) from local source code"
+	    @echo "  tests : run unit tests. exclude tests marked as slow"
+	    @echo "  all-tests : run all unit tests"
+	    @echo "  uninstall : uninstall all subpackages"
+	    @echo "  clean : delete python virtual environment"
+		@echo
+		@echo "  this utility requires sed"
+
+.DEFAULT_GOAL := help
 
 tests: install
 	$(PYTHON) -m pytest -s -m "not slow"
