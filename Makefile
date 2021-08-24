@@ -22,6 +22,12 @@ all-tests: install
 install: $(PYENV)/bin/activate
 	$(PYTHON) -m pip install --use-feature=in-tree-build $(SUBPACKAGES_PATHS)
 
+uninstall: $(PYENV)/bin/activate
+	$(PYTHON) -m pip uninstall -y $(addprefix $(PACKAGE)., $(SUBPACKAGES_WITHOUT_EXTRA_REQUIRE))
+
+develop: $(PYENV)/bin/activate
+	$(PYTHON) -m pip install --editable --use-feature=in-tree-build $(SUBPACKAGES_PATHS)
+
 $(PYENV)/bin/activate:
 	test -d $(PYENV) || python3 -m venv $(PYENV)
 	$(PYTHON) -m pip install -U pip wheel setuptools build pytest
