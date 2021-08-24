@@ -1,5 +1,15 @@
 PYENV=env
 PYTHON=$(PYENV)/bin/python3
+NAMESPACE_DIR := ./python/
+
+PACKAGE := hydrotools
+SUBPACKAGES := _restclient[develop] nwis_client[develop] caches[develop] nwm_client[gcp,develop] events[develop] metrics[develop]
+
+# discard `extras_require` qualifies from subpackage names (e.g. [develop])
+SUBPACKAGES_WITHOUT_EXTRA_REQUIRE = $(shell echo $(SUBPACKAGES) | sed 's|\[[^][]*\]||g')
+
+# relative path to subpackages (e.g. ./python/nwis_client)
+SUBPACKAGES_PATHS := $(addprefix $(NAMESPACE_DIR), $(SUBPACKAGES))
 
 .PHONY: all-tests tests install clean
 
