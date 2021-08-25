@@ -150,3 +150,37 @@ def test_build_url(loop):
 
         assert client.build_url(base_url) == base_url
         assert client.build_url(base_url, query_params) == f"{base_url}?key=value"
+
+
+class ModuleFoundError(Exception):
+    ...
+
+
+def test_restclient_nest_asyncio_ModuleNotFoundError(loop):
+    """Test for #99. Ensure ModuleNotFoundError raised if `nest_asyncio` not installed"""
+    import asyncio
+    import warnings
+
+    # verify `nest_asyncio` is not installed
+    try:
+        import nest_asyncio
+
+        error_message = "nest_asyncio installed. Cannot complete test."
+        raise ModuleFoundError(error_message)
+    except ModuleNotFoundError:
+        # this should occur, so continue
+        pass
+
+    async def test():
+        await asyncio.sleep(0.01)
+
+        with warnings.catch_warnings():
+            # ignore coroutine not awaited warning for output sake.
+            # This is not the purpose of this test
+            warnings.simplefilter("ignore", category=RuntimeWarning)
+            with pytest.raises(ModuleNotFoundError):
+                # implicitly verify that `nest_asyncio` is not installed
+                # this test will need to change if `nest_asyncio` becomes a requirement
+                RestClient(enable_cache=False)
+
+    loop.run_until_complete(test())
