@@ -22,7 +22,9 @@ help:
 	    @echo "  uninstall : uninstall all subpackages"
 	    @echo "  clean : delete python virtual environment"
 		@echo
-		@echo "  this utility requires sed"
+		@echo "  utility requirements:"
+		@echo "    pip > 21.1"
+		@echo "    sed"
 
 .DEFAULT_GOAL := help
 
