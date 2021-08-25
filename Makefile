@@ -1,7 +1,32 @@
 PYENV=env
 PYTHON=$(PYENV)/bin/python3
+NAMESPACE_DIR := ./python/
 
-.PHONY: all-tests tests install clean
+PACKAGE := hydrotools
+SUBPACKAGES := _restclient[develop] nwis_client[develop] caches[develop] nwm_client[gcp,develop] events[develop] metrics[develop]
+
+# discard `extras_require` qualifies from subpackage names (e.g. [develop])
+SUBPACKAGES_WITHOUT_EXTRA_REQUIRE = $(shell echo $(SUBPACKAGES) | sed 's|\[[^][]*\]||g')
+
+# relative path to subpackages (e.g. ./python/nwis_client)
+SUBPACKAGES_PATHS := $(addprefix $(NAMESPACE_DIR), $(SUBPACKAGES))
+
+.PHONY: help all-tests tests install uninstall develop clean
+
+help:
+	    @echo "HydroTools makefile commands:"
+	    @echo "  install : install all subpackages from local source code"
+	    @echo "  develop : install all subpackages in editable mode (pip -e) from local source code"
+	    @echo "  tests : run unit tests. exclude tests marked as slow"
+	    @echo "  all-tests : run all unit tests"
+	    @echo "  uninstall : uninstall all subpackages"
+	    @echo "  clean : delete python virtual environment"
+		@echo
+		@echo "  utility requirements:"
+		@echo "    pip > 21.1"
+		@echo "    sed"
+
+.DEFAULT_GOAL := help
 
 tests: install
 	$(PYTHON) -m pytest -s -m "not slow"
@@ -10,12 +35,14 @@ all-tests: install
 	$(PYTHON) -m pytest -s
 
 install: $(PYENV)/bin/activate
-	$(PYTHON) -m pip install --use-feature=in-tree-build ./python/_restclient[develop]
-	$(PYTHON) -m pip install --use-feature=in-tree-build ./python/nwis_client[develop]
-	$(PYTHON) -m pip install --use-feature=in-tree-build ./python/caches[develop]
-	$(PYTHON) -m pip install --use-feature=in-tree-build ./python/nwm_client[gcp,develop]
-	$(PYTHON) -m pip install --use-feature=in-tree-build ./python/events[develop]
-	$(PYTHON) -m pip install --use-feature=in-tree-build ./python/metrics[develop]
+	$(PYTHON) -m pip install --use-feature=in-tree-build $(SUBPACKAGES_PATHS)
+
+uninstall: $(PYENV)/bin/activate
+	$(PYTHON) -m pip uninstall -y $(addprefix $(PACKAGE)., $(SUBPACKAGES_WITHOUT_EXTRA_REQUIRE))
+
+develop: $(PYENV)/bin/activate
+	$(PYTHON) -m pip install --use-feature=in-tree-build --editable $(SUBPACKAGES_PATHS)
+
 
 $(PYENV)/bin/activate:
 	test -d $(PYENV) || python3 -m venv $(PYENV)
