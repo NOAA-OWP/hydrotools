@@ -809,3 +809,17 @@ def _bbox_split(values: Union[str, list, tuple, pd.Series, np.ndarray]) -> List[
     value_groups = np.array_split(values, n_groups)
 
     return list(map(lambda i: ",".join(i), value_groups))
+
+
+def _create_empty_canonical_df() -> pd.DataFrame:
+    """Returns an empty hydrotools canonical dataframe with correct field datatypes."""
+    cols = {
+        "value_time": pd.Series(dtype="datetime64[ns]"),
+        "variable_name": pd.Series(dtype="category"),
+        "usgs_site_code": pd.Series(dtype="category"),
+        "measurement_unit": pd.Series(dtype="category"),
+        "value": pd.Series(dtype="float32"),
+        "qualifiers": pd.Series(dtype="category"),
+        "series": pd.Series(dtype="category"),
+    }
+    return pd.DataFrame(cols, index=[])
