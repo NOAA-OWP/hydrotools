@@ -247,12 +247,15 @@ class IVDataService:
 
             return df
 
+        def empty_df_warning_helper():
+            warning_message = "No data was returned by the request."
+            warnings.warn(warning_message)
+
         list_of_frames = list(map(list_to_df_helper, raw_data))
 
         # Empty list. No data was returned in the request
         if not list_of_frames:
-            warning_message = "No data was returned by the request."
-            warnings.warn(warning_message)
+            empty_df_warning_helper()
             return _create_empty_canonical_df()
 
         # Concatenate list in single pd.DataFrame
@@ -260,6 +263,7 @@ class IVDataService:
 
         # skip data processing steps if no data was retrieved and return empty canonical df
         if dfs.empty:
+            empty_df_warning_helper()
             return _create_empty_canonical_df()
 
         # Convert values to numbers
