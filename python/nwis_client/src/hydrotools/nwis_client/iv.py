@@ -252,6 +252,10 @@ class IVDataService:
         # Concatenate list in single pd.DataFrame
         dfs = pd.concat(list_of_frames, ignore_index=True)
 
+        # skip data processing steps if no data was retrieved and return empty canonical df
+        if dfs.empty:
+            return _create_empty_canonical_df()
+
         # Convert values to numbers
         dfs.loc[:, "value"] = pd.to_numeric(dfs["value"], downcast="float")
 
