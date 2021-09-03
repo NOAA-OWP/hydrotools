@@ -249,12 +249,6 @@ class IVDataService:
 
         list_of_frames = list(map(list_to_df_helper, raw_data))
 
-        # Empty list. No data was returned in the request
-        if not list_of_frames:
-            warning_message = "No data was returned by the request."
-            warnings.warn(warning_message)
-            return pd.DataFrame(None)
-
         # Concatenate list in single pd.DataFrame
         dfs = pd.concat(list_of_frames, ignore_index=True)
 
