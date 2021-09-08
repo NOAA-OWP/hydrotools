@@ -425,14 +425,14 @@ def test_splitting_bbox(test, validation):
     assert v == validation
 
 
-def test_get_returns_empty_canonical_dataframe(setup_iv, monkeypatch):
+def test_get_returns_empty_canonical_dataframe(setup_iv_value_time, monkeypatch):
     """Verify that `get` can returns an empty canonical dataframe."""
 
     def get_raw_mock(*args, **kwargs):
         return [{"values": []}]
 
     monkeypatch.setattr(iv.IVDataService, "get_raw", get_raw_mock)
-    df = setup_iv.get(
+    df = setup_iv_value_time.get(
         sites=["01189000"], startDt="2015-12-01T00:00", endDt="2015-12-31T23:45"
     )
     canonical_df = iv._create_empty_canonical_df()
