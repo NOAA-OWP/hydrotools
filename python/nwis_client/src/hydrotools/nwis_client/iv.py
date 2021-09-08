@@ -256,7 +256,9 @@ class IVDataService:
         # Empty list. No data was returned in the request
         if not list_of_frames:
             empty_df_warning_helper()
-            return _create_empty_canonical_df()
+            empty_df = _create_empty_canonical_df()
+            empty_df = empty_df.rename(columns={"value_time": self.value_time_label})
+            return empty_df
 
         # Concatenate list in single pd.DataFrame
         dfs = pd.concat(list_of_frames, ignore_index=True)
@@ -264,7 +266,9 @@ class IVDataService:
         # skip data processing steps if no data was retrieved and return empty canonical df
         if dfs.empty:
             empty_df_warning_helper()
-            return _create_empty_canonical_df()
+            empty_df = _create_empty_canonical_df()
+            empty_df = empty_df.rename(columns={"value_time": self.value_time_label})
+            return empty_df
 
         # Convert values to numbers
         dfs.loc[:, "value"] = pd.to_numeric(dfs["value"], downcast="float")
