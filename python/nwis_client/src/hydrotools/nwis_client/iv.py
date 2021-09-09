@@ -247,16 +247,28 @@ class IVDataService:
 
             return df
 
+        def empty_df_warning_helper():
+            warning_message = "No data was returned by the request."
+            warnings.warn(warning_message)
+
         list_of_frames = list(map(list_to_df_helper, raw_data))
 
         # Empty list. No data was returned in the request
         if not list_of_frames:
-            warning_message = "No data was returned by the request."
-            warnings.warn(warning_message)
-            return pd.DataFrame(None)
+            empty_df_warning_helper()
+            empty_df = _create_empty_canonical_df()
+            empty_df = empty_df.rename(columns={"value_time": self.value_time_label})
+            return empty_df
 
         # Concatenate list in single pd.DataFrame
         dfs = pd.concat(list_of_frames, ignore_index=True)
+
+        # skip data processing steps if no data was retrieved and return empty canonical df
+        if dfs.empty:
+            empty_df_warning_helper()
+            empty_df = _create_empty_canonical_df()
+            empty_df = empty_df.rename(columns={"value_time": self.value_time_label})
+            return empty_df
 
         # Convert values to numbers
         dfs.loc[:, "value"] = pd.to_numeric(dfs["value"], downcast="float")
@@ -809,3 +821,17 @@ def _bbox_split(values: Union[str, list, tuple, pd.Series, np.ndarray]) -> List[
     value_groups = np.array_split(values, n_groups)
 
     return list(map(lambda i: ",".join(i), value_groups))
+
+
+def _create_empty_canonical_df() -> pd.DataFrame:
+    """Returns an empty hydrotools canonical dataframe with correct field datatypes."""
+    cols = {
+        "value_time": pd.Series(dtype="datetime64[ns]"),
+        "variable_name": pd.Series(dtype="category"),
+        "usgs_site_code": pd.Series(dtype="category"),
+        "measurement_unit": pd.Series(dtype="category"),
+        "value": pd.Series(dtype="float32"),
+        "qualifiers": pd.Series(dtype="category"),
+        "series": pd.Series(dtype="category"),
+    }
+    return pd.DataFrame(cols, index=[])
