@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="hydrotools.nwm_client subpackage" href="hydrotools.nwm_client.html" /><link rel="prev" title="hydrotools.nwis_client subpackage" href="hydrotools.nwis_client.html" />
 
-    <meta name="generator" content="sphinx-4.1.2, furo 2021.08.17.beta43"/>
+    <meta name="generator" content="sphinx-4.1.2, furo 2021.09.08"/>
         <title>hydrotools.nwis_client.iv module - OWPHydroTools 2.1.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=910ac4ccc9d7c023151c34010d7b500fb9777a51" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=c7c65a82b42f6b978e58466c1e9ef2509836d916" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=16fb25fabf47304eee183a5e9af80b1ba98259b1" />
     
     
@@ -32,9 +32,11 @@
   
     }
   }
-</style>
-    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css"></head>
+</style></head>
   <body>
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
     
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
   <symbol id="svg-toc" viewBox="0 0 24 24">
@@ -197,7 +199,7 @@
   </aside>
   <div class="main">
     <div class="content">
-      <article role="main">
+      <div class="article-container">
         <div class="content-icon-container">
           <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
@@ -212,7 +214,8 @@
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
-        <section id="module-hydrotools.nwis_client.iv">
+        <article role="main">
+          <section id="module-hydrotools.nwis_client.iv">
 <span id="hydrotools-nwis-client-iv-module"></span><h1>hydrotools.nwis_client.iv module<a class="headerlink" href="#module-hydrotools.nwis_client.iv" title="Permalink to this headline">¶</a></h1>
 <section id="usgs-nwis-instantaneous-values-rest-client">
 <h2>USGS NWIS Instantaneous Values REST Client<a class="headerlink" href="#usgs-nwis-instantaneous-values-rest-client" title="Permalink to this headline">¶</a></h2>
@@ -530,6 +533,11 @@ result lowered.</p>
 <span class="sig-prename descclassname"><span class="pre">hydrotools.nwis_client.iv.</span></span><span class="sig-name descname"><span class="pre">_bbox_split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">list</span><span class="p"><span class="pre">,</span> </span><span class="pre">tuple</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.series.Series</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#hydrotools.nwis_client.iv._bbox_split" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 <dl class="py function">
+<dt class="sig sig-object py" id="hydrotools.nwis_client.iv._create_empty_canonical_df">
+<span class="sig-prename descclassname"><span class="pre">hydrotools.nwis_client.iv.</span></span><span class="sig-name descname"><span class="pre">_create_empty_canonical_df</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#hydrotools.nwis_client.iv._create_empty_canonical_df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an empty hydrotools canonical dataframe with correct field datatypes.</p>
+</dd></dl>
+<dl class="py function">
 <dt class="sig sig-object py" id="hydrotools.nwis_client.iv.sequence_scientific_array_like">
 <span class="sig-prename descclassname"><span class="pre">hydrotools.nwis_client.iv.</span></span><span class="sig-name descname"><span class="pre">sequence_scientific_array_like</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">T</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#hydrotools.nwis_client.iv.sequence_scientific_array_like" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -544,7 +552,8 @@ result lowered.</p>
 </section>
 </section>
 
-      </article>
+        </article>
+      </div>
       <footer>
         
         <div class="related-pages">
@@ -571,13 +580,11 @@ result lowered.</p>
         </div>
 
         <div class="related-information">
-              Copyright &#169; 2021, Jason A. Regina and Austin Raney
-            |
+              Copyright &#169; 2021, Jason A. Regina and Austin Raney |
             Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
               and
               <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
-              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
-            |
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>. |
             <a class="muted-link" href="_sources/hydrotools.nwis_client.iv.rst.txt"
                rel="nofollow">
               Show Source
