@@ -1,31 +1,34 @@
-# from nwm_client.FileDownloader import FileDownloader
-# from nwm_client.NWMDataProcessor import NWMDataProcessor as NWM
-# from pathlib import Path
-# import xarray as xr
-from nwm_client.NWMDataSource import HTTPFileSource
-import pandas as pd
+from nwm_client.FileDownloader import FileDownloader
+from nwm_client.NWMFileProcessor import NWMFileProcessor
+from nwm_client.NWMFileCatalog import HTTPFileCatalog
+
+import tempfile
 
 def main():
-    # url1 = "https://nomads.ncep.noaa.gov/pub/data/nccf/com/nwm/prod/nwm.20210909/analysis_assim/nwm.t00z.analysis_assim.channel_rt.tm00.conus.nc"
-    # url2 = "https://nomads.ncep.noaa.gov/pub/data/nccf/com/nwm/prod/nwm.20210909/analysis_assim/nwm.t00z.analysis_assim.channel_rt.tm01.conus.nc"
-    # urls = [url1, url2]
-
-    # odir = Path("./output")
-    # downloader = FileDownloader(odir, True)
-    # downloader.get(urls)
-
-    # Process data
-    # df = NWM.get_dataframe(odir)
-    # print(df.info(memory_usage="deep"))
-    # print(df)
-
-    source = HTTPFileSource(
-        server="https://nomads.ncep.noaa.gov/pub/data/nccf/com/nwm/prod/"
+    verify = None
+    # Get list of files
+    catalog = HTTPFileCatalog(
+        server="https://nomads.ncep.noaa.gov/pub/data/nccf/com/nwm/prod/",
+        # verify=verify
         )
-    print(source.list_blobs(
-        configuration="short_range",
+    urls = catalog.list_blobs(
+        configuration="analysis_assim",
         reference_time="20210910T00Z"
-    ))
+    )
+
+    # Download and process files
+    with tempfile.TemporaryDirectory() as dir:
+        # Download files
+        downloader = FileDownloader(output_directory=dir,
+        # verify=verify
+        )
+        downloader.get(urls)
+
+        # Process files
+        df = NWMFileProcessor.get_dataframe(dir)
+
+    print(df.info(memory_usage="deep"))
+    print(df)
 
 if __name__ == "__main__":
     main()
