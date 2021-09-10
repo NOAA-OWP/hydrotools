@@ -9,6 +9,7 @@ Classes
 FileDownloader
 """
 import asyncio
+import ssl
 import aiohttp
 import aiofiles
 from urllib.parse import unquote
@@ -40,7 +41,8 @@ class FileDownloader:
         # Set directory creation
         self._create_directory = bool(create_directory)
 
-    async def get_file(self, url: str, session: aiohttp.ClientSession) -> None:
+    async def get_file(self, url: str, session: aiohttp.ClientSession, 
+        verify: str = None) -> None:
         """Download a single file.
         
         Parameters
@@ -54,8 +56,16 @@ class FileDownloader:
         -------
         None
         """
+        # SSL
+        if verify:
+            ssl_context = ssl.create_default_context(
+                purpose=ssl.Purpose.SERVER_AUTH, 
+                cafile=verify)
+        else:
+            ssl_context = ssl.create_default_context()
+
         # Retrieve a single file
-        async with session.get(url) as response:
+        async with session.get(url, ssl=ssl_context) as response:
             # Extract file name
             filename = unquote(url).split("/")[-1]
 
