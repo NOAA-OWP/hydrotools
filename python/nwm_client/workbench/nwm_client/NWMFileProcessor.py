@@ -1,12 +1,12 @@
 """
 ==================
-NWM Data Processor
+NWM File Processor
 ==================
 Tools for processing NWM data in NetCDF format.
 
 Classes
 -------
-NWMDataProcessor
+NWMFileProcessor
 """
 from pathlib import Path
 import xarray as xr
@@ -14,7 +14,7 @@ import dask.dataframe as dd
 import pandas as pd
 from typing import List, Union
 
-class NWMDataProcessor:
+class NWMFileProcessor:
 
     @classmethod
     def get_dataset(
