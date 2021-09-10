@@ -23,7 +23,7 @@ class FileDownloader:
         self,
         output_directory: Union[str, Path] = Path("."), 
         create_directory: bool = False,
-        verify: str = ''
+        verify: str = None
         ) -> None:
         """Initialize File Downloader object with specified output directory.
         
@@ -40,10 +40,10 @@ class FileDownloader:
         None
         """
         # Set output directory
-        self._output_directory = Path(output_directory).expanduser().resolve()
+        self.output_directory = Path(output_directory).expanduser().resolve()
 
         # Set directory creation
-        self._create_directory = bool(create_directory)
+        self.create_directory = bool(create_directory)
 
         # Set SSL verification
         self.verify = verify
@@ -63,12 +63,12 @@ class FileDownloader:
         None
         """
         # SSL
-        if self.verify == '':
-            ssl_context = ssl.create_default_context()
-        else:
+        if self.verify:
             ssl_context = ssl.create_default_context(
                 purpose=ssl.Purpose.SERVER_AUTH, 
                 cafile=self.verify)
+        else:
+            ssl_context = ssl.create_default_context()
 
         # Retrieve a single file
         async with session.get(url, ssl=ssl_context) as response:
