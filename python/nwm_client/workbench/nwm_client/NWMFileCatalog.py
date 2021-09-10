@@ -124,7 +124,7 @@ class HTTPFileCatalog(NWMFileCatalog):
         self.verify = verify
 
     @classmethod
-    async def get_html(cls, url, verify):
+    async def get_html(cls, url: str, verify: str = None):
         # SSL
         if verify:
             ssl_context = ssl.create_default_context(
