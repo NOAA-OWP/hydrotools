@@ -19,8 +19,12 @@ import warnings
 
 class FileDownloader:
 
-    def __init__(self, output_directory: Union[str, Path] = Path("."), 
-        create_directory: bool = False) -> None:
+    def __init__(
+        self,
+        output_directory: Union[str, Path] = Path("."), 
+        create_directory: bool = False,
+        verify: str = ''
+        ) -> None:
         """Initialize File Downloader object with specified output directory.
         
         Parameters
@@ -41,8 +45,10 @@ class FileDownloader:
         # Set directory creation
         self._create_directory = bool(create_directory)
 
-    async def get_file(self, url: str, session: aiohttp.ClientSession, 
-        verify: str = None) -> None:
+        # Set SSL verification
+        self.verify = verify
+
+    async def get_file(self, url: str, session: aiohttp.ClientSession) -> None:
         """Download a single file.
         
         Parameters
@@ -57,12 +63,12 @@ class FileDownloader:
         None
         """
         # SSL
-        if verify:
+        if self.verify == '':
+            ssl_context = ssl.create_default_context()
+        else:
             ssl_context = ssl.create_default_context(
                 purpose=ssl.Purpose.SERVER_AUTH, 
-                cafile=verify)
-        else:
-            ssl_context = ssl.create_default_context()
+                cafile=self.verify)
 
         # Retrieve a single file
         async with session.get(url, ssl=ssl_context) as response:
@@ -127,7 +133,7 @@ class FileDownloader:
         asyncio.run(self.get_files(urls))
 
     @property
-    def output_directory(self):
+    def output_directory(self) -> Path:
         return self._output_directory
 
     @output_directory.setter
@@ -135,9 +141,17 @@ class FileDownloader:
         self._output_directory = Path(output_directory).expanduser().resolve()
 
     @property
-    def create_directory(self):
+    def create_directory(self) -> bool:
         return self._create_directory
 
     @create_directory.setter
     def create_directory(self, create_directory: bool):
         self._create_directory = bool(create_directory)
+
+    @property
+    def verify(self) -> str:
+        return self._verify
+
+    @verify.setter
+    def verify(self, verify: str):
+        self._verify = verify
