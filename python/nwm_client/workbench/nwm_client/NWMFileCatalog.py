@@ -1,14 +1,14 @@
 """
-===============
-NWM File Source
-===============
+================
+NWM File Catalog
+================
 Tools for discovering operational NWM NetCDF data.
 
 Classes
 -------
-NWMFileSource
-HTTPFileSource
-GCPFileSource
+NWMFileCatalog
+HTTPFileCatalog
+GCPFileCatalog
 """
 from abc import ABC, abstractmethod
 from pathlib import Path
@@ -19,7 +19,7 @@ import aiohttp
 import ssl
 from bs4 import BeautifulSoup
 
-class NWMFileSource(ABC):
+class NWMFileCatalog(ABC):
     """Abstract base class for sources of NWM file data."""
 
     def __init__(
@@ -111,7 +111,7 @@ class NWMFileSource(ABC):
             'short_range_puertorico_no_da'
             ]
 
-class HTTPFileSource(NWMFileSource):
+class HTTPFileCatalog(NWMFileCatalog):
 
     def __init__(
         self,
@@ -184,7 +184,7 @@ class HTTPFileSource(NWMFileSource):
         self.raise_invalid_configuration(configuration)
 
         # Break-up reference time
-        issue_date, issue_time = NWMFileSource.separate_datetime(reference_time)
+        issue_date, issue_time = NWMFileCatalog.separate_datetime(reference_time)
 
         # Set prefix
         prefix = f"nwm.{issue_date}/{configuration}/"
@@ -227,7 +227,7 @@ class HTTPFileSource(NWMFileSource):
     def verify(self, verify: str) -> None:
         self._verify = verify
 
-class GCPFileSource(NWMFileSource):
+class GCPFileCatalog(NWMFileCatalog):
 
     def list_blobs(self):
         """Query for NWM files on Google Cloud Platform."""
