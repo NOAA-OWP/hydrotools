@@ -126,13 +126,15 @@ class HTTPFileSource(NWMFileSource):
     @classmethod
     async def get_html(cls, url, verify):
         # SSL
-        # ssl_context = ssl.create_default_context(
-        #   purpose=ssl.Purpose.SERVER_AUTH, 
-        #   cafile=verify)
+        if verify:
+            ssl_context = ssl.create_default_context(
+                purpose=ssl.Purpose.SERVER_AUTH, 
+                cafile=verify)
+        else:
+            ssl_context = ssl.create_default_context()
 
         async with aiohttp.ClientSession() as session:
-            # async with session.get(url, ssl=ssl_context) as response:
-            async with session.get(url) as response:
+            async with session.get(url, ssl=ssl_context) as response:
                 # Get html content
                 html_doc = await response.text()
 
