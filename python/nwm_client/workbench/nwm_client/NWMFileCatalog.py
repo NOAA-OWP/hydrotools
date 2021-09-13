@@ -112,6 +112,10 @@ class NWMFileCatalog(ABC):
             ]
 
 class HTTPFileCatalog(NWMFileCatalog):
+    """An HTTP client class for NWM data.
+    This HTTPFileCatalog class provides various methods for discovering NWM 
+    files on generic web servers.
+    """
 
     def __init__(
         self,
@@ -119,13 +123,47 @@ class HTTPFileCatalog(NWMFileCatalog):
         verify: str = None,
         location_metadata_mapping: pd.DataFrame = pd.DataFrame(),
         ) -> None:
+        """Initialize HTTP File Catalog of NWM data source.
+
+        Parameters
+        ----------
+        server : str, required, default 'national-water-model'
+            Fully qualified path to web server endpoint. Example:
+            "https://nomads.ncep.noaa.gov/pub/data/nccf/com/nwm/prod/"
+        verify : str, optional, default None
+            Path to CA certificates used for https verification.
+        location_metadata_mapping : pandas.DataFrame with nwm_feature_id Index 
+            and columns of corresponding site metadata. Defaults to 7500+ 
+            usgs_site_code used by the NWM for data assimilation.
+            
+        Returns
+        -------
+        None
+        """
         super().__init__(location_metadata_mapping=location_metadata_mapping)
         self.server = server
         self.verify = verify
 
     @classmethod
-    async def get_html(cls, url: str, verify: str = None):
-        # SSL
+    async def get_html(
+        cls,
+        url: str,
+        verify: str = None
+        ) -> str:
+        """Retrieve an HTML document.
+
+        Parameters
+        ----------
+        url : str, required
+            Path to HTML document
+        verify : str, optional, default None
+            Path to CA certificates used for https verification.
+
+        Returns
+        -------
+        HTML document retrieved from url.
+        """
+        # Setup SSL context
         if verify:
             ssl_context = ssl.create_default_context(
                 purpose=ssl.Purpose.SERVER_AUTH, 
@@ -166,19 +204,7 @@ class HTTPFileCatalog(NWMFileCatalog):
 
         Returns
         -------
-        blob_list : list
-            A list of blob names that satisfy the criteria set by the
-            parameters.
-
-        Examples
-        --------
-        >>> from hydrotools.nwm_client import http as nwm
-        >>> model_data_service = nwm.NWMDataService()
-        >>> blob_list = model_data_service.list_blobs(
-        ...     configuration = "short_range",
-        ...     reference_time = "20210101T01Z"
-        ...     )
-        
+        A list of blob names that satisfy the criteria set by the parameters.
         """
         # Validate configuration
         self.raise_invalid_configuration(configuration)
