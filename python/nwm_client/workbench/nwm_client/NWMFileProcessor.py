@@ -2,7 +2,7 @@
 ==================
 NWM File Processor
 ==================
-Tools for processing NWM data in NetCDF format.
+Tools for processing NWM data in NetCDF (.nc) format.
 
 Classes
 -------
@@ -15,6 +15,10 @@ import pandas as pd
 from typing import List, Union
 
 class NWMFileProcessor:
+    """Provides an interface for methods used to process National Water Model 
+    data from NetCDF (.nc) format to xarray.Dataset, dask.dataframe.Dataframe, 
+    or pandas.DataFrame.
+    """
 
     @classmethod
     def get_dataset(
