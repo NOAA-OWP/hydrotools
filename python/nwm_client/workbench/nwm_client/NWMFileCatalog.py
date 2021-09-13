@@ -26,6 +26,18 @@ class NWMFileCatalog(ABC):
         self,
         location_metadata_mapping: pd.DataFrame = pd.DataFrame()
         ) -> None:
+        """Initialize Catalog of NWM data source.
+
+        Parameters
+        ----------
+        location_metadata_mapping : pandas.DataFrame with nwm_feature_id Index 
+            and columns of corresponding site metadata. Defaults to 7500+ 
+            usgs_site_code used by the NWM for data assimilation.
+            
+        Returns
+        -------
+        None
+        """
         super().__init__()
 
         # Set crosswalk
@@ -51,7 +63,21 @@ class NWMFileCatalog(ABC):
             self.crosswalk = pd.concat(dfs)
 
     def raise_invalid_configuration(self, configuration) -> None:
-        """Raises an error for an invalid configuration."""
+        """Raises an error for an invalid configuration.
+
+        Parameters
+        ----------
+        configuration: str, required
+            Configuration to validate
+
+        Returns
+        -------
+        None
+
+        Raises
+        ------
+        ValueError if the configuration is invalid.
+        """
         # Validate configuration
         if configuration not in self.configurations:
             message = (f"Invalid configuration '{configuration}'. " + 
@@ -60,7 +86,18 @@ class NWMFileCatalog(ABC):
 
     @classmethod
     def separate_datetime(cls, reference_time: str) -> Tuple[str, str]:
-        """Divide reference time into separate date and time strings."""
+        """Divide reference time into separate date and time strings.
+
+        Parameters
+        ----------
+        reference_time: str, required
+            Reference time string formatted like %Y%m%dT%HZ, for example:
+            "20210910T00Z"
+
+        Returns
+        -------
+        tuple continaing two strings, (issue_date, issue_time)
+        """
         # Break-up reference time
         tokens = reference_time.split('T')
         issue_date = tokens[0]
@@ -68,8 +105,26 @@ class NWMFileCatalog(ABC):
         return issue_date, issue_time
 
     @abstractmethod
-    def list_blobs(self):
-        """Abstract method to query for NWM files."""
+    def list_blobs(
+        self,
+        configuration: str,
+        reference_time: str
+        ) -> List[str]:
+        """Abstract method to query for NWM files.
+
+        Parameters
+        ----------
+        configuration : str, required
+            Particular model simulation or forecast configuration. For a list 
+            of available configurations see NWMDataService.configurations
+        reference_time : str, required
+            Model simulation or forecast issuance/reference time in 
+            YYYYmmddTHHZ format.
+
+        Returns
+        -------
+        A list of blob names that satisfy the criteria set by the parameters.
+        """
 
     @property
     def crosswalk(self) -> pd.DataFrame:
