@@ -2,7 +2,7 @@
 ===============
 File Downloader
 ===============
-Tool for downloading files.
+Tool for downloading files asynchronously.
 
 Classes
 -------
@@ -18,6 +18,9 @@ from typing import Iterable, Union
 import warnings
 
 class FileDownloader:
+    """Provides a convenient interface to download a list of files
+    asynchronously using HTTP.
+    """
 
     def __init__(
         self,
@@ -34,6 +37,8 @@ class FileDownloader:
         create_directory: bool, options, default False
             Indicates whether to create the output directory if it does not 
             exist.
+        verify : str, optional, default None
+            Path to CA certificates used for https verification.
             
         Returns
         -------
@@ -48,7 +53,11 @@ class FileDownloader:
         # Set SSL verification
         self.verify = verify
 
-    async def get_file(self, url: str, session: aiohttp.ClientSession) -> None:
+    async def get_file(
+        self,
+        url: str,
+        session: aiohttp.ClientSession
+        ) -> None:
         """Download a single file.
         
         Parameters
@@ -62,7 +71,7 @@ class FileDownloader:
         -------
         None
         """
-        # SSL
+        # Specify SSL context
         if self.verify:
             ssl_context = ssl.create_default_context(
                 purpose=ssl.Purpose.SERVER_AUTH, 
@@ -110,7 +119,7 @@ class FileDownloader:
     def get(self, urls: Iterable[str]) -> None:
         """Setup event loop and asynchronously download multiple files. If 
         FileDownloader.create_directory is True, an output directory will be 
-        created.
+        created if needed.
         
         Parameters
         ----------
