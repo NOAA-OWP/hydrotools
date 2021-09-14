@@ -30,14 +30,15 @@ def main():
     df = client.get(
         configuration=configuration,
         reference_times=reference_times,
-        compute=False
+        # compute=False
     )
 
     # Find maximum flows
-    df_sub = df[["feature_id", "streamflow"]]
-    df_max = df_sub.groupby("feature_id").max()
-    df_max = df_max[df_max > 0.0].dropna()
-    print(df_max.compute())
+    # df_sub = df[["feature_id", "streamflow"]]
+    # df_max = df_sub.groupby("feature_id").max()
+    # df_max = df_max[df_max > 0.0].dropna()
+    # print(df_max.compute())
+    print(df)
 
 if __name__ == "__main__":
     main()
