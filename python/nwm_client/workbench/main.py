@@ -24,12 +24,12 @@ def main():
 
     # Get options
     configuration = "analysis_assim"
-    reference_time = "20210914T10Z"
+    reference_times = ["20210914T10Z", "20210914T09Z"]
 
     # Retrieve data
     df = client.get(
         configuration=configuration,
-        reference_time=reference_time
+        reference_times=reference_times
     )
 
     # Find maximum flows
