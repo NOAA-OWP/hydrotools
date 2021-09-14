@@ -29,7 +29,8 @@ def main():
     # Retrieve data
     df = client.get(
         configuration=configuration,
-        reference_times=reference_times
+        reference_times=reference_times,
+        compute=False
     )
 
     # Find maximum flows
