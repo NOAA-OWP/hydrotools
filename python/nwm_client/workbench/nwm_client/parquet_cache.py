@@ -40,6 +40,9 @@ class ParquetCache:
     def __del__(self):
         pass
 
+    def __str__(self) -> str:
+        return str(self.directory)
+
     def get(
         self,
         function: Callable,
