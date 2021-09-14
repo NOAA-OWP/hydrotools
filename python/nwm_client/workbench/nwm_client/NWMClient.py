@@ -217,7 +217,13 @@ class NWMFileClient(NWMClient):
         for ref_time in reference_times:
             dfs.append(self.get_cycle(configuration, ref_time))
 
-        return dd.multi.concat(dfs, ignore_unknown_divisions=True)
+        # Concatenate cycles
+        df = dd.multi.concat(dfs, ignore_unknown_divisions=True)
+
+        # Return pandas.DataFrame
+        if compute:
+            return df.compute()
+        return df
 
     @property
     def file_directory(self) -> Path:
