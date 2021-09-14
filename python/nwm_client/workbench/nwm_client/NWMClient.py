@@ -222,7 +222,8 @@ class NWMFileClient(NWMClient):
 
         # Return pandas.DataFrame
         if compute:
-            return df.compute()
+            return df.head() # FIXME Return head for testing
+            return df.compute() # Enable this option
         return df
 
     @property
