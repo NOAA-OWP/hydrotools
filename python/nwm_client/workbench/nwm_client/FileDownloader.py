@@ -80,7 +80,7 @@ class FileDownloader:
             ssl_context = ssl.create_default_context()
 
         # Retrieve a single file
-        async with session.get(url, ssl=ssl_context) as response:
+        async with session.get(url, ssl=ssl_context, timeout=900) as response:
             # Extract file name
             filename = unquote(url).split("/")[-1]
 
@@ -113,7 +113,8 @@ class FileDownloader:
         None
         """
         # Retrieve each file
-        async with aiohttp.ClientSession() as session:
+        connector = aiohttp.TCPConnector(limit=10)
+        async with aiohttp.ClientSession(connector=connector) as session:
             await asyncio.gather(*[self.get_file(url, session) for url in urls])
 
     def get(self, urls: Iterable[str]) -> None:
