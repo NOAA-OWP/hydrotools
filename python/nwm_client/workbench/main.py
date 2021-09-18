@@ -5,7 +5,7 @@ if __name__ == "__main__":
 
     df = client.get(
         configuration="medium_range_mem1",
-        reference_times=["20210917T00Z"],
+        reference_times=["20210915T00Z"],
         compute=False
         )
 
