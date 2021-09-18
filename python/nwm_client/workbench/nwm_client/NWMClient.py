@@ -34,6 +34,11 @@ class NWMClientDefault:
         compression="snappy"
     )
     CATALOG: NWMFileCatalog = GCPFileCatalog()
+    CANONICAL_COLUMN_MAPPING: pd.Series = pd.Series({
+        "feature_id": "nwm_feature_id",
+        "time": "value_time",
+        "streamflow": "value"
+    })
     def __post_init__(self):
         # Gather routelink files
         rl_filepath = Path(__file__).parent / "data/routelink_files"
@@ -56,8 +61,6 @@ class NWMClient(ABC):
         self,
         configuration: str,
         reference_times: List[str] = None,
-        startRT: str = None,
-        endRT: str = None,
         compute: bool = True
         ) -> Union[pd.DataFrame, dd.DataFrame]:
         """Abstract method to retrieve National Water Model data as a 
@@ -70,11 +73,6 @@ class NWMClient(ABC):
         reference_times: str or List[str], optional, default None
             List of reference time strings in %Y%m%dT%HZ format. 
             e.g. ['20210912T01Z']
-        startRT: str, optional
-            Retrieve all available cycles starting with this reference time. 
-            If endRT is not set, then retrieve from startRT until now.
-        endRT: str, optional
-            Used with startRT. Sets the final reference time to retrieve.
         compute: bool, optional, default True
             Return a pandas.DataFrame instead of a dask.dataframe.DataFrame.
 
@@ -83,6 +81,59 @@ class NWMClient(ABC):
         dask.dataframe.DataFrame of NWM data or a pandas.DataFrame in canonical 
         format.
         """
+
+    @classmethod
+    def canonicalize_dataframe(
+        cls,
+        df: dd.DataFrame,
+        configuration: str,
+        column_mapping: pd.Series = NWMClientDefault.CANONICAL_COLUMN_MAPPING,
+        variable_name: str = "streamflow",
+        measurement_unit: str = "m3/s",
+        location_metadata_mapping: pd.DataFrame = NWMClientDefault().CROSSWALK
+        ) -> dd.DataFrame:
+        """Reformat dask.dataframe.DataFrame to adhere to HydroTools canonical 
+        format.
+        
+        Parameters
+        ----------
+        df: dask.dataframe.DataFrame, required
+            Input dataframe to transform.
+        configuration: str, required
+            NWM configuration label used for "configuration" column values
+        column_mapping: dict, optional
+            Mapping used to rename columns. See NWMClientDefault for default 
+            values
+        variable_name: str, optional
+            Variable name used for "variable_name" column values
+        measurement_unit: str, optional
+            Measurement unit used for "measurment_unit" column values
+        location_metadata_mapping : pandas.DataFrame with nwm_feature_id Index and
+            columns of corresponding site metadata. Defaults to 7500+ usgs_site_code
+            used by the NWM for data assimilation
+
+        Returns
+        -------
+        dask.dataframe.DataFrame in canonical format
+        """
+        # Rename columns
+        df = df.rename(columns=column_mapping)
+
+        # Add new columns
+        df["configuration"] = configuration
+        df["variable_name"] = variable_name
+        df["measurement_unit"] = measurement_unit
+
+        # Categorize columns
+        df["configuration"] = df["configuration"].astype("category")
+        df["variable_name"] = df["variable_name"].astype("category")
+        df["measurement_unit"] = df["measurement_unit"].astype("category")
+
+        # Apply crosswalk
+        for col in location_metadata_mapping:
+            df[col] = df['nwm_feature_id'].map(location_metadata_mapping[col]).astype("category")
+
+        return df
 
 class NWMFileClient(NWMClient):
     def __init__(
@@ -191,7 +242,13 @@ class NWMFileClient(NWMClient):
             )
 
         # Convert to dataframe
-        return NWMFileProcessor.convert_to_dask_dataframe(ds)
+        df = NWMFileProcessor.convert_to_dask_dataframe(ds)
+
+        # Canonicalize
+        return NWMClient.canonicalize_dataframe(
+            df=df,
+            configuration=configuration
+        )
 
     def get(
         self,
@@ -240,7 +297,13 @@ class NWMFileClient(NWMClient):
         
         # Return pandas dataframe
         if compute:
-            return df.compute()
+            # Compute
+            df = df.compute()
+
+            # Downcast
+            df["value"] = pd.to_numeric(df["value"], downcast="float")
+            df["nwm_feature_id"] = pd.to_numeric(df["nwm_feature_id"], downcast="integer")
+            return df
         return df
 
     @property
