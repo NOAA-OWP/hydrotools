@@ -113,7 +113,7 @@ class FileDownloader:
         None
         """
         # Retrieve each file
-        connector = aiohttp.TCPConnector(limit=10)
+        connector = aiohttp.TCPConnector(limit=50)
         async with aiohttp.ClientSession(connector=connector) as session:
             await asyncio.gather(*[self.get_file(url, session) for url in urls])
 
