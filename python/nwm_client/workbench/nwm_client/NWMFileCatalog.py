@@ -17,7 +17,6 @@ HTTPFileCatalog
 GCPFileCatalog
 """
 from abc import ABC, abstractmethod
-from pathlib import Path
 import pandas as pd
 from typing import List, Tuple
 import asyncio
@@ -28,46 +27,6 @@ from google.cloud import storage
 
 class NWMFileCatalog(ABC):
     """Abstract base class for sources of NWM file data."""
-
-    def __init__(
-        self,
-        location_metadata_mapping: pd.DataFrame = pd.DataFrame()
-        ) -> None:
-        """Initialize Catalog of NWM data source.
-
-        Parameters
-        ----------
-        location_metadata_mapping : pandas.DataFrame with nwm_feature_id Index 
-            and columns of corresponding site metadata. Defaults to 7500+ 
-            usgs_site_code used by the NWM for data assimilation.
-            
-        Returns
-        -------
-        None
-        """
-        super().__init__()
-
-        # Set crosswalk
-        self.crosswalk = location_metadata_mapping
-
-        # Check for empty crosswalk
-        if self.crosswalk.empty:
-            # Use default routelink files
-            default_path = (Path(__file__).resolve().parent / 
-                "data/routelink_files")
-
-            # List routelink files
-            routelink_files = default_path.glob("*.csv")
-
-            # Generate crosswalk
-            dfs = []
-            for file in routelink_files:
-                dfs.append(pd.read_csv(
-                file,
-                dtype={"nwm_feature_id": int, "usgs_site_code": str},
-                comment='#'
-            ).set_index('nwm_feature_id')[['usgs_site_code']])
-            self.crosswalk = pd.concat(dfs)
 
     def raise_invalid_configuration(self, configuration) -> None:
         """Raises an error for an invalid configuration.
@@ -103,7 +62,7 @@ class NWMFileCatalog(ABC):
 
         Returns
         -------
-        tuple continaing two strings, (issue_date, issue_time)
+        Two strings: issue_date, issue_time
         """
         # Break-up reference time
         tokens = reference_time.split('T')
@@ -132,14 +91,6 @@ class NWMFileCatalog(ABC):
         -------
         A list of blob names that satisfy the criteria set by the parameters.
         """
-
-    @property
-    def crosswalk(self) -> pd.DataFrame:
-        return self._crosswalk
-
-    @crosswalk.setter
-    def crosswalk(self, crosswalk: pd.DataFrame) -> None:
-        self._crosswalk = crosswalk
 
     @property
     def configurations(self) -> List[str]:
@@ -182,8 +133,7 @@ class HTTPFileCatalog(NWMFileCatalog):
     def __init__(
         self,
         server: str,
-        verify: str = None,
-        location_metadata_mapping: pd.DataFrame = pd.DataFrame(),
+        verify: str = None
         ) -> None:
         """Initialize HTTP File Catalog of NWM data source.
 
@@ -194,15 +144,12 @@ class HTTPFileCatalog(NWMFileCatalog):
             "https://nomads.ncep.noaa.gov/pub/data/nccf/com/nwm/prod/"
         verify : str, optional, default None
             Path to CA certificates used for https verification.
-        location_metadata_mapping : pandas.DataFrame with nwm_feature_id Index 
-            and columns of corresponding site metadata. Defaults to 7500+ 
-            usgs_site_code used by the NWM for data assimilation.
             
         Returns
         -------
         None
         """
-        super().__init__(location_metadata_mapping=location_metadata_mapping)
+        super().__init__()
         self.server = server
         self.verify = verify
 
@@ -316,15 +263,14 @@ class HTTPFileCatalog(NWMFileCatalog):
         self._verify = verify
 
 class GCPFileCatalog(NWMFileCatalog):
-    """An Google Cloud client class for NWM data.
+    """A Google Cloud client class for NWM data.
     This GCPFileCatalog class provides various methods for discovering NWM 
     files on Google Cloud Platform.
     """
 
     def __init__(
         self,
-        bucket_name: str = 'national-water-model',
-        location_metadata_mapping: pd.DataFrame = pd.DataFrame(),
+        bucket_name: str = 'national-water-model'
         ) -> None:
         """Initialize catalog of NWM data source on Google Cloud Platform.
 
@@ -332,15 +278,12 @@ class GCPFileCatalog(NWMFileCatalog):
         ----------
         bucket_name : str, required, default 'national-water-model'
             Name of Google Cloud Bucket
-        location_metadata_mapping : pandas.DataFrame with nwm_feature_id Index 
-            and columns of corresponding site metadata. Defaults to 7500+ 
-            usgs_site_code used by the NWM for data assimilation.
             
         Returns
         -------
         None
         """
-        super().__init__(location_metadata_mapping=location_metadata_mapping)
+        super().__init__()
         self.bucket_name = bucket_name
 
     def list_blobs(
