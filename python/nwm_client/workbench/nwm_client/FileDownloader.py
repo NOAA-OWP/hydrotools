@@ -45,10 +45,10 @@ class FileDownloader:
         None
         """
         # Set output directory
-        self.output_directory = Path(output_directory).expanduser().resolve()
+        self.output_directory = output_directory
 
         # Set directory creation
-        self.create_directory = bool(create_directory)
+        self.create_directory = create_directory
 
         # Set SSL verification
         self.verify = verify
