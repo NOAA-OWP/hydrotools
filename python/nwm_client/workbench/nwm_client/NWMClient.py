@@ -218,7 +218,7 @@ class NWMFileClient(NWMClient):
         # Cache data
         for reference_time in reference_times:
             # Set subdirectory
-            subdirectory = f"RT{reference_time}"
+            subdirectory = f"{configuration}/RT{reference_time}"
 
             # Get dask dataframe
             df = self.dataframe_cache.get(
