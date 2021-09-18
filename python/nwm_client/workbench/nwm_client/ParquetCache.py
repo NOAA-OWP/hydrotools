@@ -15,7 +15,7 @@ from typing import Callable, Union
 from pathlib import Path
 
 class ParquetCache:
-    def __init__(self, directory: Union[str, Path], *args, **kwargs) -> None:
+    def __init__(self, directory: Union[str, Path], **kwargs) -> None:
         """
         Interface for caching dask.dataframe.DataFrame resulting from long
         processes.
@@ -24,12 +24,11 @@ class ParquetCache:
         ----------
         directory: str or pathlib.Path, required
             Path to parquet cache root directory.
-        *args
-            Additional arguments passed to dask.dataframe.DataFrame.to_parquet
         **kwargs
             Additional arguments passed to dask.dataframe.DataFrame.to_parquet
         """
         self.directory = directory
+        self.parameters = kwargs
         
     def __enter__(self):
         return self
@@ -82,7 +81,7 @@ class ParquetCache:
         df = function(*args, **kwargs)
 
         # Cache result
-        df.to_parquet(filepath, write_index=False, compression="snappy")
+        df.to_parquet(filepath, **self.parameters)
 
         # Return result
         return df
@@ -94,4 +93,12 @@ class ParquetCache:
     @directory.setter
     def directory(self, directory) -> None:
         self._directory = Path(directory).resolve().expanduser()
+
+    @property
+    def parameters(self) -> dict:
+        return self._parameters
+
+    @parameters.setter
+    def parameters(self, parameters) -> None:
+        self._parameters = parameters
     
