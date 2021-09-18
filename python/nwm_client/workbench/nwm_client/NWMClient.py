@@ -195,8 +195,7 @@ class NWMFileClient(NWMClient):
         reference_times: List[str] = None,
         compute: bool = True
         ) -> Union[pd.DataFrame, dd.DataFrame]:
-        """Abstract method to retrieve National Water Model data as a 
-        DataFrame.
+        """Retrieve National Water Model data as a DataFrame.
         
         Parameters
         ----------
