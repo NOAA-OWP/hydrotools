@@ -1,44 +1,12 @@
 from nwm_client.NWMClient import NWMFileClient
-from nwm_client.NWMFileCatalog import HTTPFileCatalog
-
-def main():
-    # Setup client with default catalog (GCP)
-    client = NWMFileClient()
-
-    # # Use HTTP catalog (local)
-    # catalog = HTTPFileCatalog(
-    #     server="http://0.0.0.0:8000/"
-    #     )
-    # client = NWMFileClient(catalog=catalog)
-
-    # # Get options
-    # configuration = "short_range"
-    # reference_time = "20210819T00Z"
-
-    # # Use HTTP catalog
-    # catalog = HTTPFileCatalog(
-    #     server="https://nomads.ncep.noaa.gov/pub/data/nccf/com/nwm/prod/",
-    #     verify=None
-    #     )
-    # client = NWMFileClient(catalog=catalog, verify=None)
-
-    # Get options
-    configuration = "analysis_assim"
-    reference_times = ["20210914T10Z", "20210914T09Z"]
-
-    # Retrieve data
-    df = client.get(
-        configuration=configuration,
-        reference_times=reference_times,
-        # compute=False
-    )
-
-    # Find maximum flows
-    # df_sub = df[["feature_id", "streamflow"]]
-    # df_max = df_sub.groupby("feature_id").max()
-    # df_max = df_max[df_max > 0.0].dropna()
-    # print(df_max.compute())
-    print(df)
 
 if __name__ == "__main__":
-    main()
+    client = NWMFileClient()
+
+    df = client.get(
+        configuration="medium_range_mem1",
+        reference_times=["20210917T00Z"],
+        compute=False
+        )
+
+    print(df)
