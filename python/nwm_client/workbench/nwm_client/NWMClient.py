@@ -105,6 +105,9 @@ class NWMFileClient(NWMClient):
             Local parquet directory used to locally cache retrieved dataframes.
         catalog: NWMFileCatalog, optional, default GCPFileCatalog()
             NWMFileCatalog object used to discover NWM files.
+        location_metadata_mapping : pandas.DataFrame with nwm_feature_id Index and
+            columns of corresponding site metadata. Defaults to 7500+ usgs_site_code
+            used by the NWM for data assimilation.
         verify: str, optional, default None
             Path to CA bundle for https verification.
 
