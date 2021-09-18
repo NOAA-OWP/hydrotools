@@ -87,17 +87,23 @@ class NWMFileProcessor:
         -------
         dask.dataframe.DataFrame of NWM data.
         """
-        # Count feature IDs
-        no_feature_ids = len(ds.feature_id)
-
         # Convert to dask dataframe
         df = ds.to_dask_dataframe()
 
-        # Repartition by feature ID
+        # Compute number of partitions
+        #  Best practice is ~100 MB per partition
+        #  TODO Make this a parameter
+        npartitions = 1 + len(df.index) // 2_400_000
+
+        # Sort by feature ID
+        #  Most applications will benefit from this
         df = df.sort_values(by="feature_id")
-        df = df.set_index("feature_id")
-        df = df.repartition(npartitions=no_feature_ids)
-        return df.reset_index()
+
+        # Reset index
+        df = df.set_index("feature_id").reset_index()
+
+        # Repartition
+        return df.repartition(npartitions=npartitions)
 
     @classmethod
     def convert_to_dataframe(
