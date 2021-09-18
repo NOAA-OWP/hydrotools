@@ -174,7 +174,8 @@ class NWMFileClient(NWMClient):
         # Set download directory
         downloader = FileDownloader(
             output_directory=subdirectory,
-            create_directory=True
+            create_directory=True,
+            verify=self.verify
             )
 
         # Download files
