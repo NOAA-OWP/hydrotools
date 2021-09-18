@@ -12,6 +12,7 @@ NWMFileClient
 
 from abc import ABC, abstractmethod
 import pandas as pd
+from pandas.io import parquet
 import dask.dataframe as dd
 from typing import List, Union
 from pathlib import Path
@@ -33,7 +34,6 @@ class NWMClientDefault:
         compression="snappy"
     )
     CATALOG: NWMFileCatalog = GCPFileCatalog()
-    DOWNLOADER: FileDownloader = FileDownloader()
     def __post_init__(self):
         # Gather routelink files
         rl_filepath = Path(__file__).parent / "data/routelink_files"
@@ -116,9 +116,11 @@ class NWMFileClient(NWMClient):
 
         # Set file output directory
         if file_directory:
+            self.__temp_dir = None
             self.file_directory = file_directory
         else:
-            self._file_directory = None
+            self.__temp_dir = tempfile.TemporaryDirectory()
+            self.file_directory = self.__temp_dir.name
 
         # Set dataframe cache
         if dataframe_cache:
@@ -134,13 +136,63 @@ class NWMFileClient(NWMClient):
 
         # Set CA bundle
         self.verify = verify
+
+    def __del__(self) -> None:
+        # Clean up
+        if self.__temp_dir:
+            self.__temp_dir.cleanup()
+
+    def get_cycle(
+        self,
+        configuration: str,
+        reference_time: str
+        ) -> dd.DataFrame:
+        """Retrieve a single National Water Model cycle as a 
+        dask.dataframe.DataFrame.
         
+        Parameters
+        ----------
+        configuration: str, required
+            NWM configuration cycle.
+        reference_time: str, required
+            Reference time string in %Y%m%dT%HZ format. 
+            e.g. '20210912T01Z'
+
+        Returns
+        -------
+        dask.dataframe.DataFrame of NWM data
+        """
+        # Generate list of urls
+        urls = self.catalog.list_blobs(
+            configuration=configuration,
+            reference_time=reference_time
+        )
+
+        # Set subdirectory
+        subdirectory = self.file_directory / f"RT{reference_time}"
+
+        # Set download directory
+        downloader = FileDownloader(
+            output_directory=subdirectory,
+            create_directory=True
+            )
+
+        # Download files
+        downloader.get(urls)
+
+        # Get dataset
+        ds = NWMFileProcessor.get_dataset(
+            input_directory=subdirectory,
+            feature_id_filter=self.crosswalk.index
+            )
+
+        # Convert to dataframe
+        return NWMFileProcessor.convert_to_dask_dataframe(ds)
+
     def get(
         self,
         configuration: str,
         reference_times: List[str] = None,
-        startRT: str = None,
-        endRT: str = None,
         compute: bool = True
         ) -> Union[pd.DataFrame, dd.DataFrame]:
         """Abstract method to retrieve National Water Model data as a 
@@ -153,11 +205,6 @@ class NWMFileClient(NWMClient):
         reference_times: str or List[str], optional, default None
             List of reference time strings in %Y%m%dT%HZ format. 
             e.g. ['20210912T01Z']
-        startRT: str, optional
-            Retrieve all available cycles starting with this reference time. 
-            If endRT is not set, then retrieve from startRT until now.
-        endRT: str, optional
-            Used with startRT. Sets the final reference time to retrieve.
         compute: bool, optional, default True
             Return a pandas.DataFrame instead of a dask.dataframe.DataFrame.
 
@@ -166,6 +213,32 @@ class NWMFileClient(NWMClient):
         dask.dataframe.DataFrame of NWM data or a pandas.DataFrame in canonical 
         format.
         """
+        # List of individual parquet files
+        parquet_files = []
+
+        # Cache data
+        for reference_time in reference_times:
+            # Set subdirectory
+            subdirectory = f"RT{reference_time}"
+
+            # Get dask dataframe
+            df = self.dataframe_cache.get(
+                function=self.get_cycle,
+                subdirectory=subdirectory,
+                configuration=configuration,
+                reference_time=reference_time
+            )
+
+            # Note file created
+            parquet_files.append(self.dataframe_cache.directory/subdirectory)
+
+        # Return all data
+        df = dd.read_parquet(parquet_files)
+        
+        # Return pandas dataframe
+        if compute:
+            return df.compute()
+        return df
 
     @property
     def file_directory(self) -> Path:
