@@ -16,11 +16,38 @@ import dask.dataframe as dd
 from typing import List, Union
 from pathlib import Path
 import tempfile
+from dataclasses import dataclass
 
-from .parquet_cache import ParquetCache
+from .ParquetCache import ParquetCache
 from .FileDownloader import FileDownloader
 from .NWMFileProcessor import NWMFileProcessor
 from .NWMFileCatalog import NWMFileCatalog, GCPFileCatalog
+
+@dataclass
+class NWMClientDefault:
+    """Stores application default options."""
+    CROSSWALK: pd.DataFrame = None
+    CACHE: ParquetCache = ParquetCache(
+        "nwm_cache.parquet",
+        write_index=False,
+        compression="snappy"
+    )
+    CATALOG: NWMFileCatalog = GCPFileCatalog()
+    DOWNLOADER: FileDownloader = FileDownloader()
+    def __post_init__(self):
+        # Gather routelink files
+        rl_filepath = Path(__file__).parent / "data/routelink_files"
+        rl_files = rl_filepath.glob("*.csv")
+
+        # Generate crosswalk
+        dfs = []
+        for rl_file in rl_files:
+            dfs.append(pd.read_csv(
+            rl_file,
+            dtype={"nwm_feature_id": int, "usgs_site_code": str},
+            comment='#'
+        ).set_index('nwm_feature_id')[['usgs_site_code']])
+        self.CROSSWALK = pd.concat(dfs)
 
 class NWMClient(ABC):
     
@@ -61,8 +88,9 @@ class NWMFileClient(NWMClient):
     def __init__(
         self,
         file_directory: Union[str, Path] = None,
-        dataframe_cache: Union[ParquetCache, None] = ParquetCache("nwm_cache.parquet"),
-        catalog: NWMFileCatalog = GCPFileCatalog(),
+        dataframe_cache: Union[ParquetCache, None] = NWMClientDefault.CACHE,
+        catalog: NWMFileCatalog = NWMClientDefault.CATALOG,
+        location_metadata_mapping: pd.DataFrame = NWMClientDefault().CROSSWALK,
         verify: str = None
         ) -> None:
         """Client class for retrieving data as dataframes from a remote 
@@ -101,96 +129,22 @@ class NWMFileClient(NWMClient):
         # Set file catalog
         self.catalog = catalog
 
+        # Set crosswalk
+        self.crosswalk = location_metadata_mapping
+
         # Set CA bundle
         self.verify = verify
-
-    def download_files(self, urls: List[str], directory: Path) -> None:
-        """Download a list of urls to directory.
-
-        Parameters
-        ----------
-        urls: List[str], required
-            List of NWM NetCDF url strings.
-        directory: pathlib.Path, required
-            Path to directory where downloaded files are written.
-
-        Returns
-        -------
-        None
-        """
-        # Download files
-        downloader = FileDownloader(
-            output_directory=directory,
-            verify=self.verify
-            )
-        downloader.get(urls)
-
-    def get_dask_dataframe(self, urls: List[str]) -> dd.DataFrame:
-        """Download and merge a list of urls into a dask.dataframe.DataFrame.
-
-        Parameters
-        ----------
-        urls: List[str], required
-            List of NWM NetCDF url strings to download and combine.
-
-        Returns
-        -------
-        dask.dataframe.DataFrame of NWM data.
-        """
-        # Download files to non-temp directory
-        if self.file_directory:
-            self.download_files(urls, self.file_directory)
-            return NWMFileProcessor.get_dask_dataframe(self.file_directory)
         
-        # Download filed to temp directory
-        with tempfile.TemporaryDirectory() as tdir:
-            self.download_files(urls, tdir)
-            return NWMFileProcessor.get_dask_dataframe(tdir)
-    
-    def get_cycle(
-        self,
-        configuration: str,
-        reference_time: str
-        ) -> dd.DataFrame:
-        """Retrieve National Water Model data as a dask.dataframe.DataFrame 
-        from a file-based data source for a single cycle.
-        
-        Parameters
-        ----------
-        configuration: str, required
-            NWM configuration cycle.
-        reference_time: str, required
-            Reference time in %Y%m%dT%HZ format. e.g. '20210912T01Z'
-
-        Returns
-        -------
-        dask.dataframe.DataFrame of NWM data.
-        """
-        # Get list of file URLs
-        urls = self.catalog.list_blobs(
-            configuration=configuration,
-            reference_time=reference_time
-            )
-
-        # Download files and get a dask DataFrame
-        if self.dataframe_cache:
-            return self.dataframe_cache.get(
-                self.get_dask_dataframe,
-                f"{configuration}/RT{reference_time}",
-                urls
-            )
-        return self.get_dask_dataframe(urls)
-    
     def get(
         self,
         configuration: str,
-        reference_times: List[str],
+        reference_times: List[str] = None,
         startRT: str = None,
         endRT: str = None,
         compute: bool = True
         ) -> Union[pd.DataFrame, dd.DataFrame]:
-        """Retrieve National Water Model data as a dask.dataframe.DataFrame 
-        from a file-based data source.
+        """Abstract method to retrieve National Water Model data as a 
+        DataFrame.
         
         Parameters
         ----------
@@ -212,19 +166,6 @@ class NWMFileClient(NWMClient):
         dask.dataframe.DataFrame of NWM data or a pandas.DataFrame in canonical 
         format.
         """
-        # Retrieve each cycle
-        dfs = []
-        for ref_time in reference_times:
-            dfs.append(self.get_cycle(configuration, ref_time))
-
-        # Concatenate cycles
-        df = dd.multi.concat(dfs, ignore_unknown_divisions=True)
-
-        # Return pandas.DataFrame
-        if compute:
-            return df.head() # FIXME Return head for testing
-            return df.compute() # Enable this option
-        return df
 
     @property
     def file_directory(self) -> Path:
@@ -252,6 +193,15 @@ class NWMFileClient(NWMClient):
     def catalog(self, 
         catalog: NWMFileCatalog) -> None:
         self._catalog = catalog
+
+    @property
+    def crosswalk(self) -> pd.DataFrame:
+        return self._crosswalk
+
+    @crosswalk.setter
+    def crosswalk(self, 
+        crosswalk: pd.DataFrame) -> None:
+        self._crosswalk = crosswalk
 
     @property
     def verify(self) -> str:
