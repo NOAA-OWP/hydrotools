@@ -170,11 +170,7 @@ class NWMFileClient(NWMClient):
 
         # Set file output directory
         if file_directory:
-            self.__temp_dir = None
             self.file_directory = file_directory
-        else:
-            self.__temp_dir = tempfile.TemporaryDirectory()
-            self.file_directory = self.__temp_dir.name
 
         # Set dataframe cache
         if dataframe_cache:
@@ -190,11 +186,6 @@ class NWMFileClient(NWMClient):
 
         # Set CA bundle
         self.verify = verify
-
-    def __del__(self) -> None:
-        # Clean up
-        if self.__temp_dir:
-            self.__temp_dir.cleanup()
 
     def get_cycle(
         self,
@@ -222,33 +213,32 @@ class NWMFileClient(NWMClient):
             reference_time=reference_time
         )
 
-        # Set subdirectory
-        subdirectory = self.file_directory / f"RT{reference_time}"
+        # Set temporary directory
+        with tempfile.TemporaryDirectory() as td:
+            # Setup downloader
+            downloader = FileDownloader(
+                output_directory=td,
+                create_directory=True,
+                verify=self.verify
+                )
 
-        # Set download directory
-        downloader = FileDownloader(
-            output_directory=subdirectory,
-            create_directory=True,
-            verify=self.verify
+            # Download files
+            downloader.get(urls)
+
+            # Get dataset
+            ds = NWMFileProcessor.get_dataset(
+                input_directory=td,
+                feature_id_filter=self.crosswalk.index
+                )
+
+            # Convert to dataframe
+            df = NWMFileProcessor.convert_to_dask_dataframe(ds)
+
+            # Canonicalize
+            return NWMClient.canonicalize_dataframe(
+                df=df,
+                configuration=configuration
             )
-
-        # Download files
-        downloader.get(urls)
-
-        # Get dataset
-        ds = NWMFileProcessor.get_dataset(
-            input_directory=subdirectory,
-            feature_id_filter=self.crosswalk.index
-            )
-
-        # Convert to dataframe
-        df = NWMFileProcessor.convert_to_dask_dataframe(ds)
-
-        # Canonicalize
-        return NWMClient.canonicalize_dataframe(
-            df=df,
-            configuration=configuration
-        )
 
     def get(
         self,
