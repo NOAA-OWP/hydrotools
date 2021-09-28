@@ -17,7 +17,6 @@ HTTPFileCatalog
 GCPFileCatalog
 """
 from abc import ABC, abstractmethod
-import pandas as pd
 from typing import List, Tuple
 import asyncio
 import aiohttp
@@ -85,7 +84,7 @@ class NWMFileCatalog(ABC):
             of available configurations see NWMDataService.configurations
         reference_time : str, required
             Model simulation or forecast issuance/reference time in 
-            YYYYmmddTHHZ format.
+            %Y%m%dT%HZ format.
 
         Returns
         -------
@@ -139,7 +138,7 @@ class HTTPFileCatalog(NWMFileCatalog):
 
         Parameters
         ----------
-        server : str, required, default 'national-water-model'
+        server : str, required
             Fully qualified path to web server endpoint. Example:
             "https://nomads.ncep.noaa.gov/pub/data/nccf/com/nwm/prod/"
         verify : str, optional, default None
@@ -150,14 +149,22 @@ class HTTPFileCatalog(NWMFileCatalog):
         None
         """
         super().__init__()
+        # Server path
         self.server = server
-        self.verify = verify
+
+        # Setup SSL context
+        if verify:
+            self.ssl_context = ssl.create_default_context(
+                purpose=ssl.Purpose.SERVER_AUTH, 
+                cafile=verify)
+        else:
+            self.ssl_context = ssl.create_default_context()
 
     @classmethod
     async def get_html(
         cls,
         url: str,
-        verify: str = None
+        ssl_context: ssl.SSLContext = ssl.create_default_context()
         ) -> str:
         """Retrieve an HTML document.
 
@@ -165,21 +172,13 @@ class HTTPFileCatalog(NWMFileCatalog):
         ----------
         url : str, required
             Path to HTML document
-        verify : str, optional, default None
-            Path to CA certificates used for https verification.
+        ssl_context : ssl.SSLContext, optional, default context
+            SSL configuration context.
 
         Returns
         -------
         HTML document retrieved from url.
         """
-        # Setup SSL context
-        if verify:
-            ssl_context = ssl.create_default_context(
-                purpose=ssl.Purpose.SERVER_AUTH, 
-                cafile=verify)
-        else:
-            ssl_context = ssl.create_default_context()
-
         async with aiohttp.ClientSession() as session:
             async with session.get(url, ssl=ssl_context) as response:
                 # Get html content
@@ -207,9 +206,9 @@ class HTTPFileCatalog(NWMFileCatalog):
             of available configurations see NWMDataService.configurations
         reference_time : str, required
             Model simulation or forecast issuance/reference time in 
-            YYYYmmddTHHZ format.
+            %Y%m%dT%HZ format.
         must_contain : str, optional, default 'channel_rt'
-            Optional substring found in each blob name.
+            Optional substring that must be found in each blob name.
 
         Returns
         -------
@@ -228,7 +227,7 @@ class HTTPFileCatalog(NWMFileCatalog):
         directory = self.server + prefix
 
         # Get directory listing
-        html_doc = asyncio.run(self.get_html(directory, self.verify))
+        html_doc = asyncio.run(self.get_html(directory, self.ssl_context))
 
         # Parse content
         soup = BeautifulSoup(html_doc, 'html.parser')
@@ -255,12 +254,12 @@ class HTTPFileCatalog(NWMFileCatalog):
         self._server = server
 
     @property
-    def verify(self) -> str:
-        return self._verify
+    def ssl_context(self) -> ssl.SSLContext:
+        return self._ssl_context
 
-    @verify.setter
-    def verify(self, verify: str) -> None:
-        self._verify = verify
+    @ssl_context.setter
+    def ssl_context(self, ssl_context: ssl.SSLContext) -> None:
+        self._ssl_context = ssl_context
 
 class GCPFileCatalog(NWMFileCatalog):
     """A Google Cloud client class for NWM data.
