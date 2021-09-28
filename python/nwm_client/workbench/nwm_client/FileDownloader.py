@@ -26,7 +26,8 @@ class FileDownloader:
         self,
         output_directory: Union[str, Path] = Path("."), 
         create_directory: bool = False,
-        ssl_context: ssl.SSLContext = ssl.create_default_context()
+        ssl_context: ssl.SSLContext = ssl.create_default_context(),
+        limit: int = 10
         ) -> None:
         """Initialize File Downloader object with specified output directory.
         
@@ -39,6 +40,8 @@ class FileDownloader:
             exist.
         ssl_context : ssl.SSLContext, optional, default context
             SSL configuration context.
+        limit: int, optional, default 10
+            Number of simultaneous connections.
             
         Returns
         -------
@@ -52,6 +55,9 @@ class FileDownloader:
 
         # Setup SSL context
         self.ssl_context = ssl_context
+
+        # Set limit
+        self.limit = limit
 
     async def get_file(
         self,
@@ -105,7 +111,7 @@ class FileDownloader:
         None
         """
         # Retrieve each file
-        connector = aiohttp.TCPConnector(limit=10)
+        connector = aiohttp.TCPConnector(limit=self.limit)
         async with aiohttp.ClientSession(connector=connector) as session:
             await asyncio.gather(*[self.get_file(url, session) for url in urls])
 
@@ -157,3 +163,11 @@ class FileDownloader:
     @ssl_context.setter
     def ssl_context(self, ssl_context: ssl.SSLContext) -> None:
         self._ssl_context = ssl_context
+
+    @property
+    def limit(self) -> int:
+        return self._limit
+
+    @limit.setter
+    def limit(self, limit: int) -> None:
+        self._limit = limit
