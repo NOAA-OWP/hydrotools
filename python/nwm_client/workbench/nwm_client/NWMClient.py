@@ -17,6 +17,7 @@ from typing import List, Union
 from pathlib import Path
 from dataclasses import dataclass
 import ssl
+import shutil
 
 from .ParquetCache import ParquetCache
 from .FileDownloader import FileDownloader
@@ -139,11 +140,12 @@ class NWMClient(ABC):
 class NWMFileClient(NWMClient):
     def __init__(
         self,
-        file_directory: Union[str, Path] = "nwm_files",
+        file_directory: Union[str, Path] = "NWMFileClient_NetCDF_files",
         dataframe_cache: Union[ParquetCache, None] = _NWMClientDefault.CACHE,
         catalog: NWMFileCatalog = _NWMClientDefault.CATALOG,
         location_metadata_mapping: pd.DataFrame = _NWMClientDefault.CROSSWALK,
-        ssl_context: ssl.SSLContext = _NWMClientDefault.SSL_CONTEXT
+        ssl_context: ssl.SSLContext = _NWMClientDefault.SSL_CONTEXT,
+        cleanup_files: bool = True
         ) -> None:
         """Client class for retrieving data as dataframes from a remote 
         file-based source of National Water Model data.
@@ -157,11 +159,13 @@ class NWMFileClient(NWMClient):
             Local parquet directory used to locally cache retrieved dataframes.
         catalog: NWMFileCatalog, optional, default GCPFileCatalog()
             NWMFileCatalog object used to discover NWM files.
-        location_metadata_mapping : pandas.DataFrame with nwm_feature_id Index and
+        location_metadata_mapping: pandas.DataFrame with nwm_feature_id Index and
             columns of corresponding site metadata. Defaults to 7500+ usgs_site_code
             used by the NWM for data assimilation.
-        ssl_context : ssl.SSLContext, optional, default context
+        ssl_context: ssl.SSLContext, optional, default context
             SSL configuration context.
+        cleanup_files: bool, default True
+            Delete downloaded NetCDF files upon program exit.
 
         Returns
         -------
@@ -187,10 +191,14 @@ class NWMFileClient(NWMClient):
         # Set CA bundle
         self.ssl_context = ssl_context
 
+        # Set cleanup flag
+        self.cleanup_files = cleanup_files
+
     def get_cycle(
         self,
         configuration: str,
-        reference_time: str
+        reference_time: str,
+        netcdf_dir: Union[str, Path]
         ) -> dd.DataFrame:
         """Retrieve a single National Water Model cycle as a 
         dask.dataframe.DataFrame.
@@ -202,6 +210,8 @@ class NWMFileClient(NWMClient):
         reference_time: str, required
             Reference time string in %Y%m%dT%HZ format. 
             e.g. '20210912T01Z'
+        netcdf_dir: str or pathlib.Path, required
+            Directory to save downloaded NetCDF files.
 
         Returns
         -------
@@ -212,9 +222,6 @@ class NWMFileClient(NWMClient):
             configuration=configuration,
             reference_time=reference_time
         )
-
-        # Set download directory
-        netcdf_dir = self.file_directory / f"{configuration}/RT{reference_time}"
 
         # Setup downloader
         downloader = FileDownloader(
@@ -272,16 +279,23 @@ class NWMFileClient(NWMClient):
             # Set subdirectory
             subdirectory = f"{configuration}/RT{reference_time}"
 
+            # Set download directory
+            netcdf_dir = self.file_directory / subdirectory
+
             # Get dask dataframe
             df = self.dataframe_cache.get(
                 function=self.get_cycle,
                 subdirectory=subdirectory,
                 configuration=configuration,
-                reference_time=reference_time
+                reference_time=reference_time,
+                netcdf_dir=netcdf_dir
             )
 
             # Note file created
             parquet_files.append(self.dataframe_cache.directory/subdirectory)
+
+        # Clean-up NetCDF files
+        shutil.rmtree(self.file_directory)
 
         # Limit to canonical columns
         # NOTE I could not keep dask from adding a "dir0" column using either
@@ -355,3 +369,11 @@ class NWMFileClient(NWMClient):
     @ssl_context.setter
     def ssl_context(self, ssl_context: ssl.SSLContext) -> None:
         self._ssl_context = ssl_context
+
+    @property
+    def cleanup_files(self) -> bool:
+        return self._cleanup_files
+
+    @cleanup_files.setter
+    def cleanup_files(self, cleanup_files: bool) -> None:
+        self._cleanup_files = cleanup_files
