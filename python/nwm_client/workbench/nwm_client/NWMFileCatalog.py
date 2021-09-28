@@ -132,7 +132,7 @@ class HTTPFileCatalog(NWMFileCatalog):
     def __init__(
         self,
         server: str,
-        verify: str = None
+        ssl_context: ssl.SSLContext = ssl.create_default_context()
         ) -> None:
         """Initialize HTTP File Catalog of NWM data source.
 
@@ -141,8 +141,8 @@ class HTTPFileCatalog(NWMFileCatalog):
         server : str, required
             Fully qualified path to web server endpoint. Example:
             "https://nomads.ncep.noaa.gov/pub/data/nccf/com/nwm/prod/"
-        verify : str, optional, default None
-            Path to CA certificates used for https verification.
+        ssl_context : ssl.SSLContext, optional, default context
+            SSL configuration context.
             
         Returns
         -------
@@ -153,12 +153,7 @@ class HTTPFileCatalog(NWMFileCatalog):
         self.server = server
 
         # Setup SSL context
-        if verify:
-            self.ssl_context = ssl.create_default_context(
-                purpose=ssl.Purpose.SERVER_AUTH, 
-                cafile=verify)
-        else:
-            self.ssl_context = ssl.create_default_context()
+        self.ssl_context = ssl_context
 
     @classmethod
     async def get_html(
