@@ -12,12 +12,11 @@ NWMFileClient
 
 from abc import ABC, abstractmethod
 import pandas as pd
-from pandas.io import parquet
 import dask.dataframe as dd
 from typing import List, Union
 from pathlib import Path
-import tempfile
 from dataclasses import dataclass
+import ssl
 
 from .ParquetCache import ParquetCache
 from .FileDownloader import FileDownloader
@@ -25,7 +24,7 @@ from .NWMFileProcessor import NWMFileProcessor
 from .NWMFileCatalog import NWMFileCatalog, GCPFileCatalog
 
 @dataclass
-class NWMClientDefault:
+class NWMClientDefaults:
     """Stores application default options."""
     CROSSWALK: pd.DataFrame = None
     CACHE: ParquetCache = ParquetCache(
@@ -39,6 +38,7 @@ class NWMClientDefault:
         "time": "value_time",
         "streamflow": "value"
     })
+    SSL_CONTEXT: ssl.SSLContext = ssl.create_default_context()
     def __post_init__(self):
         # Gather routelink files
         rl_filepath = Path(__file__).parent / "data/routelink_files"
@@ -53,6 +53,7 @@ class NWMClientDefault:
             comment='#'
         ).set_index('nwm_feature_id')[['usgs_site_code']])
         self.CROSSWALK = pd.concat(dfs)
+_NWMClientDefault = NWMClientDefaults()
 
 class NWMClient(ABC):
     
@@ -87,10 +88,10 @@ class NWMClient(ABC):
         cls,
         df: dd.DataFrame,
         configuration: str,
-        column_mapping: pd.Series = NWMClientDefault.CANONICAL_COLUMN_MAPPING,
+        column_mapping: pd.Series = _NWMClientDefault.CANONICAL_COLUMN_MAPPING,
         variable_name: str = "streamflow",
         measurement_unit: str = "m3/s",
-        location_metadata_mapping: pd.DataFrame = NWMClientDefault().CROSSWALK
+        location_metadata_mapping: pd.DataFrame = _NWMClientDefault.CROSSWALK
         ) -> dd.DataFrame:
         """Reformat dask.dataframe.DataFrame to adhere to HydroTools canonical 
         format.
@@ -138,11 +139,11 @@ class NWMClient(ABC):
 class NWMFileClient(NWMClient):
     def __init__(
         self,
-        file_directory: Union[str, Path] = None,
-        dataframe_cache: Union[ParquetCache, None] = NWMClientDefault.CACHE,
-        catalog: NWMFileCatalog = NWMClientDefault.CATALOG,
-        location_metadata_mapping: pd.DataFrame = NWMClientDefault().CROSSWALK,
-        verify: str = None
+        file_directory: Union[str, Path] = "nwm_files",
+        dataframe_cache: Union[ParquetCache, None] = _NWMClientDefault.CACHE,
+        catalog: NWMFileCatalog = _NWMClientDefault.CATALOG,
+        location_metadata_mapping: pd.DataFrame = _NWMClientDefault.CROSSWALK,
+        ssl_context: ssl.SSLContext = _NWMClientDefault.SSL_CONTEXT
         ) -> None:
         """Client class for retrieving data as dataframes from a remote 
         file-based source of National Water Model data.
@@ -159,8 +160,8 @@ class NWMFileClient(NWMClient):
         location_metadata_mapping : pandas.DataFrame with nwm_feature_id Index and
             columns of corresponding site metadata. Defaults to 7500+ usgs_site_code
             used by the NWM for data assimilation.
-        verify: str, optional, default None
-            Path to CA bundle for https verification.
+        ssl_context : ssl.SSLContext, optional, default context
+            SSL configuration context.
 
         Returns
         -------
@@ -169,8 +170,7 @@ class NWMFileClient(NWMClient):
         super().__init__()
 
         # Set file output directory
-        if file_directory:
-            self.file_directory = file_directory
+        self.file_directory = file_directory
 
         # Set dataframe cache
         if dataframe_cache:
@@ -185,7 +185,7 @@ class NWMFileClient(NWMClient):
         self.crosswalk = location_metadata_mapping
 
         # Set CA bundle
-        self.verify = verify
+        self.ssl_context = ssl_context
 
     def get_cycle(
         self,
@@ -213,32 +213,33 @@ class NWMFileClient(NWMClient):
             reference_time=reference_time
         )
 
-        # Set temporary directory
-        with tempfile.TemporaryDirectory() as td:
-            # Setup downloader
-            downloader = FileDownloader(
-                output_directory=td,
-                create_directory=True,
-                verify=self.verify
-                )
+        # Set download directory
+        netcdf_dir = self.file_directory / f"{configuration}/RT{reference_time}"
 
-            # Download files
-            downloader.get(urls)
-
-            # Get dataset
-            ds = NWMFileProcessor.get_dataset(
-                input_directory=td,
-                feature_id_filter=self.crosswalk.index
-                )
-
-            # Convert to dataframe
-            df = NWMFileProcessor.convert_to_dask_dataframe(ds)
-
-            # Canonicalize
-            return NWMClient.canonicalize_dataframe(
-                df=df,
-                configuration=configuration
+        # Setup downloader
+        downloader = FileDownloader(
+            output_directory=netcdf_dir,
+            create_directory=True,
+            ssl_context=self.ssl_context
             )
+
+        # Download files
+        downloader.get(urls)
+
+        # Get dataset
+        ds = NWMFileProcessor.get_dataset(
+            input_directory=netcdf_dir,
+            feature_id_filter=self.crosswalk.index
+            )
+
+        # Convert to dataframe
+        df = NWMFileProcessor.convert_to_dask_dataframe(ds)
+
+        # Canonicalize
+        return NWMClient.canonicalize_dataframe(
+            df=df,
+            configuration=configuration
+        )
 
     def get(
         self,
@@ -252,9 +253,9 @@ class NWMFileClient(NWMClient):
         ----------
         configuration: str, required
             NWM configuration cycle.
-        reference_times: str or List[str], optional, default None
+        reference_times: List[str], optional, default None
             List of reference time strings in %Y%m%dT%HZ format. 
-            e.g. ['20210912T01Z']
+            e.g. ['20210912T01Z',]
         compute: bool, optional, default True
             Return a pandas.DataFrame instead of a dask.dataframe.DataFrame.
 
@@ -333,10 +334,9 @@ class NWMFileClient(NWMClient):
         self._crosswalk = crosswalk
 
     @property
-    def verify(self) -> str:
-        return self._verify
+    def ssl_context(self) -> ssl.SSLContext:
+        return self._ssl_context
 
-    @verify.setter
-    def verify(self, 
-        verify: str) -> None:
-        self._verify = verify
+    @ssl_context.setter
+    def ssl_context(self, ssl_context: ssl.SSLContext) -> None:
+        self._ssl_context = ssl_context
