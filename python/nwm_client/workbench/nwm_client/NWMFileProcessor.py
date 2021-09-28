@@ -55,7 +55,7 @@ class NWMFileProcessor:
         file_list = [f for f in input_directory.glob("*.nc")]
 
         # Open dataset
-        ds = xr.open_mfdataset(file_list)
+        ds = xr.open_mfdataset(file_list, engine="netcdf4")
 
         # Prepare feature_id filter
         if len(feature_id_filter) != 0:
