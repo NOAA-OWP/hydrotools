@@ -283,8 +283,23 @@ class NWMFileClient(NWMClient):
             # Note file created
             parquet_files.append(self.dataframe_cache.directory/subdirectory)
 
-        # Return all data
-        df = dd.read_parquet(parquet_files)
+        # Limit to canonical columns
+        # NOTE I could not keep dask from adding a "dir0" column using either
+        #  fastparquet or pyarrow as backends
+        #  A future version of dask or the backends may fix this
+        columns = [
+            'nwm_feature_id',
+            'reference_time',
+            'value_time',
+            'value',
+            'configuration',
+            'variable_name',
+            'measurement_unit',
+            'usgs_site_code'
+            ]
+
+        # Return all reference times
+        df = dd.read_parquet(parquet_files, columns=columns)
         
         # Return pandas dataframe
         if compute:
