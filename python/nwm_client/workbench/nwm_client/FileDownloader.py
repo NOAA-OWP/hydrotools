@@ -26,7 +26,7 @@ class FileDownloader:
         self,
         output_directory: Union[str, Path] = Path("."), 
         create_directory: bool = False,
-        verify: str = None
+        ssl_context: ssl.SSLContext = ssl.create_default_context()
         ) -> None:
         """Initialize File Downloader object with specified output directory.
         
@@ -37,8 +37,8 @@ class FileDownloader:
         create_directory: bool, options, default False
             Indicates whether to create the output directory if it does not 
             exist.
-        verify : str, optional, default None
-            Path to CA certificates used for https verification.
+        ssl_context : ssl.SSLContext, optional, default context
+            SSL configuration context.
             
         Returns
         -------
@@ -50,8 +50,8 @@ class FileDownloader:
         # Set directory creation
         self.create_directory = create_directory
 
-        # Set SSL verification
-        self.verify = verify
+        # Setup SSL context
+        self.ssl_context = ssl_context
 
     async def get_file(
         self,
@@ -71,16 +71,8 @@ class FileDownloader:
         -------
         None
         """
-        # Specify SSL context
-        if self.verify:
-            ssl_context = ssl.create_default_context(
-                purpose=ssl.Purpose.SERVER_AUTH, 
-                cafile=self.verify)
-        else:
-            ssl_context = ssl.create_default_context()
-
         # Retrieve a single file
-        async with session.get(url, ssl=ssl_context, timeout=900) as response:
+        async with session.get(url, ssl=self.ssl_context, timeout=900) as response:
             # Extract file name
             filename = unquote(url).split("/")[-1]
 
@@ -159,9 +151,9 @@ class FileDownloader:
         self._create_directory = bool(create_directory)
 
     @property
-    def verify(self) -> str:
-        return self._verify
+    def ssl_context(self) -> ssl.SSLContext:
+        return self._ssl_context
 
-    @verify.setter
-    def verify(self, verify: str):
-        self._verify = verify
+    @ssl_context.setter
+    def ssl_context(self, ssl_context: ssl.SSLContext) -> None:
+        self._ssl_context = ssl_context
