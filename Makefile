@@ -29,10 +29,10 @@ help:
 .DEFAULT_GOAL := help
 
 tests: install
-	$(PYTHON) -m pytest -s -m "not slow"
+	$(PYTHON) -m pytest -s -m "not slow" --ignore=./python/nwm_client
 
 all-tests: install
-	$(PYTHON) -m pytest -s
+	$(PYTHON) -m pytest -s --ignore=./python/nwm_client
 
 install: $(PYENV)/bin/activate
 	$(PYTHON) -m pip install --use-feature=in-tree-build $(SUBPACKAGES_PATHS)
