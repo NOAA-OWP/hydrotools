@@ -25,8 +25,9 @@ jobs:
         python3 -m pip install --use-feature=in-tree-build ./python/nwis_client[develop]
         python3 -m pip install --use-feature=in-tree-build ./python/caches[develop]
         python3 -m pip install --use-feature=in-tree-build ./python/nwm_client_new[develop]
+        python3 -m pip install --use-feature=in-tree-build ./python/nwm_client[develop,gcp]
         python3 -m pip install --use-feature=in-tree-build ./python/events[develop]
         python3 -m pip install --use-feature=in-tree-build ./python/metrics[develop]
     - name: Run all unittests 
       run: |
-        python3 -m pytest -s -m "not slow" --ignore=./python/nwm_client
+        python3 -m pytest -s -m "not slow"

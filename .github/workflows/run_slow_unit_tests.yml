@@ -30,6 +30,7 @@ jobs:
         python3 -m pip install --use-feature=in-tree-build ./python/nwm_client[gcp,develop]
         python3 -m pip install --use-feature=in-tree-build ./python/events[develop]
         python3 -m pip install --use-feature=in-tree-build ./python/metrics[develop]
+        python3 -m pip install --use-feature=in-tree-build ./python/nwm_client_new[develop]
     - name: Run all unittests 
       run: |
         python3 -m pytest -s
