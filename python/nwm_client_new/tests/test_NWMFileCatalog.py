@@ -1,5 +1,5 @@
 import pytest
-from hydrotools.nwm_client.NWMFileCatalog import GCPFileCatalog, HTTPFileCatalog
+from hydrotools.nwm_client_new.NWMFileCatalog import GCPFileCatalog, HTTPFileCatalog
 import pandas as pd
 
 # Set reference time

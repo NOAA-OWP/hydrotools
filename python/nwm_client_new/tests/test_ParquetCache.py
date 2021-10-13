@@ -1,5 +1,5 @@
 import pytest
-from hydrotools.nwm_client.ParquetCache import ParquetCache
+from hydrotools.nwm_client_new.ParquetCache import ParquetCache
 from tempfile import TemporaryDirectory
 import pandas as pd
 import dask.dataframe as dd
