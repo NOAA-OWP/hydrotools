@@ -85,7 +85,7 @@ class NWMClient(ABC):
         """
 
     @classmethod
-    def canonicalize_dataframe(
+    def canonicalize_dask_dataframe(
         cls,
         df: dd.DataFrame,
         configuration: str,
@@ -243,7 +243,7 @@ class NWMFileClient(NWMClient):
         df = NWMFileProcessor.convert_to_dask_dataframe(ds)
 
         # Canonicalize
-        return NWMClient.canonicalize_dataframe(
+        return NWMClient.canonicalize_dask_dataframe(
             df=df,
             configuration=configuration
         )
