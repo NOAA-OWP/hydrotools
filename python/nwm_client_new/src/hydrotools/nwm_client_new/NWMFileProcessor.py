@@ -18,9 +18,9 @@ from typing import List, Union
 import warnings
 
 class NWMFileProcessor:
-    """Provides an interface for methods used to process National Water Model 
-    data from NetCDF (.nc) format to xarray.Dataset, dask.dataframe.Dataframe, 
-    or pandas.DataFrame.
+    """Provides a concrete interface for methods used to process National Water 
+    Model data from NetCDF (.nc) format to xarray.Dataset, 
+    dask.dataframe.Dataframe, or pandas.DataFrame.
     """
 
     @classmethod
