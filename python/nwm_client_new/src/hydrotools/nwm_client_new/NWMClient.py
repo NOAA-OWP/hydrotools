@@ -62,7 +62,7 @@ class NWMClient(ABC):
     def get(
         self,
         configuration: str,
-        reference_times: List[str] = None,
+        reference_times: List[str],
         compute: bool = True
         ) -> Union[pd.DataFrame, dd.DataFrame]:
         """Abstract method to retrieve National Water Model data as a 
@@ -72,7 +72,7 @@ class NWMClient(ABC):
         ----------
         configuration: str, required
             NWM configuration cycle.
-        reference_times: str or List[str], optional, default None
+        reference_times: List[str], required
             List of reference time strings in %Y%m%dT%HZ format. 
             e.g. ['20210912T01Z']
         compute: bool, optional, default True
