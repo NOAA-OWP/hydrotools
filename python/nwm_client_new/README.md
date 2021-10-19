@@ -1,6 +1,6 @@
-# OWPHydroTools :: NWM Client
+# OWPHydroTools :: NWM Client New
 
-This subpackage implements various interfaces to retrieve National Water Model (NWM) data from various sources including Google Cloud Platform, NOMADS, local directories, or a generic web server directory listing. The primary use for this tool is to populate `pandas.Dataframe` objects with NWM streamflow data. See the [NWM Client Documentation](https://noaa-owp.github.io/hydrotools/hydrotools.nwm_client_new.html) for a complete list and description of the currently available methods. To report bugs or request new features, submit an issue through the [OWPHydroTools Issue Tracker](https://github.com/NOAA-OWP/hydrotools/issues) on GitHub.
+This subpackage implements various interfaces to retrieve National Water Model (NWM) data from various sources including Google Cloud Platform, NOMADS, local directories, or a generic web server directory listing. The primary use for this tool is to populate `pandas.Dataframe` objects with NWM streamflow data. See the [NWM Client New Documentation](https://noaa-owp.github.io/hydrotools/hydrotools.nwm_client_new.html) for a complete list and description of the currently available methods. To report bugs or request new features, submit an issue through the [OWPHydroTools Issue Tracker](https://github.com/NOAA-OWP/hydrotools/issues) on GitHub.
 
 ## Installation
 
@@ -27,14 +27,12 @@ The following example demonstrates how one might use `hydrotools.nwm_client_new`
 ### Code
 ```python
 # Import the nwm Client
-from hydrotools.nwm_client_new import http as nwm
+from hydrotools.nwm_client_new.NWMClient import NWMFileClient
 import pandas as pd
 
-# Path to server (NOMADS in this case)
-server = "https://nomads.ncep.noaa.gov/pub/data/nccf/com/nwm/prod/"
-
-# Instantiate model data service
-model_data_service = nwm.NWMDataService(server)
+# Instantiate model data client
+#  Defaults to Google Cloud Platform
+client = NWMFileClient()
 
 # Set reference time
 yesterday = pd.Timestamp.utcnow() - pd.Timedelta("1D")
@@ -43,9 +41,9 @@ reference_time = yesterday.strftime("%Y%m%dT%-HZ")
 # Retrieve forecast data
 #  By default, only retrieves data at USGS gaging sites in
 #  CONUS that are used for model assimilation
-forecast_data = model_data_service.get(
+forecast_data = client.get(
     configuration = "short_range",
-    reference_time = reference_time
+    reference_times = [reference_time]
     )
 
 # Look at the data
@@ -77,10 +75,6 @@ None
 3 2021-01-01 05:00:00   5.12
 4 2021-01-01 06:00:00   5.03
 ```
-### System Requirements
-We employ several methods to make sure the resulting `pandas.DataFrame` produced by `nwm_client_new` are as efficient and manageable as possible. Nonetheless, this package can potentially use a large amount of memory.
-
-The National Water Model generates multiple forecasts per day at over 3.7 million locations across the United States. A single forecast could be spread across hundreds of files and require repeated calls to the data source. The intermediate steps of retrieving and processing these files into leaner `DataFrame` may use several GB of memory. As such, recommended minimum requirements to use this package are a 4-core consumer processor and 8 GB of RAM.
 
 ## Development
 
