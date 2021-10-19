@@ -49,8 +49,8 @@ class NWMFileCatalog(ABC):
                 f"Valid options: {str(self.configurations)}")
             raise ValueError(message)
 
-    @classmethod
-    def separate_datetime(cls, reference_time: str) -> Tuple[str, str]:
+    @staticmethod
+    def separate_datetime(reference_time: str) -> Tuple[str, str]:
         """Divide reference time into separate date and time strings.
 
         Parameters
@@ -155,9 +155,8 @@ class HTTPFileCatalog(NWMFileCatalog):
         # Setup SSL context
         self.ssl_context = ssl_context
 
-    @classmethod
+    @staticmethod
     async def get_html(
-        cls,
         url: str,
         ssl_context: ssl.SSLContext = ssl.create_default_context()
         ) -> str:
@@ -307,7 +306,7 @@ class GCPFileCatalog(NWMFileCatalog):
         self.raise_invalid_configuration(configuration)
 
         # Break-up reference time
-        issue_date, issue_time = NWMFileCatalog.separate_datetime(reference_time)
+        issue_date, issue_time = self.separate_datetime(reference_time)
 
         # Connect to bucket with anonymous client
         client = storage.Client.create_anonymous_client()
