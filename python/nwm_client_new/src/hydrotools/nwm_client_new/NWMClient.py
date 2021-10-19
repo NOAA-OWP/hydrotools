@@ -189,7 +189,7 @@ class NWMFileClient(NWMClient):
         if dataframe_cache:
             self.dataframe_cache = dataframe_cache
         else:
-            self._dataframe_cache = None
+            self.dataframe_cache = None
 
         # Set file catalog
         self.catalog = catalog
