@@ -117,7 +117,7 @@ class FileDownloader:
 
     def get(self, urls: Iterable[str]) -> None:
         """Setup event loop and asynchronously download multiple files. If 
-        FileDownloader.create_directory is True, an output directory will be 
+        self.create_directory is True, an output directory will be 
         created if needed.
         
         Parameters
