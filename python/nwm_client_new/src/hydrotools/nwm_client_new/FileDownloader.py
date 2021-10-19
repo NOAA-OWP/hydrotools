@@ -16,6 +16,7 @@ from urllib.parse import unquote
 from pathlib import Path
 from typing import Iterable, Union
 import warnings
+from http import HTTPStatus
 
 class FileDownloader:
     """Provides a convenient interface to download a list of files
@@ -83,8 +84,15 @@ class FileDownloader:
             filename = unquote(url).split("/")[-1]
 
             # Warn if unable to locate file
-            if response.status >= 400:
-                warnings.warn(f"Unable to download {filename}", RuntimeWarning)
+            if response.status != HTTPStatus.OK:
+                status = HTTPStatus(response.status_code)
+                message = (
+                    f"HTTP Status: {status.value}" + 
+                    f" - {status.phrase}" + 
+                    f" - {status.description}\n" + 
+                    f"{response.url}"
+                    )
+                warnings.warn(message, RuntimeWarning)
                 return
 
             # Construct output file path
