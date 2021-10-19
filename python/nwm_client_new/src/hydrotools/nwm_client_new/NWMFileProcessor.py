@@ -15,6 +15,7 @@ import pandas as pd
 import numpy as np
 import numpy.typing as npt
 from typing import List, Union
+import warnings
 
 class NWMFileProcessor:
     """Provides an interface for methods used to process National Water Model 
@@ -59,14 +60,25 @@ class NWMFileProcessor:
 
         # Prepare feature_id filter
         if len(feature_id_filter) != 0:
-            # Convert to array
-            feature_id_filter = np.asarray(feature_id_filter)
-
-            # Validate filter IDs
-            check = np.isin(feature_id_filter, ds.feature_id)
+            # Convert to integer array
+            feature_id_filter = np.asarray(feature_id_filter, dtype=int)
 
             # Subset by feature ID and variable
-            return ds.sel(feature_id=feature_id_filter[check])[variables]
+            try:
+                return ds.sel(feature_id=feature_id_filter)[variables]
+            except KeyError:
+                # Validate filter IDs
+                check = np.isin(feature_id_filter, ds.feature_id)
+
+                # Note invalid feature IDs
+                missing = feature_id_filter[~check]
+
+                # Warn
+                message = f"These filter IDs were not in the index: {missing}"
+                warnings.warn(message)
+
+                # Subset by valid feature ID and variable
+                return ds.sel(feature_id=feature_id_filter[check])[variables]
 
         # Subset by variable only
         return ds[variables]
