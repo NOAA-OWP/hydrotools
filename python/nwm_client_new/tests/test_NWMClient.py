@@ -2,6 +2,7 @@ import pytest
 from hydrotools.nwm_client_new.NWMClient import NWMFileClient
 from hydrotools.nwm_client_new.NWMFileCatalog import HTTPFileCatalog
 import pandas as pd
+from tempfile import TemporaryDirectory
 
 # Set reference time
 yesterday = pd.Timestamp.utcnow() - pd.Timedelta("1D")
@@ -30,6 +31,19 @@ def setup_http():
         server="https://nomads.ncep.noaa.gov/pub/data/nccf/com/nwm/prod/"
         )
     return NWMFileClient(catalog=catalog)
+
+@pytest.mark.slow
+def test_gcp_get_cycle(setup_gcp):
+    with TemporaryDirectory() as td:
+        df = setup_gcp.get_cycle(
+            configuration="analysis_assim",
+            reference_time=reference_time_gcp,
+            netcdf_dir=td
+        ).head()
+        for col in canonical_columns:
+            assert col in df
+        assert "analysis_assim" in df["configuration"].values
+        assert "streamflow" in df["variable_name"].values
 
 @pytest.mark.slow
 def test_gcp_client(setup_gcp):
