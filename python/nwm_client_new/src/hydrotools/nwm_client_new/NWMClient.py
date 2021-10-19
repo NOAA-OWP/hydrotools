@@ -26,7 +26,16 @@ from .NWMFileCatalog import NWMFileCatalog, GCPFileCatalog
 
 @dataclass
 class NWMClientDefaults:
-    """Stores application default options."""
+    """Stores application default options.
+
+    CROSSWALK: DataFrame that maps between point feature data source identifiers 
+        (i.e. USGS gage id -> NHDPlus COMID).
+    CACHE: Configured ParquetCache instance.
+    CATALOG: Concrete NWM data source instance.
+    CANONICAL_COLUMN_MAPPING: Mapping from NWM output variable names to 
+        hydrotools canonical names.
+    SSL_CONTEXT: ssl context instance.
+    """
     CROSSWALK: pd.DataFrame = None
     CACHE: ParquetCache = ParquetCache(
         "nwm_cache.parquet",
