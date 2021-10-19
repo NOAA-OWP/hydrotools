@@ -295,7 +295,8 @@ class NWMFileClient(NWMClient):
             parquet_files.append(self.dataframe_cache.directory/subdirectory)
 
         # Clean-up NetCDF files
-        shutil.rmtree(self.file_directory)
+        if self.cleanup_files:
+            shutil.rmtree(self.file_directory)
 
         # Limit to canonical columns
         # NOTE I could not keep dask from adding a "dir0" column using either
