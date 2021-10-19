@@ -67,8 +67,8 @@ class ParquetCache:
 
         Returns
         -------
-        object
-            Retrieve object from file.
+        dask.dataframe.DataFrame
+            Retrieve DataFrame from file.
         """
         # Set path
         filepath = self.directory / subdirectory
