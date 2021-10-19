@@ -69,6 +69,34 @@ class ParquetCache:
         -------
         dask.dataframe.DataFrame
             Retrieve DataFrame from file.
+
+        Examples
+        --------
+        >>> import pandas as pd
+        >>> import dask.dataframe as dd
+        >>> from time import sleep
+        >>> from hydrotools.nwm_client_new.ParquetCache import ParquetCache
+
+        >>> def my_long_running_process(data: dict) -> dd.DataFrame:
+        >>>     # Some long running process
+        >>>     sleep(0.2)
+        >>>     return dd.from_pandas(pd.DataFrame(data), npartitions=1)
+
+        >>> # Use context manager to setup cache
+        >>> with ParquetCache(
+        >>>     "my_cache.parquet",
+        >>>     write_index=False,
+        >>>     compression="snappy"
+        >>>     ) as cache:
+        >>>     # Fabricate some data to feed the function
+        >>>     my_data = {"A": [1, 2, 3]}
+
+        >>>     # Call the function with caching
+        >>>     df = cache.get(
+        >>>         function=my_long_running_process,
+        >>>         subdirectory="my_dataframe",
+        >>>         data=my_data
+        >>>     )
         """
         # Set path
         filepath = self.directory / subdirectory
