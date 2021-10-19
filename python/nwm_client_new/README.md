@@ -1,6 +1,6 @@
 # OWPHydroTools :: NWM Client
 
-This subpackage implements various interfaces to retrieve National Water Model (NWM) data from various sources including Google Cloud Platform, NOMADS, local directories, or a generic web server directory listing. The primary use for this tool is to populate `pandas.Dataframe` objects with NWM streamflow data. See the [NWM Client Documentation](https://noaa-owp.github.io/hydrotools/hydrotools.nwm_client.html) for a complete list and description of the currently available methods. To report bugs or request new features, submit an issue through the [OWPHydroTools Issue Tracker](https://github.com/NOAA-OWP/hydrotools/issues) on GitHub.
+This subpackage implements various interfaces to retrieve National Water Model (NWM) data from various sources including Google Cloud Platform, NOMADS, local directories, or a generic web server directory listing. The primary use for this tool is to populate `pandas.Dataframe` objects with NWM streamflow data. See the [NWM Client Documentation](https://noaa-owp.github.io/hydrotools/hydrotools.nwm_client_new.html) for a complete list and description of the currently available methods. To report bugs or request new features, submit an issue through the [OWPHydroTools Issue Tracker](https://github.com/NOAA-OWP/hydrotools/issues) on GitHub.
 
 ## Installation
 
@@ -16,18 +16,18 @@ $ python3 -m venv env
 $ source env/bin/activate
 $ python3 -m pip install --upgrade pip wheel
 
-# Install nwm_client
-$ python3 -m pip install hydrotools.nwm_client
+# Install nwm_client_new
+$ python3 -m pip install hydrotools.nwm_client_new
 ```
 
 ## Usage
 
-The following example demonstrates how one might use `hydrotools.nwm_client` to retrieve NWM streamflow forecasts.
+The following example demonstrates how one might use `hydrotools.nwm_client_new` to retrieve NWM streamflow forecasts.
 
 ### Code
 ```python
 # Import the nwm Client
-from hydrotools.nwm_client import http as nwm
+from hydrotools.nwm_client_new import http as nwm
 import pandas as pd
 
 # Path to server (NOMADS in this case)
@@ -78,7 +78,7 @@ None
 4 2021-01-01 06:00:00   5.03
 ```
 ### System Requirements
-We employ several methods to make sure the resulting `pandas.DataFrame` produced by `nwm_client` are as efficient and manageable as possible. Nonetheless, this package can potentially use a large amount of memory.
+We employ several methods to make sure the resulting `pandas.DataFrame` produced by `nwm_client_new` are as efficient and manageable as possible. Nonetheless, this package can potentially use a large amount of memory.
 
 The National Water Model generates multiple forecasts per day at over 3.7 million locations across the United States. A single forecast could be spread across hundreds of files and require repeated calls to the data source. The intermediate steps of retrieving and processing these files into leaner `DataFrame` may use several GB of memory. As such, recommended minimum requirements to use this package are a 4-core consumer processor and 8 GB of RAM.
 
