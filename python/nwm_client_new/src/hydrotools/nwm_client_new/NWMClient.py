@@ -18,6 +18,7 @@ from pathlib import Path
 from dataclasses import dataclass
 import ssl
 import shutil
+from urllib.parse import unquote
 
 from .ParquetCache import ParquetCache
 from .FileDownloader import FileDownloader
@@ -232,6 +233,9 @@ class NWMFileClient(NWMClient):
             reference_time=reference_time
         )
 
+        # Generate local filenames
+        filenames = [unquote(url).split("/")[-1] for url in urls]
+
         # Setup downloader
         downloader = FileDownloader(
             output_directory=netcdf_dir,
@@ -240,7 +244,7 @@ class NWMFileClient(NWMClient):
             )
 
         # Download files
-        downloader.get(urls)
+        downloader.get(zip(urls,filenames))
 
         # Get dataset
         ds = NWMFileProcessor.get_dataset(

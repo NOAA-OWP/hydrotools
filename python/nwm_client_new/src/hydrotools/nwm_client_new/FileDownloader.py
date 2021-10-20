@@ -12,7 +12,6 @@ import asyncio
 import ssl
 import aiohttp
 import aiofiles
-# from urllib.parse import unquote
 from pathlib import Path
 from typing import List, Tuple, Union
 import warnings
@@ -84,9 +83,6 @@ class FileDownloader:
         """
         # Retrieve a single file
         async with session.get(url, ssl=self.ssl_context, timeout=900) as response:
-            # Extract file name
-            # filename = unquote(url).split("/")[-1]
-
             # Warn if unable to locate file
             if response.status != HTTPStatus.OK:
                 status = HTTPStatus(response.status_code)
