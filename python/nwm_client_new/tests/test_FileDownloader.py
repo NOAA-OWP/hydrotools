@@ -15,7 +15,7 @@ def test_get():
     with TemporaryDirectory() as td:
         downloader = FileDownloader(output_directory=td)
         downloader.get(
-            ["https://pandas.pydata.org/docs/user_guide/index.html"]
+            [("https://pandas.pydata.org/docs/user_guide/index.html","index.html")]
             )
         ofile = downloader.output_directory / "index.html"
         assert ofile.exists()

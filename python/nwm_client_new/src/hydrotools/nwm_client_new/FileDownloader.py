@@ -12,9 +12,9 @@ import asyncio
 import ssl
 import aiohttp
 import aiofiles
-from urllib.parse import unquote
+# from urllib.parse import unquote
 from pathlib import Path
-from typing import Iterable, Union
+from typing import List, Tuple, Union
 import warnings
 from http import HTTPStatus
 
@@ -63,6 +63,7 @@ class FileDownloader:
     async def get_file(
         self,
         url: str,
+        filename: str,
         session: aiohttp.ClientSession
         ) -> None:
         """Download a single file.
@@ -71,6 +72,9 @@ class FileDownloader:
         ----------
         url: str, required
             URL path to file.
+        filename: str, required
+            Local filename used to write downloaded file. This will save the file 
+            to self.output_directory/filename
         session: aiohttp.ClientSession, required
             Session object used for retrieval.
             
@@ -81,7 +85,7 @@ class FileDownloader:
         # Retrieve a single file
         async with session.get(url, ssl=self.ssl_context, timeout=900) as response:
             # Extract file name
-            filename = unquote(url).split("/")[-1]
+            # filename = unquote(url).split("/")[-1]
 
             # Warn if unable to locate file
             if response.status != HTTPStatus.OK:
@@ -106,13 +110,15 @@ class FileDownloader:
                         break
                     await fo.write(chunk)
 
-    async def get_files(self, urls: Iterable[str]) -> None:
+    async def get_files(self, src_dst_list: List[Tuple[str,str]]) -> None:
         """Asynchronously download multiple files.
         
         Parameters
         ----------
-        urls: iterable of str, required
-            Iterable of url strings.
+        src_dst_list: List[Tuple[str,str]], required
+            List of tuples containing two strings. The first string is the 
+            source URL from which to retrieve a file, the second string is the
+            local filename where the file will be saved.
             
         Returns
         -------
@@ -121,21 +127,33 @@ class FileDownloader:
         # Retrieve each file
         connector = aiohttp.TCPConnector(limit=self.limit)
         async with aiohttp.ClientSession(connector=connector) as session:
-            await asyncio.gather(*[self.get_file(url, session) for url in urls])
+            await asyncio.gather(*[self.get_file(url, filename, session) for url, filename in src_dst_list])
 
-    def get(self, urls: Iterable[str]) -> None:
+    def get(self, src_dst_list: List[Tuple[str,str]]) -> None:
         """Setup event loop and asynchronously download multiple files. If 
         self.create_directory is True, an output directory will be 
         created if needed.
         
         Parameters
         ----------
-        urls: iterable of str, required
-            Iterable of url strings.
+        src_dst_list: List[Tuple[str,str]], required
+            List of tuples containing two strings. The first string is the 
+            source URL from which to retrieve a file, the second string is the
+            local filename where the file will be saved.
             
         Returns
         -------
         None
+
+        Examples
+        --------
+        >>> from nwm_client_new.FileDownloader import FileDownloader
+        >>> downloader = FileDownloader(output_directory="my_output")
+
+        >>> # This will download the pandas homepage and save it to "my_output/index.html"
+        >>> downloader.get(
+        >>>     [("https://pandas.pydata.org/docs/user_guide/index.html","index.html")]
+        >>>     )
         """
         # Check output directory, optionally create
         if not self.output_directory.exists():
@@ -146,7 +164,7 @@ class FileDownloader:
                 raise FileNotFoundError(message)
 
         # Start event loop to retrieve files
-        asyncio.run(self.get_files(urls))
+        asyncio.run(self.get_files(src_dst_list))
 
     @property
     def output_directory(self) -> Path:
