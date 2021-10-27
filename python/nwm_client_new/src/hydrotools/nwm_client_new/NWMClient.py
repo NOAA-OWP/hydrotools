@@ -19,6 +19,7 @@ from dataclasses import dataclass
 import ssl
 import shutil
 from urllib.parse import unquote
+import warnings
 
 from .ParquetCache import ParquetCache
 from .FileDownloader import FileDownloader
@@ -315,16 +316,27 @@ class NWMFileClient(NWMClient):
             netcdf_dir = self.file_directory / subdirectory
 
             # Get dask dataframe
-            df = self.dataframe_cache.get(
-                function=self.get_cycle,
-                subdirectory=subdirectory,
-                configuration=configuration,
-                reference_time=reference_time,
-                netcdf_dir=netcdf_dir
-            )
+            try:
+                df = self.dataframe_cache.get(
+                    function=self.get_cycle,
+                    subdirectory=subdirectory,
+                    configuration=configuration,
+                    reference_time=reference_time,
+                    netcdf_dir=netcdf_dir
+                )
+            except QueryError:
+                message = (f"No data found for configuration '{configuration}' and " +
+                    f"reference time '{reference_time}'")
+                warnings.warn(message, RuntimeWarning)
+                continue
 
             # Note file created
             parquet_files.append(self.dataframe_cache.directory/subdirectory)
+
+        # Check file list
+        if len(parquet_files) == 0:
+            message = (f"Unable to retrieve any data.")
+            raise QueryError(message)
 
         # Clean-up NetCDF files
         if self.cleanup_files:
