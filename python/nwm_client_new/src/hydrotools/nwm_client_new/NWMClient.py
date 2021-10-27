@@ -25,6 +25,15 @@ from .FileDownloader import FileDownloader
 from .NWMFileProcessor import NWMFileProcessor
 from .NWMFileCatalog import NWMFileCatalog, GCPFileCatalog
 
+class CacheNotFoundError(Exception):
+    """Exception raised for methods that require a cache."""
+    pass
+
+class QueryError(Exception):
+    """Exception raised when a combination of configuration and/or reference 
+    times does not return any results."""
+    pass
+
 @dataclass
 class NWMClientDefaults:
     """Stores application default options.
@@ -233,6 +242,12 @@ class NWMFileClient(NWMClient):
             reference_time=reference_time
         )
 
+        # Check urls
+        if len(urls) == 0:
+            message = (f"No data found for configuration '{configuration}' and " +
+                f"reference time '{reference_time}'")
+            raise QueryError(message)
+
         # Generate local filenames
         filenames = [unquote(url).split("/")[-1] for url in urls]
 
@@ -284,6 +299,10 @@ class NWMFileClient(NWMClient):
         dask.dataframe.DataFrame of NWM data or a pandas.DataFrame in canonical 
         format.
         """
+        # Check for cache
+        if self.dataframe_cache == None:
+            raise CacheNotFoundError("get requires a cache. Set a cache or use get_cycle.")
+
         # List of individual parquet files
         parquet_files = []
 
