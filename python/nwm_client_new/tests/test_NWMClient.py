@@ -3,6 +3,7 @@ from hydrotools.nwm_client_new.NWMClient import NWMFileClient
 from hydrotools.nwm_client_new.NWMFileCatalog import HTTPFileCatalog
 import pandas as pd
 from tempfile import TemporaryDirectory
+from hydrotools.nwm_client_new.NWMClient import CacheNotFoundError, QueryError
 
 # Set reference time
 yesterday = pd.Timestamp.utcnow() - pd.Timedelta("1D")
@@ -66,3 +67,25 @@ def test_http_client(setup_http):
         assert col in df
     assert "analysis_assim" in df["configuration"].values
     assert "streamflow" in df["variable_name"].values
+
+def test_CacheNotFoundError(setup_gcp):
+    with pytest.raises(CacheNotFoundError):
+        setup_gcp.dataframe_cache = None
+        df = setup_gcp.get(
+            configuration="analysis_assim",
+            reference_times=[reference_time_gcp]
+        ).head()
+
+def test_QueryError(setup_gcp):
+    with TemporaryDirectory() as td:
+        with pytest.raises(QueryError):
+            df = setup_gcp.get_cycle(
+                configuration="analysis_assim",
+                reference_time="20T00Z",
+                netcdf_dir=td
+            ).head()
+    with pytest.raises(QueryError):
+        df = setup_gcp.get(
+            configuration="analysis_assim",
+            reference_times=["20T00Z", "30T01Z"]
+        ).head()
