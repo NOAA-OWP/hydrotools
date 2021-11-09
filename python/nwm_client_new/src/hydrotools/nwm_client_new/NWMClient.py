@@ -50,6 +50,7 @@ class NWMClientDefaults:
     CROSSWALK: A property that generates a pandas.DataFrame that maps between 
         point feature data source identifiers (i.e. USGS gage id -> NWM feature 
         ID).
+    DOWNLOAD_DIRECTORY: Local path to save downloaded NWM files.
     """
     CACHE: ParquetCache = ParquetCache(
         "nwm_cache.parquet",
@@ -65,20 +66,9 @@ class NWMClientDefaults:
     SSL_CONTEXT: ssl.SSLContext = ssl.create_default_context()
     ROUTELINK_URL: str = "https://www.hydroshare.org/resource/d154f19f762c4ee9b74be55f504325d3/data/contents/RouteLink.h5"
 
-    def get_routelink(
-        self, 
-        url: str,
-        ssl_context: ssl.SSLContext
-        ) -> dd.DataFrame:
+    def _download_and_read_routelink_file(self) -> dd.DataFrame:
         """Retrieve NWM RouteLink data from URL and return a 
         dask.dataframe.DataFrame.
-        
-        Parameters
-        ----------
-        url: str
-            URL path to HDF5 RouteLink file.
-        ssl_context: ssl.SSLContext
-            SSL Context instance.
             
         Returns
         -------
@@ -90,22 +80,20 @@ class NWMClientDefaults:
             downloader = FileDownloader(
                 output_directory=td,
                 create_directory=False,
-                ssl_context=ssl_context
+                ssl_context=self.SSL_CONTEXT
                 )
 
             # Download files
-            downloader.get([(url, "RouteLink.h5")])
+            downloader.get([(self.ROUTELINK_URL, "RouteLink.h5")])
             return dd.from_pandas(pd.read_hdf(Path(td)/"RouteLink.h5"), 
                 npartitions=1)
     
     @property
-    def CROSSWALK(self) -> pd.DataFrame():
+    def CROSSWALK(self) -> pd.DataFrame:
         """Retrieve and cache a default crosswalk for use by a NWM client."""
         return self.CACHE.get(
-            function=self.get_routelink,
-            subdirectory="CROSSWALK",
-            url=self.ROUTELINK_URL,
-            ssl_context=self.SSL_CONTEXT
+            function=self._download_and_read_routelink_file,
+            subdirectory="CROSSWALK"
         ).compute()[["nwm_feature_id", "usgs_site_code"]].set_index(
             "nwm_feature_id")
 
