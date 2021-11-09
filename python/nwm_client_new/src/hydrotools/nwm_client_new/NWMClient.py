@@ -16,6 +16,7 @@ import dask.dataframe as dd
 from typing import List, Union
 from pathlib import Path
 from dataclasses import dataclass
+from tempfile import TemporaryDirectory
 import ssl
 import shutil
 from urllib.parse import unquote
@@ -39,15 +40,18 @@ class QueryError(Exception):
 class NWMClientDefaults:
     """Stores application default options.
 
-    CROSSWALK: DataFrame that maps between point feature data source identifiers 
-        (i.e. USGS gage id -> NHDPlus COMID).
     CACHE: Configured ParquetCache instance.
     CATALOG: Concrete NWM data source instance.
     CANONICAL_COLUMN_MAPPING: Mapping from NWM output variable names to 
         hydrotools canonical names.
     SSL_CONTEXT: ssl context instance.
+    ROUTELINK_URL: URL string path that points at an HDF5 file containing a
+        pandas.DataFrame with NWM crosswalk data.
+    CROSSWALK: A property that generates a pandas.DataFrame that maps between 
+        point feature data source identifiers (i.e. USGS gage id -> NWM feature 
+        ID).
+    DOWNLOAD_DIRECTORY: Local path to save downloaded NWM files.
     """
-    CROSSWALK: pd.DataFrame = None
     CACHE: ParquetCache = ParquetCache(
         "nwm_cache.parquet",
         write_index=False,
@@ -60,20 +64,40 @@ class NWMClientDefaults:
         "streamflow": "value"
     })
     SSL_CONTEXT: ssl.SSLContext = ssl.create_default_context()
-    def __post_init__(self):
-        # Gather routelink files
-        rl_filepath = Path(__file__).parent / "data/routelink_files"
-        rl_files = rl_filepath.glob("*.csv")
+    ROUTELINK_URL: str = "https://www.hydroshare.org/resource/d154f19f762c4ee9b74be55f504325d3/data/contents/RouteLink.h5"
 
-        # Generate crosswalk
-        dfs = []
-        for rl_file in rl_files:
-            dfs.append(pd.read_csv(
-            rl_file,
-            dtype={"nwm_feature_id": int, "usgs_site_code": str},
-            comment='#'
-        ).set_index('nwm_feature_id')[['usgs_site_code']])
-        self.CROSSWALK = pd.concat(dfs)
+    def _download_and_read_routelink_file(self) -> dd.DataFrame:
+        """Retrieve NWM RouteLink data from URL and return a 
+        dask.dataframe.DataFrame.
+            
+        Returns
+        -------
+        df: dask.dataframe.DataFrame
+            DataFrame containing associated location metadata.
+        """
+        with TemporaryDirectory() as td:
+            # Setup downloader
+            downloader = FileDownloader(
+                output_directory=td,
+                create_directory=False,
+                ssl_context=self.SSL_CONTEXT
+                )
+
+            # Download files
+            downloader.get([(self.ROUTELINK_URL, "RouteLink.h5")])
+            return dd.from_pandas(pd.read_hdf(Path(td)/"RouteLink.h5"), 
+                npartitions=1)
+    
+    @property
+    def CROSSWALK(self) -> pd.DataFrame:
+        """Retrieve and cache a default crosswalk for use by a NWM client."""
+        return self.CACHE.get(
+            function=self._download_and_read_routelink_file,
+            subdirectory="CROSSWALK"
+        ).compute()[["nwm_feature_id", "usgs_site_code"]].set_index(
+            "nwm_feature_id")
+
+# Initialize defaults
 _NWMClientDefault = NWMClientDefaults()
 
 class NWMClient(ABC):
