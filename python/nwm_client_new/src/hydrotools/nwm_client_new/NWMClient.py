@@ -39,15 +39,15 @@ class QueryError(Exception):
 class NWMClientDefaults:
     """Stores application default options.
 
-    CROSSWALK: DataFrame that maps between point feature data source identifiers 
-        (i.e. USGS gage id -> NHDPlus COMID).
     CACHE: Configured ParquetCache instance.
     CATALOG: Concrete NWM data source instance.
     CANONICAL_COLUMN_MAPPING: Mapping from NWM output variable names to 
         hydrotools canonical names.
     SSL_CONTEXT: ssl context instance.
+
+    CROSSWALK: A property that generates a DataFrame that maps between point 
+        feature data source identifiers (i.e. USGS gage id -> NHDPlus COMID).
     """
-    CROSSWALK: pd.DataFrame = None
     CACHE: ParquetCache = ParquetCache(
         "nwm_cache.parquet",
         write_index=False,
@@ -60,7 +60,8 @@ class NWMClientDefaults:
         "streamflow": "value"
     })
     SSL_CONTEXT: ssl.SSLContext = ssl.create_default_context()
-    def __post_init__(self):
+
+    def get_routelink(self, url: str = None):
         # Gather routelink files
         rl_filepath = Path(__file__).parent / "data/routelink_files"
         rl_files = rl_filepath.glob("*.csv")
@@ -72,8 +73,19 @@ class NWMClientDefaults:
             rl_file,
             dtype={"nwm_feature_id": int, "usgs_site_code": str},
             comment='#'
-        ).set_index('nwm_feature_id')[['usgs_site_code']])
-        self.CROSSWALK = pd.concat(dfs)
+        )[['nwm_feature_id', 'usgs_site_code']])
+        df = pd.concat(dfs)
+        return dd.from_pandas(df, npartitions=1)
+    
+    @property
+    def CROSSWALK(self) -> pd.DataFrame():
+        return self.CACHE.get(
+            function=self.get_routelink,
+            subdirectory="CROSSWALK",
+            url="www.gh.com"
+        ).compute()
+
+# Initialize defaults
 _NWMClientDefault = NWMClientDefaults()
 
 class NWMClient(ABC):
