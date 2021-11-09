@@ -70,6 +70,21 @@ class NWMClientDefaults:
         url: str,
         ssl_context: ssl.SSLContext
         ) -> dd.DataFrame:
+        """Retrieve NWM RouteLink data from URL and return a 
+        dask.dataframe.DataFrame.
+        
+        Parameters
+        ----------
+        url: str
+            URL path to HDF5 RouteLink file.
+        ssl_context: ssl.SSLContext
+            SSL Context instance.
+            
+        Returns
+        -------
+        df: dask.dataframe.DataFrame
+            DataFrame containing associated location metadata.
+        """
         with TemporaryDirectory() as td:
             # Setup downloader
             downloader = FileDownloader(
@@ -85,6 +100,7 @@ class NWMClientDefaults:
     
     @property
     def CROSSWALK(self) -> pd.DataFrame():
+        """Retrieve and cache a default crosswalk for use by a NWM client."""
         return self.CACHE.get(
             function=self.get_routelink,
             subdirectory="CROSSWALK",
