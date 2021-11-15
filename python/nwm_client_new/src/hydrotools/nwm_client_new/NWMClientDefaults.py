@@ -79,3 +79,6 @@ class NWMClientDefaults:
             subdirectory="CROSSWALK"
         ).compute()[["nwm_feature_id", "usgs_site_code"]].set_index(
             "nwm_feature_id")
+
+# Initialize defaults
+_NWMClientDefault = NWMClientDefaults()

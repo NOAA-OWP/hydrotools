@@ -12,7 +12,7 @@ NWMFileClient
 from .NWMClient import NWMClient, QueryError, CacheNotFoundError
 from typing import Union, List
 from pathlib import Path
-from .NWMClientDefaults import NWMClientDefaults
+from .NWMClientDefaults import _NWMClientDefault
 from .ParquetCache import ParquetCache
 from .NWMFileCatalog import NWMFileCatalog
 import pandas as pd
@@ -23,9 +23,6 @@ from .FileDownloader import FileDownloader
 from .NWMFileProcessor import NWMFileProcessor
 import warnings
 import shutil
-
-# Initialize defaults
-_NWMClientDefault = NWMClientDefaults()
 
 class NWMFileClient(NWMClient):
     def __init__(

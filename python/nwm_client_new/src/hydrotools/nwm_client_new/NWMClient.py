@@ -13,20 +13,7 @@ from abc import ABC, abstractmethod
 import pandas as pd
 import dask.dataframe as dd
 from typing import List, Union
-# from pathlib import Path
-# from dataclasses import dataclass
-# from tempfile import TemporaryDirectory
-# import ssl
-# import shutil
-# from urllib.parse import unquote
-# import warnings
-
-# from .ParquetCache import ParquetCache
-# from .FileDownloader import FileDownloader
-# from .NWMFileProcessor import NWMFileProcessor
-# from .NWMFileCatalog import NWMFileCatalog
-# from .GCPFileCatalog import GCPFileCatalog
-from .NWMClientDefaults import NWMClientDefaults
+from .NWMClientDefaults import _NWMClientDefault
 
 class CacheNotFoundError(Exception):
     """Exception raised for methods that require a cache."""
@@ -36,9 +23,6 @@ class QueryError(Exception):
     """Exception raised when a combination of configuration and/or reference 
     times does not return any results."""
     pass
-
-# Initialize defaults
-_NWMClientDefault = NWMClientDefaults()
 
 class NWMClient(ABC):
     
