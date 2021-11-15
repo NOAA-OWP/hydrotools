@@ -1,6 +1,6 @@
 import pytest
 from hydrotools.nwm_client_new.NWMClient import NWMFileClient
-from hydrotools.nwm_client_new.NWMFileCatalog import HTTPFileCatalog
+from hydrotools.nwm_client_new.HTTPFileCatalog import HTTPFileCatalog
 import pandas as pd
 from tempfile import TemporaryDirectory
 from hydrotools.nwm_client_new.NWMClient import CacheNotFoundError, QueryError

@@ -25,7 +25,8 @@ import warnings
 from .ParquetCache import ParquetCache
 from .FileDownloader import FileDownloader
 from .NWMFileProcessor import NWMFileProcessor
-from .NWMFileCatalog import NWMFileCatalog, GCPFileCatalog
+from .NWMFileCatalog import NWMFileCatalog
+from .GCPFileCatalog import GCPFileCatalog
 
 class CacheNotFoundError(Exception):
     """Exception raised for methods that require a cache."""
