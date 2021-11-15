@@ -2,13 +2,7 @@
 ================
 NWM File Catalog
 ================
-Tools for discovering operational NWM NetCDF data on generic web servers, for 
-example:
-NOMADS -- https://nomads.ncep.noaa.gov/pub/data/nccf/com/nwm/prod/
-
-and Google Cloud Platform (GCP).
-
-GCP -- https://console.cloud.google.com/marketplace/details/noaa-public/national-water-model
+Tools for discovering operational NWM NetCDF data from file-based sources.
 
 Classes
 -------
