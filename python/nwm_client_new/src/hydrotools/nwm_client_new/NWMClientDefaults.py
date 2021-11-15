@@ -1,3 +1,13 @@
+"""
+===================
+NWM Client Defaults
+===================
+Manages default options to build National Water Model clients.
+
+Classes
+-------
+NWMClientDefaults
+"""
 from dataclasses import dataclass
 import pandas as pd
 from .ParquetCache import ParquetCache
