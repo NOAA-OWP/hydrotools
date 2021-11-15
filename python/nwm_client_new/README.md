@@ -27,7 +27,7 @@ The following example demonstrates how one might use `hydrotools.nwm_client_new`
 ### Code
 ```python
 # Import the nwm Client
-from hydrotools.nwm_client_new.NWMClient import NWMFileClient
+from hydrotools.nwm_client_new.NWMFileClient import NWMFileClient
 import pandas as pd
 
 # Instantiate model data client
