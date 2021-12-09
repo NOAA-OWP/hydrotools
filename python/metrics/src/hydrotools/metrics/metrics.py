@@ -11,7 +11,7 @@ http://www.eumetrain.org/data/4/451/english/courses/msgcrs/index.htm
 Functions
 ---------
  - compute_contingency_table
- - convert_values_to_numpy
+ - convert_mapping_values
  - probability_of_detection
  - probability_of_false_detection
  - probability_of_false_alarm
