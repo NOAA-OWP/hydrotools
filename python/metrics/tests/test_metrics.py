@@ -2,7 +2,6 @@ import pytest
 from hydrotools.metrics import metrics
 
 import pandas as pd
-from math import isclose
 import numpy as np
 
 contigency_table = {
@@ -222,10 +221,10 @@ def test_base_chance():
 
 def test_equitable_threat_score():
     ETS = metrics.equitable_threat_score(contigency_table)
-    assert isclose(ETS, (-0.2/4.8), abs_tol=0.000001)
+    assert np.isclose(ETS, (-0.2/4.8), atol=0.000001)
 
     ETS = metrics.equitable_threat_score(char_contigency_table)
-    assert isclose(ETS, (-0.2/4.8), abs_tol=0.000001)
+    assert np.isclose(ETS, (-0.2/4.8), atol=0.000001)
 
     ETS = metrics.equitable_threat_score(alt_contigency_table,
         true_positive_key='TP',
@@ -233,7 +232,7 @@ def test_equitable_threat_score():
         false_negative_key='FN',
         true_negative_key='TN'
         )
-    assert isclose(ETS, (-0.2/4.8), abs_tol=0.000001)
+    assert np.isclose(ETS, (-0.2/4.8), atol=0.000001)
 
     with pytest.warns(RuntimeWarning):
         ETS = metrics.equitable_threat_score(zero_contingency_table)
