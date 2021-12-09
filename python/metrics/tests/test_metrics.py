@@ -33,6 +33,13 @@ nan_contigency_table = {
     'true_negative': np.nan
 }
 
+char_contigency_table = {
+    'true_positive': '1',
+    'false_positive': '2',
+    'false_negative': '3',
+    'true_negative': '4'
+}
+
 y_true = [1., 2., 3., 4.]
 y_pred = [4., 3., 2., 1.]
 
@@ -78,8 +85,14 @@ def test_probability_of_detection():
     POD = metrics.probability_of_detection(nan_contigency_table)
     assert np.isnan(POD)
 
+    POD = metrics.probability_of_detection(char_contigency_table)
+    assert POD == (1/4)
+
 def test_probability_of_false_detection():
     POFD = metrics.probability_of_false_detection(contigency_table)
+    assert POFD == (2/6)
+
+    POFD = metrics.probability_of_false_detection(char_contigency_table)
     assert POFD == (2/6)
 
     POFD = metrics.probability_of_false_detection(alt_contigency_table,
@@ -99,6 +112,8 @@ def test_probability_of_false_alarm():
     POFA = metrics.probability_of_false_alarm(contigency_table)
     assert POFA == (2/3)
 
+    POFA = metrics.probability_of_false_alarm(char_contigency_table)
+    assert POFA == (2/3)
 
     POFA = metrics.probability_of_false_alarm(alt_contigency_table,
         true_positive_key='TP',
@@ -117,6 +132,8 @@ def test_threat_score():
     TS = metrics.threat_score(contigency_table)
     assert TS == (1/6)
 
+    TS = metrics.threat_score(char_contigency_table)
+    assert TS == (1/6)
 
     TS = metrics.threat_score(alt_contigency_table,
         true_positive_key='TP',
@@ -136,6 +153,9 @@ def test_frequency_bias():
     FBI = metrics.frequency_bias(contigency_table)
     assert FBI == (3/4)
 
+    FBI = metrics.frequency_bias(char_contigency_table)
+    assert FBI == (3/4)
+
     FBI = metrics.frequency_bias(alt_contigency_table,
         true_positive_key='TP',
         false_positive_key='FP',
@@ -152,6 +172,9 @@ def test_frequency_bias():
 
 def test_percent_correct():
     PC = metrics.percent_correct(contigency_table)
+    assert PC == (5/10)
+
+    PC = metrics.percent_correct(char_contigency_table)
     assert PC == (5/10)
 
     PC = metrics.percent_correct(alt_contigency_table,
@@ -173,6 +196,9 @@ def test_base_chance():
     a_r = metrics.base_chance(contigency_table)
     assert a_r == (12/10)
 
+    a_r = metrics.base_chance(char_contigency_table)
+    assert a_r == (12/10)
+
     a_r = metrics.base_chance(alt_contigency_table,
         true_positive_key='TP',
         false_positive_key='FP',
@@ -190,6 +216,9 @@ def test_base_chance():
 
 def test_equitable_threat_score():
     ETS = metrics.equitable_threat_score(contigency_table)
+    assert isclose(ETS, (-0.2/4.8), abs_tol=0.000001)
+
+    ETS = metrics.equitable_threat_score(char_contigency_table)
     assert isclose(ETS, (-0.2/4.8), abs_tol=0.000001)
 
     ETS = metrics.equitable_threat_score(alt_contigency_table,
