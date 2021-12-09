@@ -43,6 +43,12 @@ char_contigency_table = {
 y_true = [1., 2., 3., 4.]
 y_pred = [4., 3., 2., 1.]
 
+z_true = [0., 0., 0., 0.]
+z_pred = [0., 0., 0., 0.]
+
+n_true = [np.nan, np.nan, np.nan, np.nan]
+n_pred = [np.nan, np.nan, np.nan, np.nan]
+
 def test_compute_contingency_table():
     obs = pd.Categorical([True, False, False, True, True, True,
         False, False, False, False])
@@ -258,3 +264,50 @@ def test_nash_sutcliffe_efficiency():
     NNSEL = metrics.nash_sutcliffe_efficiency(np.exp(y_true), 
         np.exp(y_pred), log=True, normalized=True)
     assert NNSEL == 0.2
+
+def test_zero_mean_squared_error():
+    MSE = metrics.mean_squared_error(z_true, z_pred)
+    assert MSE == 0.0
+
+    RMSE = metrics.mean_squared_error(z_true, z_pred, root=True)
+    assert RMSE == 0.0
+
+def test_nan_mean_squared_error():
+    MSE = metrics.mean_squared_error(n_true, n_pred)
+    assert np.isnan(MSE)
+
+    RMSE = metrics.mean_squared_error(n_true, n_pred, root=True)
+    assert np.isnan(RMSE)
+
+def test_zero_nash_sutcliffe_efficiency():
+    with pytest.warns(RuntimeWarning):
+        NSE = metrics.nash_sutcliffe_efficiency(z_true, z_pred)
+        assert np.isnan(NSE)
+        
+        NNSE = metrics.nash_sutcliffe_efficiency(z_true, z_pred, 
+            normalized=True)
+        assert np.isnan(NNSE)
+       
+        NSEL = metrics.nash_sutcliffe_efficiency(np.exp(z_true), 
+            np.exp(z_pred), log=True)
+        assert np.isnan(NSEL)
+        
+        NNSEL = metrics.nash_sutcliffe_efficiency(np.exp(z_true), 
+            np.exp(z_pred), log=True, normalized=True)
+        assert np.isnan(NNSEL)
+
+def test_nan_nash_sutcliffe_efficiency():
+    NSE = metrics.nash_sutcliffe_efficiency(n_true, n_pred)
+    assert np.isnan(NSE)
+    
+    NNSE = metrics.nash_sutcliffe_efficiency(n_true, n_pred, 
+        normalized=True)
+    assert np.isnan(NNSE)
+    
+    NSEL = metrics.nash_sutcliffe_efficiency(np.exp(n_true), 
+        np.exp(n_pred), log=True)
+    assert np.isnan(NSEL)
+    
+    NNSEL = metrics.nash_sutcliffe_efficiency(np.exp(n_true), 
+        np.exp(n_pred), log=True, normalized=True)
+    assert np.isnan(NNSEL)
