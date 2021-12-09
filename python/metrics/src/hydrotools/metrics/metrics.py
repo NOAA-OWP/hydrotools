@@ -177,8 +177,8 @@ def probability_of_detection(
         Probability of detection.
         
     """
-    a = contingency_table[true_positive_key]
-    c = contingency_table[false_negative_key]
+    a = np.float64(contingency_table[true_positive_key])
+    c = np.float64(contingency_table[false_negative_key])
     return a / (a+c)
 
 def probability_of_false_detection(
@@ -205,8 +205,8 @@ def probability_of_false_detection(
         Probability of false detection.
         
     """
-    b = contingency_table[false_positive_key]
-    d = contingency_table[true_negative_key]
+    b = np.float64(contingency_table[false_positive_key])
+    d = np.float64(contingency_table[true_negative_key])
     return b / (b+d)
 
 def probability_of_false_alarm(
@@ -233,8 +233,8 @@ def probability_of_false_alarm(
         Probability of false alarm.
         
     """
-    b = contingency_table[false_positive_key]
-    a = contingency_table[true_positive_key]
+    b = np.float64(contingency_table[false_positive_key])
+    a = np.float64(contingency_table[true_positive_key])
     return b / (b+a)
 
 def threat_score(
@@ -264,9 +264,9 @@ def threat_score(
         Threat score.
         
     """
-    a = contingency_table[true_positive_key]
-    b = contingency_table[false_positive_key]
-    c = contingency_table[false_negative_key]
+    a = np.float64(contingency_table[true_positive_key])
+    b = np.float64(contingency_table[false_positive_key])
+    c = np.float64(contingency_table[false_negative_key])
     return a / (a+b+c)
 
 def frequency_bias(
@@ -296,9 +296,9 @@ def frequency_bias(
         Frequency bias.
         
     """
-    a = contingency_table[true_positive_key]
-    b = contingency_table[false_positive_key]
-    c = contingency_table[false_negative_key]
+    a = np.float64(contingency_table[true_positive_key])
+    b = np.float64(contingency_table[false_positive_key])
+    c = np.float64(contingency_table[false_negative_key])
     return (a+b) / (a+c)
 
 def percent_correct(
@@ -331,10 +331,10 @@ def percent_correct(
         Percent correct.
         
     """
-    a = contingency_table[true_positive_key]
-    b = contingency_table[false_positive_key]
-    c = contingency_table[false_negative_key]
-    d = contingency_table[true_negative_key]
+    a = np.float64(contingency_table[true_positive_key])
+    b = np.float64(contingency_table[false_positive_key])
+    c = np.float64(contingency_table[false_negative_key])
+    d = np.float64(contingency_table[true_negative_key])
     return (a+d) / (a+b+c+d)
 
 def base_chance(
@@ -365,10 +365,10 @@ def base_chance(
         Base chance to hit by chance.
         
     """
-    a = contingency_table[true_positive_key]
-    b = contingency_table[false_positive_key]
-    c = contingency_table[false_negative_key]
-    d = contingency_table[true_negative_key]
+    a = np.float64(contingency_table[true_positive_key])
+    b = np.float64(contingency_table[false_positive_key])
+    c = np.float64(contingency_table[false_negative_key])
+    d = np.float64(contingency_table[true_negative_key])
     return ((a+b) * (a+c)) / (a+b+c+d)
 
 def equitable_threat_score(
@@ -407,7 +407,7 @@ def equitable_threat_score(
         false_negative_key=false_negative_key,
         true_negative_key=true_negative_key
         )
-    a = contingency_table[true_positive_key]
-    b = contingency_table[false_positive_key]
-    c = contingency_table[false_negative_key]
+    a = np.float64(contingency_table[true_positive_key])
+    b = np.float64(contingency_table[false_positive_key])
+    c = np.float64(contingency_table[false_negative_key])
     return (a-a_r) / (a+b+c-a_r)
