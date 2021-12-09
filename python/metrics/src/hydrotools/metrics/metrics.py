@@ -11,6 +11,7 @@ http://www.eumetrain.org/data/4/451/english/courses/msgcrs/index.htm
 Functions
 ---------
  - compute_contingency_table
+ - convert_values_to_numpy
  - probability_of_detection
  - probability_of_false_detection
  - probability_of_false_alarm
@@ -27,7 +28,7 @@ Functions
 import numpy as np
 import numpy.typing as npt
 import pandas as pd
-from typing import Union
+from typing import Union, Mapping, MutableMapping
 
 def mean_squared_error(
     y_true: npt.ArrayLike,
@@ -84,7 +85,7 @@ def nash_sutcliffe_efficiency(
     Returns
     -------
     score: float
-        Nash–Sutcliffe model efficiency coefficient
+        Nash-Sutcliffe model efficiency coefficient
         
     References
     ----------
@@ -153,6 +154,36 @@ def compute_contingency_table(
         true_negative_key : ctab.loc[False, False]
         })
 
+def convert_mapping_values(
+    mapping: Mapping[str, npt.DTypeLike],
+    converter: np.dtype = np.float64
+    ) -> MutableMapping:
+    """Convert mapping values to a consistent type. Primarily used to validate 
+    contingency tables.
+        
+    Parameters
+    ----------
+    mapping: dict-like, required
+        Input mapping with string keys and values that can be coerced into a 
+        numpy data type.
+    converter: numpy.dtype, optional, default numpy.float64
+        Converter data type or function used to convert mapping values to a 
+        consistent type.
+        
+    Returns
+    -------
+    converted_mapping: dict-like, same type as mapping
+        New mapping with converted values.
+        
+    """
+    # Populate new dictionary with converted values
+    d = {}
+    for key, value in dict(mapping).items():
+        d[key] = converter(value)
+
+    # Return new mapping with same type as original
+    return type(mapping)(d)
+
 def probability_of_detection(
     contingency_table: Union[dict, pd.DataFrame, pd.Series],
     true_positive_key: str = 'true_positive',
@@ -177,8 +208,12 @@ def probability_of_detection(
         Probability of detection.
         
     """
-    a = np.float64(contingency_table[true_positive_key])
-    c = np.float64(contingency_table[false_negative_key])
+    # Convert values to numpy scalars
+    contingency_table = convert_mapping_values(contingency_table)
+
+    # Compute
+    a = contingency_table[true_positive_key]
+    c = contingency_table[false_negative_key]
     return a / (a+c)
 
 def probability_of_false_detection(
@@ -205,8 +240,12 @@ def probability_of_false_detection(
         Probability of false detection.
         
     """
-    b = np.float64(contingency_table[false_positive_key])
-    d = np.float64(contingency_table[true_negative_key])
+    # Convert values to numpy scalars
+    contingency_table = convert_mapping_values(contingency_table)
+
+    # Compute
+    b = contingency_table[false_positive_key]
+    d = contingency_table[true_negative_key]
     return b / (b+d)
 
 def probability_of_false_alarm(
@@ -233,8 +272,12 @@ def probability_of_false_alarm(
         Probability of false alarm.
         
     """
-    b = np.float64(contingency_table[false_positive_key])
-    a = np.float64(contingency_table[true_positive_key])
+    # Convert values to numpy scalars
+    contingency_table = convert_mapping_values(contingency_table)
+
+    # Compute
+    b = contingency_table[false_positive_key]
+    a = contingency_table[true_positive_key]
     return b / (b+a)
 
 def threat_score(
@@ -264,9 +307,13 @@ def threat_score(
         Threat score.
         
     """
-    a = np.float64(contingency_table[true_positive_key])
-    b = np.float64(contingency_table[false_positive_key])
-    c = np.float64(contingency_table[false_negative_key])
+    # Convert values to numpy scalars
+    contingency_table = convert_mapping_values(contingency_table)
+
+    # Compute
+    a = contingency_table[true_positive_key]
+    b = contingency_table[false_positive_key]
+    c = contingency_table[false_negative_key]
     return a / (a+b+c)
 
 def frequency_bias(
@@ -296,9 +343,13 @@ def frequency_bias(
         Frequency bias.
         
     """
-    a = np.float64(contingency_table[true_positive_key])
-    b = np.float64(contingency_table[false_positive_key])
-    c = np.float64(contingency_table[false_negative_key])
+    # Convert values to numpy scalars
+    contingency_table = convert_mapping_values(contingency_table)
+
+    # Compute
+    a = contingency_table[true_positive_key]
+    b = contingency_table[false_positive_key]
+    c = contingency_table[false_negative_key]
     return (a+b) / (a+c)
 
 def percent_correct(
@@ -331,10 +382,14 @@ def percent_correct(
         Percent correct.
         
     """
-    a = np.float64(contingency_table[true_positive_key])
-    b = np.float64(contingency_table[false_positive_key])
-    c = np.float64(contingency_table[false_negative_key])
-    d = np.float64(contingency_table[true_negative_key])
+    # Convert values to numpy scalars
+    contingency_table = convert_mapping_values(contingency_table)
+
+    # Compute
+    a = contingency_table[true_positive_key]
+    b = contingency_table[false_positive_key]
+    c = contingency_table[false_negative_key]
+    d = contingency_table[true_negative_key]
     return (a+d) / (a+b+c+d)
 
 def base_chance(
@@ -365,10 +420,14 @@ def base_chance(
         Base chance to hit by chance.
         
     """
-    a = np.float64(contingency_table[true_positive_key])
-    b = np.float64(contingency_table[false_positive_key])
-    c = np.float64(contingency_table[false_negative_key])
-    d = np.float64(contingency_table[true_negative_key])
+    # Convert values to numpy scalars
+    contingency_table = convert_mapping_values(contingency_table)
+
+    # Compute
+    a = contingency_table[true_positive_key]
+    b = contingency_table[false_positive_key]
+    c = contingency_table[false_negative_key]
+    d = contingency_table[true_negative_key]
     return ((a+b) * (a+c)) / (a+b+c+d)
 
 def equitable_threat_score(
@@ -401,13 +460,17 @@ def equitable_threat_score(
         Equitable threat score.
         
     """
+    # Convert values to numpy scalars
+    contingency_table = convert_mapping_values(contingency_table)
+
+    # Compute
     a_r = base_chance(contingency_table,
         true_positive_key=true_positive_key,
         false_positive_key=false_positive_key,
         false_negative_key=false_negative_key,
         true_negative_key=true_negative_key
         )
-    a = np.float64(contingency_table[true_positive_key])
-    b = np.float64(contingency_table[false_positive_key])
-    c = np.float64(contingency_table[false_negative_key])
+    a = contingency_table[true_positive_key]
+    b = contingency_table[false_positive_key]
+    c = contingency_table[false_negative_key]
     return (a-a_r) / (a+b+c-a_r)
