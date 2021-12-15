@@ -35,13 +35,13 @@ all-tests: install
 	$(PYTHON) -m pytest -s
 
 install: $(PYENV)/bin/activate
-	$(PYTHON) -m pip install --use-feature=in-tree-build $(SUBPACKAGES_PATHS)
+	$(PYTHON) -m pip install $(SUBPACKAGES_PATHS)
 
 uninstall: $(PYENV)/bin/activate
 	$(PYTHON) -m pip uninstall -y $(addprefix $(PACKAGE)., $(SUBPACKAGES_WITHOUT_EXTRA_REQUIRE))
 
 develop: $(PYENV)/bin/activate
-	$(PYTHON) -m pip install --use-feature=in-tree-build --editable $(SUBPACKAGES_PATHS)
+	$(PYTHON) -m pip install --editable $(SUBPACKAGES_PATHS)
 
 
 $(PYENV)/bin/activate:
