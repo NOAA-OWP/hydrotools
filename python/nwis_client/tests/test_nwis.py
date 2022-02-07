@@ -437,3 +437,15 @@ def test_get_returns_empty_canonical_dataframe(setup_iv_value_time, monkeypatch)
     )
     canonical_df = iv._create_empty_canonical_df()
     assert df.equals(canonical_df)
+
+def test_nwis_client_get_throws_warning_for_kwargs(mocked_iv):
+    from packaging import version
+    version = version.parse(nwis_client.__version__)
+    version = (version.major, version.minor)
+
+    # versions <= than 3.1 should throw an exception instead of a warning
+    assert version <= (3, 1)
+
+    with pytest.warns():
+        # startdt should be startDT
+        mocked_iv.get(sites=["01189000"], startDt="2022-01-01")
