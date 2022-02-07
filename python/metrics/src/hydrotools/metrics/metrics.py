@@ -22,6 +22,7 @@ Functions
  - equitable_threat_score
  - mean_squared_error
  - nash_sutcliffe_efficiency
+ - kling_gupta_efficiency
 
 """
 
@@ -66,7 +67,7 @@ def nash_sutcliffe_efficiency(
     log: bool = False,
     normalized: bool = False
     ) -> float:
-    """Compute the Nash–Sutcliffe model efficiency coefficient (NSE), also called the 
+    """Compute the Nash-Sutcliffe model efficiency coefficient (NSE), also called the 
     mean squared error skill score or the R^2 (coefficient of determination) regression score.
         
     Parameters
@@ -111,6 +112,62 @@ def nash_sutcliffe_efficiency(
     if normalized:
         return 1.0 / (1.0 + numerator/denominator)
     return 1.0 - numerator/denominator
+
+def kling_gupta_efficiency(
+    y_true: npt.ArrayLike,
+    y_pred: npt.ArrayLike,
+    r_scale: float = 1.0,
+    a_scale: float = 1.0,
+    b_scale: float = 1.0
+    ) -> float:
+    """Compute the Kling-Gupta model efficiency coefficient (KGE).
+        
+    Parameters
+    ----------
+    y_true: array-like of shape (n_samples,) or (n_samples, n_outputs)
+        Ground truth (correct) target values, also called observations, measurements, or observed values.
+    y_pred: pandas.Series, required
+        Estimated target values, also called simulations or modeled values.
+    r_scale: float, optional, default 1.0
+        Linear correlation (r) scaling factor. Used to re-scale the Euclidean space by 
+        emphasizing different KGE components.
+    a_scale: float, optional, default 1.0
+        Relative variability (alpha) scaling factor. Used to re-scale the Euclidean space by 
+        emphasizing different KGE components.
+    b_scale: float, optional, default 1.0
+        Relative mean (beta) scaling factor. Used to re-scale the Euclidean space by 
+        emphasizing different KGE components.
+        
+    Returns
+    -------
+    score: float
+        Kling-Gupta efficiency.
+        
+    References
+    ----------
+    Gupta, H. V., Kling, H., Yilmaz, K. K., & Martinez, G. F. (2009). Decomposition of 
+        the mean squared error and NSE performance criteria: Implications for improving 
+        hydrological modelling. Journal of hydrology, 377(1-2), 80-91.
+    
+    """
+    # Pearson correlation coefficient
+    r = np.corrcoef(y_pred, y_true)[0,1]
+
+    # Relative variability
+    a = np.std(y_pred) / np.std(y_true)
+
+    # Relative mean
+    b = np.mean(y_pred) / np.mean(y_true)
+
+    # Scaled Euclidean distance
+    EDs = np.sqrt(
+        (r_scale * (r - 1.0)) ** 2.0 + 
+        (a_scale * (a - 1.0)) ** 2.0 + 
+        (b_scale * (b - 1.0)) ** 2.0
+        )
+
+    # Return KGE
+    return 1.0 - EDs
 
 def compute_contingency_table(
     observed: pd.Series,
