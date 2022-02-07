@@ -72,7 +72,7 @@ def verify_case_insensitive_kwargs(
 
             bound_params = signature.bind(*args, **kwargs)
 
-            variadic_keyword_args = bound_params.arguments[variadic_keyword_arg_name]
+            variadic_keyword_args = bound_params.arguments.get(variadic_keyword_arg_name, dict())
 
             errors = []  # type: List[Tuple[str, str]]
             for kwarg in variadic_keyword_args.keys():
