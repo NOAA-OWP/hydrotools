@@ -1,4 +1,5 @@
 import pytest
+from hydrotools import nwis_client
 from hydrotools.nwis_client import iv
 
 # Datetime test related imports
@@ -35,6 +36,7 @@ def test_split(key, values, split_threshold, join_on, validation):
             else:
                 assert a == v
 
+##### MOCK OBJECTS #####
 
 class MockRequests:
     """Mock of requests object
@@ -72,6 +74,7 @@ class MockRequests:
     def text(self):
         return self._text
 
+##### FIXTURES #####
 
 @pytest.fixture
 def setup_iv(loop):
@@ -84,6 +87,16 @@ def setup_iv_value_time(loop):
     o = iv.IVDataService(value_time_label="value_time")
     yield o
     o._restclient.close()
+
+@pytest.fixture
+def mocked_iv(setup_iv, monkeypatch):
+    def wrapper(*args, **kwargs):
+        return []
+
+    # Monkey patch get_raw method to return []
+    monkeypatch.setattr(iv.IVDataService, "get_raw", wrapper)
+
+    return setup_iv
 
 
 simplify_variable_test_data = [
