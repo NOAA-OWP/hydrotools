@@ -40,9 +40,9 @@ def mean_squared_error(
         
     Parameters
     ----------
-    y_true: array-like of shape (n_samples,) or (n_samples, n_outputs)
+    y_true: array-like of shape (n_samples,), required
         Ground truth (correct) target values, also called observations, measurements, or observed values.
-    y_pred: pandas.Series, required
+    y_pred: array-like of shape (n_samples,), required
         Estimated target values, also called simulations or modeled values.
     root: bool, default False
         When True, return the root mean squared error.
@@ -72,9 +72,9 @@ def nash_sutcliffe_efficiency(
         
     Parameters
     ----------
-    y_true: array-like of shape (n_samples,) or (n_samples, n_outputs)
+    y_true: array-like of shape (n_samples,), required
         Ground truth (correct) target values, also called observations, measurements, or observed values.
-    y_pred: pandas.Series, required
+    y_pred: array-like of shape (n_samples,), required
         Estimated target values, also called simulations or modeled values.
     log: bool, default False
         Apply numpy.log (natural logarithm) to y_true and y_pred 
@@ -124,9 +124,9 @@ def kling_gupta_efficiency(
         
     Parameters
     ----------
-    y_true: array-like of shape (n_samples,) or (n_samples, n_outputs)
+    y_true: array-like of shape (n_samples,), required
         Ground truth (correct) target values, also called observations, measurements, or observed values.
-    y_pred: pandas.Series, required
+    y_pred: array-like of shape (n_samples,), required
         Estimated target values, also called simulations or modeled values.
     r_scale: float, optional, default 1.0
         Linear correlation (r) scaling factor. Used to re-scale the Euclidean space by 
@@ -147,7 +147,8 @@ def kling_gupta_efficiency(
     ----------
     Gupta, H. V., Kling, H., Yilmaz, K. K., & Martinez, G. F. (2009). Decomposition of 
         the mean squared error and NSE performance criteria: Implications for improving 
-        hydrological modelling. Journal of hydrology, 377(1-2), 80-91.
+        hydrological modelling. Journal of hydrology, 377(1-2), 80-91. 
+        https://doi.org/10.1016/j.jhydrol.2009.08.003
     
     """
     # Pearson correlation coefficient
