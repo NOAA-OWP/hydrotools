@@ -446,7 +446,7 @@ def test_get_returns_empty_canonical_dataframe(setup_iv_value_time, monkeypatch)
 
     monkeypatch.setattr(iv.IVDataService, "get_raw", get_raw_mock)
     df = setup_iv_value_time.get(
-        sites=["01189000"], startDt="2015-12-01T00:00", endDt="2015-12-31T23:45"
+        sites=["01189000"], startDT="2015-12-01T00:00", endDT="2015-12-31T23:45"
     )
     canonical_df = iv._create_empty_canonical_df()
     assert df.equals(canonical_df)
