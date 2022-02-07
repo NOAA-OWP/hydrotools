@@ -30,6 +30,7 @@ import numpy as np
 import numpy.typing as npt
 import pandas as pd
 from typing import Union, Mapping, MutableMapping
+from . import _validation as validate
 
 def mean_squared_error(
     y_true: npt.ArrayLike,
@@ -99,6 +100,12 @@ def nash_sutcliffe_efficiency(
         Conference Abstracts (p. 237).
     
     """
+    # Raise if not 1-D arrays
+    validate.raise_for_non_vector(y_true, y_pred)
+
+    # Raise if not same shape
+    validate.raise_for_inconsistent_shapes(y_true, y_pred)
+
     # Optionally transform components
     if log:
         y_true = np.log(y_true)
@@ -151,6 +158,12 @@ def kling_gupta_efficiency(
         https://doi.org/10.1016/j.jhydrol.2009.08.003
     
     """
+    # Raise if not 1-D arrays
+    validate.raise_for_non_vector(y_true, y_pred)
+
+    # Raise if not same shape
+    validate.raise_for_inconsistent_shapes(y_true, y_pred)
+
     # Pearson correlation coefficient
     r = np.corrcoef(y_pred, y_true)[0,1]
 
