@@ -14,7 +14,6 @@ Classes
 import datetime
 from collections.abc import Iterable
 from functools import partial
-from typing import Dict, List, Set, T, Union, Iterable
 import re
 import aiohttp
 import six
@@ -24,6 +23,10 @@ import numpy as np
 import pandas as pd
 from hydrotools._restclient import RestClient, Url
 from collections.abc import Sequence
+
+# typing imports
+from pathlib import Path
+from typing import Dict, List, Set, Union, Iterable
 
 # local imports
 from ._utilities import verify_case_insensitive_kwargs
