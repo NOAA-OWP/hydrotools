@@ -462,3 +462,17 @@ def test_nwis_client_get_throws_warning_for_kwargs(mocked_iv):
     with pytest.warns(RuntimeWarning, match="function parameter, 'startDT', provided as 'startDt'"):
         # startdt should be startDT
         mocked_iv.get(sites=["01189000"], startDt="2022-01-01")
+
+@pytest.mark.slow
+def test_nwis_client_cache_path():
+    """verify that cache directory has configurable location"""
+    from tempfile import TemporaryDirectory
+    from pathlib import Path
+
+    with TemporaryDirectory() as temp:
+        cache_file = Path(temp) / "cache.sqlite"
+
+        service = iv.IVDataService(cache_filename=cache_file)
+        service.get(sites=["01189000"], startDT="2022-01-01")
+
+        assert cache_file.exists()
