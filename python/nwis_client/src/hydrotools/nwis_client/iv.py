@@ -26,7 +26,10 @@ from collections.abc import Sequence
 
 # typing imports
 from pathlib import Path
-from typing import Dict, List, Set, Union, Iterable
+from typing import Dict, List, Set, TypeVar, Union, Iterable
+
+T = TypeVar("T")
+
 
 # local imports
 from ._utilities import verify_case_insensitive_kwargs
