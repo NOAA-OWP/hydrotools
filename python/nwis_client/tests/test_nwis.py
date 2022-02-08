@@ -457,8 +457,8 @@ def test_nwis_client_get_throws_warning_for_kwargs(mocked_iv):
     version = (version.major, version.minor)
 
     # versions <= than 3.1 should throw an exception instead of a warning
-    assert version <= (3, 1)
+    assert version < (3, 1)
 
-    with pytest.warns():
+    with pytest.warns(RuntimeWarning, match="function parameter, 'startDT', provided as 'startDt'"):
         # startdt should be startDT
         mocked_iv.get(sites=["01189000"], startDt="2022-01-01")
