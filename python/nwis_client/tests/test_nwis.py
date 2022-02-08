@@ -76,15 +76,29 @@ class MockRequests:
 
 ##### FIXTURES #####
 
+@pytest.fixture(name="IVDataServiceWithTempCache")
+def wrap_iv_cache_location_to_temp(loop):
+    from tempfile import TemporaryDirectory
+    from pathlib import Path
+    from functools import partial
+
+    with TemporaryDirectory() as temp:
+        cache_file = Path(temp) / "cache.sqlite"
+
+        o = partial(iv.IVDataService, cache_filename=cache_file)
+        return o
+    
+
 @pytest.fixture
-def setup_iv(loop):
-    o = iv.IVDataService()
+def setup_iv(IVDataServiceWithTempCache):
+    """Setup IVDataService client. Cache file is """
+    o = IVDataServiceWithTempCache()
     yield o
     o._restclient.close()
 
 @pytest.fixture
-def setup_iv_value_time(loop):
-    o = iv.IVDataService(value_time_label="value_time")
+def setup_iv_value_time(IVDataServiceWithTempCache):
+    o = IVDataServiceWithTempCache(value_time_label="value_time")
     yield o
     o._restclient.close()
 
