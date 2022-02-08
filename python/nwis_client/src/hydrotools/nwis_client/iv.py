@@ -100,7 +100,6 @@ class IVDataService:
         safe="/:",
         quote_overide_map={"+": "%2B"},
     )
-    _requests_cache_filename = "nwisiv_cache"
     _headers = {"Accept-Encoding": "gzip, compress"}
     _value_time_label = None
 
