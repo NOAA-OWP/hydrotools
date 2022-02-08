@@ -28,7 +28,7 @@ def test_verify_case_insensitive_kwargs_warns():
     def foo(a: int, **kwargs) -> int:
         return a
 
-    with pytest.warns():
+    with pytest.warns(RuntimeWarning, match="function parameter, 'a', provided as 'A'"):
         input = 12
         res = foo(a=input, A=12)
         assert res == input
@@ -52,5 +52,5 @@ def test_verify_case_insensitive_kwargs_raises():
     def foo(a: int, **kwargs) -> int:
         return a
 
-    with pytest.raises(TypeError):
+    with pytest.raises(TypeError, match="function parameter, 'a', provided as 'A'"):
         foo(a=12, A=12)
