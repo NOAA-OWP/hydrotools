@@ -316,4 +316,30 @@ def test_convert_mapping_values():
     converted = metrics.convert_mapping_values(char_series)
 
     assert converted.dtype == np.float64
-    
+
+def test_kling_gupta_efficiency():
+    # Default (inverse case)
+    KGE = metrics.kling_gupta_efficiency(y_true, y_pred)
+    expected = -1.0
+    assert np.isclose(KGE, expected)
+
+    # Half-scale
+    KGE = metrics.kling_gupta_efficiency(y_true, np.array(y_true) * 0.5)
+    expected = (1.0 - np.sqrt(0.5))
+    assert np.isclose(KGE, expected)
+
+    # Double-scale
+    KGE = metrics.kling_gupta_efficiency(y_true, np.array(y_true) * 2.0)
+    expected = (1.0 - np.sqrt(2.0))
+    assert np.isclose(KGE, expected)
+
+    # Identity
+    KGE = metrics.kling_gupta_efficiency(y_true, np.array(y_true) * 1.0)
+    expected = 1.0
+    assert np.isclose(KGE, expected)
+
+    # Scaling parameters
+    KGE = metrics.kling_gupta_efficiency(y_true, np.array(y_true) * 0.25,
+        r_scale=0.5, a_scale=0.25, b_scale=0.25)
+    expected = (1.0 - np.sqrt(9.0/128.0))
+    assert np.isclose(KGE, expected)

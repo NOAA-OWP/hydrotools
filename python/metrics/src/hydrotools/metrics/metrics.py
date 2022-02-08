@@ -22,6 +22,7 @@ Functions
  - equitable_threat_score
  - mean_squared_error
  - nash_sutcliffe_efficiency
+ - kling_gupta_efficiency
 
 """
 
@@ -29,6 +30,7 @@ import numpy as np
 import numpy.typing as npt
 import pandas as pd
 from typing import Union, Mapping, MutableMapping
+from . import _validation as validate
 
 def mean_squared_error(
     y_true: npt.ArrayLike,
@@ -39,9 +41,9 @@ def mean_squared_error(
         
     Parameters
     ----------
-    y_true: array-like of shape (n_samples,) or (n_samples, n_outputs)
+    y_true: array-like of shape (n_samples,), required
         Ground truth (correct) target values, also called observations, measurements, or observed values.
-    y_pred: pandas.Series, required
+    y_pred: array-like of shape (n_samples,), required
         Estimated target values, also called simulations or modeled values.
     root: bool, default False
         When True, return the root mean squared error.
@@ -66,14 +68,14 @@ def nash_sutcliffe_efficiency(
     log: bool = False,
     normalized: bool = False
     ) -> float:
-    """Compute the Nash–Sutcliffe model efficiency coefficient (NSE), also called the 
+    """Compute the Nash-Sutcliffe model efficiency coefficient (NSE), also called the 
     mean squared error skill score or the R^2 (coefficient of determination) regression score.
         
     Parameters
     ----------
-    y_true: array-like of shape (n_samples,) or (n_samples, n_outputs)
+    y_true: array-like of shape (n_samples,), required
         Ground truth (correct) target values, also called observations, measurements, or observed values.
-    y_pred: pandas.Series, required
+    y_pred: array-like of shape (n_samples,), required
         Estimated target values, also called simulations or modeled values.
     log: bool, default False
         Apply numpy.log (natural logarithm) to y_true and y_pred 
@@ -98,6 +100,12 @@ def nash_sutcliffe_efficiency(
         Conference Abstracts (p. 237).
     
     """
+    # Raise if not 1-D arrays
+    validate.raise_for_non_vector(y_true, y_pred)
+
+    # Raise if not same shape
+    validate.raise_for_inconsistent_shapes(y_true, y_pred)
+
     # Optionally transform components
     if log:
         y_true = np.log(y_true)
@@ -111,6 +119,69 @@ def nash_sutcliffe_efficiency(
     if normalized:
         return 1.0 / (1.0 + numerator/denominator)
     return 1.0 - numerator/denominator
+
+def kling_gupta_efficiency(
+    y_true: npt.ArrayLike,
+    y_pred: npt.ArrayLike,
+    r_scale: float = 1.0,
+    a_scale: float = 1.0,
+    b_scale: float = 1.0
+    ) -> float:
+    """Compute the Kling-Gupta model efficiency coefficient (KGE).
+        
+    Parameters
+    ----------
+    y_true: array-like of shape (n_samples,), required
+        Ground truth (correct) target values, also called observations, measurements, or observed values.
+    y_pred: array-like of shape (n_samples,), required
+        Estimated target values, also called simulations or modeled values.
+    r_scale: float, optional, default 1.0
+        Linear correlation (r) scaling factor. Used to re-scale the Euclidean space by 
+        emphasizing different KGE components.
+    a_scale: float, optional, default 1.0
+        Relative variability (alpha) scaling factor. Used to re-scale the Euclidean space by 
+        emphasizing different KGE components.
+    b_scale: float, optional, default 1.0
+        Relative mean (beta) scaling factor. Used to re-scale the Euclidean space by 
+        emphasizing different KGE components.
+        
+    Returns
+    -------
+    score: float
+        Kling-Gupta efficiency.
+        
+    References
+    ----------
+    Gupta, H. V., Kling, H., Yilmaz, K. K., & Martinez, G. F. (2009). Decomposition of 
+        the mean squared error and NSE performance criteria: Implications for improving 
+        hydrological modelling. Journal of hydrology, 377(1-2), 80-91. 
+        https://doi.org/10.1016/j.jhydrol.2009.08.003
+    
+    """
+    # Raise if not 1-D arrays
+    validate.raise_for_non_vector(y_true, y_pred)
+
+    # Raise if not same shape
+    validate.raise_for_inconsistent_shapes(y_true, y_pred)
+
+    # Pearson correlation coefficient
+    r = np.corrcoef(y_pred, y_true)[0,1]
+
+    # Relative variability
+    a = np.std(y_pred) / np.std(y_true)
+
+    # Relative mean
+    b = np.mean(y_pred) / np.mean(y_true)
+
+    # Scaled Euclidean distance
+    EDs = np.sqrt(
+        (r_scale * (r - 1.0)) ** 2.0 + 
+        (a_scale * (a - 1.0)) ** 2.0 + 
+        (b_scale * (b - 1.0)) ** 2.0
+        )
+
+    # Return KGE
+    return 1.0 - EDs
 
 def compute_contingency_table(
     observed: pd.Series,
