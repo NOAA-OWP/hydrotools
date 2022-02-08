@@ -102,14 +102,15 @@ class IVDataService:
     def __init__(self, *, 
         enable_cache: bool = True, 
         cache_expire_after: int = 43200,
-        value_time_label: str = None
+        value_time_label: str = None,
+        cache_filename: Union[str, Path] = "nwisiv_cache"
         ):
         self._cache_enabled = enable_cache
         self._restclient = RestClient(
             base_url=self._base_url,
             headers=self._headers,
             enable_cache=self._cache_enabled,
-            cache_filename=self._requests_cache_filename,
+            cache_filename=str(cache_filename),
             cache_expire_after=cache_expire_after,
         )
         if value_time_label == None:
