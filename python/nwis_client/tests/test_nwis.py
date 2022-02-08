@@ -89,15 +89,23 @@ def setup_iv_value_time(loop):
     o._restclient.close()
 
 @pytest.fixture
-def mocked_iv(setup_iv, monkeypatch):
+def mock_iv(setup_iv, monkeypatch):
+    """mock `iv.IVDataService`. `iv.IVDataService`'s `get_raw` method has been mocked to return an
+    empty list.
+    """
     def wrapper(*args, **kwargs):
         return []
 
     # Monkey patch get_raw method to return []
     monkeypatch.setattr(iv.IVDataService, "get_raw", wrapper)
 
+@pytest.fixture
+def mocked_iv(mock_iv, setup_iv):
+    """return mocked and setup `iv.IVDataService`. 
+    `iv.IVDataService`'s `get_raw` method has been mocked to return an empty list.
+    """
     return setup_iv
-
+    
 
 simplify_variable_test_data = [
     ("test", ",", "test"),
@@ -464,7 +472,7 @@ def test_nwis_client_get_throws_warning_for_kwargs(mocked_iv):
         mocked_iv.get(sites=["01189000"], startDt="2022-01-01")
 
 @pytest.mark.slow
-def test_nwis_client_cache_path():
+def test_nwis_client_cache_path(loop):
     """verify that cache directory has configurable location"""
     from tempfile import TemporaryDirectory
     from pathlib import Path
@@ -476,3 +484,6 @@ def test_nwis_client_cache_path():
         service.get(sites=["01189000"], startDT="2022-01-01")
 
         assert cache_file.exists()
+
+        # close resources
+        service._restclient.close()
