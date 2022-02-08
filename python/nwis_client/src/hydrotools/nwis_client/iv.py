@@ -53,6 +53,8 @@ class IVDataService:
         Cached item life length in seconds
     value_time_label: str, default 'value_date'
         Label to use for datetime column returned by IVDataService.get
+    cache_filename: str or Path default 'nwisiv_cache'
+        Sqlite cache filename or filepath. Suffix '.sqlite' will be added to file if not included.
 
     Examples
     --------
