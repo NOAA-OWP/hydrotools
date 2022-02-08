@@ -9,6 +9,11 @@ Functions
  - raise_for_non_vector
  - raise_for_inconsistent_shapes
 
+Classes
+-------
+ - InconsistentShapesError
+ - NonVectorError
+
 """
 
 import numpy as np
