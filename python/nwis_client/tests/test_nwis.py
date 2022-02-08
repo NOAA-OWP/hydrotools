@@ -1,4 +1,5 @@
 import pytest
+from hydrotools import nwis_client
 from hydrotools.nwis_client import iv
 
 # Datetime test related imports
@@ -35,6 +36,7 @@ def test_split(key, values, split_threshold, join_on, validation):
             else:
                 assert a == v
 
+##### MOCK OBJECTS #####
 
 class MockRequests:
     """Mock of requests object
@@ -72,6 +74,7 @@ class MockRequests:
     def text(self):
         return self._text
 
+##### FIXTURES #####
 
 @pytest.fixture
 def setup_iv(loop):
@@ -84,6 +87,16 @@ def setup_iv_value_time(loop):
     o = iv.IVDataService(value_time_label="value_time")
     yield o
     o._restclient.close()
+
+@pytest.fixture
+def mocked_iv(setup_iv, monkeypatch):
+    def wrapper(*args, **kwargs):
+        return []
+
+    # Monkey patch get_raw method to return []
+    monkeypatch.setattr(iv.IVDataService, "get_raw", wrapper)
+
+    return setup_iv
 
 
 simplify_variable_test_data = [
@@ -433,7 +446,19 @@ def test_get_returns_empty_canonical_dataframe(setup_iv_value_time, monkeypatch)
 
     monkeypatch.setattr(iv.IVDataService, "get_raw", get_raw_mock)
     df = setup_iv_value_time.get(
-        sites=["01189000"], startDt="2015-12-01T00:00", endDt="2015-12-31T23:45"
+        sites=["01189000"], startDT="2015-12-01T00:00", endDT="2015-12-31T23:45"
     )
     canonical_df = iv._create_empty_canonical_df()
     assert df.equals(canonical_df)
+
+def test_nwis_client_get_throws_warning_for_kwargs(mocked_iv):
+    from packaging import version
+    version = version.parse(nwis_client.__version__)
+    version = (version.major, version.minor)
+
+    # versions <= than 3.1 should throw an exception instead of a warning
+    assert version < (3, 1)
+
+    with pytest.warns(RuntimeWarning, match="function parameter, 'startDT', provided as 'startDt'"):
+        # startdt should be startDT
+        mocked_iv.get(sites=["01189000"], startDt="2022-01-01")
