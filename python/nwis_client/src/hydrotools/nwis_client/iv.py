@@ -35,7 +35,7 @@ T = TypeVar("T")
 from ._utilities import verify_case_insensitive_kwargs
 
 def _verify_case_insensitive_kwargs_handler(m: str) -> None:
-    warnings.warn("`hydrotools.nwis_client` >= 3.1 will raise RuntimeError exception instead of RuntimeWarning.", DeprecationWarning)
+    warnings.warn("`hydrotools.nwis_client` > 3.1 will raise RuntimeError exception instead of RuntimeWarning.", DeprecationWarning)
     warnings.warn(m, RuntimeWarning)
 
 class IVDataService:
