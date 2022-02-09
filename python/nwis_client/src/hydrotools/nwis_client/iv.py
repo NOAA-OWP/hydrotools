@@ -14,7 +14,6 @@ Classes
 import datetime
 from collections.abc import Iterable
 from functools import partial
-from typing import Dict, List, Set, T, Union, Iterable
 import re
 import aiohttp
 import six
@@ -25,11 +24,18 @@ import pandas as pd
 from hydrotools._restclient import RestClient, Url
 from collections.abc import Sequence
 
+# typing imports
+from pathlib import Path
+from typing import Dict, List, Set, TypeVar, Union, Iterable
+
+T = TypeVar("T")
+
+
 # local imports
 from ._utilities import verify_case_insensitive_kwargs
 
 def _verify_case_insensitive_kwargs_handler(m: str) -> None:
-    warnings.warn("`hydrotools.nwis_client` >= 3.1 will raise RuntimeError exception instead of RuntimeWarning.", DeprecationWarning)
+    warnings.warn("`hydrotools.nwis_client` > 3.1 will raise RuntimeError exception instead of RuntimeWarning.", DeprecationWarning)
     warnings.warn(m, RuntimeWarning)
 
 class IVDataService:
@@ -47,6 +53,8 @@ class IVDataService:
         Cached item life length in seconds
     value_time_label: str, default 'value_date'
         Label to use for datetime column returned by IVDataService.get
+    cache_filename: str or Path default 'nwisiv_cache'
+        Sqlite cache filename or filepath. Suffix '.sqlite' will be added to file if not included.
 
     Examples
     --------
@@ -92,21 +100,21 @@ class IVDataService:
         safe="/:",
         quote_overide_map={"+": "%2B"},
     )
-    _requests_cache_filename = "nwisiv_cache"
     _headers = {"Accept-Encoding": "gzip, compress"}
     _value_time_label = None
 
     def __init__(self, *, 
         enable_cache: bool = True, 
         cache_expire_after: int = 43200,
-        value_time_label: str = None
+        value_time_label: str = None,
+        cache_filename: Union[str, Path] = "nwisiv_cache"
         ):
         self._cache_enabled = enable_cache
         self._restclient = RestClient(
             base_url=self._base_url,
             headers=self._headers,
             enable_cache=self._cache_enabled,
-            cache_filename=self._requests_cache_filename,
+            cache_filename=str(cache_filename),
             cache_expire_after=cache_expire_after,
         )
         if value_time_label == None:
