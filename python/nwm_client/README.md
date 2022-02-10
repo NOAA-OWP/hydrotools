@@ -25,6 +25,9 @@ $ python3 -m pip install hydrotools.nwm_client
 The following example demonstrates how one might use `hydrotools.nwm_client` to retrieve NWM streamflow forecasts.
 
 ### Code
+
+<details><summary><b>Retrieving data from Nomads</b></summary>
+
 ```python
 # Import the nwm Client
 from hydrotools.nwm_client import http as nwm
@@ -77,6 +80,9 @@ None
 3 2021-01-01 05:00:00   5.12
 4 2021-01-01 06:00:00   5.03
 ```
+
+</details>
+
 ### System Requirements
 We employ several methods to make sure the resulting `pandas.DataFrame` produced by `nwm_client` are as efficient and manageable as possible. Nonetheless, this package can potentially use a large amount of memory.
 
