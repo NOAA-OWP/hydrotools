@@ -86,6 +86,12 @@ class NWMDataService:
         --------
         >>> from hydrotools.nwm_client import gcp as nwm
         >>> model_data_service = nwm.NWMDataService()
+        >>> # get nwm short range forecast data as a dataframe
+        >>> # for nwm sites with associated USGS gage
+        >>> forecast_data = model_data_service.get(
+        ...     configuration = "short_range",
+        ...     reference_time = "20210101T01Z"
+        ...     )
         
         """
         # Set bucket name
