@@ -84,8 +84,8 @@ class NWMDataService:
 
         Examples
         --------
-        >>> from hydrotools.gcp_client import gcp
-        >>> model_data_service = gcp.NWMDataService()
+        >>> from hydrotools.nwm_client import gcp as nwm
+        >>> model_data_service = nwm.NWMDataService()
         
         """
         # Set bucket name
@@ -143,8 +143,8 @@ class NWMDataService:
 
         Examples
         --------
-        >>> from hydrotools.gcp_client import gcp
-        >>> model_data_service = gcp.NWMDataService()
+        >>> from hydrotools.nwm_client import gcp as nwm
+        >>> model_data_service = nwm.NWMDataService()
         >>> blob_list = model_data_service.list_blobs(
         ...     configuration = "short_range",
         ...     reference_time = "20210101T01Z"
@@ -323,8 +323,8 @@ class NWMDataService:
 
         Examples
         --------
-        >>> from hydrotools.gcp_client import gcp
-        >>> model_data_service = gcp.NWMDataService()
+        >>> from hydrotools.nwm_client import gcp as nwm
+        >>> model_data_service = nwm.NWMDataService()
         >>> forecast_data = model_data_service.get(
         ...     configuration = "short_range",
         ...     reference_time = "20210101T01Z"
@@ -413,8 +413,8 @@ class NWMDataService:
 
         Examples
         --------
-        >>> from hydrotools.gcp_client import gcp
-        >>> model_data_service = gcp.NWMDataService()
+        >>> from hydrotools.nwm_client import gcp as nwm
+        >>> model_data_service = nwm.NWMDataService()
         >>> forecast_data = model_data_service.get(
         ...     configuration = "short_range",
         ...     reference_time = "20210101T01Z"
