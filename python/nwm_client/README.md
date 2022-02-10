@@ -18,6 +18,9 @@ $ python3 -m pip install --upgrade pip wheel
 
 # Install nwm_client
 $ python3 -m pip install hydrotools.nwm_client
+
+# Install nwm_client with gcp capabilities
+$ python3 -m pip install "hydrotools.nwm_client[gcp]"
 ```
 
 ## Usage
