@@ -416,6 +416,10 @@ class NWMDataService:
         ) -> pd.DataFrame:
         """Return streamflow data for a single model cycle in a pandas DataFrame.
 
+        Note: By default, only nwm sites codes with an associated USGS site are returned by
+        `NWMDataService.get`. See `NWMDataService`'s `location_metadata_mapping` parameter to change
+        this behavior.
+
         Parameters
         ----------
         configuration : str, required
