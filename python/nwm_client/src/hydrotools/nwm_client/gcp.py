@@ -271,7 +271,7 @@ class NWMDataService:
             df = ds[['reference_time', 'time', 'streamflow']].to_dataframe().reset_index()
             
             # Extract scale factor
-            scale_factor = ds['streamflow'].scale_factor[0]
+            scale_factor = ds['streamflow'].scale_factor
             
             # Scale data
             df.loc[:, 'streamflow'] = df['streamflow'].mul(scale_factor)
