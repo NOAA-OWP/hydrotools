@@ -49,10 +49,10 @@ n_true = [np.nan, np.nan, np.nan, np.nan]
 n_pred = [np.nan, np.nan, np.nan, np.nan]
 
 def test_compute_contingency_table():
-    obs = pd.Categorical([True, False, False, True, True, True,
-        False, False, False, False])
-    sim = pd.Categorical([True, True, True, False, False, False, 
-        False, False, False, False])
+    obs = pd.Series([True, False, False, True, True, True,
+        False, False, False, False], dtype="category")
+    sim = pd.Series([True, True, True, False, False, False, 
+        False, False, False, False], dtype="category")
 
     table = metrics.compute_contingency_table(obs, sim)
 
