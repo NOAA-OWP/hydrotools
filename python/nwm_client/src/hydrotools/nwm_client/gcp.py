@@ -17,7 +17,14 @@ Classes
 from pandas.core.indexing import convert_from_missing_indexer_tuple
 from hydrotools.caches.hdf import HDFCache
 
-from google.cloud import storage
+try:
+    from google.cloud import storage
+except ImportError as e:
+    error_message = ("Unable to import google-cloud-storage. Reinstall `hydrotools.nwm_client` using the extra-requirement, `gcp`."
+                     "\n"
+                     "`pip install 'hydrotools.nwm_client[gcp]'")
+    raise ImportError(error_message) from e
+
 from io import BytesIO
 import xarray as xr
 import warnings
@@ -56,6 +63,10 @@ class NWMDataService:
         ):
         """Instantiate NWM Data Service.
 
+        Note: By default, only nwm sites codes with an associated USGS site are returned by
+        `NWMDataService.get`. See `NWMDataService`'s `location_metadata_mapping` parameter to change
+        this behavior.
+
         Parameters
         ----------
         bucket_name : str, required, default 'national-water-model'
@@ -80,8 +91,14 @@ class NWMDataService:
 
         Examples
         --------
-        >>> from hydrotools.gcp_client import gcp
-        >>> model_data_service = gcp.NWMDataService()
+        >>> from hydrotools.nwm_client import gcp as nwm
+        >>> model_data_service = nwm.NWMDataService()
+        >>> # get nwm short range forecast data as a dataframe
+        >>> # for nwm sites with associated USGS gage
+        >>> forecast_data = model_data_service.get(
+        ...     configuration = "short_range",
+        ...     reference_time = "20210101T01Z"
+        ...     )
         
         """
         # Set bucket name
@@ -139,8 +156,8 @@ class NWMDataService:
 
         Examples
         --------
-        >>> from hydrotools.gcp_client import gcp
-        >>> model_data_service = gcp.NWMDataService()
+        >>> from hydrotools.nwm_client import gcp as nwm
+        >>> model_data_service = nwm.NWMDataService()
         >>> blob_list = model_data_service.list_blobs(
         ...     configuration = "short_range",
         ...     reference_time = "20210101T01Z"
@@ -319,8 +336,8 @@ class NWMDataService:
 
         Examples
         --------
-        >>> from hydrotools.gcp_client import gcp
-        >>> model_data_service = gcp.NWMDataService()
+        >>> from hydrotools.nwm_client import gcp as nwm
+        >>> model_data_service = nwm.NWMDataService()
         >>> forecast_data = model_data_service.get(
         ...     configuration = "short_range",
         ...     reference_time = "20210101T01Z"
@@ -390,6 +407,10 @@ class NWMDataService:
         ) -> pd.DataFrame:
         """Return streamflow data for a single model cycle in a pandas DataFrame.
 
+        Note: By default, only nwm sites codes with an associated USGS site are returned by
+        `NWMDataService.get`. See `NWMDataService`'s `location_metadata_mapping` parameter to change
+        this behavior.
+
         Parameters
         ----------
         configuration : str, required
@@ -409,8 +430,8 @@ class NWMDataService:
 
         Examples
         --------
-        >>> from hydrotools.gcp_client import gcp
-        >>> model_data_service = gcp.NWMDataService()
+        >>> from hydrotools.nwm_client import gcp as nwm
+        >>> model_data_service = nwm.NWMDataService()
         >>> forecast_data = model_data_service.get(
         ...     configuration = "short_range",
         ...     reference_time = "20210101T01Z"
