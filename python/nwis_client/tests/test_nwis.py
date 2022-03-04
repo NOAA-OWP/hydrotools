@@ -272,7 +272,7 @@ def test_get_slow(setup_iv):
     df = setup_iv.get(site, startDT=start, endDT=end)
     # IV api seems to send different start based on daylights saving time.
     # Test is less prescriptive, but still should suffice
-    assert df["value_date"][0].isoformat().startswith(start)
+    assert df["value_time"][0].isoformat().startswith(start)
 
 
 datetime_keyword_test_data_should_fail = [
