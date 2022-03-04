@@ -49,13 +49,13 @@ def write_to_csv(
 @click.argument("ofile", nargs=1, type=click.Path(path_type=Path))
 @click.option("-s", "--startDT", "startDT", nargs=1, type=TimestampParamType(), help="Start datetime")
 @click.option("-e", "--endDT", "endDT", nargs=1, type=TimestampParamType(), help="End datetime")
-@click.option("-p", "--parameterCd", "parameterCd", nargs=1, type=str, help="Parameter code")
+@click.option("-p", "--parameterCd", "parameterCd", nargs=1, type=str, default="00060", help="Parameter code")
 def run(
     sites: Tuple[str], 
     ofile: Path, 
     startDT: pd.Timestamp = None,
     endDT: pd.Timestamp = None,
-    parameterCd: str = None
+    parameterCd: str = "00060"
     ) -> None:
     """Retrieve data from the USGS IV Web Service API and write to CSV.
     Writes data for all SITES to OFILE.
