@@ -23,3 +23,22 @@ def test_cli():
             '01013500', '02146470', f"{tdir}/test_output_2.csv"])
         assert result2.returncode == 0
         assert Path(f"{tdir}/test_output_2.csv").exists()
+
+def test_comments_header():
+    """Normaly would use click.testing.CLiRunner. However, this does not appear to be async friendly."""
+    with TemporaryDirectory() as tdir:
+        # Output file
+        ofile = Path(tdir) / "test_output.csv"
+
+        # Disable comments and header
+        result2 = subprocess.run([
+            "nwis-client",
+            '--no-comments', '--no-header',
+            '01013500', '02146470', str(ofile)])
+        assert result2.returncode == 0
+        assert ofile.exists()
+
+        # File should only have two lines
+        with ofile.open('r') as fi:
+            count = len([l for l in fi])
+            assert count == 2
