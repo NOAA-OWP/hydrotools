@@ -19,10 +19,16 @@ class TimestampParamType(click.ParamType):
 
 def write_to_csv(
     data: pd.DataFrame,
-    ofile: Path
+    ofile: Path,
+    comments: bool = True,
+    header: bool = True
     ) -> None:
+    # Start building output
+    output = ''
+
     # Comments
-    output = """# USGS IV Service Data
+    if comments:
+        output += """# USGS IV Service Data
 # 
 # value_date: Datetime of measurement (UTC) (character string)
 # variable: USGS variable name (character string)
@@ -33,14 +39,14 @@ def write_to_csv(
 # series: Series number in case multiple time series are returned (integer)
 # 
 """
-    # Add version, link, and write time
-    now = pd.Timestamp.utcnow()
-    output += f"# Generated at {now}\n"
-    output += f"# nwis_client version: {CLIENT_VERSION.__version__}\n"
-    output += "# Source code: https://github.com/NOAA-OWP/hydrotools\n# \n"
+        # Add version, link, and write time
+        now = pd.Timestamp.utcnow()
+        output += f"# Generated at {now}\n"
+        output += f"# nwis_client version: {CLIENT_VERSION.__version__}\n"
+        output += "# Source code: https://github.com/NOAA-OWP/hydrotools\n# \n"
 
     # Write to file
-    output += data.to_csv(index=False, float_format="{:.2f}".format)
+    output += data.to_csv(index=False, float_format="{:.2f}".format, header=header)
     with ofile.open("w") as of:
         of.write(output)
 
@@ -50,12 +56,16 @@ def write_to_csv(
 @click.option("-s", "--startDT", "startDT", nargs=1, type=TimestampParamType(), help="Start datetime")
 @click.option("-e", "--endDT", "endDT", nargs=1, type=TimestampParamType(), help="End datetime")
 @click.option("-p", "--parameterCd", "parameterCd", nargs=1, type=str, default="00060", help="Parameter code")
+@click.option('--comments/--no-comments', default=True, help="Enable/disable comments in output, enabled by default")
+@click.option('--header/--no-header', default=True, help="Enable/disable header in output, enabled by default")
 def run(
     sites: Tuple[str], 
     ofile: Path, 
     startDT: pd.Timestamp = None,
     endDT: pd.Timestamp = None,
-    parameterCd: str = "00060"
+    parameterCd: str = "00060",
+    comments: bool = True,
+    header: bool = True
     ) -> None:
     """Retrieve data from the USGS IV Web Service API and write to CSV.
     Writes data for all SITES to OFILE.
@@ -76,7 +86,7 @@ def run(
     )
     
     # Write to CSV
-    write_to_csv(data=df, ofile=ofile)
+    write_to_csv(data=df, ofile=ofile, comments=comments, header=header)
 
 if __name__ == "__main__":
     run()
