@@ -30,7 +30,8 @@ scenarios = [
 @pytest.mark.parametrize("data,check,value", scenarios)
 def test_compute_contingency_table_scenarios(data, check, value):
     # Construct contingency table
-    table = metrics.compute_contingency_table(data["obs"], data["sim"])
+    with pytest.warns(UserWarning):
+        table = metrics.compute_contingency_table(data["obs"], data["sim"])
 
     # Validate correct values
     for component, val in table.items():
