@@ -8,6 +8,7 @@ Functions
 ---------
  - raise_for_non_vector
  - raise_for_inconsistent_shapes
+ - warn_for_nondichotomous_categories
 
 Classes
 -------
@@ -19,6 +20,8 @@ Classes
 import numpy as np
 import numpy.typing as npt
 from typing import List, Tuple
+import pandas as pd
+import warnings
 
 class InconsistentShapesError(Exception):
     def __init__(self,
@@ -100,3 +103,65 @@ def raise_for_inconsistent_shapes(
                 array_shape_1=x.shape,
                 array_shape_2=y.shape
                 )
+
+def validate_boolean_categorical_series(
+    series: pd.Series
+    ) -> None:
+    """
+    Validate that series is a boolean categorical variable.
+
+    Parameters
+    ----------
+    series: pandas.Series, required
+        Series to validate.
+
+    Warnings
+    --------
+    UserWarning:
+        Warns if series is not a boolean Categorical and attempts to convert.
+
+    Raises
+    ------
+    pandas.errors.UnsupportedFunctionCall:
+        Raises if series is not a pandas.Series or if series does not contain two categories: True and False
+
+    Returns
+    -------
+    Validated boolean categorical series.
+    """
+    # Check for Series
+    if not isinstance(series, pd.Series):
+        raise pd.errors.UnsupportedFunctionCall(f"{series} is not a pandas.Series")
+
+    # Check for categorical
+    if not hasattr(series, "cat"):
+        message = f"{series} is not a categorical pandas.Series, attempting to convert"
+        warnings.warn(message=message, category=UserWarning)
+        series = series.astype("category")
+
+    # Check for True category
+    no_true_category = True
+    for c in series.cat.categories:
+        if c is True:
+            no_true_category = False
+    if no_true_category:
+        message = f"{series} has no True category, attempting to add"
+        warnings.warn(message=message, category=UserWarning)
+        series = series.cat.add_categories([True])
+
+    # Check for False category
+    no_false_category = True
+    for c in series.cat.categories:
+        if c is False:
+            no_false_category = False
+    if no_false_category:
+        message = f"{series} has no False category, attempting to add"
+        warnings.warn(message=message, category=UserWarning)
+        series = series.cat.add_categories([False])
+
+    # Check number of categories
+    if len(series.cat.categories) != 2:
+        raise pd.errors.UnsupportedFunctionCall(f"{series} does not have exactly two categories: True and False")
+
+    # Return validated series
+    return series
