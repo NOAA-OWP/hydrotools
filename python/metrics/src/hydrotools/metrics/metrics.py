@@ -214,15 +214,15 @@ def compute_contingency_table(
         pandas.Series of integer values keyed to pandas.Index([true_positive_key, false_positive_key, false_negative_key, true_negative_key])
         
     """
-    # Check for complete list of categories
-    if True not in observed.cat.categories:
-        observed = observed.cat.add_categories([True])
-    if False not in observed.cat.categories:
-        observed = observed.cat.add_categories([False])
-    if True not in simulated.cat.categories:
-        simulated = simulated.cat.add_categories([True])
-    if False not in simulated.cat.categories:
-        simulated = simulated.cat.add_categories([False])
+    # Raise if not 1-D arrays
+    validate.raise_for_non_vector(observed, simulated)
+
+    # Raise if not same shape
+    validate.raise_for_inconsistent_shapes(observed, simulated)
+
+    # Validate boolean categorical
+    observed = validate.validate_boolean_categorical_series(observed)
+    simulated = validate.validate_boolean_categorical_series(simulated)
 
     # Cross tabulate
     ctab = pd.crosstab(observed, simulated, dropna=False)
