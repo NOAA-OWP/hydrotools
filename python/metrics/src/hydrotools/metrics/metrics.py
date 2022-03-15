@@ -196,9 +196,9 @@ def compute_contingency_table(
     Parameters
     ----------
     observed: array-like, required
-        pandas.Series of boolean pandas.Categorical values indicating observed occurrences
+        Array-like of boolean values indicating observed occurrences
     simulated: array-like, required
-        pandas.Series of boolean pandas.Categorical values indicating simulated occurrences
+        Array-like of boolean values indicating simulated occurrences
     true_positive_key: str, optional, default 'true_positive'
         Label to use for true positives.
     false_positive_key: str, optional, default 'false_positive'
