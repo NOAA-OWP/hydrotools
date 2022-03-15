@@ -30,8 +30,7 @@ scenarios = [
 @pytest.mark.parametrize("data,check,value", scenarios)
 def test_compute_contingency_table_scenarios(data, check, value):
     # Construct contingency table
-    with pytest.warns(UserWarning):
-        table = metrics.compute_contingency_table(data["obs"], data["sim"])
+    table = metrics.compute_contingency_table(data["obs"], data["sim"])
 
     # Validate correct values
     for component, val in table.items():
@@ -39,3 +38,19 @@ def test_compute_contingency_table_scenarios(data, check, value):
             assert val == value
         else:
             assert val == 0
+
+def test_non_series():
+    obs = [True, False, True, False]
+    sim = [True, True, True, True]
+
+    table = metrics.compute_contingency_table(obs, sim)
+    assert table["true_positive"] == 2
+    assert table["false_positive"] == 2
+    assert table["false_negative"] == 0
+    assert table["true_negative"] == 0
+
+    POD = metrics.probability_of_detection(table)
+    assert POD == 1.0
+
+    POFD = metrics.probability_of_false_detection(table)
+    assert POFD == 1.0
