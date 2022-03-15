@@ -22,30 +22,30 @@ def test_raise_for_inconsistent_shapes():
     with pytest.raises(_validation.InconsistentShapesError):
         _validation.raise_for_inconsistent_shapes(x, y)
 
-def test_validate_boolean_categorical_series():
+def test_convert_to_boolean_categorical_series():
     # Check for non-Series
-    with pytest.raises(pd.errors.UnsupportedFunctionCall):
-        x = _validation.validate_boolean_categorical_series([1, 2, 3])
+    with pytest.warns(UserWarning):
+        x = _validation.convert_to_boolean_categorical_series([1, 2, 3])
 
     # Check for non-categorical
-    with pytest.warns(UserWarning):
-        s = pd.Series([True, True, False])
-        s = _validation.validate_boolean_categorical_series(s)
-        assert hasattr(s, "cat")
+    s = pd.Series([True, True, False])
+    s = _validation.convert_to_boolean_categorical_series(s)
+    assert hasattr(s, "cat")
 
     # Check for True
-    with pytest.warns(UserWarning):
-        s = pd.Series([False, False, False], dtype="category")
-        s = _validation.validate_boolean_categorical_series(s)
-        assert True in s.cat.categories
+    s = pd.Series([False, False, False], dtype="category")
+    s = _validation.convert_to_boolean_categorical_series(s)
+    assert True in s.cat.categories
 
     # Check for False
-    with pytest.warns(UserWarning):
-        s = pd.Series([False, False, False], dtype="category")
-        s = _validation.validate_boolean_categorical_series(s)
-        assert False in s.cat.categories
+    s = pd.Series([False, False, False], dtype="category")
+    s = _validation.convert_to_boolean_categorical_series(s)
+    assert False in s.cat.categories
 
     # Check for two categories
-    with pytest.raises(pd.errors.UnsupportedFunctionCall):
+    with pytest.warns(UserWarning):
         s = pd.Series([True, False, "5"], dtype="category")
-        s = _validation.validate_boolean_categorical_series(s)
+        s = _validation.convert_to_boolean_categorical_series(s)
+        assert len(s.cat.categories) == 2
+        assert True in s.cat.categories
+        assert False in s.cat.categories
