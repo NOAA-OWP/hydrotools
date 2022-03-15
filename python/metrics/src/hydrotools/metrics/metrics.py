@@ -184,8 +184,8 @@ def kling_gupta_efficiency(
     return 1.0 - EDs
 
 def compute_contingency_table(
-    observed: pd.Series,
-    simulated: pd.Series,
+    observed: npt.ArrayLike,
+    simulated: npt.ArrayLike,
     true_positive_key: str = 'true_positive',
     false_positive_key: str = 'false_positive',
     false_negative_key: str = 'false_negative',
@@ -195,9 +195,9 @@ def compute_contingency_table(
         
     Parameters
     ----------
-    observed: pandas.Series, required
+    observed: array-like, required
         pandas.Series of boolean pandas.Categorical values indicating observed occurrences
-    simulated: pandas.Series, required
+    simulated: array-like, required
         pandas.Series of boolean pandas.Categorical values indicating simulated occurrences
     true_positive_key: str, optional, default 'true_positive'
         Label to use for true positives.
@@ -221,8 +221,8 @@ def compute_contingency_table(
     validate.raise_for_inconsistent_shapes(observed, simulated)
 
     # Validate boolean categorical
-    observed = validate.validate_boolean_categorical_series(observed)
-    simulated = validate.validate_boolean_categorical_series(simulated)
+    observed = validate.convert_to_boolean_categorical_series(observed)
+    simulated = validate.convert_to_boolean_categorical_series(simulated)
 
     # Cross tabulate
     ctab = pd.crosstab(observed, simulated, dropna=False)
