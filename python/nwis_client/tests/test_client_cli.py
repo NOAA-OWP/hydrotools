@@ -9,7 +9,7 @@ def test_cli():
     with TemporaryDirectory() as tdir:
         # Test default parameters
         result1 = subprocess.run([
-            "nwis-client", "01013500", "02146470", f"{tdir}/test_output_1.csv"
+            "nwis-client", "01013500", "02146470", "-o", f"{tdir}/test_output_1.csv"
         ])
         assert result1.returncode == 0
         assert Path(f"{tdir}/test_output_1.csv").exists()
@@ -20,7 +20,7 @@ def test_cli():
             '-s', '2022-01-01',
             '-e', '2022-01-02',
             '-p', '00065',
-            '01013500', '02146470', f"{tdir}/test_output_2.csv"])
+            '01013500', '02146470', "-o", f"{tdir}/test_output_2.csv"])
         assert result2.returncode == 0
         assert Path(f"{tdir}/test_output_2.csv").exists()
 
@@ -34,7 +34,7 @@ def test_comments_header():
         result2 = subprocess.run([
             "nwis-client",
             '--no-comments', '--no-header',
-            '01013500', '02146470', str(ofile)])
+            '01013500', '02146470', "-o", str(ofile)])
         assert result2.returncode == 0
         assert ofile.exists()
 
@@ -42,3 +42,4 @@ def test_comments_header():
         with ofile.open('r') as fi:
             count = len([l for l in fi])
             assert count == 2
+            
