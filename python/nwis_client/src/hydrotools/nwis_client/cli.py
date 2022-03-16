@@ -54,7 +54,7 @@ def write_to_csv(
         ofile.write(output)
 
     # Write data to file
-    data.to_csv(ofile, mode="a", index=False, float_format="{:.2f}".format, header=header, chunksize=2000)
+    data.to_csv(ofile, mode="a", index=False, float_format="{:.2f}".format, header=header, chunksize=20000)
     
 @click.command()
 @click.argument("sites", nargs=-1, required=False)
