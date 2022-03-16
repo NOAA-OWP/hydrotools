@@ -2,8 +2,8 @@ import click
 from hydrotools.nwis_client import IVDataService
 from hydrotools.nwis_client import _version as CLIENT_VERSION
 from typing import Tuple
-from pathlib import Path
 import pandas as pd
+from dataclasses import dataclass
 
 class TimestampParamType(click.ParamType):
     name = "timestamp"
@@ -17,18 +17,9 @@ class TimestampParamType(click.ParamType):
         except ValueError:
             self.fail(f"{value!r} is not a valid timestamp", param, ctx)
 
-def write_to_csv(
-    data: pd.DataFrame,
-    ofile: Path,
-    comments: bool = True,
-    header: bool = True
-    ) -> None:
-    # Start building output
-    output = ''
-
-    # Comments
-    if comments:
-        output += """# USGS IV Service Data
+@dataclass
+class CSVDefaults:
+    comments: str = """# USGS IV Service Data
 # 
 # value_date: Datetime of measurement (UTC) (character string)
 # variable: USGS variable name (character string)
@@ -39,20 +30,35 @@ def write_to_csv(
 # series: Series number in case multiple time series are returned (integer)
 # 
 """
+
+def write_to_csv(
+    data: pd.DataFrame,
+    ofile: click.File,
+    comments: bool = True,
+    header: bool = True
+    ) -> None:
+    # Get default options
+    defaults = CSVDefaults()
+
+    # Comments
+    if comments:
+        output = defaults.comments
+
         # Add version, link, and write time
         now = pd.Timestamp.utcnow()
         output += f"# Generated at {now}\n"
         output += f"# nwis_client version: {CLIENT_VERSION.__version__}\n"
         output += "# Source code: https://github.com/NOAA-OWP/hydrotools\n# \n"
 
-    # Write to file
-    output += data.to_csv(index=False, float_format="{:.2f}".format, header=header)
-    with ofile.open("w") as of:
-        of.write(output)
+        # Write comments to file
+        ofile.write(output)
 
+    # Write data to file
+    data.to_csv(ofile, mode="a", index=False, float_format="{:.2f}".format, header=header, chunksize=2000)
+    
 @click.command()
-@click.argument("sites", nargs=-1)
-@click.argument("ofile", nargs=1, type=click.Path(path_type=Path))
+@click.argument("sites", nargs=-1, required=False)
+@click.option("-o", "--output", nargs=1, type=click.File("w"), help="Output file path", default="-")
 @click.option("-s", "--startDT", "startDT", nargs=1, type=TimestampParamType(), help="Start datetime")
 @click.option("-e", "--endDT", "endDT", nargs=1, type=TimestampParamType(), help="End datetime")
 @click.option("-p", "--parameterCd", "parameterCd", nargs=1, type=str, default="00060", help="Parameter code")
@@ -60,20 +66,24 @@ def write_to_csv(
 @click.option('--header/--no-header', default=True, help="Enable/disable header in output, enabled by default")
 def run(
     sites: Tuple[str], 
-    ofile: Path, 
+    output: click.File, 
     startDT: pd.Timestamp = None,
     endDT: pd.Timestamp = None,
     parameterCd: str = "00060",
     comments: bool = True,
     header: bool = True
     ) -> None:
-    """Retrieve data from the USGS IV Web Service API and write to CSV.
-    Writes data for all SITES to OFILE.
+    """Retrieve data from the USGS IV Web Service API and write in CSV format.
 
     Example:
     
-    nwis-client 01013500 02146470 my_output.csv
+    nwis-client 01013500 02146470
     """
+    # Get sites
+    if not sites:
+        print("Reading sites from stdin: ")
+        sites = click.get_text_stream("stdin").read().split()
+
     # Setup client
     client = IVDataService(value_time_label="value_time")
 
@@ -86,7 +96,7 @@ def run(
     )
     
     # Write to CSV
-    write_to_csv(data=df, ofile=ofile, comments=comments, header=header)
+    write_to_csv(data=df, ofile=output, comments=comments, header=header)
 
 if __name__ == "__main__":
     run()
