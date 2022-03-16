@@ -56,23 +56,23 @@ print(observations_data.head())
 ```
 
 ### Command Line Interface (CLI)
-The `hydrotools.nwis_client` package also includes a command-line utility that is installed to the environment targeted by the `pip` installation above. Starting a terminal and activating the correct Python environment should enable the `nwis-client` CLI. This tool will retrieve data from the USGS IV Web Service and write it to CSV format.
+The `hydrotools.nwis_client` package includes a command-line utility.
 
 This example demonstrates calling the help page:
 ```bash
 $ nwis-client --help
 ```
 ```console
-Usage: nwis-client [OPTIONS] [SITES]... OFILE
+Usage: nwis-client [OPTIONS] [SITES]...
 
-  Retrieve data from the USGS IV Web Service API and write to CSV. Writes data
-  for all SITES to OFILE.
+  Retrieve data from the USGS IV Web Service API and write in CSV format.
 
   Example:
 
-  nwis-client 01013500 02146470 my_output.csv
+  nwis-client 01013500 02146470
 
 Options:
+  -o, --output FILENAME       Output file path
   -s, --startDT TIMESTAMP     Start datetime
   -e, --endDT TIMESTAMP       End datetime
   -p, --parameterCd TEXT      Parameter code
@@ -85,8 +85,7 @@ Options:
 
 This example retrieves the last discharge value from two sites:
 ```bash
-$ nwis-client 01013500 02146470 my_data.csv
-$ cat my_data.csv
+$ nwis-client 01013500 02146470
 ```
 ```console
 # USGS IV Service Data
@@ -110,8 +109,7 @@ value_time,variable_name,usgs_site_code,measurement_unit,value,qualifiers,series
 
 This example retrieves stage data from two sites for a specific time period:
 ```bash
-$ nwis-client -p 00065 -s 2021-06-01T00:00 -e 2021-06-01T01:00 01013500 02146470 my_data.csv
-$ cat my_data.csv
+$ nwis-client -p 00065 -s 2021-06-01T00:00 -e 2021-06-01T01:00 01013500 02146470
 ```
 ```console
 # USGS IV Service Data
