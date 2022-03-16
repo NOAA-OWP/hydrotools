@@ -73,10 +73,14 @@ Usage: nwis-client [OPTIONS] [SITES]... OFILE
   nwis-client 01013500 02146470 my_output.csv
 
 Options:
-  -s, --startDT TIMESTAMP  Start datetime
-  -e, --endDT TIMESTAMP    End datetime
-  -p, --parameterCd TEXT   Parameter code
-  --help                   Show this message and exit.
+  -s, --startDT TIMESTAMP     Start datetime
+  -e, --endDT TIMESTAMP       End datetime
+  -p, --parameterCd TEXT      Parameter code
+  --comments / --no-comments  Enable/disable comments in output, enabled by
+                              default
+  --header / --no-header      Enable/disable header in output, enabled by
+                              default
+  --help                      Show this message and exit.
 ```
 
 This example retrieves the last discharge value from two sites:
