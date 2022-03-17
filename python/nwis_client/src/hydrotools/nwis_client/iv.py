@@ -35,8 +35,7 @@ T = TypeVar("T")
 from ._utilities import verify_case_insensitive_kwargs
 
 def _verify_case_insensitive_kwargs_handler(m: str) -> None:
-    warnings.warn("`hydrotools.nwis_client` > 3.1 will raise RuntimeError exception instead of RuntimeWarning.", DeprecationWarning)
-    warnings.warn(m, RuntimeWarning)
+    raise RuntimeError(m)
 
 class IVDataService:
     """
@@ -51,7 +50,7 @@ class IVDataService:
         Toggle sqlite3 request caching
     cache_expire_after : int
         Cached item life length in seconds
-    value_time_label: str, default 'value_date'
+    value_time_label: str, default 'value_time'
         Label to use for datetime column returned by IVDataService.get
     cache_filename: str or Path default 'nwisiv_cache'
         Sqlite cache filename or filepath. Suffix '.sqlite' will be added to file if not included.
@@ -106,7 +105,7 @@ class IVDataService:
     def __init__(self, *, 
         enable_cache: bool = True, 
         cache_expire_after: int = 43200,
-        value_time_label: str = None,
+        value_time_label: str = "value_time",
         cache_filename: Union[str, Path] = "nwisiv_cache"
         ):
         self._cache_enabled = enable_cache
