@@ -8,6 +8,7 @@ Functions
 ---------
  - raise_for_non_vector
  - raise_for_inconsistent_shapes
+ - warn_for_nondichotomous_categories
 
 Classes
 -------
@@ -19,6 +20,9 @@ Classes
 import numpy as np
 import numpy.typing as npt
 from typing import List, Tuple
+import pandas as pd
+import warnings
+from pandas.api.types import CategoricalDtype
 
 class InconsistentShapesError(Exception):
     def __init__(self,
@@ -100,3 +104,37 @@ def raise_for_inconsistent_shapes(
                 array_shape_1=x.shape,
                 array_shape_2=y.shape
                 )
+
+def convert_to_boolean_categorical_series(
+    data: npt.ArrayLike
+    ) -> pd.Series:
+    """
+    Transform data into a boolean categorical pandas.Series.
+
+    Parameters
+    ----------
+    data: array-like, required
+        Data to convert. Should only contain True or False values.
+
+    Warnings
+    --------
+    UserWarning:
+        Warns if any values in data are not True or False. These values will become NaN.
+
+    Returns
+    -------
+    Validated boolean categorical series.
+    """
+    # Create boolean categorical series
+    s = pd.Series(
+        data=data,
+        dtype=CategoricalDtype([True, False])
+    )
+
+    # Check for NaN
+    if s.isnull().any():
+        message = f"{data} contains values that could not be converted to True or False."
+        warnings.warn(message=message, category=UserWarning)
+
+    return s
+    

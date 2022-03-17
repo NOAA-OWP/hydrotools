@@ -65,10 +65,6 @@ flood_criteria = 19200.0
 forecasts['simulated_flood'] = (forecasts['sim'] >= flood_criteria)
 forecasts['observed_flood'] = (forecasts['obs'] >= flood_criteria)
 
-# Convert boolean columns to Categoricals
-forecasts['simulated_flood'] = forecasts['simulated_flood'].astype('category')
-forecasts['observed_flood'] = forecasts['observed_flood'].astype('category')
-
 # Compute contingency table
 contingency_table = metrics.compute_contingency_table(
     forecasts['observed_flood'],

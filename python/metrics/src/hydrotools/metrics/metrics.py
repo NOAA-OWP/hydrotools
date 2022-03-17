@@ -184,8 +184,8 @@ def kling_gupta_efficiency(
     return 1.0 - EDs
 
 def compute_contingency_table(
-    observed: pd.Series,
-    simulated: pd.Series,
+    observed: npt.ArrayLike,
+    simulated: npt.ArrayLike,
     true_positive_key: str = 'true_positive',
     false_positive_key: str = 'false_positive',
     false_negative_key: str = 'false_negative',
@@ -195,10 +195,10 @@ def compute_contingency_table(
         
     Parameters
     ----------
-    observed: pandas.Series, required
-        pandas.Series of boolean pandas.Categorical values indicating observed occurrences
-    simulated: pandas.Series, required
-        pandas.Series of boolean pandas.Categorical values indicating simulated occurrences
+    observed: array-like, required
+        Array-like of boolean values indicating observed occurrences
+    simulated: array-like, required
+        Array-like of boolean values indicating simulated occurrences
     true_positive_key: str, optional, default 'true_positive'
         Label to use for true positives.
     false_positive_key: str, optional, default 'false_positive'
@@ -214,6 +214,16 @@ def compute_contingency_table(
         pandas.Series of integer values keyed to pandas.Index([true_positive_key, false_positive_key, false_negative_key, true_negative_key])
         
     """
+    # Raise if not 1-D arrays
+    validate.raise_for_non_vector(observed, simulated)
+
+    # Raise if not same shape
+    validate.raise_for_inconsistent_shapes(observed, simulated)
+
+    # Validate boolean categorical
+    observed = validate.convert_to_boolean_categorical_series(observed)
+    simulated = validate.convert_to_boolean_categorical_series(simulated)
+
     # Cross tabulate
     ctab = pd.crosstab(observed, simulated, dropna=False)
 
