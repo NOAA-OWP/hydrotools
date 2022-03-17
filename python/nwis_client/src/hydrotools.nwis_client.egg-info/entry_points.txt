@@ -1,0 +1,2 @@
+[console_scripts]
+nwis-client = hydrotools.nwis_client.cli:run
