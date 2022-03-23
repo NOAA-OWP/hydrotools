@@ -463,15 +463,16 @@ def test_splitting_bbox(test, validation):
 def test_get_returns_empty_canonical_dataframe(setup_iv_value_time, monkeypatch):
     """Verify that `get` can returns an empty canonical dataframe."""
 
-    def get_raw_mock(*args, **kwargs):
-        return [{"values": []}]
+    with pytest.warns(UserWarning):
+        def get_raw_mock(*args, **kwargs):
+            return [{"values": []}]
 
-    monkeypatch.setattr(iv.IVDataService, "get_raw", get_raw_mock)
-    df = setup_iv_value_time.get(
-        sites=["01189000"], startDT="2015-12-01T00:00", endDT="2015-12-31T23:45"
-    )
-    canonical_df = iv._create_empty_canonical_df()
-    assert df.equals(canonical_df)
+        monkeypatch.setattr(iv.IVDataService, "get_raw", get_raw_mock)
+        df = setup_iv_value_time.get(
+            sites=["01189000"], startDT="2015-12-01T00:00", endDT="2015-12-31T23:45"
+        )
+        canonical_df = iv._create_empty_canonical_df()
+        assert df.equals(canonical_df)
 
 def test_nwis_client_get_throws_warning_for_kwargs(mocked_iv):
     from packaging import version
