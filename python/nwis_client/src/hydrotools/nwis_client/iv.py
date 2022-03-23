@@ -116,12 +116,7 @@ class IVDataService:
             cache_filename=str(cache_filename),
             cache_expire_after=cache_expire_after,
         )
-        if value_time_label == None:
-            self._value_time_label = "value_date"
-            warning_message = "Setting value_time_label to value_date. Future versions will default to value_time. To silence this warning set value_time_label."
-            warnings.warn(warning_message, UserWarning)
-        else:
-            self._value_time_label = value_time_label
+        self._value_time_label = value_time_label
 
     @verify_case_insensitive_kwargs(handler=_verify_case_insensitive_kwargs_handler)
     def get(
