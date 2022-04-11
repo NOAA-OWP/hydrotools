@@ -1,24 +1,22 @@
-import io
 from http import HTTPStatus
 from hydrotools._restclient import RestClient
-import pandas as pd
+import geopandas as gpd
 
 # local imports
 from . import url_builders
-from .types import GeographicScale, Year, utilities
+from .types import GeographicScale, Year, utilities, field_name_map
 
 
 class SVIClient:
-    _base_url = "https://svi.cdc.gov/"
-
-    def __init__(self) -> None:
+    def __init__(self, enable_cache: bool = True) -> None:
         self._rest_client = RestClient(
-            base_url=self._base_url, cache_filename="svi_client_cache"
+            cache_filename="svi_client_cache",
+            enable_cache=enable_cache,
         )
 
     def get(
         self, location: str, geographic_scale: GeographicScale, year: Year
-    ) -> pd.DataFrame:
+    ) -> gpd.GeoDataFrame:
         """[summary]
 
         Parameters
@@ -47,8 +45,7 @@ class SVIClient:
         1179   1  ALABAMA      AL    1069  ...        98        17.7        4.4      2566
 
         """
-
-        url_path = url_builders.build_csv_url(
+        url_path = url_builders.build_feature_server_url(
             location=location, geographic_scale=geographic_scale, year=year
         )
 
@@ -57,9 +54,31 @@ class SVIClient:
         if request.status != HTTPStatus.OK:  # 200
             ...
 
-        serialized_text = io.StringIO(request.text())
+        # create geodataframe from geojson response
+        df = gpd.GeoDataFrame.from_features(request.json())  # type: ignore
 
-        return pd.read_csv(serialized_text)
+        fnm = field_name_map.CdcEsriFieldNameMapFactory(geographic_scale, year)
+
+        # map of dataset field names to canonical field names
+        field_names = {
+            v: k
+            for k, v in fnm.dict(exclude_unset=True, exclude={"svi_edition"}).items()
+        }
+
+        df = df.rename(columns=field_names)
+
+        # TODO: eliminate this
+        df["svi_edition"] = fnm.svi_edition
+
+        column_order = list(fnm.dict().keys()) + ["geometry"]
+
+        # reorder dataframe columns
+        # note, during reindex, if there are columns not present in dataframe, they will be created
+        # with NaN row values
+        df = df.reindex(columns=column_order)
+
+        # TODO: melt to a wide format
+        return df
 
     @staticmethod
     def svi_documentation_url(year: Year) -> str:
