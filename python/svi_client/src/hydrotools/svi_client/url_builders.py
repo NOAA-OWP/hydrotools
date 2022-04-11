@@ -47,6 +47,8 @@ def build_feature_server_url(
     fnm = field_name_map.CdcEsriFieldNameMapFactory(geographic_scale, year)
 
     params = {
+        # SQL LIKE used as there are cases when a datasource's state abbreviation has surrounding
+        # spaces for example.
         "where": f"{fnm.state_abbreviation} like '%{location}%'",
         "outFields": ",".join(fnm.dict(exclude_unset=True).values()),
         "returnGeometry": "true",
