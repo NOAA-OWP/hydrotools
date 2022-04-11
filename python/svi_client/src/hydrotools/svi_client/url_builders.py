@@ -32,7 +32,6 @@ def build_csv_url(location: str, geographic_scale: GeographicScale, year: Year) 
 def build_feature_server_url(
     location: str, geographic_scale: GeographicScale, year: Year
 ) -> str:
-    # this will need to change
     location = utilities.validate_location(location)
     geographic_scale = utilities.validate_geographic_scale(geographic_scale)
     year = utilities.validate_year(year)
