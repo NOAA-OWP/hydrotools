@@ -53,7 +53,6 @@ def build_feature_server_url(
         "returnExceededLimitFeatures": "true",
         "f": "pgeojson",
     }
-    print(f"{params=}")
 
     o: Url = Url(path) + params
     return o.quote_url
