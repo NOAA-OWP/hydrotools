@@ -90,14 +90,25 @@ CdcEsri2010CountiesFieldNameMap = FieldNameMap(
     svi_value="S_PL_THEMES",
 )
 
+
+class _CdcEsriMissingCountyFipsFieldNameMap(FieldNameMap):
+    @staticmethod
+    def create_missing_fields(df: pd.DataFrame) -> pd.DataFrame:
+        """
+        derive `county_fips` from `fips`. county fips codes are five digits long.
+        source: https://transition.fcc.gov/oet/info/maps/census/fips/fips.txt
+        """
+        return df.assign(county_fips=lambda d: d["fips"].str.slice(0, 5))
+
+
 # svi_edition is excluded, so it can be parametrized
 _CdcEsriCountiesFieldNameMap = partial(
-    FieldNameMap,
+    _CdcEsriMissingCountyFipsFieldNameMap,
     state_name="STATE",
     state_abbreviation="ST_ABBR",
     county_name="COUNTY",
     state_fips="ST",
-    county_fips="FIPS",  # calculated FIPS[len(ST):]
+    county_fips="FIPS",  # calculated FIPS[:5]
     fips="FIPS",
     socioeconomic_rank="RPL_THEME1",
     household_comp_and_disability_rank="RPL_THEME2",
@@ -156,12 +167,12 @@ CdcEsri2010TractsFieldNameMap = FieldNameMap(
 
 # svi_edition is excluded, so it can be parametrized
 _CdcEsriTractFieldNameMap = partial(
-    FieldNameMap,
+    _CdcEsriMissingCountyFipsFieldNameMap,
     state_name="STATE",
     state_abbreviation="ST_ABBR",
     county_name="COUNTY",
     state_fips="ST",
-    county_fips="STCNTY",  # calculated STCNTY[len(ST):]
+    county_fips="STCNTY",  # calculated FIPS[:5]
     fips="FIPS",
     socioeconomic_rank="RPL_THEME1",
     household_comp_and_disability_rank="RPL_THEME2",
