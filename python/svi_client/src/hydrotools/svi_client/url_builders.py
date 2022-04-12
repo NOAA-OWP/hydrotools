@@ -107,7 +107,8 @@ def get_county_token(year: Year) -> str:
     year = utilities.validate_year(year)
 
     if year not in ("2014", "2016", "2018"):
-        ...
+        error_message = "Country geographic scale only available for SVI years: 2014, 2016, and 2018."
+        raise ValueError(error_message)
 
     return "CNTY" if year == "2014" else "COUNTY"
 
