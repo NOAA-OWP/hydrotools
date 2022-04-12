@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from functools import partial
 from types import MappingProxyType
 from typing import Optional, Tuple
+import pandas as pd
 
 # local imports
 from . import utilities
@@ -40,6 +41,13 @@ class FieldNameMap(BaseModel):
 
     # aggregated overall value; sum of values from themes 1, 2, 3, 4.
     svi_value: Optional[str]
+
+    @staticmethod
+    def create_missing_fields(df: pd.DataFrame) -> pd.DataFrame:
+        """subclasses should override this to create missing dataframe fields from existing fields.
+        default behavior is to return input df.
+        """
+        return df
 
 
 ### Mapping types for data sourced from: https://services3.arcgis.com/ZvidGQkLaDJxRSJ2/ArcGIS/rest/services/. ###
