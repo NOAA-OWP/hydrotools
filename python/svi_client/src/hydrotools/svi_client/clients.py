@@ -1,4 +1,3 @@
-from http import HTTPStatus
 from hydrotools._restclient import RestClient
 import geopandas as gpd
 
