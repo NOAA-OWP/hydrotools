@@ -177,11 +177,11 @@ _CdcEsriFieldNameMapFactory: MappingProxyType[
         ("2016", "county"): CdcEsri2016CountiesFieldNameMap,
         ("2018", "county"): CdcEsri2018CountiesFieldNameMap,
         # tracts
-        ("2000", "tract"): CdcEsri2000TractsFieldNameMap,
-        ("2010", "tract"): CdcEsri2010TractsFieldNameMap,
-        ("2014", "tract"): CdcEsri2014TractsFieldNameMap,
-        ("2016", "tract"): CdcEsri2016TractsFieldNameMap,
-        ("2018", "tract"): CdcEsri2018TractsFieldNameMap,
+        ("2000", "census_tract"): CdcEsri2000TractsFieldNameMap,
+        ("2010", "census_tract"): CdcEsri2010TractsFieldNameMap,
+        ("2014", "census_tract"): CdcEsri2014TractsFieldNameMap,
+        ("2016", "census_tract"): CdcEsri2016TractsFieldNameMap,
+        ("2018", "census_tract"): CdcEsri2018TractsFieldNameMap,
     }
 )
 
