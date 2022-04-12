@@ -67,6 +67,9 @@ class SVIClient:
 
         df = df.rename(columns=field_names)
 
+        # create missing fields if required
+        df = fnm.create_missing_fields(df)
+
         # TODO: eliminate this
         df["svi_edition"] = fnm.svi_edition
 
