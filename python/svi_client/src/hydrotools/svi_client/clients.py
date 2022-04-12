@@ -77,7 +77,29 @@ class SVIClient:
         # with NaN row values
         df = df.reindex(columns=column_order)
 
-        # TODO: melt to a wide format
+        # wide to long format
+        rank_col_names = df.columns.str.contains("rank$")
+
+        df = df.melt(
+            id_vars=df.columns[~rank_col_names],
+            value_vars=df.columns[rank_col_names],
+            var_name="rank_theme",
+            value_name="rank",
+        )
+
+        value_col_names = df.columns.str.contains("value$")
+        df = df.melt(
+            id_vars=df.columns[~value_col_names],
+            value_vars=df.columns[value_col_names],
+            var_name="value_theme",
+            value_name="value",
+        )
+        # create theme column by truncating rank_theme's _rank suffix
+        df["theme"] = df["rank_theme"].str.rstrip("_rank")
+
+        # drop unnecessary cols
+        df = df.drop(columns=["rank_theme", "value_theme"])
+
         return df
 
     @staticmethod
