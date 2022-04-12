@@ -4,7 +4,7 @@ import geopandas as gpd
 
 # local imports
 from . import url_builders
-from .types import GeographicScale, Year, utilities, field_name_map
+from .types import GeographicScale, GeographicContext, Year, utilities, field_name_map
 
 
 class SVIClient:
@@ -15,7 +15,11 @@ class SVIClient:
         )
 
     def get(
-        self, location: str, geographic_scale: GeographicScale, year: Year
+        self,
+        location: str,
+        geographic_scale: GeographicScale,
+        year: Year,
+        geographic_context: GeographicContext = "national",
     ) -> gpd.GeoDataFrame:
         """[summary]
 
@@ -46,7 +50,10 @@ class SVIClient:
 
         """
         url_path = url_builders.build_feature_server_url(
-            location=location, geographic_scale=geographic_scale, year=year
+            location=location,
+            geographic_scale=geographic_scale,
+            year=year,
+            geographic_context=geographic_context,
         )
 
         request = self._rest_client.get(url_path)

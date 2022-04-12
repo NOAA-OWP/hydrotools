@@ -2,7 +2,7 @@ import typing
 
 
 # local imports
-from .type_definitions import LOCATIONS, GeographicScale, Year
+from .type_definitions import LOCATIONS, GeographicScale, GeographicContext, Year
 
 
 def validate_location(location: str) -> str:
@@ -19,6 +19,13 @@ def validate_geographic_scale(geographic_scale: GeographicScale) -> str:
         ...
 
     return geographic_scale
+
+
+def validate_geographic_context(geographic_context: GeographicContext) -> str:
+    if geographic_context not in typing.get_args(GeographicContext):
+        ...
+
+    return geographic_context
 
 
 def validate_year(year: Year) -> str:

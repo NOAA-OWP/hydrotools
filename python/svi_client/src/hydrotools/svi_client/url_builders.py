@@ -1,5 +1,7 @@
 from hydrotools._restclient import Url
 
+from hydrotools.svi_client.types.type_definitions import GeographicContext
+
 # local imports
 from .types import utilities, field_name_map
 from .types import GeographicScale, Year
@@ -30,11 +32,22 @@ def build_csv_url(location: str, geographic_scale: GeographicScale, year: Year) 
 
 
 def build_feature_server_url(
-    location: str, geographic_scale: GeographicScale, year: Year
+    location: str,
+    geographic_scale: GeographicScale,
+    year: Year,
+    geographic_context: GeographicContext,
 ) -> str:
     location = utilities.validate_location(location)
     geographic_scale = utilities.validate_geographic_scale(geographic_scale)
     year = utilities.validate_year(year)
+    context = utilities.validate_geographic_context(geographic_context)
+
+    if context == "state":
+        error_message = (
+            "the `state` geographic context has not yet been implimented. "
+            "only svi ranked at the `national` context are currently supported."
+        )
+        raise NotImplemented(error_message)
 
     path = (
         US_COUNTY_FEATURE_SERVER_URLS[year]

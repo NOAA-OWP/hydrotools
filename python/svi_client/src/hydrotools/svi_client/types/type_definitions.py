@@ -4,6 +4,7 @@ from hydrotools._restclient import Alias, AliasGroup
 from typing import Literal
 
 GeographicScale = Literal["census_tract", "county"]
+GeographicContext = Literal["national", "state"]
 DataFormat = Literal["csv", "shp"]
 Year = Literal["2000", "2010", "2014", "2016", "2018", 2000, 2010, 2014, 2016, 2018]
 
