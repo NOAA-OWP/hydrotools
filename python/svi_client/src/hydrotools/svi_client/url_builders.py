@@ -49,7 +49,9 @@ def build_feature_server_url(
         # SQL LIKE used as there are cases when a datasource's state abbreviation has surrounding
         # spaces for example.
         "where": f"{fnm.state_abbreviation} like '%{location}%'",
-        "outFields": ",".join(fnm.dict(exclude_unset=True).values()),
+        "outFields": ",".join(
+            fnm.dict(exclude_unset=True, exclude={"svi_edition"}).values()
+        ),
         "returnGeometry": "true",
         "returnExceededLimitFeatures": "true",
         "f": "pgeojson",
