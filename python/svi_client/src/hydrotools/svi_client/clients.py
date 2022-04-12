@@ -70,15 +70,7 @@ class SVIClient:
         # create missing fields if required
         df = fnm.create_missing_fields(df)
 
-        # TODO: eliminate this
         df["svi_edition"] = fnm.svi_edition
-
-        column_order = list(fnm.dict().keys()) + ["geometry"]
-
-        # reorder dataframe columns
-        # note, during reindex, if there are columns not present in dataframe, they will be created
-        # with NaN row values
-        df = df.reindex(columns=column_order)
 
         # wide to long format
         rank_col_names = df.columns.str.contains("rank$")
@@ -91,17 +83,39 @@ class SVIClient:
         )
 
         value_col_names = df.columns.str.contains("value$")
-        df = df.melt(
-            id_vars=df.columns[~value_col_names],
-            value_vars=df.columns[value_col_names],
-            var_name="value_theme",
-            value_name="value",
-        )
+        # some datasources do not include summed theme values
+        if not (value_col_names == False).all():
+            df = df.melt(
+                id_vars=df.columns[~value_col_names],
+                value_vars=df.columns[value_col_names],
+                var_name="value_theme",
+                value_name="value",
+            )
         # create theme column by truncating rank_theme's _rank suffix
         df["theme"] = df["rank_theme"].str.rstrip("_rank")
 
         # drop unnecessary cols
-        df = df.drop(columns=["rank_theme", "value_theme"])
+        # value_theme column might not exist, so ignore errors when trying to drop
+        df = df.drop(columns=["rank_theme", "value_theme"], errors="ignore")
+
+        output_column_order = [
+            "state_name",
+            "state_abbreviation",
+            "county_name",
+            "state_fips",
+            "county_fips",
+            "fips",
+            "theme",
+            "rank",
+            "value",
+            "svi_edition",
+            "geometry",
+        ]
+
+        # reorder dataframe columns
+        # note, during reindex, if there are columns not present in dataframe, they will be created
+        # with NaN row values
+        df = df.reindex(columns=output_column_order)
 
         return df
 
