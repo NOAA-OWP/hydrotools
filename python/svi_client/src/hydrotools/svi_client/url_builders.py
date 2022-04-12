@@ -1,10 +1,8 @@
 from hydrotools._restclient import Url
 
-from hydrotools.svi_client.types.type_definitions import GeographicContext
-
 # local imports
 from .types import utilities, field_name_map
-from .types import GeographicScale, Year
+from .types import GeographicScale, GeographicContext, Year
 from .consts import US_COUNTY_FEATURE_SERVER_URLS, US_TRACT_FEATURE_SERVERS_URLS
 
 
