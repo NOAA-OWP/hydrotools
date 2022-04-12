@@ -21,32 +21,58 @@ class SVIClient:
         year: Year,
         geographic_context: GeographicContext = "national",
     ) -> gpd.GeoDataFrame:
-        """[summary]
+        """Retrieve social vulnerability index thematic rankings and values for a given state or the
+        U.S..
+
+        SVI values are available for the following years: 2000, 2010, 2014, 2016, and 2018.  The CDC
+        calculates the SVI at the census tract or county geographic scale. Likewise, the CDC
+        calculates SVI rankings in two geographic contexts: (1) relative to a given state's SVI
+        values or (2) relative to the U.S.. (1) permits interastate comparison and (2) permits
+        national comparison.
+
+        Note: `state` geographic_context is not supported at this time.
 
         Parameters
         ----------
         location : str
             state / national name or abbreviation (e.g. "AL", "US", "Wyoming", "new york")
         geographic_scale : GeographicScale "census_tract" or "county"
-            "county" scale data *not* available in 2000 or 2010
+            geographic scale at which theme values were calculated
         year : Year
             2000, 2010, 2014, 2016, or 2018
+        geographic_context : GeographicContext "national" or "state", optional
+            svi rankings calculated at the national or state level. use state for intrastate comparisons, by default "national"
+            Note: `state` not supported at this time. will raise NotImplimented Error
 
         Returns
         -------
         pd.DataFrame
             Dataframe of Social Vulnerability Index values at the census tract or county scale
 
+            columns names:
+                state_name: str
+                state_abbreviation: str
+                county_name: str
+                state_fips: str
+                county_fips: str
+                fips: str
+                theme: str
+                rank: float
+                value: float
+                svi_edition: str
+                geometry: gpd.array.GeometryDtype
+
+
         Examples
         --------
         >>> client = SVIClient()
         ... df = client.get("AL", "census_tract", "2018")
-                    ST    STATE ST_ABBR  STCNTY  ... M_UNINSUR  EP_UNINSUR MP_UNINSUR  E_DAYPOP
-        0      1  ALABAMA      AL    1015  ...        12      -999.0     -999.0       656
-        1      1  ALABAMA      AL    1015  ...        12      -999.0     -999.0       146
-        ...   ..      ...     ...     ...  ...       ...         ...        ...       ...
-        1178   1  ALABAMA      AL    1015  ...       129        10.0        4.0      1832
-        1179   1  ALABAMA      AL    1069  ...        98        17.7        4.4      2566
+                    state_name state_abbreviation  ... svi_edition                                           geometry
+        0        ALABAMA                 AL  ...        2018  POLYGON ((-87.21230 32.83583, -87.20970 32.835...
+        1        ALABAMA                 AL  ...        2018  POLYGON ((-86.45640 31.65556, -86.44864 31.655...
+        ...          ...                ...  ...         ...                                                ...
+        29498    ALABAMA                 AL  ...        2018  POLYGON ((-85.99487 31.84424, -85.99381 31.844...
+        29499    ALABAMA                 AL  ...        2018  POLYGON ((-86.19941 31.80787, -86.19809 31.808...
 
         """
         url_path = url_builders.build_feature_server_url(
