@@ -21,19 +21,25 @@ class FieldNameMap(BaseModel):
 
     svi_edition: str  # year corresponding to svi release (this assumes 2 SVI's will not be release in a given year in the future)
 
-    rank_theme_1: str  # Socioeconomic
-    rank_theme_2: str  # Household Composition / Disability
-    rank_theme_3: str  # Minority Status / Language
-    rank_theme_4: str  # Housing Type / Transportation
-    rank_svi: str  # aggregated overall percentile ranking
+    socioeconomic_rank: str  # theme_1_rank : Socioeconomic
+    household_comp_and_disability_rank: str  # theme_2_rank : Household Composition / Disability
+    minority_status_and_lang_rank: str  # theme_3_rank : Minority Status / Language
+    housing_type_and_trans_rank: str  # theme_4_rank : Housing Type / Transportation
+    svi_rank: str  # aggregated overall percentile ranking
 
-    value_theme_1: Optional[str]  # Socioeconomic
-    value_theme_2: Optional[str]  # Household Composition / Disability
-    value_theme_3: Optional[str]  # Minority Status / Language
-    value_theme_4: Optional[str]  # Housing Type / Transportation
+    socioeconomic_value: Optional[str]  # theme_1_value : Socioeconomic
+    household_comp_and_disability_value: Optional[
+        str
+    ]  # theme_2_value : Household Composition / Disability
+    minority_status_and_lang_value: Optional[
+        str
+    ]  # theme_3_value : Minority Status / Language
+    housing_type_and_trans_value: Optional[
+        str
+    ]  # theme_4_value : Housing Type / Transportation
 
     # aggregated overall value; sum of values from themes 1, 2, 3, 4.
-    value_svi: Optional[str]
+    svi_value: Optional[str]
 
 
 ### Mapping types for data sourced from: https://services3.arcgis.com/ZvidGQkLaDJxRSJ2/ArcGIS/rest/services/. ###
@@ -49,11 +55,11 @@ CdcEsri2000CountiesFieldNameMap = FieldNameMap(
     county_fips="CNTY_FIPS",
     fips="STCOFIPS",
     svi_edition="2000",
-    rank_theme_1="USG1TP",
-    rank_theme_2="USG2TP",
-    rank_theme_3="USG3TP",
-    rank_theme_4="USG4TP",
-    rank_svi="USTP",
+    socioeconomic_rank="USG1TP",
+    household_comp_and_disability_rank="USG2TP",
+    minority_status_and_lang_rank="USG3TP",
+    housing_type_and_trans_rank="USG4TP",
+    svi_rank="USTP",
 )
 
 CdcEsri2010CountiesFieldNameMap = FieldNameMap(
@@ -64,16 +70,16 @@ CdcEsri2010CountiesFieldNameMap = FieldNameMap(
     county_fips="FIRST_CNTY_FIPS",
     fips="STCOFIPS",
     svi_edition="2010",
-    rank_theme_1="R_PL_THEME1",
-    rank_theme_2="R_PL_THEME2",
-    rank_theme_3="R_PL_THEME3",
-    rank_theme_4="R_PL_THEME4",
-    rank_svi="R_PL_THEMES",
-    value_theme_1="S_PL_THEME1",
-    value_theme_2="S_PL_THEME2",
-    value_theme_3="S_PL_THEME3",
-    value_theme_4="S_PL_THEME4",
-    value_svi="S_PL_THEMES",
+    socioeconomic_rank="R_PL_THEME1",
+    household_comp_and_disability_rank="R_PL_THEME2",
+    minority_status_and_lang_rank="R_PL_THEME3",
+    housing_type_and_trans_rank="R_PL_THEME4",
+    svi_rank="R_PL_THEMES",
+    socioeconomic_value="S_PL_THEME1",
+    household_comp_and_disability_value="S_PL_THEME2",
+    minority_status_and_lang_value="S_PL_THEME3",
+    housing_type_and_trans_value="S_PL_THEME4",
+    svi_value="S_PL_THEMES",
 )
 
 # svi_edition is excluded, so it can be parametrized
@@ -85,16 +91,16 @@ _CdcEsriCountiesFieldNameMap = partial(
     state_fips="ST",
     county_fips="FIPS",  # calculated FIPS[len(ST):]
     fips="FIPS",
-    rank_theme_1="RPL_THEME1",
-    rank_theme_2="RPL_THEME2",
-    rank_theme_3="RPL_THEME3",
-    rank_theme_4="RPL_THEME4",
-    rank_svi="RPL_THEMES",
-    value_theme_1="SPL_THEME1",
-    value_theme_2="SPL_THEME2",
-    value_theme_3="SPL_THEME3",
-    value_theme_4="SPL_THEME4",
-    value_svi="SPL_THEMES",
+    socioeconomic_rank="RPL_THEME1",
+    household_comp_and_disability_rank="RPL_THEME2",
+    minority_status_and_lang_rank="RPL_THEME3",
+    housing_type_and_trans_rank="RPL_THEME4",
+    svi_rank="RPL_THEMES",
+    socioeconomic_value="SPL_THEME1",
+    household_comp_and_disability_value="SPL_THEME2",
+    minority_status_and_lang_value="SPL_THEME3",
+    housing_type_and_trans_value="SPL_THEME4",
+    svi_value="SPL_THEMES",
 )
 
 CdcEsri2014CountiesFieldNameMap = _CdcEsriCountiesFieldNameMap(svi_edition="2014")
@@ -113,11 +119,11 @@ CdcEsri2000TractsFieldNameMap = FieldNameMap(
     county_fips="CNTY_FIPS",
     fips="FIPS",
     svi_edition="2000",
-    rank_theme_1="USG1TP",
-    rank_theme_2="USG2TP",
-    rank_theme_3="USG3TP",
-    rank_theme_4="USG4TP",
-    rank_svi="USTP",
+    socioeconomic_rank="USG1TP",
+    household_comp_and_disability_rank="USG2TP",
+    minority_status_and_lang_rank="USG3TP",
+    housing_type_and_trans_rank="USG4TP",
+    svi_rank="USTP",
 )
 
 CdcEsri2010TractsFieldNameMap = FieldNameMap(
@@ -128,16 +134,16 @@ CdcEsri2010TractsFieldNameMap = FieldNameMap(
     county_fips="CNTY_FIPS",
     fips="FIPS",
     svi_edition="2010",
-    rank_theme_1="R_PL_THEME1",
-    rank_theme_2="R_PL_THEME2",
-    rank_theme_3="R_PL_THEME3",
-    rank_theme_4="R_PL_THEME4",
-    rank_svi="R_PL_THEMES",
-    value_theme_1="S_PL_THEME1",
-    value_theme_2="S_PL_THEME2",
-    value_theme_3="S_PL_THEME3",
-    value_theme_4="S_PL_THEME4",
-    value_svi="S_PL_THEMES",
+    socioeconomic_rank="R_PL_THEME1",
+    household_comp_and_disability_rank="R_PL_THEME2",
+    minority_status_and_lang_rank="R_PL_THEME3",
+    housing_type_and_trans_rank="R_PL_THEME4",
+    svi_rank="R_PL_THEMES",
+    socioeconomic_value="S_PL_THEME1",
+    household_comp_and_disability_value="S_PL_THEME2",
+    minority_status_and_lang_value="S_PL_THEME3",
+    housing_type_and_trans_value="S_PL_THEME4",
+    svi_value="S_PL_THEMES",
 )
 
 # svi_edition is excluded, so it can be parametrized
@@ -149,16 +155,16 @@ _CdcEsriTractFieldNameMap = partial(
     state_fips="ST",
     county_fips="STCNTY",  # calculated STCNTY[len(ST):]
     fips="FIPS",
-    rank_theme_1="RPL_THEME1",
-    rank_theme_2="RPL_THEME2",
-    rank_theme_3="RPL_THEME3",
-    rank_theme_4="RPL_THEME4",
-    rank_svi="RPL_THEMES",
-    value_theme_1="SPL_THEME1",
-    value_theme_2="SPL_THEME2",
-    value_theme_3="SPL_THEME3",
-    value_theme_4="SPL_THEME4",
-    value_svi="SPL_THEMES",
+    socioeconomic_rank="RPL_THEME1",
+    household_comp_and_disability_rank="RPL_THEME2",
+    minority_status_and_lang_rank="RPL_THEME3",
+    housing_type_and_trans_rank="RPL_THEME4",
+    svi_rank="RPL_THEMES",
+    socioeconomic_value="SPL_THEME1",
+    household_comp_and_disability_value="SPL_THEME2",
+    minority_status_and_lang_value="SPL_THEME3",
+    housing_type_and_trans_value="SPL_THEME4",
+    svi_value="SPL_THEMES",
 )
 
 CdcEsri2014TractsFieldNameMap = _CdcEsriTractFieldNameMap(svi_edition="2014")
