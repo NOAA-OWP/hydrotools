@@ -82,10 +82,8 @@ class SVIClient:
             geographic_context=geographic_context,
         )
 
+        # RestClient only allows 200 response code or an aiohttp.client_exceptions.ClientConnectorError is raised
         request = self._rest_client.get(url_path)
-
-        if request.status != HTTPStatus.OK:  # 200
-            ...
 
         # create geodataframe from geojson response
         df = gpd.GeoDataFrame.from_features(request.json())  # type: ignore
