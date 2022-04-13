@@ -259,7 +259,7 @@ def convert_mapping_values(
     """
     # Build object of same type of mapping
     d = type(mapping)()
-    d.update(zip(d.keys(), map(converter, d.values())))
+    d.update(zip(mapping.keys(), map(converter, mapping.values())))
     return d
 
 
