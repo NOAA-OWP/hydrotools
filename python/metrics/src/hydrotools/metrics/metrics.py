@@ -236,7 +236,7 @@ def compute_contingency_table(
         })
 
 def convert_mapping_values(
-    mapping: Mapping[str, npt.DTypeLike],
+    mapping: MutableMapping[str, npt.DTypeLike],
     converter: np.dtype = np.float64
     ) -> MutableMapping:
     """Convert mapping values to a consistent type. Primarily used to validate 
@@ -257,13 +257,11 @@ def convert_mapping_values(
         New mapping with converted values.
         
     """
-    # Populate new dictionary with converted values
-    d = {}
-    for key, value in dict(mapping).items():
-        d[key] = converter(value)
+    # Build object of same type of mapping
+    d = type(mapping)()
+    d.update(zip(d.keys(), map(converter, d.values())))
+    return d
 
-    # Return new mapping with same type as original
-    return type(mapping)(d)
 
 def probability_of_detection(
     contingency_table: Union[dict, pd.DataFrame, pd.Series],
