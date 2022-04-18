@@ -70,7 +70,7 @@ def raise_for_non_vector(
     """
     # Check each array
     for x in arrays:
-        if len(np.array(x).shape) != 1:
+        if np.asarray(x).ndim != 1:
             raise NonVectorError(arr=x)
 
 def raise_for_inconsistent_shapes(
