@@ -89,19 +89,15 @@ def raise_for_inconsistent_shapes(
     InconsistentShapesError:
         Raises if all of the arrays are not the same shape.
     """
-    # Convert to numpy arrays
-    arrays = [np.array(x) for x in arrays]
-
     # Extract first array
-    x = arrays[0]
+    xshape = np.asarray(arrays[0]).shape
 
     # Check shape of each
-    for y in arrays:
+    for y in map(np.asarray, arrays[1:]):
         # Test each array
-        test = all(i == j for i, j in zip(x.shape, y.shape))
-        if not test:
+        if xshape != y.shape:
             raise InconsistentShapesError(
-                array_shape_1=x.shape,
+                array_shape_1=xshape,
                 array_shape_2=y.shape
                 )
 
