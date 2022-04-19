@@ -52,6 +52,12 @@ class NonVectorError(Exception):
         message = f"This array is not 1-dimensional\n {self._arr}"
         return message
 
+
+def _array_attr(seq, attr):
+    if not hasattr(seq, attr):
+        return np.asarray(seq)
+    return seq
+
 def raise_for_non_vector(
     *arrays: List[npt.ArrayLike]
     ) -> None:
@@ -70,7 +76,7 @@ def raise_for_non_vector(
     """
     # Check each array
     for x in arrays:
-        if np.asarray(x).ndim != 1:
+        if _array_attr(x, "ndim").ndim != 1:
             raise NonVectorError(arr=x)
 
 def raise_for_inconsistent_shapes(
@@ -90,15 +96,15 @@ def raise_for_inconsistent_shapes(
         Raises if all of the arrays are not the same shape.
     """
     # Extract first array
-    xshape = np.asarray(arrays[0]).shape
+    xshape = _array_attr(arrays[0], "shape").shape
 
     # Check shape of each
-    for y in map(np.asarray, arrays[1:]):
-        # Test each array
-        if xshape != y.shape:
+    for y in arrays[1:]:
+        yshape = _array_attr(y, "shape").shape
+        if xshape != yshape:
             raise InconsistentShapesError(
                 array_shape_1=xshape,
-                array_shape_2=y.shape
+                array_shape_2=yshape
                 )
 
 def convert_to_boolean_categorical_series(
