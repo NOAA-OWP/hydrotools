@@ -136,6 +136,14 @@ class SVIClient:
         # value_theme column might not exist, so ignore errors when trying to drop
         df = df.drop(columns=["rank_theme", "value_theme"], errors="ignore")
 
+        # lowercase and strip all leading and trailing white spaces from str columns for consistent
+        # output and quality control
+        df_dtypes = df.dtypes
+        str_cols = df_dtypes[df_dtypes == "object"].index
+        df[str_cols] = df[str_cols].apply(lambda d: d.str.strip().str.lower())
+
+        df.sort_values("state_name", inplace=True, ignore_index=True)
+
         output_column_order = [
             "state_name",
             "state_abbreviation",
