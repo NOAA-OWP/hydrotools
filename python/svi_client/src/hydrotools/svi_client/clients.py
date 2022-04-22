@@ -5,11 +5,19 @@ import geopandas as gpd
 from . import url_builders
 from .types import GeographicScale, GeographicContext, Year, utilities, field_name_map
 
+# typing imports
+from typing import Union
+from pathlib import Path
+
 
 class SVIClient:
-    def __init__(self, enable_cache: bool = True) -> None:
+    def __init__(
+        self,
+        enable_cache: bool = True,
+        cache_filename: Union[str, Path] = "svi_client_cache",
+    ) -> None:
         self._rest_client = RestClient(
-            cache_filename="svi_client_cache",
+            cache_filename=cache_filename,
             enable_cache=enable_cache,
         )
 
