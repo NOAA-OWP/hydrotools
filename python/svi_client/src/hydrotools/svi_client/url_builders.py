@@ -57,9 +57,10 @@ def build_feature_server_url(
     fnm = field_name_map.CdcEsriFieldNameMapFactory(geographic_scale, year)
 
     params = {
-        # SQL LIKE used as there are cases when a datasource's state abbreviation has surrounding
-        # spaces for example.
-        "where": f"{fnm.state_abbreviation} like '%{location}%'",
+        # for entire US, use 1=1 where clause
+        "where": f"{fnm.state_abbreviation} = '{location}'"
+        if location != "us"
+        else "1=1",
         "outFields": ",".join(
             fnm.dict(exclude_unset=True, exclude={"svi_edition"}).values()
         ),
@@ -68,7 +69,7 @@ def build_feature_server_url(
         "f": "pgeojson",
     }
 
-    o: Url = Url(path) + params
+    o: Url = Url(path, safe="/'") + params
     return o.quote_url
 
 
