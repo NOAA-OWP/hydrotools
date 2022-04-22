@@ -19,7 +19,7 @@ Classes
 
 import numpy as np
 import numpy.typing as npt
-from typing import List, Tuple
+from typing import List, Tuple, Sequence
 import pandas as pd
 import warnings
 from pandas.api.types import CategoricalDtype
@@ -53,7 +53,7 @@ class NonVectorError(Exception):
         return message
 
 
-def _array_attr(seq, attr):
+def _array_attr(seq: Sequence, attr: str) -> npt.ArrayLike:
     if not hasattr(seq, attr):
         return np.asarray(seq)
     return seq
