@@ -1,7 +1,8 @@
 from hydrotools._restclient import Alias, AliasGroup
 
 # typing imports
-from typing import Literal
+# NOTE: use typing.Literal when minimum python version is 3.8
+from typing_extensions import Literal
 
 GeographicScale = Literal["census_tract", "county"]
 GeographicContext = Literal["national", "state"]
