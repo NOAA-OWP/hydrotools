@@ -95,7 +95,7 @@ class SVIClient:
         # number of features
         count_request = self._rest_client.get(url_path)
 
-        deserialized_count = request.json()
+        deserialized_count = count_request.json()
         count = deserialized_count["properties"]["count"]
 
         # number of features requested by a single request
