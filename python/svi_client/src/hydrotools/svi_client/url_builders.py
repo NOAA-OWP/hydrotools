@@ -5,6 +5,9 @@ from .types import utilities, field_name_map
 from .types import GeographicScale, GeographicContext, Year
 from .consts import US_COUNTY_FEATURE_SERVER_URLS, US_TRACT_FEATURE_SERVERS_URLS
 
+# typing imports
+from typing import Optional
+
 
 def build_csv_url(location: str, geographic_scale: GeographicScale, year: Year) -> str:
     location = utilities.validate_location(location)
@@ -34,6 +37,9 @@ def build_feature_server_url(
     geographic_scale: GeographicScale,
     year: Year,
     geographic_context: GeographicContext,
+    result_offset: Optional[int] = None,
+    result_record_count: Optional[int] = None,
+    count_only: bool = False,
 ) -> str:
     location = utilities.validate_location(location)
     geographic_scale = utilities.validate_geographic_scale(geographic_scale)
@@ -66,6 +72,9 @@ def build_feature_server_url(
         ),
         "returnGeometry": "true",
         "returnExceededLimitFeatures": "true",
+        "returnCountOnly": "true" if count_only else "false",
+        "resultOffset": "" if result_offset is None else result_offset,
+        "resultRecordCount": "" if result_record_count is None else result_record_count,
         "f": "pgeojson",
     }
 
