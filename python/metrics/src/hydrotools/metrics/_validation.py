@@ -19,7 +19,7 @@ Classes
 
 import numpy as np
 import numpy.typing as npt
-from typing import List, Tuple
+from typing import List, Tuple, Sequence
 import pandas as pd
 import warnings
 from pandas.api.types import CategoricalDtype
@@ -52,6 +52,12 @@ class NonVectorError(Exception):
         message = f"This array is not 1-dimensional\n {self._arr}"
         return message
 
+
+def _array_attr(seq: Sequence, attr: str) -> npt.ArrayLike:
+    if not hasattr(seq, attr):
+        return np.asarray(seq)
+    return seq
+
 def raise_for_non_vector(
     *arrays: List[npt.ArrayLike]
     ) -> None:
@@ -70,7 +76,7 @@ def raise_for_non_vector(
     """
     # Check each array
     for x in arrays:
-        if len(np.array(x).shape) != 1:
+        if _array_attr(x, "ndim").ndim != 1:
             raise NonVectorError(arr=x)
 
 def raise_for_inconsistent_shapes(
@@ -89,20 +95,16 @@ def raise_for_inconsistent_shapes(
     InconsistentShapesError:
         Raises if all of the arrays are not the same shape.
     """
-    # Convert to numpy arrays
-    arrays = [np.array(x) for x in arrays]
-
     # Extract first array
-    x = arrays[0]
+    xshape = _array_attr(arrays[0], "shape").shape
 
     # Check shape of each
-    for y in arrays:
-        # Test each array
-        test = all(i == j for i, j in zip(x.shape, y.shape))
-        if not test:
+    for y in arrays[1:]:
+        yshape = _array_attr(y, "shape").shape
+        if xshape != yshape:
             raise InconsistentShapesError(
-                array_shape_1=x.shape,
-                array_shape_2=y.shape
+                array_shape_1=xshape,
+                array_shape_2=yshape
                 )
 
 def convert_to_boolean_categorical_series(
