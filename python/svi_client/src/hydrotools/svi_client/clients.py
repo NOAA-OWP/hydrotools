@@ -1,4 +1,5 @@
 from hydrotools._restclient import RestClient
+import pandas as pd
 import geopandas as gpd
 
 # local imports
@@ -87,13 +88,41 @@ class SVIClient:
             geographic_scale=geographic_scale,
             year=year,
             geographic_context=geographic_context,
+            count_only=True,
         )
 
         # RestClient only allows 200 response code or an aiohttp.client_exceptions.ClientConnectorError is raised
-        request = self._rest_client.get(url_path)
+        # number of features
+        count_request = self._rest_client.get(url_path)
+
+        deserialized_count = request.json()
+        count = deserialized_count["properties"]["count"]
+
+        # number of features requested by a single request
+        OFFSET = 1000
+        n_gets = (count // OFFSET) + 1
+
+        urls = [
+            url_builders.build_feature_server_url(
+                location=location,
+                geographic_scale=geographic_scale,
+                year=year,
+                geographic_context=geographic_context,
+                result_offset=i * OFFSET,
+                result_record_count=OFFSET,
+            )
+            for i in range(n_gets)
+        ]
+
+        results = self._rest_client.mget(urls)
 
         # create geodataframe from geojson response
-        df = gpd.GeoDataFrame.from_features(request.json())  # type: ignore
+        df = pd.concat(
+            [gpd.GeoDataFrame.from_features(r.json()) for r in results],
+            ignore_index=True,
+        )
+
+        assert len(df) == count
 
         fnm = field_name_map.CdcEsriFieldNameMapFactory(geographic_scale, year)
 
