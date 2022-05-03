@@ -311,12 +311,6 @@ def test_nan_nash_sutcliffe_efficiency():
         np.exp(n_pred), log=True, normalized=True)
     assert np.isnan(NNSEL)
 
-def test_convert_mapping_values():
-    char_series = pd.Series(char_contigency_table)
-    converted = metrics.convert_mapping_values(char_series)
-
-    assert converted.dtype == np.float64
-
 def test_kling_gupta_efficiency():
     # Default (inverse case)
     KGE = metrics.kling_gupta_efficiency(y_true, y_pred)
