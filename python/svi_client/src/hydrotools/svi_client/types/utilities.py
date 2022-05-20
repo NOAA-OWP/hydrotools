@@ -1,4 +1,10 @@
-import typing
+try:
+    # get_args was added in 3.8
+    from typing import get_args
+
+except ImportError:
+    # to support python 3.7
+    from typing_extensions import get_args
 
 
 # local imports
@@ -17,7 +23,7 @@ def validate_location(location: str) -> str:
 
 
 def validate_geographic_scale(geographic_scale: GeographicScale) -> str:
-    valid_geo_scales = typing.get_args(GeographicScale)
+    valid_geo_scales = get_args(GeographicScale)
 
     if geographic_scale not in valid_geo_scales:
         valid_geo_scales = sorted(valid_geo_scales)
@@ -28,7 +34,7 @@ def validate_geographic_scale(geographic_scale: GeographicScale) -> str:
 
 
 def validate_geographic_context(geographic_context: GeographicContext) -> str:
-    valid_geo_contexts = typing.get_args(GeographicContext)
+    valid_geo_contexts = get_args(GeographicContext)
 
     if geographic_context not in valid_geo_contexts:
         valid_geo_scales = sorted(valid_geo_contexts)
@@ -41,7 +47,7 @@ def validate_geographic_context(geographic_context: GeographicContext) -> str:
 def validate_year(year: Year) -> str:
     year_str = str(year)
 
-    valid_years = typing.get_args(Year)
+    valid_years = get_args(Year)
     if year_str not in valid_years:
         error_message = f"Invalid year: {year}. Valid year values are\n{valid_years}"
         raise ValueError(error_message)
