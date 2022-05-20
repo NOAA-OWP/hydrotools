@@ -134,42 +134,88 @@ class SVIClient:
 
         df = df.rename(columns=field_names)
 
+        str_cols = df.select_dtypes(include=object).columns
+        # lowercase and strip all leading and trailing white spaces from str columns for consistent
+        # output and quality control
+        df[str_cols] = df[str_cols].apply(lambda d: d.str.strip().str.lower())
+
+        # cast str columns to category type. this reduces the memory footprint by several orders of
+        # magnitude
+        df[str_cols] = df[str_cols].astype("category")
+
         # create missing fields if required
         df = fnm.create_missing_fields(df)
 
         df["svi_edition"] = fnm.svi_edition
 
-        # wide to long format
-        rank_col_names = df.columns.str.contains("rank$")
+        # create column for rejoining dataframes
+        df["geometry_idx"] = df.index
 
-        df = df.melt(
-            id_vars=df.columns[~rank_col_names],
-            value_vars=df.columns[rank_col_names],
+        # take a copy of the geometry column
+        geometry = df["geometry"]
+        df = df.drop(columns=["geometry"])
+
+        # mask of column names that don't end in rank or value
+        rank_value_cols_mask = df.columns.str.contains("rank|value$")
+
+        rank_value_col_names = df.columns[rank_value_cols_mask]
+
+        rank_col_names = rank_value_col_names[
+            rank_value_col_names.str.contains("rank$")
+        ].tolist()
+
+        value_col_names = rank_value_col_names[
+            rank_value_col_names.str.contains("value$")
+        ].tolist()
+
+        non_rank_value_col_names = df.columns[~rank_value_cols_mask].tolist()
+
+        ranks_df = df.melt(
+            id_vars=non_rank_value_col_names,
+            value_vars=rank_col_names,
             var_name="rank_theme",
             value_name="rank",
         )
 
-        value_col_names = df.columns.str.contains("value$")
-        # some datasources do not include summed theme values
-        if not (value_col_names == False).all():
-            df = df.melt(
-                id_vars=df.columns[~value_col_names],
-                value_vars=df.columns[value_col_names],
+        # some data sources do not include the svi theme values, they only include their rank.
+        if value_col_names:
+            values_df = df.melt(
+                id_vars=non_rank_value_col_names,
+                value_vars=value_col_names,
                 var_name="value_theme",
                 value_name="value",
             )
+
+            ranks_df = ranks_df.set_index(
+                non_rank_value_col_names
+                + [ranks_df.groupby(non_rank_value_col_names).cumcount()]
+            )
+            values_df = values_df.set_index(
+                non_rank_value_col_names
+                + [values_df.groupby(non_rank_value_col_names).cumcount()]
+            )
+
+            df = (
+                pd.concat([ranks_df, values_df], axis=1)
+                # drop groupby cumcount level
+                .pipe(
+                    lambda d: d.reset_index(level=d.index.nlevels - 1, drop=True)
+                ).reset_index()
+            )
+        else:
+            df = ranks_df
+
+        # re-join the geometry column using a shared index and reset the index
+        df = pd.concat([df.set_index("geometry_idx"), geometry], axis=1).reset_index(
+            drop=True
+        )
+
         # create theme column by truncating rank_theme's _rank suffix
         df["theme"] = df["rank_theme"].str.rstrip("_rank")
 
         # drop unnecessary cols
         # value_theme column might not exist, so ignore errors when trying to drop
         df = df.drop(columns=["rank_theme", "value_theme"], errors="ignore")
-
-        # lowercase and strip all leading and trailing white spaces from str columns for consistent
-        # output and quality control
-        df_dtypes = df.dtypes
-        str_cols = df_dtypes[df_dtypes == "object"].index
-        df[str_cols] = df[str_cols].apply(lambda d: d.str.strip().str.lower())
 
         df.sort_values("state_name", inplace=True, ignore_index=True)
 
