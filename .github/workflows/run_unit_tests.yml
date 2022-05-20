@@ -21,14 +21,14 @@ jobs:
     - name: Install dependencies
       run: |
         python3 -m pip install -U pip
-        python3 -m pip install --use-feature=in-tree-build ./python/_restclient[develop]
-        python3 -m pip install --use-feature=in-tree-build ./python/nwis_client[develop]
-        python3 -m pip install --use-feature=in-tree-build ./python/caches[develop]
-        python3 -m pip install --use-feature=in-tree-build ./python/nwm_client_new[develop]
-        python3 -m pip install --use-feature=in-tree-build ./python/nwm_client[develop,gcp]
-        python3 -m pip install --use-feature=in-tree-build ./python/events[develop]
-        python3 -m pip install --use-feature=in-tree-build ./python/metrics[develop]
-        python3 -m pip install --use-feature=in-tree-build ./python/svi_client[develop]
+        python3 -m pip install ./python/_restclient[develop]
+        python3 -m pip install ./python/nwis_client[develop]
+        python3 -m pip install ./python/caches[develop]
+        python3 -m pip install ./python/nwm_client_new[develop]
+        python3 -m pip install ./python/nwm_client[develop,gcp]
+        python3 -m pip install ./python/events[develop]
+        python3 -m pip install ./python/metrics[develop]
+        python3 -m pip install ./python/svi_client[develop]
     - name: Run all unittests 
       run: |
         python3 -m pytest -s -m "not slow"

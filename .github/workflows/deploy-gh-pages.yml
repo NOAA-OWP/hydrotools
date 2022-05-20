@@ -21,12 +21,12 @@ jobs:
       run: |
         python -m pip install --upgrade pip Sphinx furo
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        python3 -m pip install --use-feature=in-tree-build ./python/_restclient[develop]
-        python3 -m pip install --use-feature=in-tree-build ./python/nwis_client[develop]
-        python3 -m pip install --use-feature=in-tree-build ./python/caches[develop]
-        python3 -m pip install --use-feature=in-tree-build ./python/nwm_client[develop]
-        python3 -m pip install --use-feature=in-tree-build ./python/events[develop]
-        python3 -m pip install --use-feature=in-tree-build ./python/metrics[develop]
+        python3 -m pip install ./python/_restclient[develop]
+        python3 -m pip install ./python/nwis_client[develop]
+        python3 -m pip install ./python/caches[develop]
+        python3 -m pip install ./python/nwm_client[develop]
+        python3 -m pip install ./python/events[develop]
+        python3 -m pip install ./python/metrics[develop]
     - name: Build Sphinx documentation
       run: |
         cd docs/
