@@ -43,7 +43,6 @@ def validate_year(year: Year) -> str:
 
     valid_years = typing.get_args(Year)
     if year_str not in valid_years:
-        valid_years = sorted(valid_years)
         error_message = f"Invalid year: {year}. Valid year values are\n{valid_years}"
         raise ValueError(error_message)
 
