@@ -11,7 +11,6 @@ http://www.eumetrain.org/data/4/451/english/courses/msgcrs/index.htm
 Functions
 ---------
  - compute_contingency_table
- - convert_mapping_values
  - probability_of_detection
  - probability_of_false_detection
  - probability_of_false_alarm
@@ -235,36 +234,6 @@ def compute_contingency_table(
         true_negative_key : ctab.loc[False, False]
         })
 
-def convert_mapping_values(
-    mapping: Mapping[str, npt.DTypeLike],
-    converter: np.dtype = np.float64
-    ) -> MutableMapping:
-    """Convert mapping values to a consistent type. Primarily used to validate 
-    contingency tables.
-        
-    Parameters
-    ----------
-    mapping: dict-like, required
-        Input mapping with string keys and values that can be coerced into a 
-        numpy data type.
-    converter: numpy.dtype, optional, default numpy.float64
-        Converter data type or function used to convert mapping values to a 
-        consistent type.
-        
-    Returns
-    -------
-    converted_mapping: dict-like, same type as mapping
-        New mapping with converted values.
-        
-    """
-    # Populate new dictionary with converted values
-    d = {}
-    for key, value in dict(mapping).items():
-        d[key] = converter(value)
-
-    # Return new mapping with same type as original
-    return type(mapping)(d)
-
 def probability_of_detection(
     contingency_table: Union[dict, pd.DataFrame, pd.Series],
     true_positive_key: str = 'true_positive',
@@ -290,7 +259,7 @@ def probability_of_detection(
         
     """
     # Convert values to numpy scalars
-    contingency_table = convert_mapping_values(contingency_table)
+    contingency_table = pd.Series(contingency_table, dtype=np.float64)
 
     # Compute
     a = contingency_table[true_positive_key]
@@ -322,7 +291,7 @@ def probability_of_false_detection(
         
     """
     # Convert values to numpy scalars
-    contingency_table = convert_mapping_values(contingency_table)
+    contingency_table = pd.Series(contingency_table, dtype=np.float64)
 
     # Compute
     b = contingency_table[false_positive_key]
@@ -354,7 +323,7 @@ def probability_of_false_alarm(
         
     """
     # Convert values to numpy scalars
-    contingency_table = convert_mapping_values(contingency_table)
+    contingency_table = pd.Series(contingency_table, dtype=np.float64)
 
     # Compute
     b = contingency_table[false_positive_key]
@@ -389,7 +358,7 @@ def threat_score(
         
     """
     # Convert values to numpy scalars
-    contingency_table = convert_mapping_values(contingency_table)
+    contingency_table = pd.Series(contingency_table, dtype=np.float64)
 
     # Compute
     a = contingency_table[true_positive_key]
@@ -425,7 +394,7 @@ def frequency_bias(
         
     """
     # Convert values to numpy scalars
-    contingency_table = convert_mapping_values(contingency_table)
+    contingency_table = pd.Series(contingency_table, dtype=np.float64)
 
     # Compute
     a = contingency_table[true_positive_key]
@@ -464,7 +433,7 @@ def percent_correct(
         
     """
     # Convert values to numpy scalars
-    contingency_table = convert_mapping_values(contingency_table)
+    contingency_table = pd.Series(contingency_table, dtype=np.float64)
 
     # Compute
     a = contingency_table[true_positive_key]
@@ -502,7 +471,7 @@ def base_chance(
         
     """
     # Convert values to numpy scalars
-    contingency_table = convert_mapping_values(contingency_table)
+    contingency_table = pd.Series(contingency_table, dtype=np.float64)
 
     # Compute
     a = contingency_table[true_positive_key]
@@ -542,7 +511,7 @@ def equitable_threat_score(
         
     """
     # Convert values to numpy scalars
-    contingency_table = convert_mapping_values(contingency_table)
+    contingency_table = pd.Series(contingency_table, dtype=np.float64)
 
     # Compute
     a_r = base_chance(contingency_table,

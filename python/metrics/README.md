@@ -39,9 +39,9 @@ observed = service.get(
     )
 
 # Preprocess data
-observed = observed[['value_date', 'value']]
-observed = observed.drop_duplicates(['value_date'])
-observed = observed.set_index('value_date')
+observed = observed[['value_time', 'value']]
+observed = observed.drop_duplicates(['value_time'])
+observed = observed.set_index('value_time')
 
 # Simulate a 10-day persistence forecast
 issue_frequency = pd.Timedelta('6H')
