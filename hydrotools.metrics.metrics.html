@@ -233,7 +233,6 @@
 <blockquote>
 <div><ul class="simple">
 <li><p>compute_contingency_table</p></li>
-<li><p>convert_mapping_values</p></li>
 <li><p>probability_of_detection</p></li>
 <li><p>probability_of_false_detection</p></li>
 <li><p>probability_of_false_alarm</p></li>
@@ -289,28 +288,6 @@
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>pandas.Series</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py function">
-<dt class="sig sig-object py" id="hydrotools.metrics.metrics.convert_mapping_values">
-<span class="sig-prename descclassname"><span class="pre">hydrotools.metrics.metrics.</span></span><span class="sig-name descname"><span class="pre">convert_mapping_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mapping:</span> <span class="pre">typing.Mapping[str,</span> <span class="pre">typing.Union[numpy.dtype[typing.Any],</span> <span class="pre">None,</span> <span class="pre">typing.Type[typing.Any],</span> <span class="pre">numpy.typing._dtype_like._SupportsDType[numpy.dtype[typing.Any]],</span> <span class="pre">str,</span> <span class="pre">typing.Tuple[typing.Any,</span> <span class="pre">int],</span> <span class="pre">typing.Tuple[typing.Any,</span> <span class="pre">typing.Union[typing.SupportsIndex,</span> <span class="pre">typing.Sequence[typing.SupportsIndex]]],</span> <span class="pre">typing.List[typing.Any],</span> <span class="pre">numpy.typing._dtype_like._DTypeDict,</span> <span class="pre">typing.Tuple[typing.Any,</span> <span class="pre">typing.Any]]],</span> <span class="pre">converter:</span> <span class="pre">numpy.dtype</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'numpy.float64'&gt;</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">MutableMapping</span></span></span><a class="headerlink" href="#hydrotools.metrics.metrics.convert_mapping_values" title="Permalink to this definition">#</a></dt>
-<dd><p>Convert mapping values to a consistent type. Primarily used to validate
-contingency tables.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>mapping</strong> (<em>dict-like</em><em>, </em><em>required</em>) – Input mapping with string keys and values that can be coerced into a
-numpy data type.</p></li>
-<li><p><strong>converter</strong> (<em>numpy.dtype</em><em>, </em><em>optional</em><em>, </em><em>default numpy.float64</em>) – Converter data type or function used to convert mapping values to a
-consistent type.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>converted_mapping</strong> – New mapping with converted values.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict-like, same type as mapping</p>
 </dd>
 </dl>
 </dd></dl>
