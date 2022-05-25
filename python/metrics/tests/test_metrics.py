@@ -241,6 +241,10 @@ def test_equitable_threat_score():
     ETS = metrics.equitable_threat_score(nan_contigency_table)
     assert np.isnan(ETS)
 
+def test_mean_absolute_error():
+    MAE = metrics.mean_error(y_true, y_pred)
+    assert MAE == 2.0
+
 def test_mean_squared_error():
     MSE = metrics.mean_error(y_true, y_pred, power=2.0)
     assert MSE == 5.0
