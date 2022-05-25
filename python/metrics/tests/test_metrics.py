@@ -395,3 +395,36 @@ def test_coefficient_of_persistence():
     COP = metrics.coefficient_of_persistence(y_true, y_pred, log=True)
     expected = -2.09313723301667
     assert np.isclose(COP, expected)
+
+def test_coefficient_of_extrapolation():
+    # Default
+    v = [1, 2, 4, 5]
+    COE = metrics.coefficient_of_extrapolation(v, y_pred)
+    expected = -3.0
+    assert np.isclose(COE, expected)
+
+    # Test with series
+    s = pd.Series(data=v, index=y_true_series.index)
+    COE = metrics.coefficient_of_extrapolation(s, y_pred_series)
+    expected = -3.0
+    assert np.isclose(COE, expected)
+
+    # Identity
+    COE = metrics.coefficient_of_extrapolation(y_true, np.array(y_true) * 1.0)
+    expected = 1.0
+    assert np.isclose(COE, expected)
+
+    # Power
+    COE = metrics.coefficient_of_extrapolation(v, y_pred, power=1.5)
+    expected = -1.82842712474619
+    assert np.isclose(COE, expected)
+
+    # Normalized
+    COE = metrics.coefficient_of_extrapolation(v, y_pred, normalized=True)
+    expected = 0.2
+    assert np.isclose(COE, expected)
+
+    # Log
+    COE = metrics.coefficient_of_extrapolation(v, y_pred, log=True)
+    expected = -2.19567503891363
+    assert np.isclose(COE, expected)
