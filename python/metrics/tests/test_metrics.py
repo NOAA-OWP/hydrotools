@@ -242,10 +242,10 @@ def test_equitable_threat_score():
     assert np.isnan(ETS)
 
 def test_mean_squared_error():
-    MSE = metrics.mean_squared_error(y_true, y_pred)
+    MSE = metrics.mean_error(y_true, y_pred, power=2.0)
     assert MSE == 5.0
 
-    RMSE = metrics.mean_squared_error(y_true, y_pred, root=True)
+    RMSE = metrics.mean_error(y_true, y_pred, power=2.0, root=True)
     assert RMSE == np.sqrt(5.0)
 
 def test_nash_sutcliffe_efficiency():
@@ -265,17 +265,17 @@ def test_nash_sutcliffe_efficiency():
     assert NNSEL == 0.2
 
 def test_zero_mean_squared_error():
-    MSE = metrics.mean_squared_error(z_true, z_pred)
+    MSE = metrics.mean_error(z_true, z_pred, power=2.0)
     assert MSE == 0.0
 
-    RMSE = metrics.mean_squared_error(z_true, z_pred, root=True)
+    RMSE = metrics.mean_error(z_true, z_pred, power=2.0, root=True)
     assert RMSE == 0.0
 
 def test_nan_mean_squared_error():
-    MSE = metrics.mean_squared_error(n_true, n_pred)
+    MSE = metrics.mean_error(n_true, n_pred, power=2.0)
     assert np.isnan(MSE)
 
-    RMSE = metrics.mean_squared_error(n_true, n_pred, root=True)
+    RMSE = metrics.mean_error(n_true, n_pred, power=2.0, root=True)
     assert np.isnan(RMSE)
 
 def test_zero_nash_sutcliffe_efficiency():
