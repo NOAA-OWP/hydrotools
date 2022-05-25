@@ -19,24 +19,26 @@ Functions
  - percent_correct
  - base_chance
  - equitable_threat_score
- - mean_squared_error
+ - mean_error
  - nash_sutcliffe_efficiency
  - kling_gupta_efficiency
+ - generic_skill_score
 
 """
 
 import numpy as np
 import numpy.typing as npt
 import pandas as pd
-from typing import Union, Mapping, MutableMapping
+from typing import Union
 from . import _validation as validate
 
-def mean_squared_error(
+def mean_error(
     y_true: npt.ArrayLike,
     y_pred: npt.ArrayLike,
+    power: float = 1.0,
     root: bool = False
     ) -> float:
-    """Compute the mean squared error, or optionally root mean squared error.
+    """Compute the mean error or deviation. Default is Mean Absolute Error.
         
     Parameters
     ----------
@@ -53,13 +55,13 @@ def mean_squared_error(
         Mean squared error or root mean squared error.
     
     """
-    # Compute mean squared error
-    MSE = np.sum(np.subtract(y_true, y_pred) ** 2.0) / len(y_true)
+    # Compute mean error
+    ME = np.sum(np.abs(np.subtract(y_true, y_pred)) ** power) / len(y_true)
 
-    # Return MSE, optionally return root mean squared error
+    # Return ME, optionally return root mean error
     if root:
-        return np.sqrt(MSE)
-    return MSE
+        return np.sqrt(ME)
+    return ME
 
 def nash_sutcliffe_efficiency(
     y_true: npt.ArrayLike,
@@ -111,8 +113,8 @@ def nash_sutcliffe_efficiency(
         y_pred = np.log(y_pred)
 
     # Compute components
-    numerator = mean_squared_error(y_true, y_pred)
-    denominator = mean_squared_error(y_true, np.mean(y_true))
+    numerator = mean_error(y_true, y_pred, power=2.0)
+    denominator = mean_error(y_true, np.mean(y_true), power=2.0)
 
     # Compute score, optionally normalize
     if normalized:
