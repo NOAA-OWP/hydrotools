@@ -47,12 +47,12 @@ def mean_error(
     y_pred: array-like of shape (n_samples,), required
         Estimated target values, also called simulations or modeled values.
     root: bool, default False
-        When True, return the root mean squared error.
+        When True, return the root mean error.
         
     Returns
     -------
     error: float
-        Mean squared error or root mean squared error.
+        Mean error or root mean error.
     
     """
     # Compute mean error
@@ -63,10 +63,56 @@ def mean_error(
         return np.sqrt(ME)
     return ME
 
+def mean_error_skill_score(
+    y_true: npt.ArrayLike,
+    y_pred: npt.ArrayLike,
+    y_base: npt.ArrayLike,
+    power: float = 1.0,
+    normalized: bool = False
+    ) -> float:
+    """Compute the Nash-Sutcliffe model efficiency coefficient (NSE), also called the 
+    mean squared error skill score or the R^2 (coefficient of determination) regression score.
+        
+    Parameters
+    ----------
+    y_true: array-like of shape (n_samples,), required
+        Ground truth (correct) target values, also called observations, measurements, or observed values.
+    y_pred: array-like of shape (n_samples,), required
+        Estimated target values, also called simulations or modeled values.
+    log: bool, default False
+        Apply numpy.log (natural logarithm) to y_true and y_pred 
+        before computing the NSE.
+    normalized: bool, default False
+        When True, normalize the final NSE value using the method from 
+        Nossent & Bauwens, 2012.
+        
+    Returns
+    -------
+    score: float
+        Nash-Sutcliffe model efficiency coefficient
+        
+    References
+    ----------
+    Nossent, J., & Bauwens, W. (2012, April). Application of a normalized 
+        Nash-Sutcliffe efficiency to improve the accuracy of the Sobol' 
+        sensitivity analysis of a hydrological model. In EGU General Assembly 
+        Conference Abstracts (p. 237).
+    
+    """
+    # Compute components
+    numerator = mean_error(y_true, y_pred, power=power)
+    denominator = mean_error(y_true, y_base, power=power)
+
+    # Compute score, optionally normalize
+    if normalized:
+        return 1.0 / (1.0 + numerator/denominator)
+    return 1.0 - numerator/denominator
+
 def nash_sutcliffe_efficiency(
     y_true: npt.ArrayLike,
     y_pred: npt.ArrayLike,
     log: bool = False,
+    power: float = 2.0,
     normalized: bool = False
     ) -> float:
     """Compute the Nash-Sutcliffe model efficiency coefficient (NSE), also called the 
@@ -95,10 +141,6 @@ def nash_sutcliffe_efficiency(
     Nash, J. E., & Sutcliffe, J. V. (1970). River flow forecasting through 
         conceptual models part I—A discussion of principles. Journal of 
         hydrology, 10(3), 282-290.
-    Nossent, J., & Bauwens, W. (2012, April). Application of a normalized 
-        Nash-Sutcliffe efficiency to improve the accuracy of the Sobol' 
-        sensitivity analysis of a hydrological model. In EGU General Assembly 
-        Conference Abstracts (p. 237).
     
     """
     # Raise if not 1-D arrays
@@ -112,14 +154,63 @@ def nash_sutcliffe_efficiency(
         y_true = np.log(y_true)
         y_pred = np.log(y_pred)
 
-    # Compute components
-    numerator = mean_error(y_true, y_pred, power=2.0)
-    denominator = mean_error(y_true, np.mean(y_true), power=2.0)
+    # Compute score
+    return mean_error_skill_score(y_true, y_pred, np.mean(y_true), 
+        power=power, normalized=normalized)
 
-    # Compute score, optionally normalize
-    if normalized:
-        return 1.0 / (1.0 + numerator/denominator)
-    return 1.0 - numerator/denominator
+def coefficient_of_persistence(
+    y_true: npt.ArrayLike,
+    y_pred: npt.ArrayLike,
+    lag: int = 1,
+    log: bool = False,
+    power: float = 2.0,
+    normalized: bool = False
+    ) -> float:
+    """Compute the Nash-Sutcliffe model efficiency coefficient (NSE), also called the 
+    mean squared error skill score or the R^2 (coefficient of determination) regression score.
+        
+    Parameters
+    ----------
+    y_true: array-like of shape (n_samples,), required
+        Ground truth (correct) target values, also called observations, measurements, or observed values.
+    y_pred: array-like of shape (n_samples,), required
+        Estimated target values, also called simulations or modeled values.
+    log: bool, default False
+        Apply numpy.log (natural logarithm) to y_true and y_pred 
+        before computing the NSE.
+    normalized: bool, default False
+        When True, normalize the final NSE value using the method from 
+        Nossent & Bauwens, 2012.
+        
+    Returns
+    -------
+    score: float
+        Nash-Sutcliffe model efficiency coefficient
+        
+    References
+    ----------
+    Nash, J. E., & Sutcliffe, J. V. (1970). River flow forecasting through 
+        conceptual models part I—A discussion of principles. Journal of 
+        hydrology, 10(3), 282-290.
+    
+    """
+    # Raise if not 1-D arrays
+    validate.raise_for_non_vector(y_true, y_pred)
+
+    # Raise if not same shape
+    validate.raise_for_inconsistent_shapes(y_true, y_pred)
+
+    # Optionally transform components
+    if log:
+        y_true = np.log(y_true)
+        y_pred = np.log(y_pred)
+
+    # Compute baseline
+    y_base = np.roll(y_true, lag)
+
+    # Compute score
+    return mean_error_skill_score(y_true[lag:], y_pred[lag:], y_base[lag:], 
+        power=power, normalized=normalized)
 
 def kling_gupta_efficiency(
     y_true: npt.ArrayLike,
