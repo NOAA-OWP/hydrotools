@@ -48,6 +48,24 @@ z_pred = [0., 0., 0., 0.]
 n_true = [np.nan, np.nan, np.nan, np.nan]
 n_pred = [np.nan, np.nan, np.nan, np.nan]
 
+y_true_series = pd.Series(
+    data=y_true,
+    index=pd.date_range(
+        start="2020-01-01", 
+        end="2020-01-04", 
+        freq="1D"
+    )
+)
+
+y_pred_series = pd.Series(
+    data=y_pred,
+    index=pd.date_range(
+        start="2020-01-01", 
+        end="2020-01-04", 
+        freq="1D"
+    )
+)
+
 def test_compute_contingency_table():
     obs = pd.Series([True, False, False, True, True, True,
         False, False, False, False], dtype="category")
@@ -341,3 +359,39 @@ def test_kling_gupta_efficiency():
         r_scale=0.5, a_scale=0.25, b_scale=0.25)
     expected = (1.0 - np.sqrt(9.0/128.0))
     assert np.isclose(KGE, expected)
+
+def test_coefficient_of_persistence():
+    # Default
+    COP = metrics.coefficient_of_persistence(y_true, y_pred)
+    expected = (1.0 - 11.0/3.0)
+    assert np.isclose(COP, expected)
+
+    # Test with series
+    COP = metrics.coefficient_of_persistence(y_true_series, y_pred_series)
+    expected = (1.0 - 11.0/3.0)
+    assert np.isclose(COP, expected)
+
+    # Identity
+    COP = metrics.coefficient_of_persistence(y_true, np.array(y_true) * 1.0)
+    expected = 1.0
+    assert np.isclose(COP, expected)
+
+    # Lag
+    COP = metrics.coefficient_of_persistence(y_true, y_pred, lag=2)
+    expected = -0.25
+    assert np.isclose(COP, expected)
+
+    # Power
+    COP = metrics.coefficient_of_persistence(y_true, y_pred, power=3)
+    expected = (1.0 - 29.0 / 3.0)
+    assert np.isclose(COP, expected)
+
+    # Normalized
+    COP = metrics.coefficient_of_persistence(y_true, y_pred, normalized=True)
+    expected = 1.0 / (2.0 - (1.0 - 11.0/3.0))
+    assert np.isclose(COP, expected)
+
+    # Log
+    COP = metrics.coefficient_of_persistence(y_true, y_pred, log=True)
+    expected = -2.09313723301667
+    assert np.isclose(COP, expected)
