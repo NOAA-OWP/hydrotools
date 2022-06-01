@@ -81,7 +81,14 @@ def mean_error_skill_score(
     power: float = 1.0,
     normalized: bool = False
     ) -> float:
-    """Compute a generic mean error based model skill score.
+    """Compute a generic mean error based model skill score. The mean error skill score 
+    is given by:
+
+    $$MESS = 1 - \frac{\sum_{i=1}^{n}\left| y_{p,i} - y_{o,i} \right|^{p}}{\sum_{i=1}^{n}\left| y_{b,i} - y_{o,i} \right|^{p}}$$
+
+    Where $n$ is the length of each array, $y_{s,i}$ is the *ith* simulated or predicted value, 
+    $y_{b,i}$ is the *ith* baseline value, $y_{o,i}$ is the *ith* observed or true 
+    value, and $p$ is the exponent.
         
     Parameters
     ----------
