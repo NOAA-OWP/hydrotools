@@ -214,7 +214,8 @@ def coefficient_of_persistence(
     persistence compares the model to a recent observation, given some lag. This score assesses 
     the model's skill compared to assuming a previous observation does not change (persists).
 
-    In this case
+    In the default case, the *ith* modeled value will be compared to the *i-1* observed value. 
+    The result is the mean squared error skill score using the *i-1* observed values as a baseline.
         
     Parameters
     ----------
@@ -278,7 +279,10 @@ def coefficient_of_extrapolation(
     power: float = 2.0,
     normalized: bool = False
     ) -> float:
-    """Compute the coefficient of extrapolation (Kitanidis & Bras, 1980).
+    """Compute the coefficient of extrapolation (Kitanidis & Bras, 1980). The coefficient of 
+    extrapolation compares the model output to the last two values of the observations, assuming 
+    the linear trend of the these values will continue. In other words, the coefficient of 
+    extrapolation is a skill score with baseline values $y_{b,i} = y_{b,i-1} + (y_{b,i-1} - y_{b,i-2})$.
         
     Parameters
     ----------
@@ -299,6 +303,10 @@ def coefficient_of_extrapolation(
     -------
     score: float
         Coefficient of extrapolation.
+
+    See Also
+    --------
+    mean_error_skill_score: Generic method for computing model skill.
         
     References
     ----------
