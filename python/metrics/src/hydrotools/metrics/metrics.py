@@ -111,9 +111,10 @@ def mean_error_skill_score(
         
     References
     ----------
-    Nash, J. E., & Sutcliffe, J. V. (1970). River flow forecasting through 
-        conceptual models part I—A discussion of principles. Journal of 
-        hydrology, 10(3), 282-290.
+    Nossent, J., & Bauwens, W. (2012, April). Application of a normalized 
+        Nash-Sutcliffe efficiency to improve the accuracy of the Sobol'sensitivity 
+        analysis of a hydrological model. In EGU General Assembly Conference 
+        Abstracts (p. 237).
     
     """
     # Compute components
@@ -160,6 +161,10 @@ def nash_sutcliffe_efficiency(
     Nash, J. E., & Sutcliffe, J. V. (1970). River flow forecasting through 
         conceptual models part I—A discussion of principles. Journal of 
         hydrology, 10(3), 282-290.
+    Nossent, J., & Bauwens, W. (2012, April). Application of a normalized 
+        Nash-Sutcliffe efficiency to improve the accuracy of the Sobol'sensitivity 
+        analysis of a hydrological model. In EGU General Assembly Conference 
+        Abstracts (p. 237).
     
     """
     # Raise if not 1-D arrays
@@ -208,9 +213,10 @@ def coefficient_of_persistence(
         
     References
     ----------
-    Nash, J. E., & Sutcliffe, J. V. (1970). River flow forecasting through 
-        conceptual models part I—A discussion of principles. Journal of 
-        hydrology, 10(3), 282-290.
+    Nossent, J., & Bauwens, W. (2012, April). Application of a normalized 
+        Nash-Sutcliffe efficiency to improve the accuracy of the Sobol'sensitivity 
+        analysis of a hydrological model. In EGU General Assembly Conference 
+        Abstracts (p. 237).
     
     """
     # Raise if not 1-D arrays
@@ -261,9 +267,10 @@ def coefficient_of_extrapolation(
         
     References
     ----------
-    Nash, J. E., & Sutcliffe, J. V. (1970). River flow forecasting through 
-        conceptual models part I—A discussion of principles. Journal of 
-        hydrology, 10(3), 282-290.
+    Nossent, J., & Bauwens, W. (2012, April). Application of a normalized 
+        Nash-Sutcliffe efficiency to improve the accuracy of the Sobol'sensitivity 
+        analysis of a hydrological model. In EGU General Assembly Conference 
+        Abstracts (p. 237).
     
     """
     # Raise if not 1-D arrays
