@@ -81,8 +81,7 @@ def mean_error_skill_score(
     power: float = 1.0,
     normalized: bool = False
     ) -> float:
-    """Compute the Nash-Sutcliffe model efficiency coefficient (NSE), also called the 
-    mean squared error skill score or the R^2 (coefficient of determination) regression score.
+    """Compute a generic mean error based model skill score.
         
     Parameters
     ----------
@@ -90,24 +89,24 @@ def mean_error_skill_score(
         Ground truth (correct) target values, also called observations, measurements, or observed values.
     y_pred: array-like of shape (n_samples,), required
         Estimated target values, also called simulations or modeled values.
-    log: bool, default False
-        Apply numpy.log (natural logarithm) to y_true and y_pred 
-        before computing the NSE.
+    y_base: array-like of shape (n_samples,), required
+        Baseline value(s) against which to assess skill of y_pred.
+    power: float, default 1.0
+        Exponent for each mean error summation value.
     normalized: bool, default False
-        When True, normalize the final NSE value using the method from 
+        When True, normalize the final skill score using the method from 
         Nossent & Bauwens, 2012.
         
     Returns
     -------
     score: float
-        Nash-Sutcliffe model efficiency coefficient
+        Skill score of y_pred relative to y_base.
         
     References
     ----------
-    Nossent, J., & Bauwens, W. (2012, April). Application of a normalized 
-        Nash-Sutcliffe efficiency to improve the accuracy of the Sobol' 
-        sensitivity analysis of a hydrological model. In EGU General Assembly 
-        Conference Abstracts (p. 237).
+    Nash, J. E., & Sutcliffe, J. V. (1970). River flow forecasting through 
+        conceptual models part I—A discussion of principles. Journal of 
+        hydrology, 10(3), 282-290.
     
     """
     # Compute components
