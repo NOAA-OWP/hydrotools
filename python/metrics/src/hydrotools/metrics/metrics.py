@@ -77,9 +77,9 @@ def mean_error(
         return np.sqrt(_mean_error)
     return _mean_error
 
-mean_squared_error = partial(mean_error, power=2.0)
+mean_squared_error = partial(mean_error, power=2.0, root=False)
 mean_squared_error.__doc__ = """Partial of hydrotools.metrics.mean_error with 
-a default power value of 2.0. See mean_error.
+a default power value of 2.0 and root set to False. See mean_error.
 """
 
 root_mean_squared_error = partial(mean_error, power=2.0, root=True)
