@@ -210,7 +210,11 @@ def coefficient_of_persistence(
     power: float = 2.0,
     normalized: bool = False
     ) -> float:
-    """Compute the coefficient of persistence (Kitanidis & Bras, 1980).
+    """Compute the coefficient of persistence (Kitanidis & Bras, 1980). The coefficient of 
+    persistence compares the model to a recent observation, given some lag. This score assesses 
+    the model's skill compared to assuming a previous observation does not change (persists).
+
+    In this case
         
     Parameters
     ----------
@@ -233,6 +237,10 @@ def coefficient_of_persistence(
     -------
     score: float
         Coefficient of persistence.
+
+    See Also
+    --------
+    mean_error_skill_score: Generic method for computing model skill.
         
     References
     ----------
