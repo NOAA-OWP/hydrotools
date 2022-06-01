@@ -345,7 +345,11 @@ def kling_gupta_efficiency(
     a_scale: float = 1.0,
     b_scale: float = 1.0
     ) -> float:
-    """Compute the Kling-Gupta model efficiency coefficient (KGE).
+    """Compute the Kling-Gupta model efficiency coefficient (KGE). The KGE is a 
+    summary metric that combines the relative mean, relative variance, and linear 
+    correlation between observed and simulated values. The final metric is computed 
+    using the root sum of squares with optional scaling factors, similar to 
+    computing distance in a 3-dimensional Euclidean space.
         
     Parameters
     ----------
