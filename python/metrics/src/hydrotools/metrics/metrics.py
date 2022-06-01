@@ -138,6 +138,8 @@ def nash_sutcliffe_efficiency(
     log: bool, default False
         Apply numpy.log (natural logarithm) to y_true and y_pred 
         before computing the NSE.
+    power: float, default 2.0
+        Exponent for each mean error summation value.
     normalized: bool, default False
         When True, normalize the final NSE value using the method from 
         Nossent & Bauwens, 2012.
