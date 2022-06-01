@@ -487,7 +487,12 @@ def probability_of_detection(
     true_positive_key: str = 'true_positive',
     false_negative_key: str = 'false_negative'
     ) -> float:
-    """Compute probability of detection (POD).
+    """Compute probability of detection (POD), also called the "hit rate". POD 
+    is the ratio of true positives to the number of observations. POD ranges 
+    from 0.0 to 1.0, higher is better. Note: that this statistic is easy to 
+    "hedge" if the model always indicates occurence. This statistic should 
+    be considered alongside some metric of false positives, like probability 
+    of false alarm or threat score.
         
     Parameters
     ----------
@@ -519,7 +524,9 @@ def probability_of_false_detection(
     false_positive_key: str = 'false_positive',
     true_negative_key: str = 'true_negative'
     ) -> float:
-    """Compute probability of false detection/false alarm rate (POFD/FARate).
+    """Compute probability of false detection/false alarm rate (POFD/FARate). POFD 
+    indicates the portion of non-occurences that were false alarms. POFD ranges from 
+    0.0 to 1.0, lower is better.
         
     Parameters
     ----------
@@ -551,7 +558,10 @@ def probability_of_false_alarm(
     true_positive_key: str = 'true_positive',
     false_positive_key: str = 'false_positive'
     ) -> float:
-    """Compute probability of false alarm/false alarm ratio (POFA/FARatio).
+    """Compute probability of false alarm/false alarm ratio (POFA/FARatio). POFA 
+    indicates the portion of predictions or simulated values that were false alarms. 
+    POFA ranges from 0.0 to 1.0, lower is better. The complement of POFA (1.0 - POFA) is 
+    the 'post-agreement (PAG).'
         
     Parameters
     ----------
@@ -584,7 +594,11 @@ def threat_score(
     false_positive_key: str = 'false_positive',
     false_negative_key: str = 'false_negative'
     ) -> float:
-    """Compute threat score/critical success index (TS/CSI).
+    """Compute threat score/critical success index (TS/CSI). CSI is the ratio 
+    true positives to the sum of true positives, false positives, and false 
+    negatives. CSI ranges from 0.0 to 1.0, higher is better. CSI is sensitive 
+    to event frequency, in which case the equitable threat score may be more 
+    suitable.
         
     Parameters
     ----------
@@ -660,7 +674,10 @@ def percent_correct(
     false_negative_key: str = 'false_negative',
     true_negative_key: str = 'true_negative'
     ) -> float:
-    """Compute percent correct (PC).
+    """Compute percent correct (PC). PC is the sum of both true positives and 
+    true negatives compared to the total number of observations. PC is the portion 
+    of correctly predicted occurences and non-occurences. PC ranges from 0.0 to 1.0, 
+    higher is better.
         
     Parameters
     ----------
@@ -700,12 +717,15 @@ def base_chance(
     false_negative_key: str = 'false_negative',
     true_negative_key: str = 'true_negative'
     ) -> float:
-    """Compute base chance to hit (a_r).
+    """Compute base chance to hit (a_r). Base chance is the relative frequency of 
+    occurences. In other words, this is the probability of scoring a "hit" or true positive 
+    by chance.
         
     Parameters
     ----------
     contingency_table: dict, pandas.DataFrame, or pandas.Series, required
-        Contingency table containing key-value pairs with the following keys: true_positive_key, false_positive_key, false_negative_key, true_negative_key; and int or float values 
+        Contingency table containing key-value pairs with the following keys: true_positive_key, false_positive_key, 
+            false_negative_key, true_negative_key; and int or float values 
     true_positive_key: str, optional, default 'true_positive'
         Label to use for true positives.
     false_positive_key: str, optional, default 'false_positive'
@@ -738,7 +758,9 @@ def equitable_threat_score(
     false_negative_key: str = 'false_negative',
     true_negative_key: str = 'true_negative'
     ) -> float:
-    """Compute equitable threat score (ETS).
+    """Compute equitable threat score (ETS). Threat score/Critical Success Index 
+    tends to yield lower scores for rare events. ETS computes a threat score, but 
+    accounts for the relative frequency of scoring a true positive by chance.
         
     Parameters
     ----------
