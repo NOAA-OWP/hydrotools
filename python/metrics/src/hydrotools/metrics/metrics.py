@@ -190,8 +190,7 @@ def coefficient_of_persistence(
     power: float = 2.0,
     normalized: bool = False
     ) -> float:
-    """Compute the Nash-Sutcliffe model efficiency coefficient (NSE), also called the 
-    mean squared error skill score or the R^2 (coefficient of determination) regression score.
+    """Compute the coefficient of persistence (Kitanidis & Bras, 1980).
         
     Parameters
     ----------
@@ -199,20 +198,27 @@ def coefficient_of_persistence(
         Ground truth (correct) target values, also called observations, measurements, or observed values.
     y_pred: array-like of shape (n_samples,), required
         Estimated target values, also called simulations or modeled values.
+    lag: int, default 1
+        Number of values by which to lag the baseline.
     log: bool, default False
         Apply numpy.log (natural logarithm) to y_true and y_pred 
-        before computing the NSE.
+        before computing the score.
+    power: float, default 2.0
+        Exponent for each mean error summation value.
     normalized: bool, default False
-        When True, normalize the final NSE value using the method from 
+        When True, normalize the final score using the method from 
         Nossent & Bauwens, 2012.
         
     Returns
     -------
     score: float
-        Nash-Sutcliffe model efficiency coefficient
+        Coefficient of persistence.
         
     References
     ----------
+    Kitanidis, P. K., & Bras, R. L. (1980). Real-time forecasting with a conceptual 
+        hydrologic model: 2. Applications and results. Water Resources Research, 
+        16(6), 1034-1044.
     Nossent, J., & Bauwens, W. (2012, April). Application of a normalized 
         Nash-Sutcliffe efficiency to improve the accuracy of the Sobol'sensitivity 
         analysis of a hydrological model. In EGU General Assembly Conference 
@@ -244,8 +250,7 @@ def coefficient_of_extrapolation(
     power: float = 2.0,
     normalized: bool = False
     ) -> float:
-    """Compute the Nash-Sutcliffe model efficiency coefficient (NSE), also called the 
-    mean squared error skill score or the R^2 (coefficient of determination) regression score.
+    """Compute the coefficient of extrapolation (Kitanidis & Bras, 1980).
         
     Parameters
     ----------
@@ -256,6 +261,8 @@ def coefficient_of_extrapolation(
     log: bool, default False
         Apply numpy.log (natural logarithm) to y_true and y_pred 
         before computing the NSE.
+    power: float, default 2.0
+        Exponent for each mean error summation value.
     normalized: bool, default False
         When True, normalize the final NSE value using the method from 
         Nossent & Bauwens, 2012.
@@ -263,10 +270,13 @@ def coefficient_of_extrapolation(
     Returns
     -------
     score: float
-        Nash-Sutcliffe model efficiency coefficient
+        Coefficient of extrapolation.
         
     References
     ----------
+    Kitanidis, P. K., & Bras, R. L. (1980). Real-time forecasting with a conceptual 
+        hydrologic model: 2. Applications and results. Water Resources Research, 
+        16(6), 1034-1044.
     Nossent, J., & Bauwens, W. (2012, April). Application of a normalized 
         Nash-Sutcliffe efficiency to improve the accuracy of the Sobol'sensitivity 
         analysis of a hydrological model. In EGU General Assembly Conference 
