@@ -149,7 +149,10 @@ def mean_error_skill_score(
 
 volumetric_efficiency = partial(mean_error_skill_score, y_base=0.0, power=1.0)
 volumetric_efficiency.__doc__ = """Partial of hydrotools.metrics.mean_error_skill_score 
-with a default y_base of 0.0 and a power value of 1.0.
+with a default y_base of 0.0 and a power value of 1.0. Volumetric efficiency ranges from 
+-inf to 1.0, higher is better. According to the authors, volumetric efficiency indicates 
+the "portion of water that arrives on time." Note: that large over-predictions result in 
+deeply negative values.
 
 See Also
 --------
