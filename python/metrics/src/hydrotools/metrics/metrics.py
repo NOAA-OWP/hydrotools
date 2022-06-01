@@ -215,7 +215,9 @@ def coefficient_of_persistence(
     the model's skill compared to assuming a previous observation does not change (persists).
 
     In the default case, the *ith* modeled value will be compared to the *i-1* observed value. 
-    The result is the mean squared error skill score using the *i-1* observed values as a baseline.
+    The result is the mean squared error skill score using the *i-1* observed values as a baseline. 
+    The coefficient of persistence ranges from -inf to 1.0, higher is better. A score of 0.0 indicates 
+    skill no better than assuming the last observation would persist. A perfect score is 1.0.
         
     Parameters
     ----------
@@ -283,6 +285,10 @@ def coefficient_of_extrapolation(
     extrapolation compares the model output to the last two values of the observations, assuming 
     the linear trend of the these values will continue. In other words, the coefficient of 
     extrapolation is a skill score with baseline values $y_{b,i} = y_{b,i-1} + (y_{b,i-1} - y_{b,i-2})$.
+
+    The coefficient of extrapolation ranges from -inf to 1.0, higher is better. A score of 0.0 indicates 
+    skill no better than assuming the difference between the last two observations will persist. A perfect 
+    score is 1.0.
         
     Parameters
     ----------
@@ -413,7 +419,14 @@ def compute_contingency_table(
     false_negative_key: str = 'false_negative',
     true_negative_key: str = 'true_negative'
     ) -> pd.Series:
-    """Compute components of a contingency table.
+    """Compute components of a contingency table required for the evaluation of categorical 
+    forecasts and simulations. Returns a pandas.Series indexed by table component. 'true_positive' 
+    indicates the number of times the simulation correctly indicated True according to the 
+    observations. 'false_positive' indicates the number of times the simulation incorrectly 
+    indicated True according to the observations. 'false_negative' indicates the number of times 
+    the simulation incorrectly indicated False according to the observations. 'true_negative' 
+    indicates the number of times the simulation correctly indicated False according to the 
+    observations.
         
     Parameters
     ----------
@@ -433,7 +446,19 @@ def compute_contingency_table(
     Returns
     -------
     contingency_table: pandas.Series
-        pandas.Series of integer values keyed to pandas.Index([true_positive_key, false_positive_key, false_negative_key, true_negative_key])
+        pandas.Series of integer values keyed to pandas.Index([true_positive_key, false_positive_key, 
+            false_negative_key, true_negative_key])
+
+    Examples
+    --------
+    >>> obs = [True, True, True, False, False, False, False, False, True, True]
+    >>> sim = [True, True, False, False, False, False, True, False, False, False]
+    >>> metrics.compute_contingency_table(obs, sim)
+    true_positive     2
+    false_positive    1
+    false_negative    3
+    true_negative     4
+    dtype: int64
         
     """
     # Raise if not 1-D arrays
