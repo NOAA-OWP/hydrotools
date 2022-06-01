@@ -22,7 +22,10 @@ Functions
  - mean_error
  - nash_sutcliffe_efficiency
  - kling_gupta_efficiency
- - generic_skill_score
+ - mean_error
+ - mean_error_skill_score
+ - coefficient_of_persistence
+ - coefficient_of_extrapolation
 
 """
 
@@ -38,7 +41,13 @@ def mean_error(
     power: float = 1.0,
     root: bool = False
     ) -> float:
-    """Compute the mean error or deviation. Default is Mean Absolute Error.
+    """Compute the mean error or deviation. Default is Mean Absolute Error. The mean error 
+    is given by:
+
+    $$ME = \frac{1}{n}\sum_{i=1}^{n}\left| y_{s,i} - y_{o,i} \right|^{p}$$
+
+    Where $n$ is the length of each array, $y_{s,i}$ is the *ith* simulated or predicted value, 
+    $y_{o,i}$ is the *ith* observed or true value, and $p$ is the exponent.
         
     Parameters
     ----------
@@ -46,6 +55,8 @@ def mean_error(
         Ground truth (correct) target values, also called observations, measurements, or observed values.
     y_pred: array-like of shape (n_samples,), required
         Estimated target values, also called simulations or modeled values.
+    power: float, default 1.0
+        Exponent for each mean error summation value.
     root: bool, default False
         When True, return the root mean error.
         
