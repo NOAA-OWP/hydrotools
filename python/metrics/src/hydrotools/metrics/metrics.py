@@ -147,7 +147,14 @@ def nash_sutcliffe_efficiency(
     normalized: bool = False
     ) -> float:
     """Compute the Nash-Sutcliffe model efficiency coefficient (NSE), also called the 
-    mean squared error skill score or the R^2 (coefficient of determination) regression score.
+    mean squared error skill score or the R^2 (coefficient of determination) regression score. 
+    The NSE compares model errors to observed variance. The default NSE ranges from -inf to 1.0, 
+    higher is better. A score of 0.0 indicates the model is as good a predictor as the mean of 
+    observations. A score of 1.0 indicates the model exactly matches the observations.
+
+    The "normalized" Nash-Sutcliffe model efficiency re-scales the NSE to a range from 0.0 to 1.0. 
+    In this case, A score of 0.5 indicates the model is as good a predictor as the mean of 
+    observations. A score of 1.0 still indicates the model exactly matches the observations.
         
     Parameters
     ----------
