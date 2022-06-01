@@ -263,7 +263,7 @@ def test_mean_absolute_error():
     MAE = metrics.mean_error(y_true, y_pred)
     assert MAE == 2.0
 
-def test_mean_squared_error():
+def test_mean_error():
     MSE = metrics.mean_error(y_true, y_pred, power=2.0)
     assert MSE == 5.0
 
@@ -286,14 +286,14 @@ def test_nash_sutcliffe_efficiency():
         np.exp(y_pred), log=True, normalized=True)
     assert NNSEL == 0.2
 
-def test_zero_mean_squared_error():
+def test_zero_mean_error():
     MSE = metrics.mean_error(z_true, z_pred, power=2.0)
     assert MSE == 0.0
 
     RMSE = metrics.mean_error(z_true, z_pred, power=2.0, root=True)
     assert RMSE == 0.0
 
-def test_nan_mean_squared_error():
+def test_nan_mean_error():
     MSE = metrics.mean_error(n_true, n_pred, power=2.0)
     assert np.isnan(MSE)
 
@@ -428,3 +428,15 @@ def test_coefficient_of_extrapolation():
     COE = metrics.coefficient_of_extrapolation(v, y_pred, log=True)
     expected = -2.19567503891363
     assert np.isclose(COE, expected)
+
+def test_mean_squared_error():
+    MSE = metrics.mean_squared_error(y_true, y_pred)
+    assert MSE == 5.0
+
+def test_root_mean_squared_error():
+    RMSE = metrics.root_mean_squared_error(y_true, y_pred)
+    assert RMSE == np.sqrt(5.0)
+
+def test_volumetric_efficiency():
+    VE = metrics.volumetric_efficiency(y_true, y_pred)
+    assert np.isclose(VE, 0.2)
