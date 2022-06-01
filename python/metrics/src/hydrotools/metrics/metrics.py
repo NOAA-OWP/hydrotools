@@ -22,7 +22,7 @@ Functions
  - mean_error
  - nash_sutcliffe_efficiency
  - kling_gupta_efficiency
- - mean_error
+ - volumetric_efficiency
  - mean_squared_error
  - root_mean_squared_error
  - mean_error_skill_score
@@ -156,7 +156,7 @@ deeply negative values.
 
 See Also
 --------
-mean_error_skill_score.
+mean_error_skill_score
 
 References
 ----------
