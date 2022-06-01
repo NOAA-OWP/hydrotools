@@ -65,17 +65,17 @@ def mean_error(
         
     Returns
     -------
-    error: float
+    mean_error: float
         Mean error or root mean error.
     
     """
     # Compute mean error
-    ME = np.sum(np.abs(np.subtract(y_true, y_pred)) ** power) / len(y_true)
+    _mean_error = np.sum(np.abs(np.subtract(y_true, y_pred)) ** power) / len(y_true)
 
     # Return ME, optionally return root mean error
     if root:
-        return np.sqrt(ME)
-    return ME
+        return np.sqrt(_mean_error)
+    return _mean_error
 
 mean_squared_error = partial(mean_error, power=2.0)
 mean_squared_error.__doc__ = """Partial of hydrotools.metrics.mean_error with 
@@ -360,23 +360,23 @@ def kling_gupta_efficiency(
     validate.raise_for_inconsistent_shapes(y_true, y_pred)
 
     # Pearson correlation coefficient
-    r = np.corrcoef(y_pred, y_true)[0,1]
+    linear_correlation = np.corrcoef(y_pred, y_true)[0,1]
 
     # Relative variability
-    a = np.std(y_pred) / np.std(y_true)
+    relative_variability = np.std(y_pred) / np.std(y_true)
 
     # Relative mean
-    b = np.mean(y_pred) / np.mean(y_true)
+    relative_mean = np.mean(y_pred) / np.mean(y_true)
 
     # Scaled Euclidean distance
-    EDs = np.sqrt(
-        (r_scale * (r - 1.0)) ** 2.0 + 
-        (a_scale * (a - 1.0)) ** 2.0 + 
-        (b_scale * (b - 1.0)) ** 2.0
+    euclidean_distance = np.sqrt(
+        (r_scale * (linear_correlation - 1.0)) ** 2.0 + 
+        (a_scale * (relative_variability - 1.0)) ** 2.0 + 
+        (b_scale * (relative_mean - 1.0)) ** 2.0
         )
 
     # Return KGE
-    return 1.0 - EDs
+    return 1.0 - euclidean_distance
 
 def compute_contingency_table(
     observed: npt.ArrayLike,
