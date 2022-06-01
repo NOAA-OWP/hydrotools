@@ -620,7 +620,10 @@ def frequency_bias(
     false_positive_key: str = 'false_positive',
     false_negative_key: str = 'false_negative'
     ) -> float:
-    """Compute frequency bias (FBI).
+    """Compute frequency bias (FBI). FBI measures the tendency of the simulation 
+    or forecast to over or under-predict. FBI ranges from 0.0 to inf. A perfect 
+    score is 1.0. Values less than 1.0 indicate under-prediction. Values greater 
+    than 1.0 indicate over-prediction.
         
     Parameters
     ----------
