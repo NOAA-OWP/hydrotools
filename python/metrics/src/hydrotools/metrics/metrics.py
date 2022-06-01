@@ -23,6 +23,8 @@ Functions
  - nash_sutcliffe_efficiency
  - kling_gupta_efficiency
  - mean_error
+ - mean_squared_error
+ - root_mean_squared_error
  - mean_error_skill_score
  - coefficient_of_persistence
  - coefficient_of_extrapolation
@@ -34,6 +36,7 @@ import numpy.typing as npt
 import pandas as pd
 from typing import Union
 from . import _validation as validate
+from functools import partial
 
 def mean_error(
     y_true: npt.ArrayLike,
@@ -73,6 +76,16 @@ def mean_error(
     if root:
         return np.sqrt(ME)
     return ME
+
+mean_squared_error = partial(mean_error, power=2.0)
+mean_squared_error.__doc__ = """Partial of hydrotools.metrics.mean_error with 
+a default power value of 2.0. See mean_error.
+"""
+
+root_mean_squared_error = partial(mean_error, power=2.0, root=True)
+root_mean_squared_error.__doc__ = """Partial of hydrotools.metrics.mean_error with 
+a default power value of 2.0 and root set to True. See mean_error.
+"""
 
 def mean_error_skill_score(
     y_true: npt.ArrayLike,
