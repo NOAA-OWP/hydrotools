@@ -134,3 +134,6 @@ This limits `groupby` operations to category values that actually appear in the 
 ```python
 mean_flow = my_dataframe.groupby('usgs_site_code', observed=True).mean()
 ```
+
+## American Geophysical Union 2021 Fall Meeting Poster
+[OWPHydroTools_AGU2021.pdf](https://github.com/NOAA-OWP/OWP-Presentations/blob/main/AGU_2021/Poster_Presentations/J.Regina_OWPHydroTools_AGU2021.pdf)
