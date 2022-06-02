@@ -8,6 +8,14 @@ import pandas as pd
 def setup_gcp():
     return gcp.NWMDataService()
 
+@pytest.fixture
+def setup_gcp_US():
+    return gcp.NWMDataService(unit_system="US")
+
+def test_unit_systems(setup_gcp, setup_gcp_US):
+    assert (setup_gcp._unit_handler) == None
+    assert (setup_gcp_US._unit_handler) != None
+
 def test_bucket_name(setup_gcp):
     assert (setup_gcp.bucket_name) == "national-water-model"
 
