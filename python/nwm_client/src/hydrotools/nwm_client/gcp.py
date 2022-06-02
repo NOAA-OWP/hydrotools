@@ -15,6 +15,7 @@ Classes
 """
 
 from hydrotools.caches.hdf import HDFCache
+from google.cloud import storage
 
 from io import BytesIO
 import xarray as xr
