@@ -3,7 +3,7 @@ PYTHON=$(PYENV)/bin/python3
 NAMESPACE_DIR := ./python/
 
 PACKAGE := hydrotools
-SUBPACKAGES := _restclient[develop] nwis_client[develop] caches[develop] nwm_client_new[develop] events[develop] metrics[develop] nwm_client[gcp,develop]
+SUBPACKAGES := _restclient[develop] nwis_client[develop] caches[develop] nwm_client_new[develop] events[develop] metrics[develop] nwm_client[develop]
 
 # discard `extras_require` qualifies from subpackage names (e.g. [develop])
 SUBPACKAGES_WITHOUT_EXTRA_REQUIRE = $(shell echo $(SUBPACKAGES) | sed 's|\[[^][]*\]||g')
