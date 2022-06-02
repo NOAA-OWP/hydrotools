@@ -33,7 +33,9 @@ class UnitHandler:
 
         Example
         -------
-
+        >>> unit_handler = UnitHandler.UnitHandler()
+        >>> unit_handler.conversion_factor("ft", "m")
+        0.30479999999999996
         """
         # Return conversion factor
         return self.unit_registry.Quantity(1, from_units).to(to_units).magnitude
@@ -57,7 +59,9 @@ class UnitHandler:
 
         Example
         -------
-
+        >>> unit_handler = UnitHandler.UnitHandler()
+        >>> unit_handler.convert_values([1, 1, 1], "ft", "m")
+        array([0.3048, 0.3048, 0.3048])
         """
         # Check for pandas.series
         if isinstance(value, pd.Series):
