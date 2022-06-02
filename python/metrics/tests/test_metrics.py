@@ -48,6 +48,24 @@ z_pred = [0., 0., 0., 0.]
 n_true = [np.nan, np.nan, np.nan, np.nan]
 n_pred = [np.nan, np.nan, np.nan, np.nan]
 
+y_true_series = pd.Series(
+    data=y_true,
+    index=pd.date_range(
+        start="2020-01-01", 
+        end="2020-01-04", 
+        freq="1D"
+    )
+)
+
+y_pred_series = pd.Series(
+    data=y_pred,
+    index=pd.date_range(
+        start="2020-01-01", 
+        end="2020-01-04", 
+        freq="1D"
+    )
+)
+
 def test_compute_contingency_table():
     obs = pd.Series([True, False, False, True, True, True,
         False, False, False, False], dtype="category")
@@ -241,11 +259,15 @@ def test_equitable_threat_score():
     ETS = metrics.equitable_threat_score(nan_contigency_table)
     assert np.isnan(ETS)
 
-def test_mean_squared_error():
-    MSE = metrics.mean_squared_error(y_true, y_pred)
+def test_mean_absolute_error():
+    MAE = metrics.mean_error(y_true, y_pred)
+    assert MAE == 2.0
+
+def test_mean_error():
+    MSE = metrics.mean_error(y_true, y_pred, power=2.0)
     assert MSE == 5.0
 
-    RMSE = metrics.mean_squared_error(y_true, y_pred, root=True)
+    RMSE = metrics.mean_error(y_true, y_pred, power=2.0, root=True)
     assert RMSE == np.sqrt(5.0)
 
 def test_nash_sutcliffe_efficiency():
@@ -264,18 +286,18 @@ def test_nash_sutcliffe_efficiency():
         np.exp(y_pred), log=True, normalized=True)
     assert NNSEL == 0.2
 
-def test_zero_mean_squared_error():
-    MSE = metrics.mean_squared_error(z_true, z_pred)
+def test_zero_mean_error():
+    MSE = metrics.mean_error(z_true, z_pred, power=2.0)
     assert MSE == 0.0
 
-    RMSE = metrics.mean_squared_error(z_true, z_pred, root=True)
+    RMSE = metrics.mean_error(z_true, z_pred, power=2.0, root=True)
     assert RMSE == 0.0
 
-def test_nan_mean_squared_error():
-    MSE = metrics.mean_squared_error(n_true, n_pred)
+def test_nan_mean_error():
+    MSE = metrics.mean_error(n_true, n_pred, power=2.0)
     assert np.isnan(MSE)
 
-    RMSE = metrics.mean_squared_error(n_true, n_pred, root=True)
+    RMSE = metrics.mean_error(n_true, n_pred, power=2.0, root=True)
     assert np.isnan(RMSE)
 
 def test_zero_nash_sutcliffe_efficiency():
@@ -337,3 +359,84 @@ def test_kling_gupta_efficiency():
         r_scale=0.5, a_scale=0.25, b_scale=0.25)
     expected = (1.0 - np.sqrt(9.0/128.0))
     assert np.isclose(KGE, expected)
+
+def test_coefficient_of_persistence():
+    # Default
+    COP = metrics.coefficient_of_persistence(y_true, y_pred)
+    expected = (1.0 - 11.0/3.0)
+    assert np.isclose(COP, expected)
+
+    # Test with series
+    COP = metrics.coefficient_of_persistence(y_true_series, y_pred_series)
+    expected = (1.0 - 11.0/3.0)
+    assert np.isclose(COP, expected)
+
+    # Identity
+    COP = metrics.coefficient_of_persistence(y_true, np.array(y_true) * 1.0)
+    expected = 1.0
+    assert np.isclose(COP, expected)
+
+    # Lag
+    COP = metrics.coefficient_of_persistence(y_true, y_pred, lag=2)
+    expected = -0.25
+    assert np.isclose(COP, expected)
+
+    # Power
+    COP = metrics.coefficient_of_persistence(y_true, y_pred, power=3)
+    expected = (1.0 - 29.0 / 3.0)
+    assert np.isclose(COP, expected)
+
+    # Normalized
+    COP = metrics.coefficient_of_persistence(y_true, y_pred, normalized=True)
+    expected = 1.0 / (2.0 - (1.0 - 11.0/3.0))
+    assert np.isclose(COP, expected)
+
+    # Log
+    COP = metrics.coefficient_of_persistence(y_true, y_pred, log=True)
+    expected = -2.09313723301667
+    assert np.isclose(COP, expected)
+
+def test_coefficient_of_extrapolation():
+    # Default
+    v = [1, 2, 4, 5]
+    COE = metrics.coefficient_of_extrapolation(v, y_pred)
+    expected = -3.0
+    assert np.isclose(COE, expected)
+
+    # Test with series
+    s = pd.Series(data=v, index=y_true_series.index)
+    COE = metrics.coefficient_of_extrapolation(s, y_pred_series)
+    expected = -3.0
+    assert np.isclose(COE, expected)
+
+    # Identity
+    COE = metrics.coefficient_of_extrapolation(y_true, np.array(y_true) * 1.0)
+    expected = 1.0
+    assert np.isclose(COE, expected)
+
+    # Power
+    COE = metrics.coefficient_of_extrapolation(v, y_pred, power=1.5)
+    expected = -1.82842712474619
+    assert np.isclose(COE, expected)
+
+    # Normalized
+    COE = metrics.coefficient_of_extrapolation(v, y_pred, normalized=True)
+    expected = 0.2
+    assert np.isclose(COE, expected)
+
+    # Log
+    COE = metrics.coefficient_of_extrapolation(v, y_pred, log=True)
+    expected = -2.19567503891363
+    assert np.isclose(COE, expected)
+
+def test_mean_squared_error():
+    MSE = metrics.mean_squared_error(y_true, y_pred)
+    assert MSE == 5.0
+
+def test_root_mean_squared_error():
+    RMSE = metrics.root_mean_squared_error(y_true, y_pred)
+    assert RMSE == np.sqrt(5.0)
+
+def test_volumetric_efficiency():
+    VE = metrics.volumetric_efficiency(y_true, y_pred)
+    assert np.isclose(VE, 0.2)
