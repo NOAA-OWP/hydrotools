@@ -467,8 +467,7 @@ class NWMDataService:
 
         # Convert units
         if self._unit_handler:
-            u = UnitHandler.UnitHandler()
-            df.loc[:, "value"] = u.convert_values(df["value"], "m^3/s", "ft^3/s")
+            df.loc[:, "value"] = self._unit_handler.convert_values(df["value"], "m^3/s", "ft^3/s")
             df["measurement_unit"] = "ft^3/s"
         return df
 
