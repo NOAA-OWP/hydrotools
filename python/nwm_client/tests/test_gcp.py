@@ -175,3 +175,14 @@ def test_invalid_configuration_exception(setup_gcp):
             configuration="medium_range",
             reference_time="20210101T06Z"
         )
+
+@pytest.mark.slow
+def test_get_US(setup_gcp_US):
+    # Test ANA
+    df = setup_gcp_US.get(
+        configuration="analysis_assim",
+        reference_time="20210101T01Z"
+    )
+    assert df['value_time'].unique().size == 3
+    assert (df['measurement_unit'] == "ft^3/s").all()
+    
