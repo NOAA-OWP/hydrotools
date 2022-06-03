@@ -73,10 +73,7 @@ class UnitHandler:
         """
         # Check for pandas.series
         if isinstance(value, pd.Series):
-            return pd.Series(
-                data=self.unit_registry.Quantity(value.values, from_units).to(to_units).magnitude,
-                index=value.index
-            )
+            return self.unit_registry.Quantity(value.values, from_units).to(to_units).magnitude
 
         # Return converted value
         return self.unit_registry.Quantity(value, from_units).to(to_units).magnitude
