@@ -18,9 +18,6 @@ $ python3 -m pip install --upgrade pip wheel
 
 # Install nwm_client
 $ python3 -m pip install hydrotools.nwm_client
-
-# Install nwm_client with gcp capabilities
-$ python3 -m pip install "hydrotools.nwm_client[gcp]"
 ```
 
 ## Usage
@@ -37,6 +34,11 @@ from hydrotools.nwm_client import gcp as nwm
 import pandas as pd
 
 # Instantiate model data service
+#  By default, NWM values are in SI units
+#  If you prefer US standard units, nwm_client can return streamflow
+#  values in cubic feet per second by setting the unit_system parameter 
+#  to "US".
+# model_data_service = nwm.NWMDataService(unit_system="US")
 model_data_service = nwm.NWMDataService()
 
 # Retrieve forecast data

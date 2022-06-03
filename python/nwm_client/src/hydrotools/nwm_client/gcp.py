@@ -14,16 +14,8 @@ Classes
 
 """
 
-from pandas.core.indexing import convert_from_missing_indexer_tuple
 from hydrotools.caches.hdf import HDFCache
-
-try:
-    from google.cloud import storage
-except ImportError as e:
-    error_message = ("Unable to import google-cloud-storage. Reinstall `hydrotools.nwm_client` using the extra-requirement, `gcp`."
-                     "\n"
-                     "`pip install 'hydrotools.nwm_client[gcp]'")
-    raise ImportError(error_message) from e
+from google.cloud import storage
 
 from io import BytesIO
 import xarray as xr
@@ -36,6 +28,7 @@ from typing import Union
 import numpy.typing as npt
 from pathlib import Path
 from collections.abc import Iterable
+from . import UnitHandler
 
 # Global singletons for holding location and df/None of NWM feature id to usgs site
 # code mapping
@@ -59,7 +52,8 @@ class NWMDataService:
         *,
         location_metadata_mapping: pd.DataFrame = None,
         cache_path: Union[str, Path] = "nwm_client.h5",
-        cache_group: str = 'nwm_client'
+        cache_group: str = 'nwm_client',
+        unit_system: str = "SI"
         ):
         """Instantiate NWM Data Service.
 
@@ -83,6 +77,9 @@ class NWMDataService:
             Structure defaults to storing pandas.DataFrames in PyTable format.
             Individual DataFrames can be accessed directly using key patterns 
             that look like '/{cache_group}/{configuration}/DT{reference_time}'
+        unit_system: str, optional, default 'SI'
+            The default measurement_unit for NWM streamflow data are cubic meter per second. 
+            Setting this option to "US" will convert the units to cubic foot per second.
 
         Returns
         -------
@@ -126,6 +123,17 @@ class NWMDataService:
         # Set caching options
         self._cache_path = Path(cache_path)
         self._cache_group = cache_group
+
+        # Validate system of units
+        if unit_system not in self.valid_unit_systems:
+            message = f'Invalid unit system "{unit_system}". Must select from {str(self.valid_unit_systems)}'
+            raise ValueError(message)
+        
+        # Set default unit registry
+        if unit_system == "US":
+            self._unit_handler = UnitHandler.UnitHandler()
+        else:
+            self._unit_handler = None
 
     # TODO find publicly available authoritative source of service
     #  compatible valid model configuration strings
@@ -438,7 +446,7 @@ class NWMDataService:
         ...     )
         
         """
-        # Return with caching
+        # Retrieve from cache
         if cache_data:
             key = f"/{self.cache_group}/{configuration}/DT{reference_time}"
             with HDFCache(
@@ -447,15 +455,21 @@ class NWMDataService:
                 complib='zlib',
                 fletch32=True
             ) as cache:
-                return cache.get(
+                df = cache.get(
                     self.get_cycle,
                     key,
                     configuration=configuration,
                     reference_time=reference_time
                 )
+        else:
+            # Retrieve without caching
+            df = self.get_cycle(configuration, reference_time)
 
-        # Return without caching
-        return self.get_cycle(configuration, reference_time)
+        # Convert units
+        if self._unit_handler:
+            df.loc[:, "value"] = self._unit_handler.convert_values(df["value"], "m^3/s", "ft^3/s")
+            df["measurement_unit"] = "ft^3/s"
+        return df
 
     @property
     def bucket_name(self) -> str:
@@ -532,3 +546,7 @@ class NWMDataService:
             'short_range_hawaii_no_da',
             'short_range_puertorico_no_da'
             ]
+
+    @property
+    def valid_unit_systems(self) -> list:
+        return ['SI', 'US']

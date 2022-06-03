@@ -8,6 +8,14 @@ import pandas as pd
 def setup_gcp():
     return gcp.NWMDataService()
 
+@pytest.fixture
+def setup_gcp_US():
+    return gcp.NWMDataService(unit_system="US")
+
+def test_unit_systems(setup_gcp, setup_gcp_US):
+    assert (setup_gcp._unit_handler) == None
+    assert (setup_gcp_US._unit_handler) != None
+
 def test_bucket_name(setup_gcp):
     assert (setup_gcp.bucket_name) == "national-water-model"
 
@@ -146,74 +154,11 @@ def test_get(setup_gcp):
     )
     assert df['value_time'].unique().size == 3
 
-    # # Test Ext. ANA
-    # df = setup_gcp.get(
-    #     configuration="analysis_assim_extend",
-    #     reference_time="20210101T16Z"
-    # )
-    # assert df['value_time'].unique().size == 28
-
-    # # Test short range
-    # df = setup_gcp.get(
-    #     configuration="short_range",
-    #     reference_time="20210101T01Z"
-    # )
-    # assert df['value_time'].unique().size == 18
-
-    # # Test medium range
-    # df = setup_gcp.get(
-    #     configuration="medium_range_mem1",
-    #     reference_time="20210101T06Z"
-    # )
-    # assert df['value_time'].unique().size == 80
-
-    # # Test long range
-    # df = setup_gcp.get(
-    #     configuration="long_range_mem1",
-    #     reference_time="20210101T06Z"
-    # )
-    # assert df['value_time'].unique().size == 120
-
-    # # Test Hawaii ANA
-    # df = setup_gcp.get(
-    #     configuration="analysis_assim_hawaii",
-    #     reference_time="20210101T01Z"
-    # )
-    # assert df['value_time'].unique().size == 3
-
-    # # Test Hawaii Short Range
-    # df = setup_gcp.get(
-    #     configuration="short_range_hawaii",
-    #     reference_time="20210101T00Z"
-    # )
-    # assert df['value_time'].unique().size == 60
-
-    # # Test Puerto Rico ANA
-    # df = setup_gcp.get(
-    #     configuration="analysis_assim_puertorico",
-    #     reference_time="20210501T00Z"
-    # )
-    # assert df['value_time'].unique().size == 3
-
-    # # Test Puerto Rico Short Range
-    # df = setup_gcp.get(
-    #     configuration="short_range_puertorico",
-    #     reference_time="20210501T06Z"
-    # )
-    # assert df['value_time'].unique().size == 48
-
 @pytest.mark.slow
 def test_get_no_da(setup_gcp):
     # No DA Cycles
     cycles = [
-        ('analysis_assim_no_da', "20210501T06Z", 3),
-        # ('analysis_assim_extend_no_da', "20210501T16Z", 28),
-        # ('analysis_assim_hawaii_no_da', "20210501T00Z", 12),
-        # ('analysis_assim_long_no_da', "20210501T00Z", 12),
-        # ('analysis_assim_puertorico_no_da', "20210501T00Z", 3),
-        # ('medium_range_no_da', "20210501T00Z", 80),
-        # ('short_range_hawaii_no_da', "20210501T00Z", 192),
-        # ('short_range_puertorico_no_da', "20210501T06Z", 48)
+        ('analysis_assim_no_da', "20210501T06Z", 3)
     ]
     # Test
     for cycle, ref_tm, validate in cycles:
@@ -230,3 +175,14 @@ def test_invalid_configuration_exception(setup_gcp):
             configuration="medium_range",
             reference_time="20210101T06Z"
         )
+
+@pytest.mark.slow
+def test_get_US(setup_gcp_US):
+    # Test ANA
+    df = setup_gcp_US.get(
+        configuration="analysis_assim",
+        reference_time="20210101T01Z"
+    )
+    assert df['value_time'].unique().size == 3
+    assert (df['measurement_unit'] == "ft^3/s").all()
+    
