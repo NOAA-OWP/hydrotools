@@ -1,14 +1,14 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="hydrotools._restclient.utilities module" href="hydrotools._restclient.utilities.html" /><link rel="prev" title="hydrotools._restclient.urllib module" href="hydrotools._restclient.urllib.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-5.0.2, furo 2022.06.04.1"/>
         <title>hydrotools._restclient.urllib_types module - OWPHydroTools 2.1.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -207,7 +207,8 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -222,41 +223,49 @@
         </div>
         <article role="main">
           <section id="module-hydrotools._restclient.urllib_types">
-<span id="hydrotools-restclient-urllib-types-module"></span><h1>hydrotools._restclient.urllib_types module<a class="headerlink" href="#module-hydrotools._restclient.urllib_types" title="Permalink to this headline">#</a></h1>
+<span id="hydrotools-restclient-urllib-types-module"></span><h1>hydrotools._restclient.urllib_types module<a class="headerlink" href="#module-hydrotools._restclient.urllib_types" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="hydrotools._restclient.urllib_types.Quote">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hydrotools._restclient.urllib_types.</span></span><span class="sig-name descname"><span class="pre">Quote</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hydrotools._restclient.urllib_types.Quote" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
 <p>Enumeration of quote/unquote handling methods.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="hydrotools._restclient.urllib_types.Quote.QUOTE">
 <span class="sig-name descname"><span class="pre">QUOTE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">QuoteStyle(quote_style=&lt;function</span> <span class="pre">quote&gt;,</span> <span class="pre">unquote_style=&lt;function</span> <span class="pre">unquote&gt;)</span></em><a class="headerlink" href="#hydrotools._restclient.urllib_types.Quote.QUOTE" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="hydrotools._restclient.urllib_types.Quote.QUOTE_FROM_BYTES">
 <span class="sig-name descname"><span class="pre">QUOTE_FROM_BYTES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">QuoteStyle(quote_style=&lt;function</span> <span class="pre">quote_from_bytes&gt;,</span> <span class="pre">unquote_style=&lt;function</span> <span class="pre">unquote_to_bytes&gt;)</span></em><a class="headerlink" href="#hydrotools._restclient.urllib_types.Quote.QUOTE_FROM_BYTES" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="hydrotools._restclient.urllib_types.Quote.QUOTE_PLUS">
 <span class="sig-name descname"><span class="pre">QUOTE_PLUS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">QuoteStyle(quote_style=&lt;function</span> <span class="pre">quote_plus&gt;,</span> <span class="pre">unquote_style=&lt;function</span> <span class="pre">unquote_plus&gt;)</span></em><a class="headerlink" href="#hydrotools._restclient.urllib_types.Quote.QUOTE_PLUS" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="hydrotools._restclient.urllib_types.Quote.quote">
 <span class="sig-name descname"><span class="pre">quote</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hydrotools._restclient.urllib_types.Quote.quote" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="hydrotools._restclient.urllib_types.Quote.quote_style">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">quote_style</span></span><a class="headerlink" href="#hydrotools._restclient.urllib_types.Quote.quote_style" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="hydrotools._restclient.urllib_types.Quote.unquote">
 <span class="sig-name descname"><span class="pre">unquote</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hydrotools._restclient.urllib_types.Quote.unquote" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="hydrotools._restclient.urllib_types.Quote.unquote_style">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unquote_style</span></span><a class="headerlink" href="#hydrotools._restclient.urllib_types.Quote.unquote_style" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 </dd></dl>
+
 </section>
 
         </article>
@@ -313,6 +322,7 @@
 </div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/scripts/furo.js"></script>
     </body>

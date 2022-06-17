@@ -1,14 +1,14 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="hydrotools.nwis_client subpackage" href="hydrotools.nwis_client.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-5.0.2, furo 2022.06.04.1"/>
         <title>OWPHydroTools 2.1.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -207,7 +207,8 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -222,12 +223,12 @@
         </div>
         <article role="main">
           <section id="owphydrotools">
-<h1><code class="docutils literal notranslate"><span class="pre">OWPHydroTools</span></code><a class="headerlink" href="#owphydrotools" title="Permalink to this headline">#</a></h1>
+<h1><code class="docutils literal notranslate"><span class="pre">OWPHydroTools</span></code><a class="headerlink" href="#owphydrotools" title="Permalink to this heading">#</a></h1>
 <p>Tools for retrieving hydrological data</p>
 <div class="toctree-wrapper compound">
 </div>
 <section id="motivation">
-<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">#</a></h2>
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this heading">#</a></h2>
 <p>We developed OWPHydroTools with data scientists in mind. We attempted to
 ensure the simplest methods such as <code class="docutils literal notranslate"><span class="pre">get</span></code> both accepted and returned
 data structures frequently used by data scientists using scientific
@@ -248,7 +249,7 @@ data as easy and reproducible as possible for scientists, practitioners
 and other hydrological experts.</p>
 </section>
 <section id="what-s-here">
-<h2>What’s here?<a class="headerlink" href="#what-s-here" title="Permalink to this headline">#</a></h2>
+<h2>What’s here?<a class="headerlink" href="#what-s-here" title="Permalink to this heading">#</a></h2>
 <p>We’ve taken a grab-and-go approach to installation and usage of
 OWPHydroTools. This means, in line with a standard toolbox, you will
 typically install just the tool or tools that get your job done without
@@ -278,7 +279,7 @@ the construction and retrieval of GET requests painless</p></li>
 </ul>
 </section>
 <section id="utc-time">
-<h2>UTC Time<a class="headerlink" href="#utc-time" title="Permalink to this headline">#</a></h2>
+<h2>UTC Time<a class="headerlink" href="#utc-time" title="Permalink to this heading">#</a></h2>
 <p>Note: the canonical <code class="docutils literal notranslate"><span class="pre">pandas.DataFrames</span></code> used by OWPHydroTools use
 time-zone naive datetimes that assume UTC time. In general, do not
 assume methods are compatible with time-zone aware datetimes or
@@ -286,12 +287,12 @@ timestamps. Expect methods to transform time-zone aware datetimes and
 timestamps into their timezone naive counterparts at UTC time.</p>
 </section>
 <section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">#</a></h2>
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">#</a></h2>
 <p>Refer to each subpackage’s <code class="docutils literal notranslate"><span class="pre">README.md</span></code> or documentation for examples
 of how to use each tool.</p>
 </section>
 <section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">#</a></h2>
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h2>
 <p>In accordance with the python community, we support and advise the usage
 of virtual environments in any workflow using python. In the following
 installation guide, we use python’s built-in <code class="docutils literal notranslate"><span class="pre">venv</span></code> module to create a
@@ -313,7 +314,7 @@ $ python3 -m pip install hydrotools.nwis_client
 </div>
 </section>
 <section id="owphydrotools-canonical-format">
-<h2>OWPHydroTools Canonical Format<a class="headerlink" href="#owphydrotools-canonical-format" title="Permalink to this headline">#</a></h2>
+<h2>OWPHydroTools Canonical Format<a class="headerlink" href="#owphydrotools-canonical-format" title="Permalink to this heading">#</a></h2>
 <p>“Canonical” labels are protected and part of a fixed lexicon. Canonical
 labels are shared among all <code class="docutils literal notranslate"><span class="pre">hydrotools</span></code> subpackages. Subpackage
 methods should avoid changing or redefining these columns where they
@@ -344,12 +345,12 @@ reference time. Interpretation is simulation or forecast specific.</p></li>
 longitude</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">latitude</span></code> [<em>category</em>]: float32 category, WGS84 decimal latitude</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">crs</span></code> [<em>category</em>]: string category, Coordinate Reference System,
-typically <code class="docutils literal notranslate"><span class="pre">"EPSG:4326"</span></code></p></li>
+typically <code class="docutils literal notranslate"><span class="pre">&quot;EPSG:4326&quot;</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">geometry</span></code> [<em>geometry</em>]: <code class="docutils literal notranslate"><span class="pre">GeoPandas</span></code> compatible <code class="docutils literal notranslate"><span class="pre">GeoSeries</span></code>
 used as the default “geometry” column</p></li>
 </ul>
 <section id="non-canonical-column-labels">
-<h3>Non-Canonical Column Labels<a class="headerlink" href="#non-canonical-column-labels" title="Permalink to this headline">#</a></h3>
+<h3>Non-Canonical Column Labels<a class="headerlink" href="#non-canonical-column-labels" title="Permalink to this heading">#</a></h3>
 <p>“Non-Canonical” labels are subpackage specific extensions to the
 canonical standard. Packages may share these non-canonical lables, but
 cross-compatibility is not guaranteed. Examples of non-canonical labels
@@ -370,7 +371,7 @@ USACE gage ID</p></li>
 </ul>
 </section>
 <section id="categorical-data-types">
-<h3>Categorical Data Types<a class="headerlink" href="#categorical-data-types" title="Permalink to this headline">#</a></h3>
+<h3>Categorical Data Types<a class="headerlink" href="#categorical-data-types" title="Permalink to this heading">#</a></h3>
 <p>OWPHydroTools uses <code class="docutils literal notranslate"><span class="pre">pandas.Dataframe</span></code> that contain
 <code class="docutils literal notranslate"><span class="pre">pandas.Categorical</span></code> values to increase memory efficiency. Depending
 upon your use-case, these values may require special consideration. To
@@ -379,7 +380,7 @@ see if a <code class="docutils literal notranslate"><span class="pre">Dataframe<
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">my_dataframe</span><span class="o">.</span><span class="n">info</span><span class="p">())</span>
 </pre></div>
 </div>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&lt;class 'pandas.core.frame.DataFrame'&gt;</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;</span>
 <span class="go">Int64Index: 5706954 entries, 0 to 5706953</span>
 <span class="go">Data columns (total 7 columns):</span>
 <span class="gp"> #   </span>Column            Dtype
@@ -403,30 +404,30 @@ of categories can lead to unexpected behavior such as when using
 <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame.groupby</span></code> as documented
 <a class="reference external" href="https://stackoverflow.com/questions/48471648/pandas-groupby-with-categories-with-redundant-nan">here</a>.
 <code class="docutils literal notranslate"><span class="pre">pandas.Categorical</span></code> are also incompatible with <code class="docutils literal notranslate"><span class="pre">fixed</span></code> format HDF
-files (must use <code class="docutils literal notranslate"><span class="pre">format="table"</span></code>) and may cause unexpected behavior
+files (must use <code class="docutils literal notranslate"><span class="pre">format=&quot;table&quot;</span></code>) and may cause unexpected behavior
 when attempting to write to GeoSpatial formats using <code class="docutils literal notranslate"><span class="pre">geopandas</span></code>.</p>
 <p>Possible solutions include:</p>
 <section id="cast-categorical-to-str">
-<h4>Cast <code class="docutils literal notranslate"><span class="pre">Categorical</span></code> to <code class="docutils literal notranslate"><span class="pre">str</span></code><a class="headerlink" href="#cast-categorical-to-str" title="Permalink to this headline">#</a></h4>
+<h4>Cast <code class="docutils literal notranslate"><span class="pre">Categorical</span></code> to <code class="docutils literal notranslate"><span class="pre">str</span></code><a class="headerlink" href="#cast-categorical-to-str" title="Permalink to this heading">#</a></h4>
 <p>Casting to <code class="docutils literal notranslate"><span class="pre">str</span></code> will resolve all of the aformentioned issues
 including writing to geospatial formats.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_dataframe</span><span class="p">[</span><span class="s1">'usgs_site_code'</span><span class="p">]</span> <span class="o">=</span> <span class="n">my_dataframe</span><span class="p">[</span><span class="s1">'usgs_site_code'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_dataframe</span><span class="p">[</span><span class="s1">&#39;usgs_site_code&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">my_dataframe</span><span class="p">[</span><span class="s1">&#39;usgs_site_code&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="remove-unused-categories">
-<h4>Remove unused categories<a class="headerlink" href="#remove-unused-categories" title="Permalink to this headline">#</a></h4>
+<h4>Remove unused categories<a class="headerlink" href="#remove-unused-categories" title="Permalink to this heading">#</a></h4>
 <p>This will remove categories from the <code class="docutils literal notranslate"><span class="pre">Series</span></code> for which no values are
 actually present.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_dataframe</span><span class="p">[</span><span class="s1">'usgs_site_code'</span><span class="p">]</span> <span class="o">=</span> <span class="n">my_dataframe</span><span class="p">[</span><span class="s1">'usgs_site_code'</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">remove_unused_categories</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_dataframe</span><span class="p">[</span><span class="s1">&#39;usgs_site_code&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">my_dataframe</span><span class="p">[</span><span class="s1">&#39;usgs_site_code&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">remove_unused_categories</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>
 <section id="use-observed-option-with-groupby">
-<h4>Use <code class="docutils literal notranslate"><span class="pre">observed</span></code> option with <code class="docutils literal notranslate"><span class="pre">groupby</span></code><a class="headerlink" href="#use-observed-option-with-groupby" title="Permalink to this headline">#</a></h4>
+<h4>Use <code class="docutils literal notranslate"><span class="pre">observed</span></code> option with <code class="docutils literal notranslate"><span class="pre">groupby</span></code><a class="headerlink" href="#use-observed-option-with-groupby" title="Permalink to this heading">#</a></h4>
 <p>This limits <code class="docutils literal notranslate"><span class="pre">groupby</span></code> operations to category values that actually
 appear in the <code class="docutils literal notranslate"><span class="pre">Series</span></code> or <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mean_flow</span> <span class="o">=</span> <span class="n">my_dataframe</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'usgs_site_code'</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mean_flow</span> <span class="o">=</span> <span class="n">my_dataframe</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;usgs_site_code&#39;</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>
@@ -511,6 +512,7 @@ appear in the <code class="docutils literal notranslate"><span class="pre">Serie
 </div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/scripts/furo.js"></script>
     </body>

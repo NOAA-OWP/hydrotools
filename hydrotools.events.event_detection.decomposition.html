@@ -1,14 +1,14 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="hydrotools.caches subpackage" href="hydrotools.caches.html" /><link rel="prev" title="hydrotools.events.event_detection subpackage" href="hydrotools.events.event_detection.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-5.0.2, furo 2022.06.04.1"/>
         <title>hydrotools.events.event_detection.decomposition module - OWPHydroTools 2.1.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -207,7 +207,8 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -222,9 +223,9 @@
         </div>
         <article role="main">
           <section id="module-hydrotools.events.event_detection.decomposition">
-<span id="hydrotools-events-event-detection-decomposition-module"></span><h1>hydrotools.events.event_detection.decomposition module<a class="headerlink" href="#module-hydrotools.events.event_detection.decomposition" title="Permalink to this headline">#</a></h1>
+<span id="hydrotools-events-event-detection-decomposition-module"></span><h1>hydrotools.events.event_detection.decomposition module<a class="headerlink" href="#module-hydrotools.events.event_detection.decomposition" title="Permalink to this heading">#</a></h1>
 <section id="event-detection-decomposition">
-<h2>Event Detection :: Decomposition<a class="headerlink" href="#event-detection-decomposition" title="Permalink to this headline">#</a></h2>
+<h2>Event Detection :: Decomposition<a class="headerlink" href="#event-detection-decomposition" title="Permalink to this heading">#</a></h2>
 <p>Use time series decomposition to detect hydrological events in
 streamflow time series as described in Regina &amp; Ogden, 2020.</p>
 <dl class="simple">
@@ -233,7 +234,7 @@ Time Series Decomposition., Under review., Hydrol. Proc.</p>
 </dd>
 </dl>
 <section id="functions">
-<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">#</a></h3>
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">#</a></h3>
 <p>rolling_minimum
 detrend_streamflow
 mark_event_flows
@@ -242,7 +243,7 @@ event_boundaries
 list_events</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="hydrotools.events.event_detection.decomposition.detrend_streamflow">
-<span class="sig-prename descclassname"><span class="pre">hydrotools.events.event_detection.decomposition.</span></span><span class="sig-name descname"><span class="pre">detrend_streamflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.core.series.Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">halflife</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pandas._libs.tslibs.timedeltas.Timedelta</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pandas._libs.tslibs.offsets.DateOffset</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pandas.core.indexes.base.Index</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">pandas.core.series.Series</span></span></span><a class="headerlink" href="#hydrotools.events.event_detection.decomposition.detrend_streamflow" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">hydrotools.events.event_detection.decomposition.</span></span><span class="sig-name descname"><span class="pre">detrend_streamflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">halflife</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Timedelta</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DateOffset</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Index</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="headerlink" href="#hydrotools.events.event_detection.decomposition.detrend_streamflow" title="Permalink to this definition">#</a></dt>
 <dd><p>Model the trend in a streamflow time series using a rolling
 minimum filter. Remove the trend and residual components. The method
 aims to produce a detrended time series with a median of 0.0. It assumes
@@ -250,7 +251,7 @@ any residual components less than twice the detrended median are random
 noise.
 Return the detrended streamflow time series.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>series</strong> (<em>pandas.Series with a DateTimeIndex</em><em>, </em><em>required</em>) – The original streamflow time series.</p></li>
 <li><p><strong>halflife</strong> (<em>float</em><em>, </em><em>str</em><em>, </em><em>timedelta</em><em>, </em><em>required</em>) – Specifies the decay term for <cite>pandas.Series.ewm.mean</cite>. This filter
@@ -260,62 +261,65 @@ of normal instrument fluctuations as events.</p></li>
 This filter is used to model the trend in <cite>series</cite>.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>detrended</strong> – New streamflow time series with trend removed.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pandas.Series</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="hydrotools.events.event_detection.decomposition.event_boundaries">
-<span class="sig-prename descclassname"><span class="pre">hydrotools.events.event_detection.decomposition.</span></span><span class="sig-name descname"><span class="pre">event_boundaries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.core.series.Series</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hydrotools.events.event_detection.decomposition.event_boundaries" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">hydrotools.events.event_detection.decomposition.</span></span><span class="sig-name descname"><span class="pre">event_boundaries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hydrotools.events.event_detection.decomposition.event_boundaries" title="Permalink to this definition">#</a></dt>
 <dd><p>Return a two column pandas.DataFrame with ‘start’ and ‘end’ event times
 generated from a time series of boolean event points.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>event_points</strong> (<em>pandas.Series</em>) – Boolean time series where True indicates the associated value
 in the <cite>series</cite> is part of an event.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>events</strong> – A two column DataFrame with a row for each event detected. <cite>start</cite> and
 <cite>end</cite> columns indicate the boundaries of each event.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pandas.DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="hydrotools.events.event_detection.decomposition.find_local_minimum">
-<span class="sig-prename descclassname"><span class="pre">hydrotools.events.event_detection.decomposition.</span></span><span class="sig-name descname"><span class="pre">find_local_minimum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas._libs.tslibs.timestamps.Timestamp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pandas._libs.tslibs.timedeltas.Timedelta</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeseries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.core.series.Series</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hydrotools.events.event_detection.decomposition.find_local_minimum" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">hydrotools.events.event_detection.decomposition.</span></span><span class="sig-name descname"><span class="pre">find_local_minimum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Timestamp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Timedelta</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeseries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hydrotools.events.event_detection.decomposition.find_local_minimum" title="Permalink to this definition">#</a></dt>
 <dd><p>Return Datetime of the local minimum value within radius of origin.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>origin</strong> (<em>pandas.Timestamp</em><em>, </em><em>required</em>) – The central datetime around which to search.</p></li>
 <li><p><strong>radius</strong> (<em>float</em><em>, </em><em>str</em><em>, </em><em>pd.Timedelta</em><em>, </em><em>required</em>) – The search radius around origin to look for a minimum value.</p></li>
 <li><p><strong>timseries</strong> (<em>pandas.Series with a DateTimeIndex</em><em>, </em><em>required</em>) – The original time series to inspect.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Datetime of the local minimum value.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Index</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="hydrotools.events.event_detection.decomposition.list_events">
-<span class="sig-prename descclassname"><span class="pre">hydrotools.events.event_detection.decomposition.</span></span><span class="sig-name descname"><span class="pre">list_events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.core.series.Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">halflife</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pandas._libs.tslibs.timedeltas.Timedelta</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pandas._libs.tslibs.offsets.DateOffset</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pandas.core.indexes.base.Index</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimum_event_duration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">pandas._libs.tslibs.timedeltas.Timedelta</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">datetime.timedelta</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.timedelta64</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'0H'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">pandas._libs.tslibs.timedeltas.Timedelta</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">datetime.timedelta</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.timedelta64</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'0H'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#hydrotools.events.event_detection.decomposition.list_events" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">hydrotools.events.event_detection.decomposition.</span></span><span class="sig-name descname"><span class="pre">list_events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">halflife</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Timedelta</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DateOffset</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Index</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimum_event_duration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Timedelta</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">timedelta</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">timedelta64</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'0H'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Timedelta</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">timedelta</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">timedelta64</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'0H'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#hydrotools.events.event_detection.decomposition.list_events" title="Permalink to this definition">#</a></dt>
 <dd><p>Apply time series decomposition to mark event values in a streamflow
 time series. Discretize continuous event values into indiviual events.
 Return a DataFrame with one row for each event detected with <cite>start</cite> and
 <cite>end</cite> columns indicating the boundaries of each event.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>series</strong> (<em>pandas.Series with a DateTimeIndex</em><em>, </em><em>required</em>) – The original streamflow time series.</p></li>
 <li><p><strong>halflife</strong> (<em>float</em><em>, </em><em>str</em><em>, </em><em>timedelta</em><em>, </em><em>required</em>) – Specifies the decay term for <cite>pandas.Series.ewm.mean</cite>. This filter
@@ -330,18 +334,19 @@ original signal may advance or delay event start times depending upon how
 much smoothing is required to eliminate noise.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>events</strong> – A two column DataFrame with a row for each event detected. <cite>start</cite> and
 <cite>end</cite> columns indicate the boundaries of each event.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pandas.DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="hydrotools.events.event_detection.decomposition.mark_event_flows">
-<span class="sig-prename descclassname"><span class="pre">hydrotools.events.event_detection.decomposition.</span></span><span class="sig-name descname"><span class="pre">mark_event_flows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.core.series.Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">halflife</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pandas._libs.tslibs.timedeltas.Timedelta</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pandas._libs.tslibs.offsets.DateOffset</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pandas.core.indexes.base.Index</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimum_event_duration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">pandas._libs.tslibs.timedeltas.Timedelta</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">datetime.timedelta</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.timedelta64</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'0H'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">pandas._libs.tslibs.timedeltas.Timedelta</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">datetime.timedelta</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.timedelta64</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'0H'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">pandas.core.series.Series</span></span></span><a class="headerlink" href="#hydrotools.events.event_detection.decomposition.mark_event_flows" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">hydrotools.events.event_detection.decomposition.</span></span><span class="sig-name descname"><span class="pre">mark_event_flows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">halflife</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Timedelta</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DateOffset</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Index</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimum_event_duration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Timedelta</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">timedelta</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">timedelta64</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'0H'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Timedelta</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">timedelta</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">timedelta64</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'0H'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="headerlink" href="#hydrotools.events.event_detection.decomposition.mark_event_flows" title="Permalink to this definition">#</a></dt>
 <dd><p>Model the trend in a streamflow time series by taking the max
 of two rolling minimum filters applied in a forward and
 backward fashion. Remove the trend and residual components. The method
@@ -352,7 +357,7 @@ Return the boolean time series that indicates whether an
 individual value in the original streamflow time series
 is part of an event (True) or not part of an event (False).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>series</strong> (<em>pandas.Series with a DateTimeIndex</em><em>, </em><em>required</em>) – The original streamflow time series.</p></li>
 <li><p><strong>halflife</strong> (<em>float</em><em>, </em><em>str</em><em>, </em><em>timedelta</em><em>, </em><em>required</em>) – Specifies the decay term for <cite>pandas.Series.ewm.mean</cite>. This filter
@@ -367,37 +372,39 @@ original signal may advance or delay event start times depending upon how
 much smoothing is required to eliminate noise.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>event_points</strong> – Boolean time series where True indicates the associated value
 in the <cite>series</cite> is part of an event.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pandas.Series</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="hydrotools.events.event_detection.decomposition.rolling_minimum">
-<span class="sig-prename descclassname"><span class="pre">hydrotools.events.event_detection.decomposition.</span></span><span class="sig-name descname"><span class="pre">rolling_minimum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.core.series.Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pandas._libs.tslibs.offsets.DateOffset</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pandas.core.indexes.base.Index</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">pandas.core.series.Series</span></span></span><a class="headerlink" href="#hydrotools.events.event_detection.decomposition.rolling_minimum" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">hydrotools.events.event_detection.decomposition.</span></span><span class="sig-name descname"><span class="pre">rolling_minimum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DateOffset</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Index</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="headerlink" href="#hydrotools.events.event_detection.decomposition.rolling_minimum" title="Permalink to this definition">#</a></dt>
 <dd><p>Model the trend in a streamflow time series using a rolling
 minimum filter.
 Return the trend of a streamflow time series.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>series</strong> (<em>pandas.Series with a DateTimeIndex</em><em>, </em><em>required</em>) – The original streamflow time series.</p></li>
 <li><p><strong>window</strong> (<em>int</em><em>, </em><em>offset</em><em>, or </em><em>BaseIndexer subclass</em><em>, </em><em>required</em>) – Size of the moving window for <cite>pandas.Series.rolling.min</cite>.
 This filter is used to model the trend in <cite>series</cite>.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>trend</strong> – Approximate baseflow trend of original series.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pandas.Series</p>
 </dd>
 </dl>
 </dd></dl>
+
 </section>
 </section>
 </section>
@@ -478,6 +485,7 @@ This filter is used to model the trend in <cite>series</cite>.</p></li>
 </div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/scripts/furo.js"></script>
     </body>

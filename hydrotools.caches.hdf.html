@@ -1,14 +1,14 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="hydrotools.caches subpackage" href="hydrotools.caches.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-5.0.2, furo 2022.06.04.1"/>
         <title>hydrotools.caches.hdf module - OWPHydroTools 2.1.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -207,7 +207,8 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -222,13 +223,13 @@
         </div>
         <article role="main">
           <section id="module-hydrotools.caches.hdf">
-<span id="hydrotools-caches-hdf-module"></span><h1>hydrotools.caches.hdf module<a class="headerlink" href="#module-hydrotools.caches.hdf" title="Permalink to this headline">#</a></h1>
+<span id="hydrotools-caches-hdf-module"></span><h1>hydrotools.caches.hdf module<a class="headerlink" href="#module-hydrotools.caches.hdf" title="Permalink to this heading">#</a></h1>
 <section id="hdf5-backed-caching-functionality">
-<h2>HDF5-backed Caching Functionality<a class="headerlink" href="#hdf5-backed-caching-functionality" title="Permalink to this headline">#</a></h2>
+<h2>HDF5-backed Caching Functionality<a class="headerlink" href="#hdf5-backed-caching-functionality" title="Permalink to this heading">#</a></h2>
 <p>Cache pandas objects resulting from long processes for later retrieval to avoid
 reprocessing.</p>
 <section id="classes">
-<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">#</a></h3>
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">#</a></h3>
 <blockquote>
 <div><ul class="simple">
 <li><p>HDFCache</p></li>
@@ -243,17 +244,19 @@ reprocessing.</p>
 <span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hydrotools.caches.hdf.HDFCache.close" title="Permalink to this definition">#</a></dt>
 <dd><p>Close the Pandas HDFStore.</p>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="hydrotools.caches.hdf.HDFCache.format">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">format</span></span><a class="headerlink" href="#hydrotools.caches.hdf.HDFCache.format" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="hydrotools.caches.hdf.HDFCache.get">
 <span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hydrotools.caches.hdf.HDFCache.get" title="Permalink to this definition">#</a></dt>
 <dd><p>Check HDFStore for key and return the object. If key is not in
 the cache, then run function and store the result for later retrieval.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>function</strong> (<em>Callable</em>) – Function to run to produce the object for storage.</p></li>
 <li><p><strong>key</strong> (<em>str</em>) – Key used to reference object in HDFStore.</p></li>
@@ -261,23 +264,27 @@ the cache, then run function and store the result for later retrieval.</p>
 <li><p><strong>**kwargs</strong> – Additional arguments passed directly to function.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Retrieve object from file.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>object</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="hydrotools.caches.hdf.HDFCache.path">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">path</span></span><a class="headerlink" href="#hydrotools.caches.hdf.HDFCache.path" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="hydrotools.caches.hdf.HDFCache.store">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">store</span></span><a class="headerlink" href="#hydrotools.caches.hdf.HDFCache.store" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 </dd></dl>
+
 </section>
 </section>
 </section>
@@ -350,6 +357,7 @@ the cache, then run function and store the result for later retrieval.</p>
 </div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/scripts/furo.js"></script>
     </body>
