@@ -24,7 +24,7 @@ Currently the repository has the following subpackages:
 - `nwm_client`: Provides methods for retrieving National Water Model data from various sources including [Google Cloud Platform](https://console.cloud.google.com/marketplace/details/noaa-public/national-water-model) and [NOMADS](https://nomads.ncep.noaa.gov/pub/data/nccf/com/nwm/prod/)
 - `metrics`: Variety of methods used to compute common evaluation metrics
 - `nwis_client`: Provides easy to use methods for retrieving data from the [USGS NWIS Instantaneous Values (IV) Web Service](https://waterservices.usgs.gov/rest/IV-Service.html)
-- `svi_client`: Provides programmatic accessing the Center for Disease Control's (CDC) [Social Vulnerability Index (SVI)](https://www.atsdr.cdc.gov/placeandhealth/svi/index.html)
+- `svi_client`: Provides programmatic access to the Center for Disease Control's (CDC) [Social Vulnerability Index (SVI)](https://www.atsdr.cdc.gov/placeandhealth/svi/index.html)
 
 - `_restclient`: A generic REST client with built in cache that make the construction and retrieval of GET requests painless
 - `caches`: Provides a variety of object caching utilities
