@@ -1,9 +1,9 @@
 # Guidance on how to contribute
 
 There are two primary ways to help:
- - Using the issue tracker, and
- - Changing the code-base.
 
+- Using the issue tracker, and
+- Changing the code-base.
 
 ## Using the issue tracker
 
@@ -22,7 +22,6 @@ own fork, and then submit a pull request. All new code should have associated
 unit tests that validate implemented features and the presence or lack of defects.
 Additionally, the code should follow any stylistic and architectural guidelines
 prescribed by the project.
-
 
 ## Contribution Guidelines
 
@@ -104,76 +103,97 @@ This project uses python native `namespace` packaging as outlined introduced in 
 
 ```bash
 python
-├── my_subpackage/
-   ├── hydrotools/
-   │   └── my_subpackage/
-   │       ├── __init__.py
-   │       └── foo.py
-   │       └── bar.py
-   ├── setup.py
-   ├── pyproject.toml
-   └── tests/
+└── my_subpackage/
+    ├── src/
+    │   └── hydrotools/
+    │       └── my_subpackage/
+    │           ├── __init__.py
+    │           ├── foo.py
+    │           └── _version.py
+    ├── tests/
+    ├── CONTRIBUTION.md -> ../../CONTRIBUTION.md
+    ├── LICENSE -> ../../LICENSE
+    ├── SECURITY.md -> ../../SECURITY.md
+    ├── TERMS.md -> ../../TERMS.md
+    ├── README.md
+    ├── pyproject.toml
+    ├── pytest.ini -> ../../pytest.ini
+    └── setup.cfg
 ```
 
-3. The package's `setup.py` should use the following template:
+3. The package's `setup.cfg` should use the following template:
 
-```python
-#!/usr/bin/env python3
-from setuptools import setup, find_namespace_packages
+```ini
+[metadata]
+name = hydrotools.{{ SUBPACKAGE_NAME }}
+version = attr: hydrotools.{{ SUBPACKAGE_NAME }}._version.__version__
+author = {{ AUTHOR }}
+author_email = {{ AUTHOR_EMAIL }}
+description = {{ SHORT_DESCRIPTION }}
+long_description = file: README.md
+long_description_content_type = text/markdown; charset=UTF-8
+license = USDOC
+license_files =
+    LICENSE
+url = https://github.com/NOAA-OWP/hydrotools
+project_urls =
+    Documentation = https://noaa-owp.github.io/hydrotools/hydrotools.{{ SUBPACKAGE_NAME }}.html
+    Source = https://github.com/NOAA-OWP/hydrotools/tree/main/python/nwm_client
+    Tracker = https://github.com/NOAA-OWP/hydrotools/issues
+classifiers =
+    Development Status :: 3 - Alpha
+    Intended Audience :: Education
+    Intended Audience :: Science/Research
+    License :: Free To Use But Restricted
+    Programming Language :: Python :: 3.7
+    Programming Language :: Python :: 3.8
+    Programming Language :: Python :: 3.9
+    Topic :: Scientific/Engineering :: Hydrology
+    Operating System :: OS Independent
 
-# python namespace subpackage
-# this namespace package follows PEP420
-# https://packaging.python.org/guides/packaging-namespace-packages/#native-namespace-packages
+[options]
+packages = find_namespace:
+package_dir =
+    =src
+install_requires =
+  {{ PACKAGE_REQUIREMENTS }}
+python_requires = >=3.7
+include_package_data = True
 
-NAMESPACE_PACKAGE_NAME = "hydrotools"
-SUBPACKAGE_NAME = "{{ SUBPACKAGE_NAME }}"
+[options.packages.find]
+where = src
 
-# Namespace subpackage slug.
-# Ex: mypkg.a # Where the namespace pkg = `mypkg` and the subpackage = `a`
-SUBPACKAGE_SLUG = f"{NAMESPACE_PACKAGE_NAME}.{SUBPACKAGE_NAME}"
+[options.extras_require]
+develop =
+    pytest
 
-# Subpackage version
-VERSION = "0.1.0"
-
-# Package author information
-AUTHOR = "{{ AUTHOR }}"
-AUTHOR_EMAIL = "{{ AUTHOR_EMAIL }}"
-
-# Short sub-package description
-DESCRIPTION = "{{ SHORT_DESCRIPTION }}"
-
-# Package dependency requirements
-REQUIREMENTS = []
-
-# Development requirements
-DEVELOPMENT_REQUIREMENTS = ["pytest"]
-
-setup(
-    name=SUBPACKAGE_SLUG,
-    version=VERSION,
-    author=AUTHOR,
-    author_email=AUTHOR_EMAIL,
-    classifiers=["Private :: Do Not Upload to pypi server",],
-    description=DESCRIPTION,
-    namespace_packages=[NAMESPACE_PACKAGE_NAME],
-    packages=find_namespace_packages(
-        include=[f"{NAMESPACE_PACKAGE_NAME}.*"]
-    ),
-    install_requires=REQUIREMENTS,
-    extras_require={"develop": DEVELOPMENT_REQUIREMENTS},
-)
 ```
 
 4. The package's `pyproject.toml` should use the following template and add any
 build-system requirements:
 
-```
+```toml
 [build-system]
 build-backend = "setuptools.build_meta"
 requires = [
   "setuptools>=42",
   "wheel",
 ]
+
+```
+
+5. `_version.py` should use the following template:
+
+```python
+__version__ = "0.0.1"
+
+```
+
+6. `__init__.py` must start with the following:
+
+```python
+# removing __version__ import will cause build to fail. see: https://github.com/pypa/setuptools/issues/1724#issuecomment-627241822
+from ._version import __version__
 
 ```
 
