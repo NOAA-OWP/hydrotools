@@ -13,6 +13,7 @@ from abc import ABC, abstractmethod
 import pandas as pd
 import dask.dataframe as dd
 from typing import List, Union
+import numpy.typing as npt
 from .NWMClientDefaults import _NWMClientDefault
 
 class CacheNotFoundError(Exception):
@@ -29,8 +30,10 @@ class NWMClient(ABC):
     @abstractmethod
     def get(
         self,
-        configuration: str,
-        reference_times: List[str],
+        configurations: List[str],
+        reference_times: npt.ArrayLike,
+        variables: List[str],
+        nwm_feature_id_filter: npt.ArrayLike = _NWMClientDefault.CROSSWALK.index,
         compute: bool = True
         ) -> Union[pd.DataFrame, dd.DataFrame]:
         """Abstract method to retrieve National Water Model data as a 
@@ -38,11 +41,15 @@ class NWMClient(ABC):
         
         Parameters
         ----------
-        configuration: str, required
-            NWM configuration cycle.
-        reference_times: List[str], required
-            List of reference time strings in %Y%m%dT%HZ format. 
-            e.g. ['20210912T01Z']
+        configurations: List[str], required
+            List of NWM configurations.
+        reference_times: array-like, required
+            array-like of reference times. Should be compatible with pandas.Timestamp.
+        variables: List[str], optional, default ['streamflow']
+            List of variables to retrieve from NWM files.
+        nwm_feature_id_filter: array-like, optional
+            array-like of NWM feature IDs to return. Defaults to channel features 
+            with a known USGS mapping.
         compute: bool, optional, default True
             Return a pandas.DataFrame instead of a dask.dataframe.DataFrame.
 
