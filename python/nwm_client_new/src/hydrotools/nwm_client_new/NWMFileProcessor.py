@@ -14,8 +14,9 @@ import dask.dataframe as dd
 import pandas as pd
 import numpy as np
 import numpy.typing as npt
-from typing import Union
+from typing import List, Union
 import warnings
+from .NWMClientDefaults import _NWMClientDefault
 
 class NWMFileProcessor:
     """Provides a concrete interface for methods used to process National Water 
@@ -27,7 +28,8 @@ class NWMFileProcessor:
     def get_dataset(
         cls,
         input_directory: Union[str, Path],
-        feature_id_filter: npt.ArrayLike = []
+        feature_id_filter: npt.ArrayLike = _NWMClientDefault.CROSSWALK.index,
+        variables: List[str] = _NWMClientDefault.VARIABLES
         ) -> xr.Dataset:
         """Generate an xarray.Dataset from an input directory of NWM .nc files.
 
@@ -38,7 +40,12 @@ class NWMFileProcessor:
             files.
         feature_id_filter: array-like, optional, default []
             Subset of feature IDs to return.
-
+        variables: list of str, optional, default ["reference_time", "time",
+             "streamflow"]
+             List of variables to retrieve from source files. Options include: 
+             'time', 'reference_time', 'feature_id', 'crs', 'streamflow', 
+             'nudge', 'velocity', 'qSfcLatRunoff', 'qBucket', 'qBtmVertRunoff'
+             
         Returns
         -------
         xarray.Dataset of input_directory lazily loaded.
@@ -59,7 +66,7 @@ class NWMFileProcessor:
 
             # Subset by feature ID and variable
             try:
-                return ds.sel(feature_id=feature_id_filter)
+                return ds.sel(feature_id=feature_id_filter)[variables]
             except KeyError:
                 # Validate filter IDs
                 check = np.isin(feature_id_filter, ds.feature_id)
@@ -72,10 +79,10 @@ class NWMFileProcessor:
                 warnings.warn(message)
 
                 # Subset by valid feature ID and variable
-                return ds.sel(feature_id=feature_id_filter[check])
+                return ds.sel(feature_id=feature_id_filter[check])[variables]
 
         # Subset by variable only
-        return ds
+        return ds[variables]
 
     @classmethod
     def convert_to_dask_dataframe(
@@ -98,7 +105,6 @@ class NWMFileProcessor:
 
         # Compute number of partitions
         #  Best practice is ~100 MB per partition
-        #  TODO Make this a parameter
         npartitions = 1 + len(df.index) // 2_400_000
 
         # Sort by feature ID
