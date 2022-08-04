@@ -14,7 +14,7 @@ import dask.dataframe as dd
 import pandas as pd
 import numpy as np
 import numpy.typing as npt
-from typing import List, Union
+from typing import Union
 import warnings
 
 class NWMFileProcessor:
@@ -27,8 +27,7 @@ class NWMFileProcessor:
     def get_dataset(
         cls,
         input_directory: Union[str, Path],
-        feature_id_filter: npt.ArrayLike = [],
-        variables: List[str] = ["reference_time", "time", "streamflow"]
+        feature_id_filter: npt.ArrayLike = []
         ) -> xr.Dataset:
         """Generate an xarray.Dataset from an input directory of NWM .nc files.
 
@@ -39,11 +38,6 @@ class NWMFileProcessor:
             files.
         feature_id_filter: array-like, optional, default []
             Subset of feature IDs to return.
-        variables: list of str, optional, default ["reference_time", "time",
-             "streamflow"]
-             List of variables to retrieve from source files. Options include: 
-             'time', 'reference_time', 'feature_id', 'crs', 'streamflow', 
-             'nudge', 'velocity', 'qSfcLatRunoff', 'qBucket', 'qBtmVertRunoff'
 
         Returns
         -------
@@ -65,7 +59,7 @@ class NWMFileProcessor:
 
             # Subset by feature ID and variable
             try:
-                return ds.sel(feature_id=feature_id_filter)[variables]
+                return ds.sel(feature_id=feature_id_filter)
             except KeyError:
                 # Validate filter IDs
                 check = np.isin(feature_id_filter, ds.feature_id)
@@ -78,10 +72,10 @@ class NWMFileProcessor:
                 warnings.warn(message)
 
                 # Subset by valid feature ID and variable
-                return ds.sel(feature_id=feature_id_filter[check])[variables]
+                return ds.sel(feature_id=feature_id_filter[check])
 
         # Subset by variable only
-        return ds[variables]
+        return ds
 
     @classmethod
     def convert_to_dask_dataframe(
