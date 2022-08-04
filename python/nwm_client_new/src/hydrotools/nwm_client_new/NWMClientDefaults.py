@@ -25,8 +25,6 @@ class NWMClientDefaults:
 
     STORE: Configured ParquetStore instance.
     CATALOG: Concrete NWM data source instance.
-    CANONICAL_COLUMN_MAPPING: Mapping from NWM output variable names to 
-        hydrotools canonical names.
     SSL_CONTEXT: ssl context instance.
     ROUTELINK_URL: URL string path that points at an HDF5 file containing a
         pandas.DataFrame with NWM crosswalk data.
@@ -41,11 +39,6 @@ class NWMClientDefaults:
         compression="snappy"
     )
     CATALOG: NWMFileCatalog = GCPFileCatalog()
-    CANONICAL_COLUMN_MAPPING: pd.Series = pd.Series({
-        "feature_id": "nwm_feature_id",
-        "time": "value_time",
-        "streamflow": "value"
-    })
     SSL_CONTEXT: ssl.SSLContext = ssl.create_default_context()
     ROUTELINK_URL: str = "https://www.hydroshare.org/resource/d154f19f762c4ee9b74be55f504325d3/data/contents/RouteLink.h5"
 
