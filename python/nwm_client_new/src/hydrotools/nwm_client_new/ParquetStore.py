@@ -105,6 +105,27 @@ class ParquetStore(MutableMapping):
         # Number of subdirectories under root
         return len([f for f in self.root.glob("*")])
 
+    def append(self, subdirectory: str, df: dd.DataFrame) -> None:
+        """Append data to a parquet file.
+
+        Parameters
+        ----------
+        subdirectory: str, required
+            Key-path under ParquetStore.root where existing dataframe is stored.
+        df: dask.dataframe.DataFrame, required
+            Data to append.
+
+        Returns
+        -------
+        None
+        
+        """
+        # Set path
+        filepath = self.root / subdirectory
+
+        # Save dataframe
+        df.to_parquet(filepath, append=True, **self.parameters)
+
     @property
     def root(self) -> Path:
         return self._directory
