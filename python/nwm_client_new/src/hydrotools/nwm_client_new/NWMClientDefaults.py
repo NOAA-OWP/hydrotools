@@ -10,7 +10,7 @@ NWMClientDefaults
 """
 from dataclasses import dataclass
 import pandas as pd
-from .ParquetCache import ParquetCache
+from .ParquetStore import ParquetStore
 from .NWMFileCatalog import NWMFileCatalog
 from .GCPFileCatalog import GCPFileCatalog
 import ssl
@@ -23,7 +23,7 @@ from pathlib import Path
 class NWMClientDefaults:
     """Stores application default options.
 
-    CACHE: Configured ParquetCache instance.
+    STORE: Configured ParquetStore instance.
     CATALOG: Concrete NWM data source instance.
     CANONICAL_COLUMN_MAPPING: Mapping from NWM output variable names to 
         hydrotools canonical names.
@@ -35,8 +35,8 @@ class NWMClientDefaults:
         ID).
     DOWNLOAD_DIRECTORY: Local path to save downloaded NWM files.
     """
-    CACHE: ParquetCache = ParquetCache(
-        "nwm_cache.parquet",
+    STORE: ParquetStore = ParquetStore(
+        "nwm_store.parquet",
         write_index=False,
         compression="snappy"
     )
@@ -73,11 +73,11 @@ class NWMClientDefaults:
     
     @property
     def CROSSWALK(self) -> pd.DataFrame:
-        """Retrieve and cache a default crosswalk for use by a NWM client."""
-        return self.CACHE.get(
-            function=self._download_and_read_routelink_file,
-            subdirectory="CROSSWALK"
-        ).compute()[["nwm_feature_id", "usgs_site_code"]].set_index(
+        """Retrieve and store a default crosswalk for use by a NWM client."""
+        key = "CROSSWALK"
+        if key not in self.STORE:
+            self.STORE[key] = self._download_and_read_routelink_file()
+        return self.STORE[key].compute()[["nwm_feature_id", "usgs_site_code"]].set_index(
             "nwm_feature_id")
 
 # Initialize defaults
