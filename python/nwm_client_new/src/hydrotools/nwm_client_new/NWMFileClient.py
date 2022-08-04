@@ -15,7 +15,9 @@ from pathlib import Path
 from .NWMClientDefaults import _NWMClientDefault
 from .ParquetStore import ParquetStore
 from .NWMFileCatalog import NWMFileCatalog
+import numpy as np
 import pandas as pd
+import xarray as xr
 import ssl
 import dask.dataframe as dd
 from .FileDownloader import FileDownloader
@@ -80,7 +82,62 @@ class NWMFileClient(NWMClient):
         # Set cleanup flag
         self.cleanup_files = cleanup_files
 
-    def get_cycle(
+    def get_dataset(
+        self,
+        configuration: str,
+        reference_time: pd.Timestamp,
+        nwm_feature_ids: npt.ArrayLike = _NWMClientDefault.CROSSWALK.index,
+        variables: List[str] = _NWMClientDefault.VARIABLES
+        ) -> xr.Dataset:
+        """Retrieve a single National Water Model cycle as an xarray.Dataset
+        
+        Parameters
+        ----------
+        configuration: str, required
+            NWM configuration cycle.
+        reference_time: datetime-like, required
+            pandas.Timestamp compatible datetime object
+
+        Returns
+        -------
+        xarray.Dataset of NWM data
+        """
+        # Generate list of urls
+        urls = self.catalog.list_blobs(
+            configuration=configuration,
+            reference_time=reference_time
+        )
+
+        # Check urls
+        if len(urls) == 0:
+            message = (f"No data found for configuration '{configuration}' and " +
+                f"reference time '{reference_time}'")
+            raise QueryError(message)
+
+        # Generate local filenames
+        filenames = [f"part_{idx}.nc" for idx, _ in enumerate(urls)]
+
+        # Output subdirectory
+        subdirectory = self.file_directory / configuration / reference_time.strftime("RT%Y%m%dT%HZ")
+
+        # Setup downloader
+        downloader = FileDownloader(
+            output_directory=subdirectory,
+            create_directory=True,
+            ssl_context=self.ssl_context
+            )
+
+        # Download files
+        downloader.get(zip(urls,filenames))
+
+        # Get dataset
+        return NWMFileProcessor.get_dataset(
+            input_directory=subdirectory,
+            feature_id_filter=nwm_feature_ids,
+            variables=variables
+            )
+
+    def get_cycle_2(
         self,
         configuration: str,
         reference_time: pd.Timestamp,
@@ -165,8 +222,8 @@ class NWMFileClient(NWMClient):
         self,
         configurations: List[str],
         reference_times: npt.ArrayLike,
-        variables: List[str] = ["streamflow"],
         nwm_feature_ids: npt.ArrayLike = _NWMClientDefault.CROSSWALK.index,
+        variables: List[str] = _NWMClientDefault.VARIABLES,
         compute: bool = True
         ) -> Union[pd.DataFrame, dd.DataFrame]:
         """Abstract method to retrieve National Water Model data as a 
@@ -198,39 +255,82 @@ class NWMFileClient(NWMClient):
         # Validate reference times
         reference_times = [pd.Timestamp(rft) for rft in reference_times]
 
-        # Check dataframe store
+        # Put features in array
+        nwm_feature_ids = np.array(nwm_feature_ids)
+
+        # Collect dataframes
         dfs = []
+        retrieve = {}
         for cfg in configurations:
             for rft in reference_times:
                 # Build string rep
                 rft_str = rft.strftime("%Y%m%dT%HZ")
+
+                # Look for all variables and feature IDs
                 for var in variables:
-                    for fid in nwm_feature_ids:
-                        # Build key
-                        key = f"{cfg}_{var}_{rft_str}_{fid}"
+                    # Build key
+                    key = f"{cfg}_{rft_str}_{var}"
 
-                        # Check store
-                        if key in self.dataframe_store:
-                            # Retrieve from parquet
-                            dfs.append(self.dataframe_store[key])
-                        else:
-                            # Retrieve data
-                            try:
-                                df = self.get_cycle(cfg, rft, variables=[var], nwm_feature_ids=[fid])
-                            except QueryError:
-                                warnings.warn(f"Could not generate dataframe for key {key}", UserWarning)
-                                continue
+                    # Check store
+                    if key in self.dataframe_store:
+                        # Load data
+                        df = self.dataframe_store[key]
 
-                            # Map crosswalk
-                            for col in self.crosswalk:
-                                df[col] = df["nwm_feature_id"].map(self.crosswalk[col])
-                            
-                            # Save dataframe
-                            self.dataframe_store[key] = df
+                        # Check for features
+                        missing = ~np.isin(nwm_feature_ids, df["nwm_feature_id"].compute())
+                        missing_ids = nwm_feature_ids[missing]
 
-                            # Retrieve from parquet
-                            dfs.append(self.dataframe_store[key])
-        
+                        # If no IDs are missing, continue
+                        if not np.any(missing):
+                            dfs.append(df[df["nwm_feature_id"].isin(nwm_feature_ids)])
+                            continue
+                    else:
+                        missing_ids = nwm_feature_ids
+
+                    # Open dataset
+                    if f"{cfg}_{rft_str}" not in retrieve:
+                        # Open dataset for later retrieval
+                        retrieve[f"{cfg}_{rft_str}"] = self.get_dataset(cfg, rft, missing_ids, ["reference_time"]+variables)
+
+                    # Process data
+                    ds = retrieve[f"{cfg}_{rft_str}"]
+
+                    # Warn
+                    if ds.feature_id.size == 0:
+                        message = f"These filter IDs returned no data: {missing_ids}"
+                        warnings.warn(message)
+                        dfs.append(df[df["nwm_feature_id"].isin(nwm_feature_ids)])
+                        continue
+
+                    # Convert to dask
+                    df = NWMFileProcessor.convert_to_dask_dataframe(ds)
+                    
+                    # Canonicalize
+                    df = df[["reference_time", "feature_id", "time", var]].rename(columns={
+                        "feature_id": "nwm_feature_id",
+                        "time": "value_time",
+                        var: "value"
+                    })
+
+                    # Add required columns
+                    df["measurement_unit"] = ds[var].attrs["units"]
+                    df["variable_name"] = var
+                    df["configuration"] = ds.attrs["model_configuration"]
+
+                    # Address ambigious "No-DA" cycle names
+                    if cfg.endswith("no_da"):
+                        df["configuration"] = df["configuration"] + "_no_da"
+                        
+                    # Map crosswalk
+                    for col in self.crosswalk:
+                        df[col] = df["nwm_feature_id"].map(self.crosswalk[col])
+
+                    # Save
+                    self.dataframe_store.append(key, df)
+
+                    # Append
+                    dfs.append(df[df["nwm_feature_id"].isin(nwm_feature_ids)])
+
         # Check for empty data
         if not dfs:
             message = (
