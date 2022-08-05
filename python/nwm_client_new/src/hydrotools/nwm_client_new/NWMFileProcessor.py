@@ -56,6 +56,11 @@ class NWMFileProcessor:
         # Generate file list
         file_list = [f for f in input_directory.glob("*.nc")]
 
+        # Update variables with minimal coordinates
+        for v in ["feature_id", "time", "reference_time"]:
+            if v not in variables:
+                variables.append(v)
+
         # Open dataset
         ds = xr.open_mfdataset(file_list, engine="netcdf4")
 
