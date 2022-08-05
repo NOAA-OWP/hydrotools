@@ -10,7 +10,7 @@ NWMFileClient
 """
 
 from .NWMClient import NWMClient, QueryError, StoreNotFoundError
-from typing import Union, List
+from typing import Union, List, Dict
 from pathlib import Path
 from .NWMClientDefaults import _NWMClientDefault
 from .ParquetStore import ParquetStore
@@ -94,13 +94,13 @@ class NWMFileClient(NWMClient):
         else:
             self.unit_system = unit_system
 
-    def get_dataset(
+    def get_files(
         self,
         configuration: str,
         reference_time: pd.Timestamp,
         nwm_feature_ids: npt.ArrayLike = _NWMClientDefault.CROSSWALK.index,
         variables: List[str] = _NWMClientDefault.VARIABLES
-        ) -> xr.Dataset:
+        ) -> Dict[str, List[Path]]:
         """Retrieve a single National Water Model cycle as an xarray.Dataset
         
         Parameters
@@ -145,12 +145,11 @@ class NWMFileClient(NWMClient):
         # Download files
         downloader.get(zip(urls,filenames))
 
-        # Get dataset
-        return NWMFileProcessor.get_dataset(
-            input_directory=subdirectory,
-            feature_id_filter=nwm_feature_ids,
-            variables=variables
-            )
+        # Return nested list of files
+        files = sorted(list(subdirectory.glob("*.nc")))
+        num_groups = len(files) // 20 + 1
+        file_groups = np.array_split(files, num_groups)
+        return {f"part_{idx}": fg for idx, fg in enumerate(file_groups)}
 
     def get(
         self,
@@ -194,7 +193,6 @@ class NWMFileClient(NWMClient):
 
         # Collect dataframes
         dfs = []
-        open_datasets = {}
         for cfg in configurations:
             for rft in reference_times:
                 # Build datetime string
@@ -223,52 +221,55 @@ class NWMFileClient(NWMClient):
                     else:
                         missing_ids = nwm_feature_ids
 
-                    # Open dataset
-                    if f"{cfg}_{rft_str}" not in open_datasets:
-                        # Open dataset for later retrieval
-                        open_datasets[f"{cfg}_{rft_str}"] = self.get_dataset(cfg, rft, missing_ids, ["reference_time"]+variables)
-
                     # Process data
-                    ds = open_datasets[f"{cfg}_{rft_str}"]
+                    # NOTE This may be parallizable. This funky mess exists because dask and xarray
+                    #  got fussy with the medium range data.
+                    keyed_files = self.get_files(cfg, rft)
+                    for part, files in keyed_files.items():
+                        # Build subkey
+                        subkey = f"{key}/{part}"
 
-                    # Warn for no features
-                    if ds.feature_id.size == 0:
-                        message = f"These filter IDs returned no data: {missing_ids}"
-                        warnings.warn(message)
-                        continue
+                        # Open dataset
+                        ds = NWMFileProcessor.get_dataset(files, missing_ids, ["reference_time"]+variables)
 
-                    # Convert to dask
-                    df = NWMFileProcessor.convert_to_dask_dataframe(ds)
-                    
-                    # Canonicalize
-                    df = df[["reference_time", "feature_id", "time", var]].rename(columns={
-                        "feature_id": "nwm_feature_id",
-                        "time": "value_time",
-                        var: "value"
-                    })
-
-                    # Add required columns
-                    df["measurement_unit"] = ds[var].attrs["units"]
-                    df["variable_name"] = var
-                    df["configuration"] = ds.attrs["model_configuration"]
-
-                    # Address ambigious "No-DA" cycle names
-                    if cfg.endswith("no_da"):
-                        df["configuration"] = df["configuration"] + "_no_da"
+                        # Warn for no features
+                        if ds.feature_id.size == 0:
+                            message = f"These filter IDs returned no data: {missing_ids}"
+                            warnings.warn(message)
+                            continue
                         
-                    # Map crosswalk
-                    for col in self.crosswalk:
-                        df[col] = df["nwm_feature_id"].map(self.crosswalk[col])
+                        # Convert to dask
+                        df = NWMFileProcessor.convert_to_dask_dataframe(ds)
+                        
+                        # Canonicalize
+                        df = df[["reference_time", "feature_id", "time", var]].rename(columns={
+                            "feature_id": "nwm_feature_id",
+                            "time": "value_time",
+                            var: "value"
+                        })
 
-                    # Save
-                    self.dataframe_store.append(key, df)
+                        # Add required columns
+                        df["measurement_unit"] = ds[var].attrs["units"]
+                        df["variable_name"] = var
+                        df["configuration"] = ds.attrs["model_configuration"]
 
-                    # Append
-                    dfs.append(df[df["nwm_feature_id"].isin(nwm_feature_ids)])
+                        # Address ambigious "No-DA" cycle names
+                        if cfg.endswith("no_da"):
+                            df["configuration"] = df["configuration"] + "_no_da"
+                            
+                        # Map crosswalk
+                        for col in self.crosswalk:
+                            df[col] = df["nwm_feature_id"].map(self.crosswalk[col])
 
-        # Close datasets
-        for _, ds in open_datasets.items():
-            ds.close()
+                        # Save
+                        self.dataframe_store.append(subkey, df)
+
+                        # Append all parts
+                        df = self.dataframe_store[subkey]
+                        dfs.append(df[df["nwm_feature_id"].isin(missing_ids)])
+
+                        # Close dataset
+                        ds.close()
 
         # Check for empty data
         if not dfs:
@@ -293,7 +294,6 @@ class NWMFileClient(NWMClient):
 
         # Convert units
         if self.unit_system == "US":
-            print("entry")
             # Get conversions
             c = _NWMClientDefault.NWM_TO_US_UNIT_CONVERSION
 
