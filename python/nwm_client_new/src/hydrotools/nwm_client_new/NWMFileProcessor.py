@@ -56,10 +56,11 @@ class NWMFileProcessor:
         # Generate file list
         file_list = [f for f in input_directory.glob("*.nc")]
 
-        # Update variables with minimal coordinates
-        for v in ["feature_id", "time", "reference_time"]:
-            if v not in variables:
-                variables.append(v)
+        # Minimum coordinates
+        coordinates = []
+        for c in ["feature_id", "time", "reference_time"]:
+            if c not in variables:
+                coordinates.append(c)
 
         # Open dataset
         ds = xr.open_mfdataset(file_list, engine="netcdf4")
@@ -71,7 +72,7 @@ class NWMFileProcessor:
 
             # Subset by feature ID and variable
             try:
-                return ds.sel(feature_id=feature_id_filter)[variables]
+                return ds.sel(feature_id=feature_id_filter)[coordinates+variables]
             except KeyError:
                 # Validate filter IDs
                 check = np.isin(feature_id_filter, ds.feature_id)
@@ -84,10 +85,10 @@ class NWMFileProcessor:
                 warnings.warn(message)
 
                 # Subset by valid feature ID and variable
-                return ds.sel(feature_id=feature_id_filter[check])[variables]
+                return ds.sel(feature_id=feature_id_filter[check])[coordinates+variables]
 
         # Subset by variable only
-        return ds[variables]
+        return ds[coordinates+variables]
 
     @classmethod
     def convert_to_dask_dataframe(
