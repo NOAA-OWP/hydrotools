@@ -2,7 +2,6 @@ import pytest
 from hydrotools.nwm_client_new.NWMFileClient import NWMFileClient
 from hydrotools.nwm_client_new.HTTPFileCatalog import HTTPFileCatalog
 import pandas as pd
-from tempfile import TemporaryDirectory
 from hydrotools.nwm_client_new.NWMClient import StoreNotFoundError, QueryError
 
 # Set reference time
