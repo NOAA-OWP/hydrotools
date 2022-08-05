@@ -24,6 +24,7 @@ from .FileDownloader import FileDownloader
 from .NWMFileProcessor import NWMFileProcessor
 import numpy.typing as npt
 import warnings
+from shutil import rmtree
 
 class NWMFileClient(NWMClient):
     def __init__(
@@ -33,7 +34,8 @@ class NWMFileClient(NWMClient):
         catalog: NWMFileCatalog = _NWMClientDefault.CATALOG,
         location_metadata_mapping: pd.DataFrame = _NWMClientDefault.CROSSWALK,
         ssl_context: ssl.SSLContext = _NWMClientDefault.SSL_CONTEXT,
-        cleanup_files: bool = True
+        cleanup_files: bool = False,
+        unit_system: str = "SI"
         ) -> None:
         """Client class for retrieving data as dataframes from a remote 
         file-based source of National Water Model data.
@@ -136,87 +138,6 @@ class NWMFileClient(NWMClient):
             feature_id_filter=nwm_feature_ids,
             variables=variables
             )
-
-    def get_cycle_2(
-        self,
-        configuration: str,
-        reference_time: pd.Timestamp,
-        variables: List[str] = ["streamflow", "nudge", "velocity", "qSfcLatRunoff", "qBucket", "qBtmVertRunoff"],
-        nwm_feature_ids: npt.ArrayLike = _NWMClientDefault.CROSSWALK.index,
-        ) -> dd.DataFrame:
-        """Retrieve a single National Water Model cycle as a 
-        dask.dataframe.DataFrame.
-        
-        Parameters
-        ----------
-        configuration: str, required
-            NWM configuration cycle.
-        reference_time: datetime-like, required
-            pandas.Timestamp compatible datetime object
-
-        Returns
-        -------
-        dask.dataframe.DataFrame of NWM data
-        """
-        # Generate list of urls
-        urls = self.catalog.list_blobs(
-            configuration=configuration,
-            reference_time=reference_time
-        )
-
-        # Check urls
-        if len(urls) == 0:
-            message = (f"No data found for configuration '{configuration}' and " +
-                f"reference time '{reference_time}'")
-            raise QueryError(message)
-
-        # Generate local filenames
-        filenames = [f"part_{idx}.nc" for idx, _ in enumerate(urls)]
-
-        # Output subdirectory
-        subdirectory = self.file_directory / configuration / reference_time.strftime("RT%Y%m%dT%HZ")
-
-        # Setup downloader
-        downloader = FileDownloader(
-            output_directory=subdirectory,
-            create_directory=True,
-            ssl_context=self.ssl_context
-            )
-
-        # Download files
-        downloader.get(zip(urls,filenames))
-
-        # Get dataset
-        ds = NWMFileProcessor.get_dataset(
-            input_directory=subdirectory,
-            feature_id_filter=nwm_feature_ids
-            )
-
-        # Check for data
-        if ds.feature_id.size == 0:
-            raise QueryError(f"No data found for feature IDs {nwm_feature_ids}")
-
-        # Convert to dask dataframe
-        dfs = []
-        for var in variables:
-            # Convert to DataFrame
-            df = NWMFileProcessor.convert_to_dask_dataframe(ds[["reference_time"]+[var]])
-
-            # Map new names
-            df = df.rename(columns={
-                "feature_id": "nwm_feature_id",
-                "time": "value_time",
-                var: "value"
-            })
-
-            # Canonicalize
-            df["measurement_unit"] = ds[var].attrs["units"]
-            df["variable_name"] = var
-            df["configuration"] = ds.attrs["model_configuration"]
-            if configuration.endswith("no_da"):
-                df["configuration"] = df["configuration"] + "_no_da"
-            dfs.append(df)
-        return dd.multi.concat(dfs)
 
     def get(
         self,
@@ -345,6 +266,14 @@ class NWMFileClient(NWMClient):
                 f"nwm_feature_ids {nwm_feature_ids}\n"
                 )
             raise QueryError(message)
+
+        # Clean-up NetCDF files
+        if self.cleanup_files:
+            # Remove top directory
+            try:
+                rmtree(self.file_directory)
+            except OSError as e:
+                warnings.warn(str(e), RuntimeWarning)
 
         # Return pandas.DataFrame
         if compute:
