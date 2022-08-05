@@ -42,7 +42,7 @@ class NWMClientDefaults:
     CATALOG: NWMFileCatalog = GCPFileCatalog()
     SSL_CONTEXT: ssl.SSLContext = ssl.create_default_context()
     ROUTELINK_URL: str = "https://www.hydroshare.org/resource/d154f19f762c4ee9b74be55f504325d3/data/contents/RouteLink.h5"
-    VARIABLES: List[str] = field(default_factory=lambda: ["reference_time", "time", "streamflow"])
+    VARIABLES: List[str] = field(default_factory=lambda: ["streamflow"])
 
     def _download_and_read_routelink_file(self) -> dd.DataFrame:
         """Retrieve NWM RouteLink data from URL and return a 
