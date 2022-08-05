@@ -114,6 +114,9 @@ class NWMFileClient(NWMClient):
         -------
         xarray.Dataset of NWM data
         """
+        # Validate reference times
+        reference_time = pd.Timestamp(reference_time)
+
         # Generate list of urls
         urls = self.catalog.list_blobs(
             configuration=configuration,
