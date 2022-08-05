@@ -27,7 +27,7 @@ class NWMFileProcessor:
     @classmethod
     def get_dataset(
         cls,
-        input_directory: Union[str, Path],
+        paths: Union[str, npt.ArrayLike],
         feature_id_filter: npt.ArrayLike = _NWMClientDefault.CROSSWALK.index,
         variables: List[str] = _NWMClientDefault.VARIABLES
         ) -> xr.Dataset:
@@ -50,12 +50,6 @@ class NWMFileProcessor:
         -------
         xarray.Dataset of input_directory lazily loaded.
         """
-        # Resolve input directory
-        input_directory = Path(input_directory)
-
-        # Generate file list
-        file_list = [f for f in input_directory.glob("*.nc")]
-
         # Minimum coordinates
         coordinates = []
         for c in ["feature_id", "time", "reference_time"]:
@@ -63,7 +57,7 @@ class NWMFileProcessor:
                 coordinates.append(c)
 
         # Open dataset
-        ds = xr.open_mfdataset(file_list, engine="netcdf4")
+        ds = xr.open_mfdataset(paths, engine="netcdf4")
 
         # Prepare feature_id filter
         if len(feature_id_filter) != 0:
