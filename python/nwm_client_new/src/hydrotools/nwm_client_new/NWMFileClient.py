@@ -56,6 +56,9 @@ class NWMFileClient(NWMClient):
             SSL configuration context.
         cleanup_files: bool, default True
             Delete downloaded NetCDF files upon program exit.
+        unit_system: str, optional, default 'SI'
+            The default measurement_unit for NWM streamflow data are cubic meter per second. 
+            Setting this option to "US" will convert the units to cubic foot per second.
 
         Returns
         -------
@@ -83,6 +86,13 @@ class NWMFileClient(NWMClient):
 
         # Set cleanup flag
         self.cleanup_files = cleanup_files
+
+        # Validate system of units
+        if unit_system not in _NWMClientDefault.VALID_UNIT_SYSTEMS:
+            message = f'Invalid unit system "{unit_system}". Must select from {str(self.valid_unit_systems)}'
+            raise ValueError(message)
+        else:
+            self.unit_system = unit_system
 
     def get_dataset(
         self,
@@ -275,10 +285,27 @@ class NWMFileClient(NWMClient):
             except OSError as e:
                 warnings.warn(str(e), RuntimeWarning)
 
+        # Concatenate
+        data = dd.multi.concat(dfs)
+
+        # Convert units
+        if self.unit_system == "US":
+            print("entry")
+            # Get conversions
+            c = _NWMClientDefault.NWM_TO_US_UNIT_CONVERSION
+
+            # Conversion factors
+            factors = data["measurement_unit"].map(c["conversion_factor"])
+            labels = data["measurement_unit"].map(c["measurement_unit_conversion"])
+
+            # Convert
+            data["value"] = data["value"].mul(factors)
+            data["measurement_unit"] = labels
+
         # Return pandas.DataFrame
         if compute:
             # Convert to pandas
-            df = dd.multi.concat(dfs).compute()
+            df = data.compute()
 
             # Optimize memory
             df["nwm_feature_id"] = pd.to_numeric(df["nwm_feature_id"], downcast="integer")
@@ -290,7 +317,7 @@ class NWMFileClient(NWMClient):
             return df.reset_index(drop=True)
 
         # Return dask dataframe
-        return dd.multi.concat(dfs)
+        return data
 
     @property
     def file_directory(self) -> Path:

@@ -13,12 +13,13 @@ import pandas as pd
 from .ParquetStore import ParquetStore
 from .NWMFileCatalog import NWMFileCatalog
 from .GCPFileCatalog import GCPFileCatalog
+from .UnitHandler import UnitHandler
 import ssl
 import dask.dataframe as dd
 from tempfile import TemporaryDirectory
 from .FileDownloader import FileDownloader
 from pathlib import Path
-from typing import List
+from typing import List, Dict
 
 @dataclass
 class NWMClientDefaults:
@@ -43,6 +44,8 @@ class NWMClientDefaults:
     SSL_CONTEXT: ssl.SSLContext = ssl.create_default_context()
     ROUTELINK_URL: str = "https://www.hydroshare.org/resource/d154f19f762c4ee9b74be55f504325d3/data/contents/RouteLink.h5"
     VARIABLES: List[str] = field(default_factory=lambda: ["streamflow"])
+    NWM_TO_SI_UNIT_MAPPING: Dict[str, str] = field(default_factory=lambda: {"m": "m", "m s-1": "m/s", "m3 s-1": "m^3/s"})
+    SI_TO_US_UNIT_MAPPING: Dict[str, str] = field(default_factory=lambda: {"m": "ft", "m/s": "ft/s", "m^3/s": "ft^3/s"})
 
     def _download_and_read_routelink_file(self) -> dd.DataFrame:
         """Retrieve NWM RouteLink data from URL and return a 
@@ -74,6 +77,23 @@ class NWMClientDefaults:
             self.STORE[key] = self._download_and_read_routelink_file()
         return self.STORE[key].compute()[["nwm_feature_id", "usgs_site_code"]].set_index(
             "nwm_feature_id")
+    
+    @property
+    def NWM_TO_US_UNIT_CONVERSION(self) -> Dict[str, Dict[str, float]]:
+        """Retrieve and store a default crosswalk for use by a NWM client."""
+        # Set up unit handler
+        unit_handler = UnitHandler()
+
+        # Build conversion from NWM to US
+        nwm_to_us_mapping = {key: self.SI_TO_US_UNIT_MAPPING[val] for key, val in self.NWM_TO_SI_UNIT_MAPPING.items()}
+        si_to_us_conversion = {key: unit_handler.conversion_factor(key, val) for key, val in self.SI_TO_US_UNIT_MAPPING.items()}
+        nwm_to_us_conversion = {key: si_to_us_conversion[val] for key, val in self.NWM_TO_SI_UNIT_MAPPING.items()}
+
+        return {"measurement_unit_conversion": nwm_to_us_mapping, "conversion_factor": nwm_to_us_conversion}
+
+    @property
+    def VALID_UNIT_SYSTEMS(self) -> List[str]:
+        return ['SI', 'US']
 
 # Initialize defaults
 _NWMClientDefault = NWMClientDefaults()
