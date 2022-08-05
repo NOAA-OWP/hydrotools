@@ -260,15 +260,15 @@ class NWMFileClient(NWMClient):
 
         # Collect dataframes
         dfs = []
-        retrieve = {}
+        open_datasets = {}
         for cfg in configurations:
             for rft in reference_times:
-                # Build string rep
+                # Build datetime string
                 rft_str = rft.strftime("%Y%m%dT%HZ")
 
-                # Look for all variables and feature IDs
+                # Retrieve or build and store dataframes
                 for var in variables:
-                    # Build key
+                    # Generate key
                     key = f"{cfg}_{rft_str}_{var}"
 
                     # Check store
@@ -280,26 +280,27 @@ class NWMFileClient(NWMClient):
                         missing = ~np.isin(nwm_feature_ids, df["nwm_feature_id"].compute())
                         missing_ids = nwm_feature_ids[missing]
 
+                        # Load
+                        dfs.append(df[df["nwm_feature_id"].isin(nwm_feature_ids)])
+
                         # If no IDs are missing, continue
                         if not np.any(missing):
-                            dfs.append(df[df["nwm_feature_id"].isin(nwm_feature_ids)])
                             continue
                     else:
                         missing_ids = nwm_feature_ids
 
                     # Open dataset
-                    if f"{cfg}_{rft_str}" not in retrieve:
+                    if f"{cfg}_{rft_str}" not in open_datasets:
                         # Open dataset for later retrieval
-                        retrieve[f"{cfg}_{rft_str}"] = self.get_dataset(cfg, rft, missing_ids, ["reference_time"]+variables)
+                        open_datasets[f"{cfg}_{rft_str}"] = self.get_dataset(cfg, rft, missing_ids, ["reference_time"]+variables)
 
                     # Process data
-                    ds = retrieve[f"{cfg}_{rft_str}"]
+                    ds = open_datasets[f"{cfg}_{rft_str}"]
 
-                    # Warn
+                    # Warn for no features
                     if ds.feature_id.size == 0:
                         message = f"These filter IDs returned no data: {missing_ids}"
                         warnings.warn(message)
-                        dfs.append(df[df["nwm_feature_id"].isin(nwm_feature_ids)])
                         continue
 
                     # Convert to dask
@@ -331,10 +332,14 @@ class NWMFileClient(NWMClient):
                     # Append
                     dfs.append(df[df["nwm_feature_id"].isin(nwm_feature_ids)])
 
+        # Close datasets
+        for _, ds in open_datasets.items():
+            ds.close()
+
         # Check for empty data
         if not dfs:
             message = (
-                f"Query return no data for configurations {configurations}\n" + 
+                f"Query returned no data for configurations {configurations}\n" + 
                 f"reference_times {reference_times}\n" + 
                 f"variables {variables}\n" + 
                 f"nwm_feature_ids {nwm_feature_ids}\n"
