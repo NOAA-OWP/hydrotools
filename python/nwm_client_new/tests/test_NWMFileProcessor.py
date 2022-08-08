@@ -4,9 +4,11 @@ from pathlib import Path
 
 input_directory = Path(__file__).parent / "short_range"
 
+
 def test_get_dataset():
+    files = input_directory.glob("*.nc")
     with pytest.warns(UserWarning):
-        ds = NWMFileProcessor.get_dataset(input_directory)
+        ds = NWMFileProcessor.get_dataset(files)
         assert "reference_time" in ds
         assert "time" in ds
         assert "streamflow" in ds
@@ -14,15 +16,17 @@ def test_get_dataset():
 
 @pytest.mark.slow
 def test_convert_to_dask_dataframe():
-    ds = NWMFileProcessor.get_dataset(input_directory, feature_id_filter=[])
+    files = input_directory.glob("*.nc")
+    ds = NWMFileProcessor.get_dataset(files, feature_id_filter=[])
     df = NWMFileProcessor.convert_to_dask_dataframe(ds)
     assert df.npartitions == 2
     ds.close()
 
 @pytest.mark.slow
 def test_convert_to_dataframe():
+    files = input_directory.glob("*.nc")
     with pytest.warns(UserWarning):
-        ds = NWMFileProcessor.get_dataset(input_directory)
+        ds = NWMFileProcessor.get_dataset(files)
         df = NWMFileProcessor.convert_to_dataframe(ds)
         assert "feature_id" in df
         ds.close()
