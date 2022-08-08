@@ -8,7 +8,7 @@ Classes
 -------
 NWMFileProcessor
 """
-from pathlib import Path
+
 import xarray as xr
 import dask.dataframe as dd
 import pandas as pd
@@ -35,20 +35,17 @@ class NWMFileProcessor:
 
         Parameters
         ----------
-        input_directory: str, pathlib.Path, required
-            Directory containing collection of National Water Model NetCDF 
-            files.
-        feature_id_filter: array-like, optional, default []
-            Subset of feature IDs to return.
-        variables: list of str, optional, default ["reference_time", "time",
-             "streamflow"]
+        paths: str or array-like of paths, required
+            Glob string or array-like of paths passed directly to xarray.open_mfdataset
+        feature_id_filter: array-like, optional
+            Subset of feature IDs to return. Defaults to USGS assimilation locations.
+        variables: list of str, optional, default ["streamflow"]
              List of variables to retrieve from source files. Options include: 
-             'time', 'reference_time', 'feature_id', 'crs', 'streamflow', 
-             'nudge', 'velocity', 'qSfcLatRunoff', 'qBucket', 'qBtmVertRunoff'
+             'streamflow', 'nudge', 'velocity', 'qSfcLatRunoff', 'qBucket', 'qBtmVertRunoff'
              
         Returns
         -------
-        xarray.Dataset of input_directory lazily loaded.
+        xarray.Dataset of paths lazily loaded.
         """
         # Minimum coordinates
         coordinates = []

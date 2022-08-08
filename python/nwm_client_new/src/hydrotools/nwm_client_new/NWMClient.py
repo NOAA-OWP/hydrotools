@@ -52,7 +52,7 @@ class NWMClient(ABC):
             array-like of NWM feature IDs to return. Defaults to channel features 
             with a known USGS mapping.
         compute: bool, optional, default True
-            Return a pandas.DataFrame instead of a dask.dataframe.DataFrame.
+            When True returns a pandas.DataFrame. When False returns a dask.dataframe.DataFrame.
 
         Returns
         -------

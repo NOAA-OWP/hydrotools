@@ -17,7 +17,6 @@ from .ParquetStore import ParquetStore
 from .NWMFileCatalog import NWMFileCatalog
 import numpy as np
 import pandas as pd
-import xarray as xr
 import ssl
 import dask.dataframe as dd
 from .FileDownloader import FileDownloader
@@ -29,7 +28,7 @@ from shutil import rmtree
 class NWMFileClient(NWMClient):
     def __init__(
         self,
-        file_directory: Union[str, Path] = "NWMFileClient_NetCDF_files",
+        file_directory: Union[str, Path] = _NWMClientDefault.DOWNLOAD_DIRECTORY,
         dataframe_store: Union[ParquetStore, None] = _NWMClientDefault.STORE,
         catalog: NWMFileCatalog = _NWMClientDefault.CATALOG,
         location_metadata_mapping: pd.DataFrame = _NWMClientDefault.CROSSWALK,
@@ -42,9 +41,8 @@ class NWMFileClient(NWMClient):
 
         Parameters
         ----------
-        file_directory: str or pathlib.Path, optional, default None
-            Directory to save downloaded NetCDF files. If None, will use 
-            temporary files.
+        file_directory: str or pathlib.Path, optional, default "NWMFileClient_NetCDF_files"
+            Directory to save downloaded NetCDF files.
         dataframe_store: ParquetStore, default ParquetStore("nwm_store.parquet")
             Local parquet directory used to locally store retrieved dataframes.
         catalog: NWMFileCatalog, optional, default GCPFileCatalog()
@@ -52,13 +50,14 @@ class NWMFileClient(NWMClient):
         location_metadata_mapping: pandas.DataFrame with nwm_feature_id Index and
             columns of corresponding site metadata. Defaults to 7500+ usgs_site_code
             used by the NWM for data assimilation.
-        ssl_context: ssl.SSLContext, optional, default context
+        ssl_context: ssl.SSLContext, optional, default default_context
             SSL configuration context.
-        cleanup_files: bool, default True
+        cleanup_files: bool, default False
             Delete downloaded NetCDF files upon program exit.
         unit_system: str, optional, default 'SI'
-            The default measurement_unit for NWM streamflow data are cubic meter per second. 
-            Setting this option to "US" will convert the units to cubic foot per second.
+            The default measurement_unit for NWM streamflow data are cubic meter per second, 
+            meter per second, and meter. Setting this option to "US" will convert the units 
+            to cubic foot per second, foot per second, or foot respectively.
 
         Returns
         -------
@@ -98,10 +97,9 @@ class NWMFileClient(NWMClient):
         self,
         configuration: str,
         reference_time: pd.Timestamp,
-        nwm_feature_ids: npt.ArrayLike = _NWMClientDefault.CROSSWALK.index,
-        variables: List[str] = _NWMClientDefault.VARIABLES
+        group_size: int = 20
         ) -> Dict[str, List[Path]]:
-        """Retrieve a single National Water Model cycle as an xarray.Dataset
+        """Download files for a single National Water Model cycle.
         
         Parameters
         ----------
@@ -109,10 +107,14 @@ class NWMFileClient(NWMClient):
             NWM configuration cycle.
         reference_time: datetime-like, required
             pandas.Timestamp compatible datetime object
+        group_size: int, optional, default 20
+            Files are downloaded in groups of 20 by default. This is to accomodate the 
+            xarray, dask, and HDF5 backends that may struggle with opening too many files
+            at once. This setting is mostly relevant to retrieving medium range forecasts.
 
         Returns
         -------
-        xarray.Dataset of NWM data
+        dict mapping a group string key to a list of local file paths. 
         """
         # Validate reference times
         reference_time = pd.Timestamp(reference_time)
@@ -147,7 +149,7 @@ class NWMFileClient(NWMClient):
 
         # Return nested list of files
         files = sorted(list(subdirectory.glob("*.nc")))
-        num_groups = len(files) // 20 + 1
+        num_groups = len(files) // group_size + 1
         file_groups = np.array_split(files, num_groups)
         return {f"group_{idx}": fg for idx, fg in enumerate(file_groups)}
 
@@ -168,13 +170,13 @@ class NWMFileClient(NWMClient):
             List of NWM configurations.
         reference_times: array-like, required
             array-like of reference times. Should be compatible with pandas.Timestamp.
-        variables: List[str], optional, default ['streamflow']
-            List of variables to retrieve from NWM files.
         nwm_feature_ids: array-like, optional
             array-like of NWM feature IDs to return. Defaults to channel features 
             with a known USGS mapping.
+        variables: List[str], optional, default ['streamflow']
+            List of variables to retrieve from NWM files.
         compute: bool, optional, default True
-            Return a pandas.DataFrame instead of a dask.dataframe.DataFrame.
+            When True returns a pandas.DataFrame. When False returns a dask.dataframe.DataFrame.
 
         Returns
         -------

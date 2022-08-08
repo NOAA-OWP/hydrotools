@@ -30,9 +30,14 @@ class NWMClientDefaults:
     SSL_CONTEXT: ssl context instance.
     ROUTELINK_URL: URL string path that points at an HDF5 file containing a
         pandas.DataFrame with NWM crosswalk data.
+    VARIABLES: default list of variables to retrieve from channel_rt files.
+    NWM_TO_SI_UNIT_MAPPING: mapping from NWM units to pint compatible metric unit symbols
+    SI_TO_US_UNIT_MAPPING: mapping from SI units to default US standard conversion units
     CROSSWALK: A property that generates a pandas.DataFrame that maps between 
         point feature data source identifiers (i.e. USGS gage id -> NWM feature 
         ID).
+    NWM_TO_US_UNIT_CONVERSION: Propertying mapping NWM units to US standard units and conversion factors
+    VALID_UNIT_SYSTEMS: Valid unit systems handled by client
     DOWNLOAD_DIRECTORY: Local path to save downloaded NWM files.
     """
     STORE: ParquetStore = ParquetStore(
@@ -46,6 +51,7 @@ class NWMClientDefaults:
     VARIABLES: List[str] = field(default_factory=lambda: ["streamflow"])
     NWM_TO_SI_UNIT_MAPPING: Dict[str, str] = field(default_factory=lambda: {"m": "m", "m s-1": "m/s", "m3 s-1": "m^3/s"})
     SI_TO_US_UNIT_MAPPING: Dict[str, str] = field(default_factory=lambda: {"m": "ft", "m/s": "ft/s", "m^3/s": "ft^3/s"})
+    DOWNLOAD_DIRECTORY: Path = Path("NWMFileClient_NetCDF_files")
 
     def _download_and_read_routelink_file(self) -> dd.DataFrame:
         """Retrieve NWM RouteLink data from URL and return a 
@@ -80,7 +86,7 @@ class NWMClientDefaults:
     
     @property
     def NWM_TO_US_UNIT_CONVERSION(self) -> Dict[str, Dict[str, float]]:
-        """Retrieve and store a default crosswalk for use by a NWM client."""
+        """Mapping from NWM units to US standard units and respective conversion factors."""
         # Set up unit handler
         unit_handler = UnitHandler()
 
