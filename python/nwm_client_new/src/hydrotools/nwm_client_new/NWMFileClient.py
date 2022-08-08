@@ -130,7 +130,7 @@ class NWMFileClient(NWMClient):
             raise QueryError(message)
 
         # Generate local filenames
-        filenames = [f"part_{idx}.nc" for idx, _ in enumerate(urls)]
+        filenames = [f"timestep_{idx}.nc" for idx, _ in enumerate(urls)]
 
         # Output subdirectory
         subdirectory = self.file_directory / configuration / reference_time.strftime("RT%Y%m%dT%HZ")
@@ -149,7 +149,7 @@ class NWMFileClient(NWMClient):
         files = sorted(list(subdirectory.glob("*.nc")))
         num_groups = len(files) // 20 + 1
         file_groups = np.array_split(files, num_groups)
-        return {f"part_{idx}": fg for idx, fg in enumerate(file_groups)}
+        return {f"group_{idx}": fg for idx, fg in enumerate(file_groups)}
 
     def get(
         self,
@@ -225,9 +225,9 @@ class NWMFileClient(NWMClient):
                     # NOTE This may be parallizable. This funky mess exists because dask and xarray
                     #  got fussy with the medium range data.
                     keyed_files = self.get_files(cfg, rft)
-                    for part, files in keyed_files.items():
+                    for group, files in keyed_files.items():
                         # Build subkey
-                        subkey = f"{key}/{part}"
+                        subkey = f"{key}/{group}"
 
                         # Open dataset
                         ds = NWMFileProcessor.get_dataset(files, missing_ids, ["reference_time"]+variables)
