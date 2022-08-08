@@ -33,18 +33,15 @@ def setup_http():
     return NWMFileClient(catalog=catalog)
 
 @pytest.mark.slow
-def test_gcp_get_dataset(setup_gcp):
-    with pytest.warns(UserWarning):
-        ds = setup_gcp.get_dataset(
-            configuration="analysis_assim",
-            reference_time=reference_time_gcp
-        )
-        assert "reference_time" in ds
-        assert "feature_id" in ds
-        assert "time" in ds
-        assert "streamflow" in ds
-        assert ds.attrs["model_configuration"] == "analysis_and_assimilation"
-        ds.close()
+def test_gcp_get_files(setup_gcp):
+    keyed_files = setup_gcp.get_files(
+        configuration="analysis_assim",
+        reference_time=reference_time_gcp
+    )
+    for key, files in keyed_files.items():
+        assert key == "group_0"
+        for idx, f in  enumerate(sorted(files)):
+            assert f.name == f"timestep_{idx}.nc"
 
 @pytest.mark.slow
 def test_gcp_client(setup_gcp):
@@ -80,7 +77,7 @@ def test_StoreNotFoundError(setup_gcp):
 
 def test_QueryError(setup_gcp):
     with pytest.raises(QueryError):
-        ds = setup_gcp.get_dataset(
+        ds = setup_gcp.get_files(
             configuration="analysis_assim",
             reference_time="2050-08-01 10:00"
         )
