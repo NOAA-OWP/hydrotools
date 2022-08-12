@@ -20,7 +20,9 @@ from typing import Union, Dict, Callable
 import pandas as pd
 from io import StringIO
 from abc import ABC, abstractmethod
+import numpy as np
 import numpy.typing as npt
+import warnings
 
 class NWISGenericClient(ABC):
     """Abstract interface for USGS NWIS data services.
@@ -384,8 +386,60 @@ class NWISFloodStageClient(NWISGenericClient):
 
         # Get single site
         return {"site": site}
+    
+    def _convert_stage_series_to_flow(self, series: pd.Series, rating_curves: pd.DataFrame) -> np.ndarray:
+        """Convert a series of NWS flood stages to flood flows using a dataframe of rating curves.
+        
+        Parameters
+        ----------
+        series: pandas.Series, required
+            Series of NWS flood stages with a name that corresponds to one of the sites in rating_curves.
+        rating_curves: pandas.DataFrame, required
+            Dataframe containing USGS rating curves as returned by NWISRatingCurveClient
 
-    def get(self, sites: Union[str, npt.ArrayLike]) -> pd.DataFrame:
+        Returns
+        -------
+        numpy.ndarray containing interpolated flood flows
+        """
+        # Extract data
+        rc = rating_curves[rating_curves["usgs_site_code"] == series.name]
+
+        # Check for empty
+        if rc.empty:
+            warnings.warn(f"No rating curve found for usgs_site_code {series.name}", RuntimeWarning)
+            return series * np.nan
+
+        return np.interp(
+            x = series,
+            xp = rc["INDEP"],
+            fp = rc["DEP"],
+            left=np.nan,
+            right=np.nan
+        )
+
+    def _convert_stage_dataframe_to_flow(self, data: pd.DataFrame, rating_curves: pd.DataFrame) -> pd.DataFrame:
+        """Convert a dataframe of NWS flood stages to flood flows using a dataframe of rating curves.
+        
+        Parameters
+        ----------
+        data: pandas.Series, required
+            DataFrames of NWS flood stages indexed by usgs_site_code.
+        rating_curves: pandas.DataFrame, required
+            Dataframe containing USGS rating curves as returned by NWISRatingCurveClient
+
+        Returns
+        -------
+        pandas.DataFrame containing interpolated flood flows
+        """
+        converted = data.apply(
+            self._convert_stage_series_to_flow, 
+            axis=1, 
+            result_type="broadcast", 
+            rating_curves=rating_curves
+            )
+        return converted.rename(columns={c: c.replace("_stage", "_flow") for c in converted.columns})
+
+    def get(self, sites: Union[str, npt.ArrayLike], compute_flow: bool = False) -> pd.DataFrame:
         """Retrieve flood categories for a list of USGS site codes.
         
         Parameters
@@ -393,6 +447,9 @@ class NWISFloodStageClient(NWISGenericClient):
         sites: str or array-like, required
             String of usgs site codes in a comma-delimited list or an array-like of 
             usgs site code.
+        compute_flow: bool, optional, default False
+            When True will use the NWISRatingCurveClient to convert stage to streamflow.
+            New columns are added to the returned dataframe.
 
         Returns
         -------
@@ -414,6 +471,18 @@ class NWISFloodStageClient(NWISGenericClient):
         # Process dataframes
         df = pd.concat([self.process_dataframe(f) for f in frames], ignore_index=True)
 
-        # Optimize memory
-        df["usgs_site_code"] = df["usgs_site_code"].astype("category")
+        # Convert to flow
+        if compute_flow:
+            # Index by site code
+            df = df.set_index("usgs_site_code")
+
+            # Rating curve
+            rc_client = NWISRatingCurveClient()
+            rating_curves = rc_client.get(sites=df.index)
+
+            # Convert
+            flood_flows = self._convert_stage_dataframe_to_flow(df, rating_curves)
+
+            # Concatenate
+            return pd.concat([df, flood_flows], axis=1).reset_index()
         return df
