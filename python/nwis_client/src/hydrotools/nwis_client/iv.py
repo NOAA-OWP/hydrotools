@@ -280,7 +280,7 @@ class IVDataService:
             return empty_df
 
         # Convert values to numbers
-        dfs.loc[:, "value"] = pd.to_numeric(dfs["value"], downcast="float")
+        dfs["value"] = pd.to_numeric(dfs["value"], downcast="float")
 
         # Convert all times to UTC
         dfs[self.value_time_label] = pd.to_datetime(
