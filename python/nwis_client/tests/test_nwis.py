@@ -502,3 +502,25 @@ def test_nwis_client_cache_path(loop):
 
         # close resources
         service._restclient.close()
+
+def test_fixes_209(loop, monkeypatch):
+    """
+    verify that pandas FutureWarning is not raised by `IVDataService.get`. This FutureWarning was
+    introduced in 1.5.1. see pandas changelog
+    https://pandas.pydata.org/docs/whatsnew/v1.5.0.html#inplace-operation-when-setting-values-with-loc-and-iloc
+    for more information.
+    """
+    import warnings
+
+    def mock_get_raw(*args, **kwargs):
+        return [{'usgs_site_code': '01646500', 'variableName': 'streamflow', 'measurement_unit': 'ft3/s', 'values': [{'value': '18300', 'qualifiers': ['A'], 'dateTime': '2020-12-31T20:00:00.000-05:00'}, {'value': '18200', 'qualifiers': ['A'], 'dateTime': '2020-12-31T20:15:00.000-05:00'}], 'series': 0}]
+
+    monkeypatch.setattr(iv.IVDataService, "get_raw", mock_get_raw)
+    client = iv.IVDataService(enable_cache=False)
+
+    # fail if ANY warning. this should probably be more specific, but if we get any warnings, we
+    # should resolve them.
+    with warnings.catch_warnings():
+        # warning will be raised to exception if caught
+        warnings.simplefilter("error")
+        client.get(sites='01646500', startDT="2021-01-01T01:00", endDT="2021-01-01T01:15")
