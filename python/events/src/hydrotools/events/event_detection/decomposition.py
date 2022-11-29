@@ -91,7 +91,7 @@ def detrend_streamflow(
         
         """
     # Check index
-    if type(series.index) != pd.DatetimeIndex:
+    if not isinstance(series.index, pd.DatetimeIndex):
         raise Exception("series index is not DatetimeIndex")
 
     if not series.index.is_monotonic_increasing:
@@ -182,7 +182,7 @@ def find_local_minimum(
 
     """
     # Check for DatetimeIndex
-    if type(timeseries.index) != pd.DatetimeIndex:
+    if not isinstance(timeseries.index, pd.DatetimeIndex):
         raise Exception("timeseries index is not DatetimeIndex")
 
     # Check origin is in index
