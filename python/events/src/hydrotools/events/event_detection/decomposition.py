@@ -26,6 +26,7 @@ from typing import Union
 import datetime
 import warnings
 
+
 def rolling_minimum(
     series: pd.Series,
     window: Union[int, pd.tseries.offsets.DateOffset, pd.Index]
@@ -53,21 +54,11 @@ def rolling_minimum(
         raise Exception("series index is not DatetimeIndex")
 
     # Estimate trend using a forward rolling minimum
-    forward = series.rolling(window=window).min()
-
-    # Flip series values to run filter in reverse
-    reverse = pd.Series(series.values[::-1], 
-        index=series.index)
-
-    # Estimate trend using a backward rolling minimum
-    backward = reverse.rolling(window=window).min()
-
-    # Restore reversed series
-    backward = pd.Series(backward.values[::-1], 
-            index=backward.index)
-
+    forward = series[::-1].rolling(window=window).min()[::-1]
+    backward = series.rolling(window=window).min()
     # Take the max of the forward and backward trends
     return np.maximum(forward, backward)
+
 
 def detrend_streamflow(
     series: pd.Series,
