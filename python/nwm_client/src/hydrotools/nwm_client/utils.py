@@ -49,17 +49,14 @@ def nwm_routelink_extract_usgs_sites(
 
     """
     # open dataset
-    ds = xr.open_dataset(routelink_file_or_url, mask_and_scale=False, engine="h5netcdf")
 
-    df = pd.DataFrame(
-        {
-            "nwm_feature_id": ds.link.values,
-            "usgs_site_code": ds.gages.values,
-        }
-    )
-
-    # remove ds from mem
-    del ds
+    with xr.open_dataset(routelink_file_or_url, mask_and_scale=False, engine="h5netcdf") as ds:
+        df = pd.DataFrame(
+            {
+                "nwm_feature_id": ds.link.values,
+                "usgs_site_code": ds.gages.values,
+            }
+        )
 
     # decode bytes to string and strip whitespaces
     df.loc[:, "usgs_site_code"] = df["usgs_site_code"].str.decode("utf-8").str.strip()
