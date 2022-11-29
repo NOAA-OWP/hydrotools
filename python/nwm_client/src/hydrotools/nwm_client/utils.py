@@ -126,8 +126,9 @@ def crosswalk(
     crosswalk_df = pd.read_csv(
         crosswalk_file,
         dtype={"nwm_feature_id": int, "usgs_site_code": str},
-        comment='#'
-    )[['nwm_feature_id', 'usgs_site_code']]
+        comment='#',
+        usecols=['nwm_feature_id', 'usgs_site_code']
+    )
 
     # If passed site codes are singular or in string form convert to list
     if isinstance(crosswalk_values, six.string_types):
