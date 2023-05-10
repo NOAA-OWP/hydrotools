@@ -284,8 +284,7 @@ class IVDataService:
 
         # Convert all times to UTC
         dfs[self.value_time_label] = pd.to_datetime(
-            dfs["dateTime"], utc=True, infer_datetime_format=True
-        ).dt.tz_localize(None)
+            dfs["dateTime"], utc=True).dt.tz_localize(None)
 
         # Simplify variable name
         dfs["variable_name"] = dfs["variableName"].apply(self.simplify_variable_name)
