@@ -29,6 +29,9 @@ jobs:
         python3 -m pip install ./python/events[develop]
         python3 -m pip install ./python/metrics[develop]
         python3 -m pip install ./python/svi_client[develop]
+    - name: Echo dependency versions
+      run: |
+        python3 -m pip freeze
     - name: Run all unittests 
       run: |
         python3 -m pytest -s -m "not slow"
