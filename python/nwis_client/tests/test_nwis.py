@@ -184,6 +184,13 @@ def test_get_value_time(setup_iv_value_time, sites, validation):
     assert df["usgs_site_code"].isin(validation).all()
     assert "value_time" in df
 
+
+@pytest.mark.slow
+def test_get_with_expanded_metadata(setup_iv):
+    """Test expanded metadata option"""
+    df = setup_iv.get(sites=["01646500"], parameterCd="00060", include_expanded_metadata=True)
+    assert (df["huc_code"] == "02070008").all()
+
 def test_get_raw_with_mock(setup_iv, monkeypatch):
     """Test data retrieval and parsing"""
     import json
@@ -201,6 +208,52 @@ def test_get_raw_with_mock(setup_iv, monkeypatch):
 
     data = setup_iv.get_raw(sites="01646500", parameterCd="00060,00065")
     assert data[0]["usgs_site_code"] == "01646500"
+
+def test_expanded_metadata(setup_iv, monkeypatch):
+    """Test data retrieval and parsing"""
+    import json
+    from pathlib import Path
+    from hydrotools._restclient import RestClient
+
+    def requests_mock(*args, **kwargs):
+        json_text = json.loads(
+            (Path(__file__).resolve().parent / "nwis_test_data.json").read_text()
+        )
+        # key_word_args = {"_json": json_text}
+        return MockRequests(_json=json_text)
+
+    monkeypatch.setattr(RestClient, "get", requests_mock)
+
+    data = setup_iv.get_raw(sites="01646500", parameterCd="00060,00065", include_expanded_metadata=True)
+    assert data[0]["hucCd"] == "02070008"
+
+def test_expanded_metadata_columns(setup_iv, monkeypatch):
+    """Test data retrieval and parsing"""
+    import json
+    from pathlib import Path
+    from hydrotools._restclient import RestClient
+
+    def requests_mock(*args, **kwargs):
+        json_text = json.loads(
+            (Path(__file__).resolve().parent / "nwis_test_data.json").read_text()
+        )
+        # key_word_args = {"_json": json_text}
+        return MockRequests(_json=json_text)
+
+    monkeypatch.setattr(RestClient, "get", requests_mock)
+
+    data = setup_iv.get(sites="01646500", parameterCd="00060,00065", include_expanded_metadata=True)
+    extra_columns = [
+        "site_type_code",
+        "huc_code",
+        "county_code",
+        "state_code",
+        "site_name",
+        "latitude",
+        "longitude"
+        ]
+    for c in extra_columns:
+        assert c in data.columns
 
 
 def test_handle_response(setup_iv, monkeypatch):

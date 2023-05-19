@@ -159,6 +159,7 @@ class IVDataService:
         ] = None,
         period: Union[str, None] = None,
         siteStatus: str = "all",
+        include_expanded_metadata: bool = False,
         **params,
     ):
         """Return Pandas DataFrame of NWIS IV data.
@@ -189,6 +190,9 @@ class IVDataService:
         siteStatus: str, optional, default 'all'
             Site status in string format.
             Options: 'all', 'active', 'inactive'
+        include_expanded_metadata: bool, default False
+            Setting to True will add latitude, longitude, srs, hucCd, stateCd, countyCd, and siteName
+            columns to the returned dataframe.
         params:
             Additional parameters passed directly to service.
 
@@ -244,6 +248,7 @@ class IVDataService:
             endDT=endDT,
             period=period,
             siteStatus=siteStatus,
+            include_expanded_metadata=include_expanded_metadata,
             **params,
         )
 
@@ -284,8 +289,7 @@ class IVDataService:
 
         # Convert all times to UTC
         dfs[self.value_time_label] = pd.to_datetime(
-            dfs["dateTime"], utc=True, infer_datetime_format=True
-        ).dt.tz_localize(None)
+            dfs["dateTime"], utc=True).dt.tz_localize(None)
 
         # Simplify variable name
         dfs["variable_name"] = dfs["variableName"].apply(self.simplify_variable_name)
@@ -304,8 +308,18 @@ class IVDataService:
             "usgs_site_code",
             "measurement_unit",
             "qualifiers",
-            "series",
+            "series"
         ]
+        if include_expanded_metadata:
+            expanded_columns = [
+                "siteTypeCd",
+                "hucCd",
+                "countyCd",
+                "stateCd",
+                "siteName",
+                "srs"
+                ]
+            cols += expanded_columns
         dfs[cols] = dfs[cols].astype(str)
         dfs[cols] = dfs[cols].astype(dtype="category")
 
@@ -315,17 +329,26 @@ class IVDataService:
         dfs[converted_float.columns] = converted_float
 
         # DataFrame in semi-WRES compatible format
-        return dfs[
-            [
-                self.value_time_label,
-                "variable_name",
-                "usgs_site_code",
-                "measurement_unit",
-                "value",
-                "qualifiers",
-                "series",
-            ]
+        output_columns = [
+            self.value_time_label,
+            "variable_name",
+            "usgs_site_code",
+            "measurement_unit",
+            "value",
+            "qualifiers",
+            "series",
         ]
+        if include_expanded_metadata:
+            expanded_column_mapping = {
+                "siteTypeCd": "site_type_code",
+                "hucCd": "huc_code",
+                "countyCd": "county_code",
+                "stateCd": "state_code",
+                "siteName": "site_name"
+                }
+            dfs = dfs.rename(columns=expanded_column_mapping)
+            output_columns += list(expanded_column_mapping.values()) + ["latitude", "longitude"]
+        return dfs[output_columns]
 
     def get_raw(
         self,
@@ -368,6 +391,7 @@ class IVDataService:
         period: Union[str, None] = None,
         siteStatus: str = "all",
         max_sites_per_request: int = 20,
+        include_expanded_metadata: bool = False,
         **params,
     ) -> List[aiohttp.ClientResponse]:
         """
@@ -446,7 +470,8 @@ class IVDataService:
         results = self._restclient.mget(parameters=query_params, headers=self._headers)
 
         # flatten list of lists
-        return [item for r in results for item in self._handle_response(r)]
+        return [item for r in results for item in self._handle_response(r,
+            include_expanded_metadata=include_expanded_metadata)]
 
     def _handle_start_end_period_url_params(
         self, startDT=None, endDT=None, period=None
@@ -556,7 +581,10 @@ class IVDataService:
         return params
 
     @staticmethod
-    def _handle_response(raw_response: aiohttp.ClientResponse) -> List[dict]:
+    def _handle_response(
+        raw_response: aiohttp.ClientResponse,
+        include_expanded_metadata: bool = False
+        ) -> List[dict]:
         """From a raw response, return a list of extracted sites in dictionary form.
         Relevant dictionary keys are:
 
@@ -593,6 +621,19 @@ class IVDataService:
                 "measurement_unit": json_time_series["variable"]["unit"]["unitCode"],
             }
 
+        def extract_expanded_metadata(json_time_series):
+            # Add site type code, huc, county, and state codes
+            d = {s["name"]: s["value"] for s in json_time_series["sourceInfo"]["siteProperty"]}
+
+            # Add site name
+            d["siteName"] = json_time_series["sourceInfo"]["siteName"]
+
+            # Add geo coordinates
+            d["srs"] = json_time_series["sourceInfo"]["geoLocation"]["geogLocation"]["srs"]
+            d["latitude"] = json_time_series["sourceInfo"]["geoLocation"]["geogLocation"]["latitude"]
+            d["longitude"] = json_time_series["sourceInfo"]["geoLocation"]["geogLocation"]["longitude"]
+            return d
+
         flattened_data = []
 
         for response_value_timeSeries in deserialized_response["value"]["timeSeries"]:
@@ -601,6 +642,10 @@ class IVDataService:
 
                 # Create general site metadata dictionary
                 site_metadata = extract_metadata(response_value_timeSeries)
+
+                # Add expanded metadata
+                if include_expanded_metadata:
+                    site_metadata.update(extract_expanded_metadata(response_value_timeSeries))
 
                 # Add site time series values and its index number
                 site_metadata.update({"values": site_data["value"], "series": indicies})
