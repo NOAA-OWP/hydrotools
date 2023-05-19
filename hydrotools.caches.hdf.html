@@ -2,13 +2,13 @@
 <html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="hydrotools.caches subpackage" href="hydrotools.caches.html" />
 
-    <meta name="generator" content="sphinx-5.0.2, furo 2022.06.21"/>
+    <!-- Generated with Sphinx 6.2.1 and Furo 2023.03.27 -->
         <title>hydrotools.caches.hdf module - OWPHydroTools 2.1.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -149,7 +149,7 @@
   <span class="sidebar-brand-text">OWPHydroTools 2.1.2 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -208,7 +208,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -235,6 +236,8 @@ reprocessing.</p>
 <li><p>HDFCache</p></li>
 </ul>
 </div></blockquote>
+</section>
+</section>
 <dl class="py class">
 <dt class="sig sig-object py" id="hydrotools.caches.hdf.HDFCache">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hydrotools.caches.hdf.</span></span><span class="sig-name descname"><span class="pre">HDFCache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'table'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hydrotools.caches.hdf.HDFCache" title="Permalink to this definition">#</a></dt>
@@ -286,8 +289,6 @@ the cache, then run function and store the result for later retrieval.</p>
 </dd></dl>
 
 </section>
-</section>
-</section>
 
         </article>
       </div>
@@ -296,7 +297,7 @@ the cache, then run function and store the result for later retrieval.</p>
         <div class="related-pages">
           
           <a class="prev-page" href="hydrotools.caches.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -318,9 +319,7 @@ the cache, then run function and store the result for later retrieval.</p>
             
           </div>
           <div class="right-details">
-            <div class="icons">
-              
-            </div>
+            
           </div>
         </div>
         
@@ -332,7 +331,7 @@ the cache, then run function and store the result for later retrieval.</p>
       <div class="toc-sticky toc-scroll">
         <div class="toc-title-container">
           <span class="toc-title">
-            Contents
+            On this page
           </span>
         </div>
         <div class="toc-tree-container">
@@ -341,6 +340,14 @@ the cache, then run function and store the result for later retrieval.</p>
 <li><a class="reference internal" href="#">hydrotools.caches.hdf module</a><ul>
 <li><a class="reference internal" href="#hdf5-backed-caching-functionality">HDF5-backed Caching Functionality</a><ul>
 <li><a class="reference internal" href="#classes">Classes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#hydrotools.caches.hdf.HDFCache"><code class="docutils literal notranslate"><span class="pre">HDFCache</span></code></a><ul>
+<li><a class="reference internal" href="#hydrotools.caches.hdf.HDFCache.close"><code class="docutils literal notranslate"><span class="pre">HDFCache.close()</span></code></a></li>
+<li><a class="reference internal" href="#hydrotools.caches.hdf.HDFCache.format"><code class="docutils literal notranslate"><span class="pre">HDFCache.format</span></code></a></li>
+<li><a class="reference internal" href="#hydrotools.caches.hdf.HDFCache.get"><code class="docutils literal notranslate"><span class="pre">HDFCache.get()</span></code></a></li>
+<li><a class="reference internal" href="#hydrotools.caches.hdf.HDFCache.path"><code class="docutils literal notranslate"><span class="pre">HDFCache.path</span></code></a></li>
+<li><a class="reference internal" href="#hydrotools.caches.hdf.HDFCache.store"><code class="docutils literal notranslate"><span class="pre">HDFCache.store</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -355,10 +362,8 @@ the cache, then run function and store the result for later retrieval.</p>
     </aside>
   </div>
 </div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/scripts/furo.js"></script>
     </body>
 </html>

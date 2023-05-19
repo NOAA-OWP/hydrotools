@@ -2,13 +2,13 @@
 <html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="hydrotools._restclient subpackage" href="hydrotools._restclient.html" /><link rel="prev" title="hydrotools.nwm_client.http module" href="hydrotools.nwm_client.http.html" />
 
-    <meta name="generator" content="sphinx-5.0.2, furo 2022.06.21"/>
+    <!-- Generated with Sphinx 6.2.1 and Furo 2023.03.27 -->
         <title>hydrotools.nwm_client.utils module - OWPHydroTools 2.1.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -149,7 +149,7 @@
   <span class="sidebar-brand-text">OWPHydroTools 2.1.2 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -208,7 +208,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -230,9 +231,10 @@
 used in part with the other portions of this subpackage. One pragmatic use of this
 module is to extract nhdPlus links associated with usgs sites to filter stations of
 interest.</p>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="hydrotools.nwm_client.utils.crosswalk">
-<span class="sig-prename descclassname"><span class="pre">hydrotools.nwm_client.utils.</span></span><span class="sig-name descname"><span class="pre">crosswalk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">usgs_site_codes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwm_feature_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#hydrotools.nwm_client.utils.crosswalk" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">hydrotools.nwm_client.utils.</span></span><span class="sig-name descname"><span class="pre">crosswalk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">usgs_site_codes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwm_feature_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#hydrotools.nwm_client.utils.crosswalk" title="Permalink to this definition">#</a></dt>
 <dd><p>Return the nwm_feature_id(s) OR usgs_site_codes for one or more provided
 usgs_sites_codes or nwm_feature_ids.</p>
 <dl class="field-list simple">
@@ -271,7 +273,7 @@ usgs_sites_codes or nwm_feature_ids.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="hydrotools.nwm_client.utils.nwm_routelink_extract_usgs_sites">
-<span class="sig-prename descclassname"><span class="pre">hydrotools.nwm_client.utils.</span></span><span class="sig-name descname"><span class="pre">nwm_routelink_extract_usgs_sites</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">routelink_file_or_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#hydrotools.nwm_client.utils.nwm_routelink_extract_usgs_sites" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">hydrotools.nwm_client.utils.</span></span><span class="sig-name descname"><span class="pre">nwm_routelink_extract_usgs_sites</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">routelink_file_or_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#hydrotools.nwm_client.utils.nwm_routelink_extract_usgs_sites" title="Permalink to this definition">#</a></dt>
 <dd><p>From a NWM routelink file, extract nwm_feature_id’s that have associated USGS
 NWIS Stations, returning a df with cols <cite>nwm_feature_id</cite> and <cite>usgs_site_code</cite>.</p>
 <p>Routelink files can be obtained from nomads production server:
@@ -298,7 +300,6 @@ NWIS Stations, returning a df with cols <cite>nwm_feature_id</cite> and <cite>us
 </dd></dl>
 
 </section>
-</section>
 
         </article>
       </div>
@@ -312,10 +313,10 @@ NWIS Stations, returning a df with cols <cite>nwm_feature_id</cite> and <cite>us
                 </div>
                 <div class="title">hydrotools._restclient subpackage</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="hydrotools.nwm_client.http.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -337,9 +338,7 @@ NWIS Stations, returning a df with cols <cite>nwm_feature_id</cite> and <cite>us
             
           </div>
           <div class="right-details">
-            <div class="icons">
-              
-            </div>
+            
           </div>
         </div>
         
@@ -351,7 +350,7 @@ NWIS Stations, returning a df with cols <cite>nwm_feature_id</cite> and <cite>us
       <div class="toc-sticky toc-scroll">
         <div class="toc-title-container">
           <span class="toc-title">
-            Contents
+            On this page
           </span>
         </div>
         <div class="toc-tree-container">
@@ -359,6 +358,8 @@ NWIS Stations, returning a df with cols <cite>nwm_feature_id</cite> and <cite>us
             <ul>
 <li><a class="reference internal" href="#">hydrotools.nwm_client.utils module</a><ul>
 <li><a class="reference internal" href="#national-water-model-file-utilities">National Water Model File Utilities</a></li>
+<li><a class="reference internal" href="#hydrotools.nwm_client.utils.crosswalk"><code class="docutils literal notranslate"><span class="pre">crosswalk()</span></code></a></li>
+<li><a class="reference internal" href="#hydrotools.nwm_client.utils.nwm_routelink_extract_usgs_sites"><code class="docutils literal notranslate"><span class="pre">nwm_routelink_extract_usgs_sites()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -371,10 +372,8 @@ NWIS Stations, returning a df with cols <cite>nwm_feature_id</cite> and <cite>us
     </aside>
   </div>
 </div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/scripts/furo.js"></script>
     </body>
 </html>

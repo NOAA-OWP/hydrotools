@@ -2,13 +2,13 @@
 <html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="hydrotools._restclient.urllib_types module" href="hydrotools._restclient.urllib_types.html" /><link rel="prev" title="hydrotools._restclient.async_helpers module" href="hydrotools._restclient.async_helpers.html" />
 
-    <meta name="generator" content="sphinx-5.0.2, furo 2022.06.21"/>
+    <!-- Generated with Sphinx 6.2.1 and Furo 2023.03.27 -->
         <title>hydrotools._restclient.urllib module - OWPHydroTools 2.1.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -134,7 +134,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -149,7 +149,7 @@
   <span class="sidebar-brand-text">OWPHydroTools 2.1.2 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -208,7 +208,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -216,7 +217,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -226,7 +227,7 @@
 <span id="hydrotools-restclient-urllib-module"></span><h1>hydrotools._restclient.urllib module<a class="headerlink" href="#module-hydrotools._restclient.urllib" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="hydrotools._restclient.urllib.Url">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hydrotools._restclient.urllib.</span></span><span class="sig-name descname"><span class="pre">Url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">url:</span> <span class="pre">~typing.Union[str,</span> <span class="pre">~hydrotools._restclient.urllib.Url],</span> <span class="pre">*,</span> <span class="pre">quote_treatment:</span> <span class="pre">~hydrotools._restclient.urllib_types.Quote</span> <span class="pre">=</span> <span class="pre">&lt;object</span> <span class="pre">object&gt;,</span> <span class="pre">safe:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">&lt;object</span> <span class="pre">object&gt;,</span> <span class="pre">quote_overide_map:</span> <span class="pre">~typing.Dict[str,</span> <span class="pre">str]</span> <span class="pre">=</span> <span class="pre">{}</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hydrotools._restclient.urllib.Url" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hydrotools._restclient.urllib.</span></span><span class="sig-name descname"><span class="pre">Url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">~hydrotools._restclient.urllib.Url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quote_treatment:</span> <span class="pre">~hydrotools._restclient.urllib_types.Quote</span> <span class="pre">=</span> <span class="pre">&lt;object</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">safe:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">&lt;object</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quote_overide_map:</span> <span class="pre">~typing.Dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str]</span> <span class="pre">=</span> <span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hydrotools._restclient.urllib.Url" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">UserString</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 <p>Treat urls analogous to pathlib.Path’s treatment of paths.</p>
 <p class="rubric">Examples</p>
@@ -298,7 +299,7 @@ individual <cite>key=value</cite> pairs each seperated by the <cite>&amp;</cite>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hydrotools._restclient.urllib.Url.add">
-<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">PRIMITIVE</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">PRIMITIVE</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#hydrotools._restclient.urllib.Url" title="hydrotools._restclient.urllib.Url"><span class="pre">Url</span></a></span></span><a class="headerlink" href="#hydrotools._restclient.urllib.Url.add" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">PRIMITIVE</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">PRIMITIVE</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#hydrotools._restclient.urllib.Url" title="hydrotools._restclient.urllib.Url"><span class="pre">Url</span></a></span></span><a class="headerlink" href="#hydrotools._restclient.urllib.Url.add" title="Permalink to this definition">#</a></dt>
 <dd><p>Add/append query parameters to <cite>Url</cite> object url via a dictionary. Dictionary
 values are either specified as either a primitive or list of primitives. Url
 query parameter values passed in list are represented with individual
@@ -379,7 +380,7 @@ urllib.parse.quote_plus.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="hydrotools._restclient.urllib.Variadic">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hydrotools._restclient.urllib.</span></span><span class="sig-name descname"><span class="pre">Variadic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimeter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">','</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hydrotools._restclient.urllib.Variadic" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hydrotools._restclient.urllib.</span></span><span class="sig-name descname"><span class="pre">Variadic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimeter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">','</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hydrotools._restclient.urllib.Variadic" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">UserString</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 <p>join list or tuple on some delimeter. The is useful when specifying arguments in
 a URL that do not conform to the &amp;key=value&amp;key=value2 convention.</p>
@@ -428,10 +429,10 @@ codecs.register_error that can handle UnicodeEncodeErrors.</p>
                 </div>
                 <div class="title">hydrotools._restclient.urllib_types module</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="hydrotools._restclient.async_helpers.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -453,25 +454,57 @@ codecs.register_error that can handle UnicodeEncodeErrors.</p>
             
           </div>
           <div class="right-details">
-            <div class="icons">
-              
-            </div>
+            
           </div>
         </div>
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">hydrotools._restclient.urllib module</a><ul>
+<li><a class="reference internal" href="#hydrotools._restclient.urllib.Url"><code class="docutils literal notranslate"><span class="pre">Url</span></code></a><ul>
+<li><a class="reference internal" href="#hydrotools._restclient.urllib.Url._abc_impl"><code class="docutils literal notranslate"><span class="pre">Url._abc_impl</span></code></a></li>
+<li><a class="reference internal" href="#hydrotools._restclient.urllib.Url._build_parse_result"><code class="docutils literal notranslate"><span class="pre">Url._build_parse_result()</span></code></a></li>
+<li><a class="reference internal" href="#hydrotools._restclient.urllib.Url._build_parse_result_cast_to_url"><code class="docutils literal notranslate"><span class="pre">Url._build_parse_result_cast_to_url()</span></code></a></li>
+<li><a class="reference internal" href="#hydrotools._restclient.urllib.Url._clean_parse_result"><code class="docutils literal notranslate"><span class="pre">Url._clean_parse_result()</span></code></a></li>
+<li><a class="reference internal" href="#hydrotools._restclient.urllib.Url._validate_construction"><code class="docutils literal notranslate"><span class="pre">Url._validate_construction()</span></code></a></li>
+<li><a class="reference internal" href="#hydrotools._restclient.urllib.Url.add"><code class="docutils literal notranslate"><span class="pre">Url.add()</span></code></a></li>
+<li><a class="reference internal" href="#hydrotools._restclient.urllib.Url.joinurl"><code class="docutils literal notranslate"><span class="pre">Url.joinurl()</span></code></a></li>
+<li><a class="reference internal" href="#hydrotools._restclient.urllib.Url.quote_treatment"><code class="docutils literal notranslate"><span class="pre">Url.quote_treatment</span></code></a></li>
+<li><a class="reference internal" href="#hydrotools._restclient.urllib.Url.quote_url"><code class="docutils literal notranslate"><span class="pre">Url.quote_url</span></code></a></li>
+<li><a class="reference internal" href="#hydrotools._restclient.urllib.Url.url"><code class="docutils literal notranslate"><span class="pre">Url.url</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#hydrotools._restclient.urllib.Variadic"><code class="docutils literal notranslate"><span class="pre">Variadic</span></code></a><ul>
+<li><a class="reference internal" href="#hydrotools._restclient.urllib.Variadic._abc_impl"><code class="docutils literal notranslate"><span class="pre">Variadic._abc_impl</span></code></a></li>
+<li><a class="reference internal" href="#hydrotools._restclient.urllib.Variadic.encode"><code class="docutils literal notranslate"><span class="pre">Variadic.encode()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
   </div>
 </div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/scripts/furo.js"></script>
     </body>
 </html>
