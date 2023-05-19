@@ -339,7 +339,15 @@ class IVDataService:
             "series",
         ]
         if include_expanded_metadata:
-            output_columns += expanded_columns + ["latitude", "longitude"]
+            expanded_column_mapping = {
+                "siteTypeCd": "site_type_code",
+                "hucCd": "huc_code",
+                "countyCd": "county_code",
+                "stateCd": "state_code",
+                "siteName": "site_name"
+                }
+            dfs = dfs.rename(columns=expanded_column_mapping)
+            output_columns += list(expanded_column_mapping.values()) + ["latitude", "longitude"]
         return dfs[output_columns]
 
     def get_raw(
