@@ -40,7 +40,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        python3 -m pip install -U pip
+        python3 -m pip install -U pip pytest
     - name: Echo dependency versions
       run: |
         python3 -m pip freeze
