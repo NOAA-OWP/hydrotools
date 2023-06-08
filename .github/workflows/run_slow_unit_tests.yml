@@ -1,9 +1,6 @@
 name: Run Slow Unit Tests
 
-on:
-    schedule:
-        # Run at 10 am every monday at 5 am cst (10 am utc)
-        - cron: '0 10 * * 1'
+on: push
 
 jobs:
   rest_client:
