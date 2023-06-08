@@ -1,12 +1,12 @@
-name: hydrotools.nwm_client_new
+name: hydrotools.metrics
 
 on:
   push:
     paths:
-    - 'python/nwm_client_new/**'
+    - 'python/metrics/**'
   pull_request:
     paths:
-    - 'python/nwm_client_new/**'
+    - 'python/metrics/**'
 
 jobs:
   unittests:
@@ -27,10 +27,10 @@ jobs:
     - name: Install dependencies
       run: |
         python3 -m pip install -U pip
-        python3 -m pip install ./python/nwm_client_new[develop]
+        python3 -m pip install ./python/metrics[develop]
     - name: Echo dependency versions
       run: |
         python3 -m pip freeze
     - name: Run unittests 
       run: |
-        python3 -m pytest -s -m "not slow" ./python/nwm_client_new/
+        python3 -m pytest -s -m "not slow" ./python/metrics/
