@@ -1,4 +1,4 @@
-name: Run Slow Unit Tests
+name: Weekly Slow Unit Tests
 
 on:
   schedule:
