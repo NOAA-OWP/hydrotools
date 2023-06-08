@@ -1,6 +1,9 @@
 name: Run Slow Unit Tests
 
-on: [push, pull_request]
+on:
+  schedule:
+    # Run at 10 am every monday at 5 am cst (10 am utc)
+    - cron: '0 10 * * 1'
 
 jobs:
   rest_client:
@@ -45,7 +48,7 @@ jobs:
     - name: Install dependencies
       run: |
         python3 -m pip install -U pip
-        python3 -m pip install ./python/_restclient[develop]
+        python3 -m pip install ./python/_restclient
         python3 -m pip install ./python/nwis_client[develop]
     - name: Echo dependency versions
       run: |
@@ -119,6 +122,7 @@ jobs:
     - name: Install dependencies
       run: |
         python3 -m pip install -U pip
+        python3 -m pip install ./python/caches
         python3 -m pip install ./python/nwm_client[gcp,develop]
     - name: Echo dependency versions
       run: |

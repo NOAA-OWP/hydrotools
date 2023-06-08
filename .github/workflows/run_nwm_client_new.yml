@@ -1,9 +1,12 @@
 name: hydrotools.nwm_client_new
 
 on:
-  schedule:
-    # Run at 10 am every monday at 5 am cst (10 am utc)
-    - cron: '0 10 * * 1'
+  push:
+    paths:
+    - 'python/nwm_client_new/**'
+  pull_request:
+    paths:
+    - 'python/nwm_client_new/**'
 
 jobs:
   unittests:
