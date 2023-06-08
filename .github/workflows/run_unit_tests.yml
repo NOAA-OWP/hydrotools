@@ -4,9 +4,23 @@ on:
   push:
     paths-ignore:
       - './python/nwm_client_new/**'
+      - './python/_restclient/**'
+      - './python/nwis_client/**'
+      - './python/svi_client/**'
+      - './python/nwm_client/**'
+      - './python/metrics/**'
+      - './python/events/**'
+      - './python/caches/**'
   pull_request:
     paths-ignore:
       - './python/nwm_client_new/**'
+      - './python/_restclient/**'
+      - './python/nwis_client/**'
+      - './python/svi_client/**'
+      - './python/nwm_client/**'
+      - './python/metrics/**'
+      - './python/events/**'
+      - './python/caches/**'
 
 jobs:
   unittests:
@@ -27,16 +41,9 @@ jobs:
     - name: Install dependencies
       run: |
         python3 -m pip install -U pip
-        python3 -m pip install ./python/_restclient[develop]
-        python3 -m pip install ./python/nwis_client[develop]
-        python3 -m pip install ./python/caches[develop]
-        python3 -m pip install ./python/nwm_client[develop,gcp]
-        python3 -m pip install ./python/events[develop]
-        python3 -m pip install ./python/metrics[develop]
-        python3 -m pip install ./python/svi_client[develop]
     - name: Echo dependency versions
       run: |
         python3 -m pip freeze
     - name: Run all unittests 
       run: |
-        python3 -m pytest -s -m "not slow" --ignore=./python/nwm_client_new
+        python3 -m pytest -s -m "not slow" --ignore=./python/nwm_client_new --ignore=./python/_restclient --ignore=./python/nwis_client --ignore=./python/caches --ignore=./python/nwm_client --ignore=./python/svi_client --ignore=./python/events --ignore=./python/metrics
