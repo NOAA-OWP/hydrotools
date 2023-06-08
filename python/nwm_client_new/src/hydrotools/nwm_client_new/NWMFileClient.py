@@ -207,7 +207,12 @@ class NWMFileClient(NWMClient):
 
         # Clean-up NetCDF files
         if self.cleanup_files:
-            shutil.rmtree(self.file_directory)
+            try:
+                shutil.rmtree(self.file_directory)
+            except OSError:
+                message = (f"Unable to delete {self.file_directory}")
+                warnings.warn(message, RuntimeWarning)
+
 
         # Limit to canonical columns
         # NOTE I could not keep dask from adding a "dir0" column using either
