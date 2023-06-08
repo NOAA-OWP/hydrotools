@@ -6,6 +6,7 @@
 ![hydrotools.nwm_client_new testing status](https://github.com/noaa-owp/hydrotools/actions/workflows/run_nwm_client_new.yml/badge.svg)
 ![hydrotools._restclient testing status](https://github.com/noaa-owp/hydrotools/actions/workflows/run_rest_client.yml/badge.svg)
 ![hydrotools.svi_client testing status](https://github.com/noaa-owp/hydrotools/actions/workflows/run_svi_client.yml/badge.svg)
+![weekly unit tests](https://github.com/noaa-owp/hydrotools/actions/workflows/run_slow_unit_tests.yml/badge.svg)
 
 ![OWPHydroTools](https://raw.githubusercontent.com/NOAA-OWP/hydrotools/main/docs/banner.png)
 
