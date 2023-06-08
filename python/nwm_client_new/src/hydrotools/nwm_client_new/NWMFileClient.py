@@ -9,50 +9,55 @@ Classes
 NWMFileClient
 """
 
-from .NWMClient import NWMClient, QueryError, CacheNotFoundError
-from typing import Union, List
+from .NWMClient import NWMClient, QueryError, StoreNotFoundError
+from typing import Union, List, Dict
 from pathlib import Path
 from .NWMClientDefaults import _NWMClientDefault
-from .ParquetCache import ParquetCache
+from .ParquetStore import ParquetStore
 from .NWMFileCatalog import NWMFileCatalog
+import numpy as np
 import pandas as pd
 import ssl
 import dask.dataframe as dd
-from urllib.parse import unquote
 from .FileDownloader import FileDownloader
 from .NWMFileProcessor import NWMFileProcessor
+import numpy.typing as npt
 import warnings
-import shutil
+from shutil import rmtree
 
 class NWMFileClient(NWMClient):
     def __init__(
         self,
-        file_directory: Union[str, Path] = "NWMFileClient_NetCDF_files",
-        dataframe_cache: Union[ParquetCache, None] = _NWMClientDefault.CACHE,
+        file_directory: Union[str, Path] = _NWMClientDefault.DOWNLOAD_DIRECTORY,
+        dataframe_store: Union[ParquetStore, None] = _NWMClientDefault.STORE,
         catalog: NWMFileCatalog = _NWMClientDefault.CATALOG,
         location_metadata_mapping: pd.DataFrame = _NWMClientDefault.CROSSWALK,
         ssl_context: ssl.SSLContext = _NWMClientDefault.SSL_CONTEXT,
-        cleanup_files: bool = True
+        cleanup_files: bool = False,
+        unit_system: str = "SI"
         ) -> None:
         """Client class for retrieving data as dataframes from a remote 
         file-based source of National Water Model data.
 
         Parameters
         ----------
-        file_directory: str or pathlib.Path, optional, default None
-            Directory to save downloaded NetCDF files. If None, will use 
-            temporary files.
-        dataframe_cache: ParquetCache, default ParquetCache("nwm_cache.parquet")
-            Local parquet directory used to locally cache retrieved dataframes.
+        file_directory: str or pathlib.Path, optional, default "NWMFileClient_NetCDF_files"
+            Directory to save downloaded NetCDF files.
+        dataframe_store: ParquetStore, default ParquetStore("nwm_store.parquet")
+            Local parquet directory used to locally store retrieved dataframes.
         catalog: NWMFileCatalog, optional, default GCPFileCatalog()
             NWMFileCatalog object used to discover NWM files.
         location_metadata_mapping: pandas.DataFrame with nwm_feature_id Index and
             columns of corresponding site metadata. Defaults to 7500+ usgs_site_code
             used by the NWM for data assimilation.
-        ssl_context: ssl.SSLContext, optional, default context
+        ssl_context: ssl.SSLContext, optional, default default_context
             SSL configuration context.
-        cleanup_files: bool, default True
+        cleanup_files: bool, default False
             Delete downloaded NetCDF files upon program exit.
+        unit_system: str, optional, default 'SI'
+            The default measurement_unit for NWM streamflow data are cubic meter per second, 
+            meter per second, and meter. Setting this option to "US" will convert the units 
+            to cubic foot per second, foot per second, or foot respectively.
 
         Returns
         -------
@@ -63,11 +68,11 @@ class NWMFileClient(NWMClient):
         # Set file output directory
         self.file_directory = file_directory
 
-        # Set dataframe cache
-        if dataframe_cache:
-            self.dataframe_cache = dataframe_cache
+        # Set dataframe store
+        if dataframe_store:
+            self.dataframe_store = dataframe_store
         else:
-            self.dataframe_cache = None
+            self.dataframe_store = None
 
         # Set file catalog
         self.catalog = catalog
@@ -81,29 +86,39 @@ class NWMFileClient(NWMClient):
         # Set cleanup flag
         self.cleanup_files = cleanup_files
 
-    def get_cycle(
+        # Validate system of units
+        if unit_system not in _NWMClientDefault.VALID_UNIT_SYSTEMS:
+            message = f'Invalid unit system "{unit_system}". Must select from {str(self.valid_unit_systems)}'
+            raise ValueError(message)
+        else:
+            self.unit_system = unit_system
+
+    def get_files(
         self,
         configuration: str,
-        reference_time: str,
-        netcdf_dir: Union[str, Path]
-        ) -> dd.DataFrame:
-        """Retrieve a single National Water Model cycle as a 
-        dask.dataframe.DataFrame.
+        reference_time: pd.Timestamp,
+        group_size: int = 20
+        ) -> Dict[str, List[Path]]:
+        """Download files for a single National Water Model cycle.
         
         Parameters
         ----------
         configuration: str, required
             NWM configuration cycle.
-        reference_time: str, required
-            Reference time string in %Y%m%dT%HZ format. 
-            e.g. '20210912T01Z'
-        netcdf_dir: str or pathlib.Path, required
-            Directory to save downloaded NetCDF files.
+        reference_time: datetime-like, required
+            pandas.Timestamp compatible datetime object
+        group_size: int, optional, default 20
+            Files are downloaded in groups of 20 by default. This is to accomodate the 
+            xarray, dask, and HDF5 backends that may struggle with opening too many files
+            at once. This setting is mostly relevant to retrieving medium range forecasts.
 
         Returns
         -------
-        dask.dataframe.DataFrame of NWM data
+        dict mapping a group string key to a list of local file paths. 
         """
+        # Validate reference times
+        reference_time = pd.Timestamp(reference_time)
+
         # Generate list of urls
         urls = self.catalog.list_blobs(
             configuration=configuration,
@@ -117,11 +132,14 @@ class NWMFileClient(NWMClient):
             raise QueryError(message)
 
         # Generate local filenames
-        filenames = [unquote(url).split("/")[-1] for url in urls]
+        filenames = [f"timestep_{idx}.nc" for idx, _ in enumerate(urls)]
+
+        # Output subdirectory
+        subdirectory = self.file_directory / configuration / reference_time.strftime("RT%Y%m%dT%HZ")
 
         # Setup downloader
         downloader = FileDownloader(
-            output_directory=netcdf_dir,
+            output_directory=subdirectory,
             create_directory=True,
             ssl_context=self.ssl_context
             )
@@ -129,114 +147,182 @@ class NWMFileClient(NWMClient):
         # Download files
         downloader.get(zip(urls,filenames))
 
-        # Get dataset
-        ds = NWMFileProcessor.get_dataset(
-            input_directory=netcdf_dir,
-            feature_id_filter=self.crosswalk.index
-            )
-
-        # Convert to dataframe
-        df = NWMFileProcessor.convert_to_dask_dataframe(ds)
-
-        # Canonicalize
-        return NWMClient.canonicalize_dask_dataframe(
-            df=df,
-            configuration=configuration
-        )
+        # Return nested list of files
+        files = sorted(list(subdirectory.glob("*.nc")))
+        num_groups = len(files) // group_size + 1
+        file_groups = np.array_split(files, num_groups)
+        return {f"group_{idx}": fg for idx, fg in enumerate(file_groups)}
 
     def get(
         self,
-        configuration: str,
-        reference_times: List[str] = None,
+        configurations: List[str],
+        reference_times: npt.ArrayLike,
+        nwm_feature_ids: npt.ArrayLike = _NWMClientDefault.CROSSWALK.index,
+        variables: List[str] = _NWMClientDefault.VARIABLES,
         compute: bool = True
         ) -> Union[pd.DataFrame, dd.DataFrame]:
-        """Retrieve National Water Model data as a DataFrame.
+        """Abstract method to retrieve National Water Model data as a 
+        DataFrame.
         
         Parameters
         ----------
-        configuration: str, required
-            NWM configuration cycle.
-        reference_times: List[str], optional, default None
-            List of reference time strings in %Y%m%dT%HZ format. 
-            e.g. ['20210912T01Z',]
+        configurations: List[str], required
+            List of NWM configurations.
+        reference_times: array-like, required
+            array-like of reference times. Should be compatible with pandas.Timestamp.
+        nwm_feature_ids: array-like, optional
+            array-like of NWM feature IDs to return. Defaults to channel features 
+            with a known USGS mapping.
+        variables: List[str], optional, default ['streamflow']
+            List of variables to retrieve from NWM files.
         compute: bool, optional, default True
-            Return a pandas.DataFrame instead of a dask.dataframe.DataFrame.
+            When True returns a pandas.DataFrame. When False returns a dask.dataframe.DataFrame.
 
         Returns
         -------
         dask.dataframe.DataFrame of NWM data or a pandas.DataFrame in canonical 
         format.
         """
-        # Check for cache
-        if self.dataframe_cache == None:
-            raise CacheNotFoundError("get requires a cache. Set a cache or use get_cycle.")
+        # Check store
+        if not self.dataframe_store:
+            raise StoreNotFoundError("get requires a dataframe store")
+        
+        # Validate reference times
+        reference_times = [pd.Timestamp(rft) for rft in reference_times]
 
-        # List of individual parquet files
-        parquet_files = []
+        # Put features in array
+        nwm_feature_ids = np.array(nwm_feature_ids)
 
-        # Cache data
-        for reference_time in reference_times:
-            # Set subdirectory
-            subdirectory = f"{configuration}/RT{reference_time}"
+        # Collect dataframes
+        dfs = []
+        for cfg in configurations:
+            for rft in reference_times:
+                # Build datetime string
+                rft_str = rft.strftime("%Y%m%dT%HZ")
 
-            # Set download directory
-            netcdf_dir = self.file_directory / subdirectory
+                # Retrieve or build and store dataframes
+                for var in variables:
+                    # Generate key
+                    key = f"{cfg}_{rft_str}_{var}"
 
-            # Get dask dataframe
-            try:
-                df = self.dataframe_cache.get(
-                    function=self.get_cycle,
-                    subdirectory=subdirectory,
-                    configuration=configuration,
-                    reference_time=reference_time,
-                    netcdf_dir=netcdf_dir
+                    # Check store
+                    if key in self.dataframe_store:
+                        # Load data
+                        df = self.dataframe_store[key]
+
+                        # Check for features
+                        missing = ~np.isin(nwm_feature_ids, df["nwm_feature_id"].compute())
+                        missing_ids = nwm_feature_ids[missing]
+
+                        # Load
+                        dfs.append(df[df["nwm_feature_id"].isin(nwm_feature_ids)])
+
+                        # If no IDs are missing, continue
+                        if not np.any(missing):
+                            continue
+                    else:
+                        missing_ids = nwm_feature_ids
+
+                    # Process data
+                    # NOTE This may be parallizable. This funky mess exists because dask and xarray
+                    #  got fussy with the medium range data.
+                    keyed_files = self.get_files(cfg, rft)
+                    for group, files in keyed_files.items():
+                        # Build subkey
+                        subkey = f"{key}/{group}"
+
+                        # Open dataset
+                        ds = NWMFileProcessor.get_dataset(files, missing_ids, ["reference_time"]+variables)
+
+                        # Warn for no features
+                        if ds.feature_id.size == 0:
+                            message = f"These filter IDs returned no data: {missing_ids}"
+                            warnings.warn(message)
+                            continue
+                        
+                        # Convert to dask
+                        df = NWMFileProcessor.convert_to_dask_dataframe(ds)
+                        
+                        # Canonicalize
+                        df = df[["reference_time", "feature_id", "time", var]].rename(columns={
+                            "feature_id": "nwm_feature_id",
+                            "time": "value_time",
+                            var: "value"
+                        })
+
+                        # Add required columns
+                        df["measurement_unit"] = ds[var].attrs["units"]
+                        df["variable_name"] = var
+                        df["configuration"] = ds.attrs["model_configuration"]
+
+                        # Address ambigious "No-DA" cycle names
+                        if cfg.endswith("no_da"):
+                            df["configuration"] = df["configuration"] + "_no_da"
+                            
+                        # Map crosswalk
+                        for col in self.crosswalk:
+                            df[col] = df["nwm_feature_id"].map(self.crosswalk[col])
+
+                        # Save
+                        self.dataframe_store.append(subkey, df)
+
+                        # Append all parts
+                        df = self.dataframe_store[subkey]
+                        dfs.append(df[df["nwm_feature_id"].isin(missing_ids)])
+
+                        # Close dataset
+                        ds.close()
+
+        # Check for empty data
+        if not dfs:
+            message = (
+                f"Query returned no data for configurations {configurations}\n" + 
+                f"reference_times {reference_times}\n" + 
+                f"variables {variables}\n" + 
+                f"nwm_feature_ids {nwm_feature_ids}\n"
                 )
-            except QueryError:
-                message = (f"No data found for configuration '{configuration}' and " +
-                    f"reference time '{reference_time}'")
-                warnings.warn(message, RuntimeWarning)
-                continue
-
-            # Note file created
-            parquet_files.append(self.dataframe_cache.directory/subdirectory)
-
-        # Check file list
-        if len(parquet_files) == 0:
-            message = (f"Unable to retrieve any data.")
             raise QueryError(message)
 
         # Clean-up NetCDF files
         if self.cleanup_files:
-            shutil.rmtree(self.file_directory)
+            # Remove top directory
+            try:
+                rmtree(self.file_directory)
+            except OSError as e:
+                warnings.warn(str(e), RuntimeWarning)
 
-        # Limit to canonical columns
-        # NOTE I could not keep dask from adding a "dir0" column using either
-        #  fastparquet or pyarrow as backends
-        #  A future version of dask or the backends may fix this
-        columns = [
-            'nwm_feature_id',
-            'reference_time',
-            'value_time',
-            'value',
-            'configuration',
-            'variable_name',
-            'measurement_unit',
-            'usgs_site_code'
-            ]
+        # Concatenate
+        data = dd.multi.concat(dfs)
 
-        # Return all reference times
-        df = dd.read_parquet(parquet_files, columns=columns)
-        
-        # Return pandas dataframe
+        # Convert units
+        if self.unit_system == "US":
+            # Get conversions
+            c = _NWMClientDefault.NWM_TO_US_UNIT_CONVERSION
+
+            # Conversion factors
+            factors = data["measurement_unit"].map(c["conversion_factor"])
+            labels = data["measurement_unit"].map(c["measurement_unit_conversion"])
+
+            # Convert
+            data["value"] = data["value"].mul(factors)
+            data["measurement_unit"] = labels
+
+        # Return pandas.DataFrame
         if compute:
-            # Compute
-            df = df.compute()
+            # Convert to pandas
+            df = data.compute()
 
-            # Downcast
-            df["value"] = pd.to_numeric(df["value"], downcast="float")
+            # Optimize memory
             df["nwm_feature_id"] = pd.to_numeric(df["nwm_feature_id"], downcast="integer")
-            return df
-        return df
+            df["value"] = pd.to_numeric(df["value"], downcast="float")
+            for cat in ["measurement_unit", "usgs_site_code", "variable_name", "configuration"]:
+                df[cat] = df[cat].astype("category")
+
+            # Reset to unique index
+            return df.reset_index(drop=True)
+
+        # Return dask dataframe
+        return data
 
     @property
     def file_directory(self) -> Path:
@@ -248,13 +334,13 @@ class NWMFileClient(NWMClient):
         self._file_directory.mkdir(exist_ok=True, parents=True)
 
     @property
-    def dataframe_cache(self) -> ParquetCache:
-        return self._dataframe_cache
+    def dataframe_store(self) -> ParquetStore:
+        return self._dataframe_store
 
-    @dataframe_cache.setter
-    def dataframe_cache(self, 
-        dataframe_cache: Union[ParquetCache, None]) -> None:
-        self._dataframe_cache = dataframe_cache
+    @dataframe_store.setter
+    def dataframe_store(self, 
+        dataframe_store: Union[ParquetStore, None]) -> None:
+        self._dataframe_store = dataframe_store
 
     @property
     def catalog(self) -> NWMFileCatalog:
