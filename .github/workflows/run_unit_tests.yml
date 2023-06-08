@@ -3,10 +3,10 @@ name: nwm-client-new
 on:
   push:
     paths:
-      - './python/nwm_client_new/**'
+    - 'python/nwm_client_new/**'
   pull_request:
     paths:
-      - './python/nwm_client_new/**'
+    - 'python/nwm_client_new/**'
 
 jobs:
   unittests:
