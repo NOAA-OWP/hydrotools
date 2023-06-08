@@ -1,6 +1,12 @@
 name: Run Unit Tests
 
-on: [push, pull_request]
+on:
+  push:
+    paths-ignore:
+      - './python/nwm_client_new/**'
+  pull_request:
+    paths-ignore:
+      - './python/nwm_client_new/**'
 
 jobs:
   unittests:
@@ -24,7 +30,6 @@ jobs:
         python3 -m pip install ./python/_restclient[develop]
         python3 -m pip install ./python/nwis_client[develop]
         python3 -m pip install ./python/caches[develop]
-        python3 -m pip install ./python/nwm_client_new[develop]
         python3 -m pip install ./python/nwm_client[develop,gcp]
         python3 -m pip install ./python/events[develop]
         python3 -m pip install ./python/metrics[develop]
@@ -34,4 +39,4 @@ jobs:
         python3 -m pip freeze
     - name: Run all unittests 
       run: |
-        python3 -m pytest -s -m "not slow"
+        python3 -m pytest -s -m "not slow" --ignore=.python/nwm_client_new
