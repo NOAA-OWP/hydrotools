@@ -26,7 +26,8 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        python3 -m pip install -U pip
+        python3 -m pip install -U pip wheel
+        pythons3 -m pip install ./python/nwm_client_new[develop]
     - name: Echo dependency versions
       run: |
         python3 -m pip freeze
