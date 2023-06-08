@@ -1,0 +1,37 @@
+name: hydrotools.nwm_client
+
+on:
+  push:
+    paths:
+    - 'python/nwm_client/**'
+  pull_request:
+    paths:
+    - 'python/nwm_client/**'
+
+jobs:
+  unittests:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python3 -m pip install -U pip
+        python3 -m pip install ./python/caches
+        python3 -m pip install ./python/nwm_client[develop,gcp]
+    - name: Echo dependency versions
+      run: |
+        python3 -m pip freeze
+    - name: Run unittests 
+      run: |
+        python3 -m pytest -s -m "not slow" ./python/nwm_client/
