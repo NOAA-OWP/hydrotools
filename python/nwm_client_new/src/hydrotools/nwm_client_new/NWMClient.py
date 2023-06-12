@@ -17,7 +17,7 @@ import numpy.typing as npt
 from .NWMClientDefaults import _NWMClientDefault
 
 class StoreNotFoundError(Exception):
-    """Exception raised for methods that require a dataframe store."""
+    """Exception raised by methods that require a dataframe store."""
     pass
 
 class QueryError(Exception):
@@ -26,7 +26,7 @@ class QueryError(Exception):
     pass
 
 class NWMClient(ABC):
-    """Abstract base class for building National Water Model output data clients."""
+    """Abstract base class by building National Water Model output data clients."""
     
     @abstractmethod
     def get(
