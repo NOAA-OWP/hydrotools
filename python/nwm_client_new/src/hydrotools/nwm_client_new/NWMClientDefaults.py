@@ -25,9 +25,9 @@ from typing import List, Dict
 class NWMClientDefaults:
     """Stores application default options.
 
-    STORE: Configured ParquetStore instance.
+    STORE: Configured ParquetStore instance. Default is class level object, not instance object.
     CATALOG: Concrete NWM data source instance.
-    SSL_CONTEXT: ssl context instance.
+    SSL_CONTEXT: ssl context instance. Default is class level object, not instance object.
     ROUTELINK_URL: URL string path that points at an HDF5 file containing a
         pandas.DataFrame with NWM crosswalk data.
     VARIABLES: default list of variables to retrieve from channel_rt files.
@@ -38,7 +38,7 @@ class NWMClientDefaults:
         ID).
     NWM_TO_US_UNIT_CONVERSION: Propertying mapping NWM units to US standard units and conversion factors
     VALID_UNIT_SYSTEMS: Valid unit systems handled by client
-    DOWNLOAD_DIRECTORY: Local path to save downloaded NWM files.
+    DOWNLOAD_DIRECTORY: Local path to save downloaded NWM files. Default is class level object, not instance object.
     """
     STORE: ParquetStore = ParquetStore(
         "hydrotools_data/nwm_store.parquet",
