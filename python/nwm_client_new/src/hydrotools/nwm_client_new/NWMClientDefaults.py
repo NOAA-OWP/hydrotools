@@ -41,7 +41,7 @@ class NWMClientDefaults:
     DOWNLOAD_DIRECTORY: Local path to save downloaded NWM files.
     """
     STORE: ParquetStore = ParquetStore(
-        "nwm_store.parquet",
+        "hydrotools_data/nwm_store.parquet",
         write_index=False,
         compression="snappy"
     )
@@ -51,7 +51,7 @@ class NWMClientDefaults:
     VARIABLES: List[str] = field(default_factory=lambda: ["streamflow"])
     NWM_TO_SI_UNIT_MAPPING: Dict[str, str] = field(default_factory=lambda: {"m": "m", "m s-1": "m/s", "m3 s-1": "m^3/s"})
     SI_TO_US_UNIT_MAPPING: Dict[str, str] = field(default_factory=lambda: {"m": "ft", "m/s": "ft/s", "m^3/s": "ft^3/s"})
-    DOWNLOAD_DIRECTORY: Path = Path("NWMFileClient_NetCDF_files")
+    DOWNLOAD_DIRECTORY: Path = Path("hydrotools_data/NWMFileClient_NetCDF_files")
 
     def _download_and_read_routelink_file(self) -> dd.DataFrame:
         """Retrieve NWM RouteLink data from URL and return a 
