@@ -8,7 +8,7 @@ Classes
 -------
 NWMFileProcessor
 """
-from pathlib import Path
+
 import xarray as xr
 import dask.dataframe as dd
 import pandas as pd
@@ -16,6 +16,7 @@ import numpy as np
 import numpy.typing as npt
 from typing import List, Union
 import warnings
+from .NWMClientDefaults import _NWMClientDefault
 
 class NWMFileProcessor:
     """Provides a concrete interface for methods used to process National Water 
@@ -26,37 +27,34 @@ class NWMFileProcessor:
     @classmethod
     def get_dataset(
         cls,
-        input_directory: Union[str, Path],
-        feature_id_filter: npt.ArrayLike = [],
-        variables: List[str] = ["reference_time", "time", "streamflow"]
+        paths: Union[str, npt.ArrayLike],
+        feature_id_filter: npt.ArrayLike = _NWMClientDefault.CROSSWALK.index,
+        variables: List[str] = _NWMClientDefault.VARIABLES
         ) -> xr.Dataset:
         """Generate an xarray.Dataset from an input directory of NWM .nc files.
 
         Parameters
         ----------
-        input_directory: str, pathlib.Path, required
-            Directory containing collection of National Water Model NetCDF 
-            files.
-        feature_id_filter: array-like, optional, default []
-            Subset of feature IDs to return.
-        variables: list of str, optional, default ["reference_time", "time",
-             "streamflow"]
+        paths: str or array-like of paths, required
+            Glob string or array-like of paths passed directly to xarray.open_mfdataset
+        feature_id_filter: array-like, optional
+            Subset of feature IDs to return. Defaults to USGS assimilation locations.
+        variables: list of str, optional, default ["streamflow"]
              List of variables to retrieve from source files. Options include: 
-             'time', 'reference_time', 'feature_id', 'crs', 'streamflow', 
-             'nudge', 'velocity', 'qSfcLatRunoff', 'qBucket', 'qBtmVertRunoff'
-
+             'streamflow', 'nudge', 'velocity', 'qSfcLatRunoff', 'qBucket', 'qBtmVertRunoff'
+             
         Returns
         -------
-        xarray.Dataset of input_directory lazily loaded.
+        xarray.Dataset of paths lazily loaded.
         """
-        # Resolve input directory
-        input_directory = Path(input_directory)
-
-        # Generate file list
-        file_list = [f for f in input_directory.glob("*.nc")]
+        # Minimum coordinates
+        coordinates = []
+        for c in ["feature_id", "time", "reference_time"]:
+            if c not in variables:
+                coordinates.append(c)
 
         # Open dataset
-        ds = xr.open_mfdataset(file_list, engine="netcdf4")
+        ds = xr.open_mfdataset(paths, engine="netcdf4")
 
         # Prepare feature_id filter
         if len(feature_id_filter) != 0:
@@ -65,7 +63,7 @@ class NWMFileProcessor:
 
             # Subset by feature ID and variable
             try:
-                return ds.sel(feature_id=feature_id_filter)[variables]
+                return ds.sel(feature_id=feature_id_filter)[coordinates+variables]
             except KeyError:
                 # Validate filter IDs
                 check = np.isin(feature_id_filter, ds.feature_id)
@@ -78,10 +76,10 @@ class NWMFileProcessor:
                 warnings.warn(message)
 
                 # Subset by valid feature ID and variable
-                return ds.sel(feature_id=feature_id_filter[check])[variables]
+                return ds.sel(feature_id=feature_id_filter[check])[coordinates+variables]
 
         # Subset by variable only
-        return ds[variables]
+        return ds[coordinates+variables]
 
     @classmethod
     def convert_to_dask_dataframe(
@@ -104,7 +102,6 @@ class NWMFileProcessor:
 
         # Compute number of partitions
         #  Best practice is ~100 MB per partition
-        #  TODO Make this a parameter
         npartitions = 1 + len(df.index) // 2_400_000
 
         # Sort by feature ID
