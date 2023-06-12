@@ -20,6 +20,14 @@ from tempfile import TemporaryDirectory
 from .FileDownloader import FileDownloader
 from pathlib import Path
 from typing import List, Dict, Literal
+from enum import Enum
+
+class MeasurementUnitSystem(Enum):
+    """A system of units to define measurements.
+    Options are SI or US.
+    """
+    SI = "SI"
+    US = "US"
 
 @dataclass
 class NWMClientDefaults:
@@ -37,8 +45,8 @@ class NWMClientDefaults:
         point feature data source identifiers (i.e. USGS gage id -> NWM feature 
         ID).
     NWM_TO_US_UNIT_CONVERSION: Propertying mapping NWM units to US standard units and conversion factors
-    VALID_UNIT_SYSTEMS: Valid unit systems handled by client
     DOWNLOAD_DIRECTORY: Local path to save downloaded NWM files. Default is class level object, not instance object.
+    UNIT_SYSTEM: Default system of measurements.
     """
     STORE: ParquetStore = ParquetStore(
         "hydrotools_data/nwm_store.parquet",
@@ -52,7 +60,7 @@ class NWMClientDefaults:
     NWM_TO_SI_UNIT_MAPPING: Dict[str, str] = field(default_factory=lambda: {"m": "m", "m s-1": "m/s", "m3 s-1": "m^3/s"})
     SI_TO_US_UNIT_MAPPING: Dict[str, str] = field(default_factory=lambda: {"m": "ft", "m/s": "ft/s", "m^3/s": "ft^3/s"})
     DOWNLOAD_DIRECTORY: Path = Path("hydrotools_data/NWMFileClient_NetCDF_files")
-    UNIT_SYSTEM: Literal["SI", "US"] = "US"
+    UNIT_SYSTEM: MeasurementUnitSystem = MeasurementUnitSystem.US
 
     def _download_and_read_routelink_file(self) -> dd.DataFrame:
         """Retrieve NWM RouteLink data from URL and return a 

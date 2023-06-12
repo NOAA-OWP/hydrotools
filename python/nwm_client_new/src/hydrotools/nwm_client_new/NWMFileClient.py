@@ -12,7 +12,7 @@ NWMFileClient
 from .NWMClient import NWMClient, QueryError, StoreNotFoundError
 from typing import Union, List, Dict
 from pathlib import Path
-from .NWMClientDefaults import _NWMClientDefault
+from .NWMClientDefaults import _NWMClientDefault, MeasurementUnitSystem
 from .ParquetStore import ParquetStore
 from .NWMFileCatalog import NWMFileCatalog
 import numpy as np
@@ -34,7 +34,7 @@ class NWMFileClient(NWMClient):
         location_metadata_mapping: pd.DataFrame = _NWMClientDefault.CROSSWALK,
         ssl_context: ssl.SSLContext = _NWMClientDefault.SSL_CONTEXT,
         cleanup_files: bool = False,
-        unit_system: str = "SI"
+        unit_system: MeasurementUnitSystem = _NWMClientDefault.UNIT_SYSTEM
         ) -> None:
         """Client class for retrieving data as dataframes from a remote 
         file-based source of National Water Model data.
@@ -54,9 +54,9 @@ class NWMFileClient(NWMClient):
             SSL configuration context.
         cleanup_files: bool, default False
             Delete downloaded NetCDF files upon program exit.
-        unit_system: str, optional, default 'SI'
+        unit_system: MeasurementUnitSystem, optional, default MeasurementUnitSystem.SI
             The default measurement_unit for NWM streamflow data are cubic meter per second, 
-            meter per second, and meter. Setting this option to "US" will convert the units 
+            meter per second, and meter. Setting this option to MeasurementUnitSystem.US will convert the units 
             to cubic foot per second, foot per second, or foot respectively.
 
         Returns
@@ -86,12 +86,8 @@ class NWMFileClient(NWMClient):
         # Set cleanup flag
         self.cleanup_files = cleanup_files
 
-        # Validate system of units
-        if unit_system not in _NWMClientDefault.VALID_UNIT_SYSTEMS:
-            message = f'Invalid unit system "{unit_system}". Must select from {str(self.valid_unit_systems)}'
-            raise ValueError(message)
-        else:
-            self.unit_system = unit_system
+        # Set unit system
+        self.unit_system = unit_system
 
     def get_files(
         self,
@@ -295,7 +291,7 @@ class NWMFileClient(NWMClient):
         data = dd.multi.concat(dfs)
 
         # Convert units
-        if self.unit_system == "US":
+        if self.unit_system == MeasurementUnitSystem.US:
             # Get conversions
             c = _NWMClientDefault.NWM_TO_US_UNIT_CONVERSION
 
