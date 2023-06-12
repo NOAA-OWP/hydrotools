@@ -43,16 +43,13 @@ class NWMFileCatalog(ABC):
 
         Parameters
         ----------
-        reference_time: datetime-like, required
+        reference_time: pandas.Timestamp, required
             pandas.Timestamp compatible datetime object
 
         Returns
         -------
         Two strings: issue_date, issue_time
         """
-        # Validate reference time
-        reference_time = pd.Timestamp(reference_time)
-        
         # Break-up reference time
         tokens = reference_time.strftime("%Y%m%dT%HZ").split('T')
         issue_date = tokens[0]
