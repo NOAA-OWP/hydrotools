@@ -19,7 +19,7 @@ import dask.dataframe as dd
 from tempfile import TemporaryDirectory
 from .FileDownloader import FileDownloader
 from pathlib import Path
-from typing import List, Dict
+from typing import List, Dict, Literal
 
 @dataclass
 class NWMClientDefaults:
@@ -52,6 +52,7 @@ class NWMClientDefaults:
     NWM_TO_SI_UNIT_MAPPING: Dict[str, str] = field(default_factory=lambda: {"m": "m", "m s-1": "m/s", "m3 s-1": "m^3/s"})
     SI_TO_US_UNIT_MAPPING: Dict[str, str] = field(default_factory=lambda: {"m": "ft", "m/s": "ft/s", "m^3/s": "ft^3/s"})
     DOWNLOAD_DIRECTORY: Path = Path("hydrotools_data/NWMFileClient_NetCDF_files")
+    UNIT_SYSTEM: Literal["SI", "US"] = "US"
 
     def _download_and_read_routelink_file(self) -> dd.DataFrame:
         """Retrieve NWM RouteLink data from URL and return a 
@@ -96,10 +97,6 @@ class NWMClientDefaults:
         nwm_to_us_conversion = {key: si_to_us_conversion[val] for key, val in self.NWM_TO_SI_UNIT_MAPPING.items()}
 
         return {"measurement_unit_conversion": nwm_to_us_mapping, "conversion_factor": nwm_to_us_conversion}
-
-    @property
-    def VALID_UNIT_SYSTEMS(self) -> List[str]:
-        return ['SI', 'US']
 
 # Initialize defaults
 _NWMClientDefault = NWMClientDefaults()
