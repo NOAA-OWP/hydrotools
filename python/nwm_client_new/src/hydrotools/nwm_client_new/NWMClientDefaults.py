@@ -47,7 +47,7 @@ class NWMClientDefaults:
     )
     CATALOG: NWMFileCatalog = GCPFileCatalog()
     SSL_CONTEXT: ssl.SSLContext = ssl.create_default_context()
-    ROUTELINK_URL: str = "https://www.hydroshare.org/resource/d154f19f762c4ee9b74be55f504325d3/data/contents/RouteLink.h5"
+    ROUTELINK_URL: str = "https://www.hydroshare.org/resource/b5f58460941c49578e311adb9823657a/data/contents/RouteLink.h5"
     VARIABLES: List[str] = field(default_factory=lambda: ["streamflow"])
     NWM_TO_SI_UNIT_MAPPING: Dict[str, str] = field(default_factory=lambda: {"m": "m", "m s-1": "m/s", "m3 s-1": "m^3/s"})
     SI_TO_US_UNIT_MAPPING: Dict[str, str] = field(default_factory=lambda: {"m": "ft", "m/s": "ft/s", "m^3/s": "ft^3/s"})
