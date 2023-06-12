@@ -16,7 +16,7 @@ $ python3 -m venv env
 $ source env/bin/activate
 $ python3 -m pip install --upgrade pip wheel
 
-# Install nwm_client_new
+# Install nwm_client
 $ python3 -m pip install hydrotools.nwm_client_new
 ```
 
@@ -25,56 +25,121 @@ $ python3 -m pip install hydrotools.nwm_client_new
 The following example demonstrates how one might use `hydrotools.nwm_client_new` to retrieve NWM streamflow forecasts.
 
 ### Code
+
+<details><summary><b>Retrieving data from google cloud</b></summary>
+
 ```python
-# Import the nwm Client
+# Import the NWM Client
 from hydrotools.nwm_client_new.NWMFileClient import NWMFileClient
-import pandas as pd
 
 # Instantiate model data client
-#  Defaults to Google Cloud Platform
-client = NWMFileClient()
-
-# Set reference time
-yesterday = pd.Timestamp.utcnow() - pd.Timedelta("1D")
-reference_time = yesterday.strftime("%Y%m%dT%-HZ")
+#  By default, NWM values are in SI units
+#  If you prefer US standard units, nwm_client can return
+#  values in US standard units by setting the unit_system parameter 
+#  to "US".
+# model_data_client = NWMFileClient(unit_system="US")
+model_data_client = NWMFileClient()
 
 # Retrieve forecast data
-#  By default, only retrieves data at USGS gaging sites in
-#  CONUS that are used for model assimilation
-forecast_data = client.get(
-    configuration = "short_range",
-    reference_times = [reference_time]
+forecast_data = model_data_client.get(
+    configurations = ["short_range"],
+    reference_times = ["20210101T01Z"],
+    nwm_feature_ids = [724696]
     )
 
 # Look at the data
-print(forecast_data.info(memory_usage='deep'))
-print(forecast_data[['value_time', 'value']].head())
+print(forecast_data.head())
 ```
 ### Example output
 ```console
-<class 'pandas.core.frame.DataFrame'>
-RangeIndex: 137628 entries, 0 to 137627
-Data columns (total 8 columns):
- #   Column            Non-Null Count   Dtype         
----  ------            --------------   -----         
- 0   reference_time    137628 non-null  datetime64[ns]
- 1   value_time        137628 non-null  datetime64[ns]
- 2   nwm_feature_id    137628 non-null  int64         
- 3   value             137628 non-null  float32       
- 4   usgs_site_code    137628 non-null  category      
- 5   configuration     137628 non-null  category      
- 6   measurement_unit  137628 non-null  category      
- 7   variable_name     137628 non-null  category      
-dtypes: category(4), datetime64[ns](2), float32(1), int64(1)
-memory usage: 5.1 MB
-None
-           value_time  value
-0 2021-01-01 02:00:00   5.29
-1 2021-01-01 03:00:00   5.25
-2 2021-01-01 04:00:00   5.20
-3 2021-01-01 05:00:00   5.12
-4 2021-01-01 06:00:00   5.03
+       reference_time  nwm_feature_id          value_time      value measurement_unit variable_name configuration usgs_site_code
+0 2021-01-01 01:00:00          724696 2021-01-01 02:00:00  56.340000           m3 s-1    streamflow   short_range       01013500
+1 2021-01-01 01:00:00          724696 2021-01-01 17:00:00  56.090000           m3 s-1    streamflow   short_range       01013500
+2 2021-01-01 01:00:00          724696 2021-01-01 16:00:00  56.119999           m3 s-1    streamflow   short_range       01013500
+3 2021-01-01 01:00:00          724696 2021-01-01 15:00:00  56.149998           m3 s-1    streamflow   short_range       01013500
+4 2021-01-01 01:00:00          724696 2021-01-01 14:00:00  56.180000           m3 s-1    streamflow   short_range       01013500
 ```
+
+</details>
+
+<details><summary><b>Retrieving data from Nomads</b></summary>
+
+```python
+# Import the NWM Client
+from hydrotools.nwm_client_new.NWMFileClient import NWMFileClient
+from hydrotools.nwm_client_new.HTTPFileCatalog import HTTPFileCatalog
+import pandas as pd
+
+# Instantiate model data client
+catalog = HTTPFileCatalog("https://nomads.ncep.noaa.gov/pub/data/nccf/com/nwm/prod/")
+model_data_client = NWMFileClient(catalog=catalog)
+
+# Set reference time
+yesterday = pd.Timestamp.utcnow() - pd.Timedelta("1D")
+
+# Retrieve forecast data
+forecast_data = model_data_client.get(
+    configurations = ["short_range"],
+    reference_times = [yesterday],
+    nwm_feature_ids = [724696]
+    )
+
+# Look at the data
+print(forecast_data.head())
+```
+### Example output
+```console
+       reference_time  nwm_feature_id          value_time      value measurement_unit variable_name configuration usgs_site_code
+0 2022-08-07 18:00:00          724696 2022-08-07 19:00:00  20.369999           m3 s-1    streamflow   short_range       01013500
+1 2022-08-07 18:00:00          724696 2022-08-08 10:00:00  24.439999           m3 s-1    streamflow   short_range       01013500
+2 2022-08-07 18:00:00          724696 2022-08-08 09:00:00  24.469999           m3 s-1    streamflow   short_range       01013500
+3 2022-08-07 18:00:00          724696 2022-08-08 08:00:00  24.490000           m3 s-1    streamflow   short_range       01013500
+4 2022-08-07 18:00:00          724696 2022-08-08 07:00:00  24.510000           m3 s-1    streamflow   short_range       01013500
+```
+
+</details>
+
+<details><summary><b>Retrieving data from a private file server</b></summary>
+
+```python
+# Import the NWM Client
+from hydrotools.nwm_client_new.NWMFileClient import NWMFileClient
+from hydrotools.nwm_client_new.HTTPFileCatalog import HTTPFileCatalog
+import ssl
+
+# Instantiate model data client
+catalog = HTTPFileCatalog(
+    "https://path-to-my-private-server.com/nwm-files", 
+    ssl_context=ssl.create_default_context(ca_file="/path/to/my/ca-bundle.crt")
+    )
+model_data_client = NWMFileClient(catalog=catalog, unit_system="US")
+
+# Retrieve forecast data
+forecast_data = model_data_client.get(
+    configurations = ["short_range"],
+    reference_times = ["2022-06-01T13"],
+    nwm_feature_ids = [724696]
+    )
+
+# Look at the data
+print(forecast_data.head())
+```
+### Example output
+```console
+       reference_time  nwm_feature_id          value_time        value measurement_unit variable_name configuration usgs_site_code
+0 2022-06-01 13:00:00          724696 2022-06-01 14:00:00  3586.910645           ft^3/s    streamflow   short_range       01013500
+1 2022-06-01 13:00:00          724696 2022-06-02 05:00:00  2167.260986           ft^3/s    streamflow   short_range       01013500
+2 2022-06-01 13:00:00          724696 2022-06-02 04:00:00  2168.673584           ft^3/s    streamflow   short_range       01013500
+3 2022-06-01 13:00:00          724696 2022-06-02 03:00:00  2172.558350           ft^3/s    streamflow   short_range       01013500
+4 2022-06-01 13:00:00          724696 2022-06-02 02:00:00  2177.855469           ft^3/s    streamflow   short_range       01013500
+```
+
+</details>
+
+### System Requirements
+We employ several methods to make sure the resulting `pandas.DataFrame` produced by `nwm_client` are as efficient and manageable as possible. Nonetheless, this package can potentially use a large amount of memory.
+
+The National Water Model generates multiple forecasts per day at over 3.7 million locations across the United States. A single forecast could be spread across hundreds of files and require repeated calls to the data source. The intermediate steps of retrieving and processing these files into leaner `DataFrame` may use several GB of memory. As such, recommended minimum requirements to use this package are a 4-core consumer processor and 8 GB of RAM.
 
 ## Development
 
