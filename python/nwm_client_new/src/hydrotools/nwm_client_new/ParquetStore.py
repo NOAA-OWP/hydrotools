@@ -27,6 +27,14 @@ class ParquetStore(MutableMapping):
         **kwargs
             Additional arguments passed to dask.dataframe.DataFrame.to_parquet
 
+        Notes
+        -----
+        ParquetStore is really a collection of conveniene methods for common 
+        data access patterns wrapped around a parquet file. This module 
+        was not specifically designed for parallel workflows and should not 
+        be considered thread-safe. For more complicated file-io patterns 
+        see the dask.dataframe.DataFrame documentation.
+
         Examples
         --------
         >>> import pandas as pd
