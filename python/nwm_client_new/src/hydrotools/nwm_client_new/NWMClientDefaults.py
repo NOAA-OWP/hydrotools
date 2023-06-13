@@ -19,7 +19,7 @@ import dask.dataframe as dd
 from tempfile import TemporaryDirectory
 from .FileDownloader import FileDownloader
 from pathlib import Path
-from typing import List, Dict, Literal
+from typing import List, Dict
 from enum import Enum
 
 class MeasurementUnitSystem(Enum):
