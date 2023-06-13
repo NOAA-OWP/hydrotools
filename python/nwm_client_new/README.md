@@ -105,6 +105,7 @@ print(forecast_data.head())
 # Import the NWM Client
 from hydrotools.nwm_client_new.NWMFileClient import NWMFileClient
 from hydrotools.nwm_client_new.HTTPFileCatalog import HTTPFileCatalog
+from hydrotools.nwm_client_new.NWMClientDefaults import MeasurementUnitSystem
 import ssl
 
 # Instantiate model data client
@@ -112,7 +113,7 @@ catalog = HTTPFileCatalog(
     "https://path-to-my-private-server.com/nwm-files", 
     ssl_context=ssl.create_default_context(ca_file="/path/to/my/ca-bundle.crt")
     )
-model_data_client = NWMFileClient(catalog=catalog, unit_system="US")
+model_data_client = NWMFileClient(catalog=catalog, unit_system=MeasurementUnitSystem.US)
 
 # Retrieve forecast data
 forecast_data = model_data_client.get(
