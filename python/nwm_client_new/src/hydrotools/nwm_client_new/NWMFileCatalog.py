@@ -10,6 +10,7 @@ NWMFileCatalog
 """
 from abc import ABC, abstractmethod
 from typing import List, Tuple
+import pandas as pd
 
 class NWMFileCatalog(ABC):
     """Abstract base class for sources of NWM file data."""
@@ -37,21 +38,20 @@ class NWMFileCatalog(ABC):
             raise ValueError(message)
 
     @staticmethod
-    def separate_datetime(reference_time: str) -> Tuple[str, str]:
+    def separate_datetime(reference_time: pd.Timestamp) -> Tuple[str, str]:
         """Divide reference time into separate date and time strings.
 
         Parameters
         ----------
-        reference_time: str, required
-            Reference time string formatted like %Y%m%dT%HZ, for example:
-            "20210910T00Z"
+        reference_time: pandas.Timestamp, required
+            pandas.Timestamp compatible datetime object
 
         Returns
         -------
         Two strings: issue_date, issue_time
         """
         # Break-up reference time
-        tokens = reference_time.split('T')
+        tokens = reference_time.strftime("%Y%m%dT%HZ").split('T')
         issue_date = tokens[0]
         issue_time = tokens[1].lower()
         return issue_date, issue_time

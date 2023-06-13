@@ -125,7 +125,7 @@ class FileDownloader:
         async with aiohttp.ClientSession(connector=connector) as session:
             await asyncio.gather(*[self.get_file(url, filename, session) for url, filename in src_dst_list])
 
-    def get(self, src_dst_list: List[Tuple[str,str]]) -> None:
+    def get(self, src_dst_list: List[Tuple[str,str]], overwrite: bool = False) -> None:
         """Setup event loop and asynchronously download multiple files. If 
         self.create_directory is True, an output directory will be 
         created if needed.
@@ -136,6 +136,9 @@ class FileDownloader:
             List of tuples containing two strings. The first string is the 
             source URL from which to retrieve a file, the second string is the
             local filename where the file will be saved.
+        overwrite: bool, optional, default False
+            If True will overwrite destination file, if it exists. If False, 
+            download of this file is skipped.
             
         Returns
         -------
@@ -151,6 +154,17 @@ class FileDownloader:
         >>>     [("https://pandas.pydata.org/docs/user_guide/index.html","index.html")]
         >>>     )
         """
+        # Shorten list to files that do not exist
+        if not overwrite:
+            short = []
+            for src, dst in src_dst_list:
+                if (self.output_directory / dst).exists():
+                    message = f"File exists, skipping download of {self.output_directory / dst}"
+                    warnings.warn(message, UserWarning)
+                    continue
+                short.append((src, dst))
+            src_dst_list = short
+        
         # Check output directory, optionally create
         if not self.output_directory.exists():
             if self.create_directory:

@@ -30,7 +30,7 @@ def test_parameters(setup_gcp, setup_http):
 def test_gcp_list_blobs(setup_gcp):
     blobs = setup_gcp.list_blobs(
         configuration="analysis_assim",
-        reference_time=reference_time
+        reference_time=pd.Timestamp(reference_time)
     )
     assert len(blobs) == 3
 
@@ -38,6 +38,6 @@ def test_gcp_list_blobs(setup_gcp):
 def test_http_list_blobs(setup_http):
     blobs = setup_http.list_blobs(
         configuration="analysis_assim",
-        reference_time=reference_time
+        reference_time=pd.Timestamp(reference_time)
     )
     assert len(blobs) == 3
