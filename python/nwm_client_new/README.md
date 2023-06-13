@@ -36,8 +36,10 @@ from hydrotools.nwm_client_new.NWMFileClient import NWMFileClient
 #  By default, NWM values are in SI units
 #  If you prefer US standard units, nwm_client can return
 #  values in US standard units by setting the unit_system parameter 
-#  to "US".
-# model_data_client = NWMFileClient(unit_system="US")
+#  to MeasurementUnitSystem.US
+# 
+# from hydrotools.nwm_client_new.NWMClientDefaults import MeasurementUnitSystem
+# model_data_client = NWMFileClient(unit_system=MeasurementUnitSystem.US)
 model_data_client = NWMFileClient()
 
 # Retrieve forecast data
