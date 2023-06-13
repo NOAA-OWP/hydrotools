@@ -60,7 +60,7 @@ class NWMClientDefaults:
     NWM_TO_SI_UNIT_MAPPING: Dict[str, str] = field(default_factory=lambda: {"m": "m", "m s-1": "m/s", "m3 s-1": "m^3/s"})
     SI_TO_US_UNIT_MAPPING: Dict[str, str] = field(default_factory=lambda: {"m": "ft", "m/s": "ft/s", "m^3/s": "ft^3/s"})
     DOWNLOAD_DIRECTORY: Path = Path("hydrotools_data/NWMFileClient_NetCDF_files")
-    UNIT_SYSTEM: MeasurementUnitSystem = MeasurementUnitSystem.US
+    UNIT_SYSTEM: MeasurementUnitSystem = MeasurementUnitSystem.SI
 
     def _download_and_read_routelink_file(self) -> dd.DataFrame:
         """Retrieve NWM RouteLink data from URL and return a 
