@@ -7,7 +7,7 @@ on:
   pull_request:
     paths:
     - 'python/nwm_client_new/**'
-    workflow_dispatch:
+  workflow_dispatch:
 
 jobs:
   unittests:
