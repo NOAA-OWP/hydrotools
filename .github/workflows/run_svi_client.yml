@@ -7,6 +7,7 @@ on:
   pull_request:
     paths:
     - 'python/svi_client/**'
+    workflow_dispatch:
 
 jobs:
   unittests:
