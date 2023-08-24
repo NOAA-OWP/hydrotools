@@ -76,6 +76,9 @@ class ParquetStore(MutableMapping):
     def __str__(self) -> str:
         # Return root directory string
         return str(self.root)
+    
+    def __bool__(self) -> bool:
+        return bool(str(self))
         
     def __getitem__(self, subdirectory: str) -> dd.DataFrame:
         # Set path
