@@ -110,12 +110,19 @@ from hydrotools.nwm_client_new.HTTPFileCatalog import HTTPFileCatalog
 from hydrotools.nwm_client_new.NWMClientDefaults import MeasurementUnitSystem
 import ssl
 
+# Create ssl context
+context = ssl.create_default_context(cafile="/path/to/my/ca-bundle.crt")
+
 # Instantiate model data client
 catalog = HTTPFileCatalog(
-    "https://path-to-my-private-server.com/nwm-files", 
-    ssl_context=ssl.create_default_context(ca_file="/path/to/my/ca-bundle.crt")
+    "https://path-to-my-private-server.com/nwm/2.2/", 
+    ssl_context=context
     )
-model_data_client = NWMFileClient(catalog=catalog, unit_system=MeasurementUnitSystem.US)
+model_data_client = NWMFileClient(
+    catalog=catalog,
+    unit_system=MeasurementUnitSystem.US,
+    ssl_context=context
+)
 
 # Retrieve forecast data
 forecast_data = model_data_client.get(
