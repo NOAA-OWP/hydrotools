@@ -69,7 +69,7 @@ print(forecast_data.head())
 ```python
 # Import the NWM Client
 from hydrotools.nwm_client_new.NWMFileClient import NWMFileClient
-from hydrotools.nwm_client_new.HTTPFileCatalog import AzureFileCatalog
+from hydrotools.nwm_client_new.AzureFileCatalog import AzureFileCatalog
 import pandas as pd
 
 # Instantiate model data client
