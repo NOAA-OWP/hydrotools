@@ -64,6 +64,43 @@ print(forecast_data.head())
 
 </details>
 
+<details><summary><b>Retrieving data from Azure Blob Storage</b></summary>
+
+```python
+# Import the NWM Client
+from hydrotools.nwm_client_new.NWMFileClient import NWMFileClient
+from hydrotools.nwm_client_new.AzureFileCatalog import AzureFileCatalog
+import pandas as pd
+
+# Instantiate model data client
+catalog = AzureFileCatalog()
+model_data_client = NWMFileClient(catalog=catalog)
+
+# Set reference time
+yesterday = pd.Timestamp.utcnow() - pd.Timedelta("1D")
+
+# Retrieve forecast data
+forecast_data = model_data_client.get(
+    configurations = ["short_range"],
+    reference_times = [yesterday],
+    nwm_feature_ids = [724696]
+    )
+
+# Look at the data
+print(forecast_data.head())
+```
+### Example output
+```console
+       reference_time  nwm_feature_id          value_time      value measurement_unit variable_name configuration usgs_site_code
+0 2022-08-07 18:00:00          724696 2022-08-07 19:00:00  20.369999           m3 s-1    streamflow   short_range       01013500
+1 2022-08-07 18:00:00          724696 2022-08-08 10:00:00  24.439999           m3 s-1    streamflow   short_range       01013500
+2 2022-08-07 18:00:00          724696 2022-08-08 09:00:00  24.469999           m3 s-1    streamflow   short_range       01013500
+3 2022-08-07 18:00:00          724696 2022-08-08 08:00:00  24.490000           m3 s-1    streamflow   short_range       01013500
+4 2022-08-07 18:00:00          724696 2022-08-08 07:00:00  24.510000           m3 s-1    streamflow   short_range       01013500
+```
+
+</details>
+
 <details><summary><b>Retrieving data from Nomads</b></summary>
 
 ```python
