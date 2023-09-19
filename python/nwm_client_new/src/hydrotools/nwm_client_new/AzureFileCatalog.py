@@ -12,6 +12,7 @@ Classes
 AzureFileCatalog
 """
 from .NWMFileCatalog import NWMFileCatalog
+from hydrotools._restclient.urllib import Url
 import azure.storage.blob
 import planetary_computer
 import adlfs
@@ -77,7 +78,11 @@ class AzureFileCatalog(NWMFileCatalog):
         blobs = fs.glob(f"nwm/nwm.{issue_date}/{configuration}/nwm.t{issue_time}*")
 
         # Return blob URLs
-        return [self.server+b for b in list(blobs) if must_contain in b]
+        return [
+            str(self.server / suffix) 
+            for suffix in list(blobs) 
+            if must_contain in suffix
+            ]
 
     @property
     def server(self) -> str:
@@ -85,5 +90,5 @@ class AzureFileCatalog(NWMFileCatalog):
 
     @server.setter
     def server(self, server: str) -> None:
-        self._server = server
+        self._server = Url(server)
     
