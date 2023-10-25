@@ -27,7 +27,7 @@ class RestClient:
     methods to simplify usage.
 
     Features
-    
+
     - Base url
     - SQLite request cache
     - Retry exponential backoff
@@ -241,7 +241,7 @@ class RestClient:
     def _patch_get(
         self, client_response: aiohttp.ClientResponse
     ) -> aiohttp.ClientResponse:
-        """ Wrap aiohttp.ClientResponse text and json coros in run_until_complete. Monkeypatch text and json with wrappers."""
+        """Wrap aiohttp.ClientResponse text and json coros in run_until_complete. Monkeypatch text and json with wrappers."""
         # May iter through methods and wrap all coro's in the future
         # however that may not work if a non-coro returns a async context manager for example
         text = wrap_coro_in_callable(client_response.text)
@@ -273,17 +273,17 @@ class RestClient:
 
     @property
     def base_url(self) -> str:
-        """ Base url """
+        """Base url"""
         return self._base_url
 
     @property
     def headers(self) -> dict:
-        """ GET request headers """
+        """GET request headers"""
         return self._headers
 
     def close(self) -> None:
-        """ Release aiohttp.ClientSession """
-         # Session never instantiated, thus cannot be closed
+        """Release aiohttp.ClientSession"""
+        # Session never instantiated, thus cannot be closed
         session = getattr(self, "_session", None)
         if session is None:
             return
@@ -305,7 +305,7 @@ class RestClient:
 def cached_response_to_client_response(
     cached_response: CachedResponse, *, loop: asyncio.AbstractEventLoop
 ):
-    """ Translation from aiohttp_client_cache.CachedResponse to aiohttp.ClientResponse """
+    """Translation from aiohttp_client_cache.CachedResponse to aiohttp.ClientResponse"""
     # Naive 'casting' to ClientResponse. Likely needs work to cover all cases.
     inst = ClientResponse(
         cached_response.method,
