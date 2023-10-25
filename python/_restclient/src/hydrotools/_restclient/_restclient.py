@@ -3,7 +3,6 @@ from aiohttp_client_cache.response import CachedResponse
 from aiohttp_client_cache import SQLiteBackend
 import aiohttp
 import forge
-import atexit
 from functools import reduce
 
 # Type hints
@@ -110,9 +109,6 @@ class RestClient:
                 ClientSession, cache=cache, retry=retry, n_retries=n_retries
             )()
         )  # type: ClientSession
-
-        # register session removal at normal exit
-        atexit.register(self.close)
 
     @GET_SIGNATURE
     def get(self, url, *, parameters, headers, **kwargs):
@@ -297,7 +293,6 @@ class RestClient:
                 add_to_loop(self._session.close())
 
     def __del__(self) -> None:
-        atexit.unregister(self.close)
         self.close()
 
     def __enter__(self):
