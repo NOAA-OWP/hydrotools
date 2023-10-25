@@ -14,14 +14,14 @@ import asyncio
 
 # local imports
 from .async_client import ClientSession
-from .async_helpers import AsyncToSerialHelper
+from ._async_helpers import add_to_loop, wrap_coro_in_callable, wrap_func_in_coro
 from .urllib import PRIMITIVE, Url
 from ._restclient_sigs import GET_SIGNATURE, MGET_SIGNATURE
 
 __all__ = ["RestClient"]
 
 
-class RestClient(AsyncToSerialHelper):
+class RestClient:
     """
     Class that simplifies writing RESTful client libraries and retrieval scripts. Behind
     the scenes requests are made asynchronously, however the API is exposed using serial
@@ -89,8 +89,7 @@ class RestClient(AsyncToSerialHelper):
         n_retries: int = 3,
         loop: asyncio.AbstractEventLoop = None,
     ):
-        # implicitly adds self._loop and gets loop if None provided
-        super().__init__(loop)
+        self._loop = loop or asyncio.get_event_loop()
         self._base_url = Url(base_url) if base_url is not None else None
         self._headers = headers
         self._retires = n_retries
@@ -106,8 +105,8 @@ class RestClient(AsyncToSerialHelper):
             )
 
         # wrap ClientSession in coroutine and call in event loop
-        self._session = self._add_to_loop(
-            self._wrap_func_in_coro(
+        self._session = add_to_loop(
+            wrap_func_in_coro(
                 ClientSession, cache=cache, retry=retry, n_retries=n_retries
             )()
         )  # type: ClientSession
@@ -135,7 +134,7 @@ class RestClient(AsyncToSerialHelper):
         aiohttp.ClientResponse
         """
 
-        return self._add_to_loop(
+        return add_to_loop(
             self._get(url, parameters=parameters, headers=headers, **kwargs)
         )
 
@@ -159,7 +158,7 @@ class RestClient(AsyncToSerialHelper):
         -------
         List[aiohttp.ClientResponse]
         """
-        return self._add_to_loop(
+        return add_to_loop(
             self._mget(urls, parameters=parameters, headers=headers, **kwargs)
         )
 
@@ -249,8 +248,8 @@ class RestClient(AsyncToSerialHelper):
         """ Wrap aiohttp.ClientResponse text and json coros in run_until_complete. Monkeypatch text and json with wrappers."""
         # May iter through methods and wrap all coro's in the future
         # however that may not work if a non-coro returns a async context manager for example
-        text = self._wrap_coro_in_callable(client_response.text)
-        json = self._wrap_coro_in_callable(client_response.json)
+        text = wrap_coro_in_callable(client_response.text)
+        json = wrap_coro_in_callable(client_response.json)
         # resign signatures
         text = forge.copy(aiohttp.ClientResponse.text, exclude="self")(text)
         json = forge.copy(aiohttp.ClientResponse.json, exclude="self")(json)
@@ -295,7 +294,7 @@ class RestClient(AsyncToSerialHelper):
 
         if not self._session.closed:
             if not self._loop.is_closed():
-                self._add_to_loop(self._session.close())
+                add_to_loop(self._session.close())
 
     def __del__(self) -> None:
         atexit.unregister(self.close)
