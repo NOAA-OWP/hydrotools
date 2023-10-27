@@ -129,7 +129,7 @@ class SVIClient:
         # map of dataset field names to canonical field names
         field_names = {
             v: k
-            for k, v in fnm.dict(exclude_unset=True, exclude={"svi_edition"}).items()
+            for k, v in fnm.dict(exclude_none=True, exclude={"svi_edition"}).items()
         }
 
         df = df.rename(columns=field_names)
