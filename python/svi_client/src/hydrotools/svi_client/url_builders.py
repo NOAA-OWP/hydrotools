@@ -68,7 +68,7 @@ def build_feature_server_url(
         if location != "us"
         else "1=1",
         "outFields": ",".join(
-            fnm.dict(exclude_unset=True, exclude={"svi_edition"}).values()
+            fnm.dict(exclude_none=True, exclude={"svi_edition"}).values()
         ),
         "returnGeometry": "true",
         "returnExceededLimitFeatures": "true",
