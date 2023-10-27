@@ -69,6 +69,12 @@ CdcEsri2000CountiesFieldNameMap = FieldNameMap(
     minority_status_and_lang_rank="USG3TP",
     housing_type_and_trans_rank="USG4TP",
     svi_rank="USTP",
+    # below fields do not exits in 2000s data product
+    socioeconomic_value=None,
+    household_comp_and_disability_value=None,
+    minority_status_and_lang_value=None,
+    housing_type_and_trans_value=None,
+    svi_value=None,
 )
 
 CdcEsri2010CountiesFieldNameMap = FieldNameMap(
@@ -145,6 +151,12 @@ CdcEsri2000TractsFieldNameMap = FieldNameMap(
     minority_status_and_lang_rank="USG3TP",
     housing_type_and_trans_rank="USG4TP",
     svi_rank="USTP",
+    # below fields do not exits in 2000s data product
+    socioeconomic_value=None,
+    household_comp_and_disability_value=None,
+    minority_status_and_lang_value=None,
+    housing_type_and_trans_value=None,
+    svi_value=None,
 )
 
 CdcEsri2010TractsFieldNameMap = FieldNameMap(
