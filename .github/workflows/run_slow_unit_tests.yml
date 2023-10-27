@@ -4,6 +4,8 @@ on:
   schedule:
     # Run at 10 am every monday at 5 am cst (10 am utc)
     - cron: '0 10 * * 1'
+  # Run slow tests manually
+  workflow_dispatch:
 
 jobs:
   rest_client:
