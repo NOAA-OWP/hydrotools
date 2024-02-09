@@ -61,7 +61,7 @@ observations = observations.drop_duplicates(
 # Resample to hourly, keep first measurement in each 1-hour bin
 observations = observations.groupby([
     'usgs_site_code',
-    Grouper(key='value_date', freq='H')
+    Grouper(key='value_date', freq='h')
     ]).first().ffill()
 
 # Detect events
@@ -69,7 +69,7 @@ events = observations['value'].groupby(
     level='usgs_site_code').apply(
         list_events_helper, 
         level='usgs_site_code', 
-        halflife='6H', 
+        halflife='6h', 
         window='7D'
     )
 
