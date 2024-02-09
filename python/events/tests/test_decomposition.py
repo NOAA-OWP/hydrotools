@@ -23,12 +23,12 @@ def test_list_events():
         index=pd.date_range(
             start=pd.to_datetime('2018-01-01'),
             periods=len(t),
-            freq='H'),
+            freq='h'),
         name='streamflow'
     )
 
     # Detect event
-    events = ev.list_events(series, '6H', '7D')
+    events = ev.list_events(series, '6h', '7D')
 
     # Should detect a single event
     assert len(events.index) == 1
@@ -56,12 +56,12 @@ def test_list_events_noise():
         index=pd.date_range(
             start=pd.to_datetime('2018-01-01'),
             periods=len(t),
-            freq='H'),
+            freq='h'),
         name='streamflow'
     )
     
     # Detect event
-    events = ev.list_events(series, '6H', '7D', '6H', '7H')
+    events = ev.list_events(series, '6h', '7D', '6h', '7h')
 
     # Should detect a single event
     assert len(events.index) == 1
@@ -80,7 +80,7 @@ def test_local_minimum_datetime_exception():
     with pytest.raises(Exception):
         idx = ev.find_local_minimum(
             pd.Timestamp('2020-01-01 01:00'),
-            '3H',
+            '3h',
             series
         )
 
@@ -91,7 +91,7 @@ def test_origin_not_idx():
         index=pd.date_range(
             start=pd.to_datetime('2018-01-01'),
             periods=10,
-            freq='H'),
+            freq='h'),
         name='streamflow'
     )
 
@@ -99,7 +99,7 @@ def test_origin_not_idx():
     with pytest.raises(Exception):
         idx = ev.find_local_minimum(
             pd.Timestamp('2020-01-01 01:00'),
-            '3H',
+            '3h',
             series
         )
 
@@ -110,7 +110,7 @@ def test_bad_time_series_idx():
         index=[i for i in range(5)]
     )
     with pytest.raises(Exception):
-        events = ev.list_events(series, '6H', '7D')
+        events = ev.list_events(series, '6h', '7D')
 
     # Not monotonic
     series = pd.Series(
@@ -125,7 +125,7 @@ def test_bad_time_series_idx():
         name='streamflow'
     )
     with pytest.raises(Exception):
-        events = ev.list_events(series, '6H', '7D')
+        events = ev.list_events(series, '6h', '7D')
 
     # Duplicated
     series = pd.Series(
@@ -140,7 +140,7 @@ def test_bad_time_series_idx():
         name='streamflow'
     )
     with pytest.raises(Exception):
-        events = ev.list_events(series, '6H', '7D')
+        events = ev.list_events(series, '6h', '7D')
 
 def test_null_warning():
     series = pd.Series(
@@ -155,4 +155,4 @@ def test_null_warning():
         name='streamflow'
     )
     with pytest.warns(UserWarning):
-        events = ev.list_events(series, '6H', '7D')
+        events = ev.list_events(series, '6h', '7D')
