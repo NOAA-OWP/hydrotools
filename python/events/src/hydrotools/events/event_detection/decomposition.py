@@ -153,12 +153,12 @@ def event_boundaries(event_points: pd.Series):
         
         """
     # Identify event starts
-    forward_shift = event_points.shift(1).fillna(False)
+    forward_shift = event_points.shift(1).astype(bool).fillna(False)
     starts = (event_points & ~forward_shift)
     starts = starts[starts]
 
     # Identify event ends
-    backward_shift = event_points.shift(-1).fillna(False)
+    backward_shift = event_points.shift(-1).astype(bool).fillna(False)
     ends = (event_points & ~backward_shift)
     ends = ends[ends]
 
