@@ -26,6 +26,31 @@ The following example demonstrates how one might use `hydrotools.nwm_client_new`
 
 ### Code
 
+<details><summary><b>View compatible configurations</b></summary>
+
+```python
+# Import the NWM Client
+from hydrotools.nwm_client_new.NWMFileClient import NWMFileClient
+
+# Instantiate model data client
+model_data_client = NWMFileClient()
+
+# Print compatible model configurations
+#  Note that not all data sources contain the full range of available 
+#  National Water Model data. This client defaults to Google Cloud Platform
+#  Which has the largest amount of *operational* forecast data.
+#  Also note that not all configurations are available for the entire
+#  archive of NWM operational forecast data. For example, the configurations 
+#  for Alaska only became available after August 2023.
+print(model_data_client.catalog.configurations)
+```
+### Example output
+```console
+['analysis_assim', 'analysis_assim_alaska', 'analysis_assim_alaska_no_da', 'analysis_assim_extend', 'analysis_assim_extend_no_da', 'analysis_assim_extend_alaska', 'analysis_assim_extend_alaska_no_da', 'analysis_assim_hawaii', 'analysis_assim_hawaii_no_da', 'analysis_assim_no_da', 'analysis_assim_puertorico', 'analysis_assim_puertorico_no_da', 'analysis_assim_long', 'analysis_assim_long_no_da', 'long_range_mem1', 'long_range_mem2', 'long_range_mem3', 'long_range_mem4', 'medium_range_alaska_mem1', 'medium_range_alaska_mem2', 'medium_range_alaska_mem3', 'medium_range_alaska_mem4', 'medium_range_alaska_mem5', 'medium_range_alaska_mem6', 'medium_range_alaska_no_da', 'medium_range_mem1', 'medium_range_mem2', 'medium_range_mem3', 'medium_range_mem4', 'medium_range_mem5', 'medium_range_mem6', 'medium_range_mem7', 'medium_range_no_da', 'short_range', 'short_range_alaska', 'short_range_hawaii', 'short_range_hawaii_no_da', 'short_range_puertorico', 'short_range_puertorico_no_da']
+```
+
+</details>
+
 <details><summary><b>Retrieving data from google cloud</b></summary>
 
 ```python
