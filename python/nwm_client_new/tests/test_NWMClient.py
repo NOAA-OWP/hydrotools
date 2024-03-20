@@ -7,7 +7,7 @@ from hydrotools.nwm_client_new.NWMClient import StoreNotFoundError, QueryError
 # Set reference time
 yesterday = pd.Timestamp.utcnow() - pd.Timedelta("1D")
 reference_time_gcp = yesterday.strftime("%Y%m%dT%-HZ")
-reference_time_http = (yesterday+pd.Timedelta("1H")).strftime("%Y%m%dT%-HZ")
+reference_time_http = pd.Timestamp.utcnow() - pd.Timedelta("1D")
 
 # Canonical columns
 canonical_columns = [
