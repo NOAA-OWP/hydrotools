@@ -288,7 +288,8 @@ class NWMFileClient(NWMClient):
                 warnings.warn(message, RuntimeWarning)
 
         # Concatenate
-        data = dd.multi.concat(dfs)
+        # data = dd.multi.concat(dfs)
+        data = dd.concat(dfs)
 
         # Convert units
         if self.unit_system == MeasurementUnitSystem.US:
