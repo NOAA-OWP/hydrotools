@@ -48,19 +48,20 @@ class NWMClientDefaults:
     DOWNLOAD_DIRECTORY: Local path to save downloaded NWM files. Default is class level object, not instance object.
     UNIT_SYSTEM: Default system of measurements.
     """
-    STORE: ParquetStore = ParquetStore(
-        "hydrotools_data/nwm_store.parquet",
-        write_index=False,
-        compression="snappy"
-    )
-    CATALOG: NWMFileCatalog = GCPFileCatalog()
-    SSL_CONTEXT: ssl.SSLContext = ssl.create_default_context()
+    STORE: ParquetStore = field(
+        default_factory=lambda: ParquetStore(
+            "hydrotools_data/nwm_store.parquet",
+            write_index=False,
+            compression="snappy"
+        ))
+    CATALOG: NWMFileCatalog = field(default_factory=GCPFileCatalog)
+    SSL_CONTEXT: ssl.SSLContext = field(default_factory=ssl.create_default_context)
     ROUTELINK_URL: str = "https://www.hydroshare.org/resource/e9fe66730d184bdfbaea19639bd7cb55/data/contents/RouteLink.h5"
     VARIABLES: List[str] = field(default_factory=lambda: ["streamflow"])
     NWM_TO_SI_UNIT_MAPPING: Dict[str, str] = field(default_factory=lambda: {"m": "m", "m s-1": "m/s", "m3 s-1": "m^3/s"})
     SI_TO_US_UNIT_MAPPING: Dict[str, str] = field(default_factory=lambda: {"m": "ft", "m/s": "ft/s", "m^3/s": "ft^3/s"})
     DOWNLOAD_DIRECTORY: Path = Path("hydrotools_data/NWMFileClient_NetCDF_files")
-    UNIT_SYSTEM: MeasurementUnitSystem = MeasurementUnitSystem.SI
+    UNIT_SYSTEM: MeasurementUnitSystem = field(default_factory=lambda: MeasurementUnitSystem.SI)
 
     def _download_and_read_routelink_file(self) -> dd.DataFrame:
         """Retrieve NWM RouteLink data from URL and return a 
