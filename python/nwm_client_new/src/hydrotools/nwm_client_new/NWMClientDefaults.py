@@ -21,6 +21,7 @@ from .FileDownloader import FileDownloader
 from pathlib import Path
 from typing import List, Dict
 from enum import Enum
+from pint import UnitRegistry
 
 class MeasurementUnitSystem(Enum):
     """A system of units to define measurements.
@@ -98,7 +99,7 @@ class NWMClientDefaults:
     def NWM_TO_US_UNIT_CONVERSION(self) -> Dict[str, Dict[str, float]]:
         """Mapping from NWM units to US standard units and respective conversion factors."""
         # Set up unit handler
-        unit_handler = UnitHandler()
+        unit_handler = UnitHandler(unit_registry=UnitRegistry(cache_folder=Path("hydrotools/pint_cache")))
 
         # Build conversion from NWM to US
         nwm_to_us_mapping = {key: self.SI_TO_US_UNIT_MAPPING[val] for key, val in self.NWM_TO_SI_UNIT_MAPPING.items()}
