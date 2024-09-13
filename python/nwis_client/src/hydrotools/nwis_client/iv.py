@@ -118,6 +118,12 @@ class IVDataService:
         )
         self._value_time_label = value_time_label
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        self._restclient.close()
+
     @verify_case_insensitive_kwargs(handler=_verify_case_insensitive_kwargs_handler)
     def get(
         self,
