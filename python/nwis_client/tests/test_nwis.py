@@ -87,7 +87,7 @@ def wrap_iv_cache_location_to_temp(loop):
 
         o = partial(iv.IVDataService, cache_filename=cache_file)
         return o
-    
+
 
 @pytest.fixture
 def setup_iv(IVDataServiceWithTempCache):
@@ -119,7 +119,7 @@ def mocked_iv(mock_iv, setup_iv):
     `iv.IVDataService`'s `get_raw` method has been mocked to return an empty list.
     """
     return setup_iv
-    
+
 
 simplify_variable_test_data = [
     ("test", ",", "test"),
@@ -555,6 +555,17 @@ def test_nwis_client_cache_path(loop):
 
         # close resources
         service._restclient.close()
+
+
+@pytest.mark.slow
+def test_nwis_client_context_manager(loop):
+    """verify that context manager closes resources"""
+    with iv.IVDataService() as service:
+        service.get(sites=["01189000"], startDT="2022-01-01")
+    assert service._restclient._session.closed
+    # should this be closed? The assertion fails if uncommented
+    # assert service._restclient._loop.is_closed()
+
 
 def test_fixes_209(loop, monkeypatch):
     """
