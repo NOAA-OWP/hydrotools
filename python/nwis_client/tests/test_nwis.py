@@ -77,7 +77,7 @@ class MockRequests:
 ##### FIXTURES #####
 
 @pytest.fixture(name="IVDataServiceWithTempCache")
-def wrap_iv_cache_location_to_temp(loop):
+def wrap_iv_cache_location_to_temp(event_loop):
     from tempfile import TemporaryDirectory
     from pathlib import Path
     from functools import partial
@@ -540,7 +540,7 @@ def test_nwis_client_get_throws_warning_for_kwargs(mocked_iv):
         mocked_iv.get(sites=["01189000"], startDt="2022-01-01")
 
 @pytest.mark.slow
-def test_nwis_client_cache_path(loop):
+def test_nwis_client_cache_path(event_loop):
     """verify that cache directory has configurable location"""
     from tempfile import TemporaryDirectory
     from pathlib import Path
@@ -558,7 +558,7 @@ def test_nwis_client_cache_path(loop):
 
 
 @pytest.mark.slow
-def test_nwis_client_context_manager(loop):
+def test_nwis_client_context_manager(event_loop):
     """verify that context manager closes resources"""
     with iv.IVDataService() as service:
         service.get(sites=["01189000"], startDT="2022-01-01")
@@ -567,7 +567,7 @@ def test_nwis_client_context_manager(loop):
     # assert service._restclient._loop.is_closed()
 
 
-def test_fixes_209(loop, monkeypatch):
+def test_fixes_209(event_loop, monkeypatch):
     """
     verify that pandas FutureWarning is not raised by `IVDataService.get`. This FutureWarning was
     introduced in 1.5.1. see pandas changelog
