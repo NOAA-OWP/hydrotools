@@ -1,6 +1,49 @@
 [build-system]
+requires = ["setuptools>=70"]
 build-backend = "setuptools.build_meta"
-requires = [
-  "setuptools>=42",
-  "wheel",
+
+[project]
+name = "hydrotools.nwis_client"
+authors = [
+    { name = "Austin Raney", email = "aaraney@protonmail.com" },
+    { name = "Jason A. Regina", email = "jason.regina@noaa.gov" },
 ]
+description = "A convenient interface to the USGS NWIS Instantaneous Values (IV) REST Service API."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { file = "LICENSE" }
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "License :: Free To Use But Restricted",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Hydrology",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "pandas",
+    "numpy",
+    "hydrotools._restclient>=3.0.4",
+    "aiohttp",
+    "click",
+]
+dynamic = ["version"]
+
+[tool.setuptools.dynamic]
+version = { attr = "hydrotools.nwis_client._version.__version__" }
+
+[project.optional-dependencies]
+develop = ["pytest", "pytest-aiohttp"]
+
+[project.urls]
+Homepage = "https://github.com/NOAA-OWP/hydrotools"
+Documentation = "https://noaa-owp.github.io/hydrotools/hydrotools.nwis_client.html"
+Repository = "https://github.com/NOAA-OWP/hydrotools/tree/main/python/nwis_client"
+"Bug Tracker" = "https://github.com/NOAA-OWP/hydrotools/issues"
+
+[project.scripts]
+nwis-client = "hydrotools.nwis_client.cli:run"

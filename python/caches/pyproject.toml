@@ -1,7 +1,37 @@
 [build-system]
-requires = [
-    "setuptools>=42",
-    "wheel",
-    "pip"
-]
+requires = ["setuptools>=70"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "hydrotools.caches"
+authors = [{ name = "Jason A. Regina", email = "jason.regina@noaa.gov" }]
+description = "Variety of object caching utilities for OWPHydroTools."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { file = "LICENSE" }
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "License :: Free To Use But Restricted",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Hydrology",
+    "Operating System :: OS Independent",
+]
+dependencies = ["numpy<2; python_version<'3.10'", "pandas", "tables"]
+dynamic = ["version"]
+
+[tool.setuptools.dynamic]
+version = { attr = "hydrotools.caches._version.__version__" }
+
+[project.optional-dependencies]
+develop = ["pytest"]
+
+[project.urls]
+Homepage = "https://github.com/NOAA-OWP/hydrotools"
+Documentation = "https://noaa-owp.github.io/hydrotools/hydrotools.caches.html"
+Repository = "https://github.com/NOAA-OWP/hydrotools/tree/main/python/caches"
+"Bug Tracker" = "https://github.com/NOAA-OWP/hydrotools/issues"
