@@ -44,7 +44,7 @@ def mean_error(
     power: float = 1.0,
     root: bool = False
     ) -> float:
-    """Compute the mean error or deviation. Default is Mean Absolute Error. The mean error 
+    r"""Compute the mean error or deviation. Default is Mean Absolute Error. The mean error 
     is given by:
 
     $$ME = \frac{1}{n}\sum_{i=1}^{n}\left| y_{s,i} - y_{o,i} \right|^{p}$$
@@ -102,7 +102,7 @@ def mean_error_skill_score(
     power: float = 1.0,
     normalized: bool = False
     ) -> float:
-    """Compute a generic mean error based model skill score. The mean error skill score 
+    r"""Compute a generic mean error based model skill score. The mean error skill score 
     is given by:
 
     $$MESS = 1 - \frac{\sum_{i=1}^{n}\left| y_{p,i} - y_{o,i} \right|^{p}}{\sum_{i=1}^{n}\left| y_{b,i} - y_{o,i} \right|^{p}}$$
