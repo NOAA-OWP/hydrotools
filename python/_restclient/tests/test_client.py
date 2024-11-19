@@ -82,13 +82,11 @@ async def test_get_check_cache(basic_test_server):
         assert r2.from_cache is True
 
 
-def test_get_non_async(basic_test_server, loop):
-    with pytest.warns(DeprecationWarning):
-        # throws DeprecationWarning b.c. session not create in async func
-        session = ClientSession()
-        resp_coro = session.get(basic_test_server["uri"])
-        resp = loop.run_until_complete(resp_coro)
-        assert loop.run_until_complete(resp.json()) == basic_test_server["data"]
+def test_get_non_async(basic_test_server, event_loop):
+    session = ClientSession(loop=event_loop)
+    resp_coro = session.get(basic_test_server["uri"])
+    resp = event_loop.run_until_complete(resp_coro)
+    assert event_loop.run_until_complete(resp.json()) == basic_test_server["data"]
 
 
 @pytest.fixture
