@@ -29,7 +29,7 @@ dependencies = [
 dynamic = ["version"]
 
 [tool.setuptools.dynamic]
-version = {attr = "hydrotools.events._version.__version__"}
+version = {attr = "hydrotools.events.event_detection._version.__version__"}
 
 [project.optional-dependencies]
 develop = ["pytest"]
