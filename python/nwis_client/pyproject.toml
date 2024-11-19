@@ -4,7 +4,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "hydrotools.nwis_client"
-authors = [{ name = "Austin Raney", email = "aaraney@protonmail.com" }]
+authors = [
+    { name = "Austin Raney", email = "aaraney@protonmail.com" },
+    { name = "Jason A. Regina", email = "jason.regina@noaa.gov" },
+]
 description = "A convenient interface to the USGS NWIS Instantaneous Values (IV) REST Service API."
 readme = "README.md"
 requires-python = ">=3.8"
