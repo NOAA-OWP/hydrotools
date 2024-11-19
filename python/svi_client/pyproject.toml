@@ -1,6 +1,44 @@
 [build-system]
+requires = ["setuptools>=70"]
 build-backend = "setuptools.build_meta"
-requires = [
-  "setuptools>=42",
-  "wheel",
+
+[project]
+name = "hydrotools.svi_client"
+authors = [{ name = "Austin Raney", email = "aaraney@protonmail.com" }]
+description = "Retrieve Social Vulnerability Index data from The Center for Disease Control / The Agency for Toxic Substances and Disease Registry."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { file = "LICENSE" }
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "License :: Free To Use But Restricted",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Hydrology",
+    "Operating System :: OS Independent",
 ]
+dependencies = [
+    "hydrotools._restclient",
+    "numpy >=1.20.0",
+    "pandas",
+    "geopandas",
+    "pydantic",
+    "typing_extensions",
+]
+dynamic = ["version"]
+
+[tool.setuptools.dynamic]
+version = { attr = "hydrotools.svi_client._version.__version__" }
+
+[project.optional-dependencies]
+develop = ["pytest", "pytest-aiohttp"]
+
+[project.urls]
+Homepage = "https://github.com/NOAA-OWP/hydrotools"
+Documentation = "https://noaa-owp.github.io/hydrotools/hydrotools.svi_client.html"
+Repository = "https://github.com/NOAA-OWP/hydrotools/tree/main/python/svi_client"
+"Bug Tracker" = "https://github.com/NOAA-OWP/hydrotools/issues"

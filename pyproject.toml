@@ -1,7 +1,45 @@
 [build-system]
-requires = [
-    "setuptools>=42",
-    "wheel",
-    "pip"
-]
+requires = ["setuptools>=70"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "hydrotools"
+authors = [
+    { name = "Jason A. Regina", email = "jason.regina@noaa.gov" },
+    { name = "Austin Raney", email = "austin.raney@noaa.gov" },
+]
+description = "Suite of tools for retrieving USGS NWIS observations and evaluating National Water Model (NWM) data."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { file = "LICENSE" }
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "License :: Free To Use But Restricted",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Hydrology",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "hydrotools.nwis_client>=3.2.1",
+    "hydrotools.nwm_client[gcp]>=5.0.3",
+    "hydrotools.events>=1.1.5",
+    "hydrotools.metrics>=1.2.3",
+]
+dynamic = ["version"]
+
+[tool.setuptools.dynamic]
+version = { attr = "hydrotools._version.__version__" }
+
+[project.optional-dependencies]
+develop = ["pytest"]
+
+[project.urls]
+Homepage = "https://github.com/NOAA-OWP/hydrotools"
+Documentation = "https://noaa-owp.github.io/hydrotools"
+Repository = "https://github.com/NOAA-OWP/hydrotools"
+"Bug Tracker" = "https://github.com/NOAA-OWP/hydrotools/issues"
