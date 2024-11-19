@@ -1,6 +1,41 @@
 [build-system]
+requires = ["setuptools>=70"]
 build-backend = "setuptools.build_meta"
-requires = [
-  "setuptools>=42",
-  "wheel",
+
+[project]
+name = "hydrotools.events"
+authors = [
+    {name = "Jason A. Regina", email = "jason.regina@noaa.gov"},
 ]
+description = "Various methods to support event-based evaluations."
+readme = "README.md"
+requires-python = ">=3.9"
+license = {file = "LICENSE"}
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "License :: Free To Use But Restricted",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Hydrology",
+    "Operating System :: OS Independent"
+]
+dependencies = [
+    "numpy>=1.20.0",
+    "pandas",
+]
+dynamic = ["version"]
+
+[tool.setuptools.dynamic]
+version = {attr = "hydrotools.events._version.__version__"}
+
+[project.optional-dependencies]
+develop = ["pytest"]
+
+[project.urls]
+Homepage = "https://github.com/NOAA-OWP/hydrotools"
+Documentation = "https://noaa-owp.github.io/hydrotools/hydrotools.events.html"
+Repository = "https://github.com/NOAA-OWP/hydrotools/tree/main/python/events"
+"Bug Tracker" = "https://github.com/NOAA-OWP/hydrotools/issues"
