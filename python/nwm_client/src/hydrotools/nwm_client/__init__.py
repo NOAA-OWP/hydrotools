@@ -11,3 +11,10 @@ except ImportError as e:
         pass
     else:
         raise e
+
+import warnings
+
+warnings.warn(
+    "nwm_client is no longer supported. Use https://pypi.org/project/hydrotools.nwm-client-new/",
+    FutureWarning
+    )
