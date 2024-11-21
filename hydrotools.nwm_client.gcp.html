@@ -178,7 +178,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -267,233 +267,14 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="module-hydrotools.nwm_client.gcp">
-<span id="hydrotools-nwm-client-gcp-module"></span><h1>hydrotools.nwm_client.gcp module<a class="headerlink" href="#module-hydrotools.nwm_client.gcp" title="Link to this heading">¶</a></h1>
-<section id="google-cloud-platform-nwm-client">
-<h2>Google Cloud Platform NWM Client<a class="headerlink" href="#google-cloud-platform-nwm-client" title="Link to this heading">¶</a></h2>
-<p>This module provides classes that offer a convenient
-interface to retrieve National Water Model (NWM) data
-from Google Cloud Platform.</p>
-<p><a class="reference external" href="https://console.cloud.google.com/marketplace/details/noaa-public/national-water-model">https://console.cloud.google.com/marketplace/details/noaa-public/national-water-model</a></p>
-<section id="classes">
-<h3>Classes<a class="headerlink" href="#classes" title="Link to this heading">¶</a></h3>
-<blockquote>
-<div><p>NWMDataService</p>
-</div></blockquote>
-</section>
-</section>
-<dl class="py class">
-<dt class="sig sig-object py" id="hydrotools.nwm_client.gcp.NWMDataService">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hydrotools.nwm_client.gcp.</span></span><span class="sig-name descname"><span class="pre">NWMDataService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bucket_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'national-water-model'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_processes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location_metadata_mapping</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'nwm_client.h5'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_group</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'nwm_client'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_system</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'SI'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hydrotools.nwm_client.gcp.NWMDataService" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A Google Cloud Storage client class.
-The NWMDataService class provides various methods for constructing
-requests, retrieving data, and parsing responses from the NWM dataset
-on Google Cloud Platform.</p>
-<dl class="py property">
-<dt class="sig sig-object py" id="hydrotools.nwm_client.gcp.NWMDataService.bucket_name">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bucket_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#hydrotools.nwm_client.gcp.NWMDataService.bucket_name" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="hydrotools.nwm_client.gcp.NWMDataService.cache_group">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cache_group</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#hydrotools.nwm_client.gcp.NWMDataService.cache_group" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="hydrotools.nwm_client.gcp.NWMDataService.cache_path">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cache_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span></em><a class="headerlink" href="#hydrotools.nwm_client.gcp.NWMDataService.cache_path" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="hydrotools.nwm_client.gcp.NWMDataService.configurations">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">configurations</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#hydrotools.nwm_client.gcp.NWMDataService.configurations" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="hydrotools.nwm_client.gcp.NWMDataService.crosswalk">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">crosswalk</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">DataFrame</span></em><a class="headerlink" href="#hydrotools.nwm_client.gcp.NWMDataService.crosswalk" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="hydrotools.nwm_client.gcp.NWMDataService.get">
-<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#hydrotools.nwm_client.gcp.NWMDataService.get" title="Link to this definition">¶</a></dt>
-<dd><p>Return streamflow data for a single model cycle in a pandas DataFrame.</p>
-<p>Note: By default, only nwm sites codes with an associated USGS site are returned by
-<cite>NWMDataService.get</cite>. See <cite>NWMDataService</cite>’s <cite>location_metadata_mapping</cite> parameter to change
-this behavior.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>configuration</strong> (<em>str</em><em>, </em><em>required</em>) – Particular model simulation or forecast configuration. For a list
-of available configurations see NWMDataService.configurations</p></li>
-<li><p><strong>reference_time</strong> (<em>str</em><em>, </em><em>required</em>) – Model simulation or forecast issuance/reference time in
-YYYYmmddTHHZ format.</p></li>
-<li><p><strong>cache_data</strong> (<em>bool</em><em>, </em><em>optional</em><em>, </em><em>default True</em>) – If True use a local HDFStore to save retrieved data.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>df</strong> – Simluted or forecasted streamflow data associated with a single
-run of the National Water Model.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pandas.DataFrame</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hydrotools.nwm_client</span> <span class="kn">import</span> <span class="n">gcp</span> <span class="k">as</span> <span class="n">nwm</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model_data_service</span> <span class="o">=</span> <span class="n">nwm</span><span class="o">.</span><span class="n">NWMDataService</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">forecast_data</span> <span class="o">=</span> <span class="n">model_data_service</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">configuration</span> <span class="o">=</span> <span class="s2">&quot;short_range&quot;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">reference_time</span> <span class="o">=</span> <span class="s2">&quot;20210101T01Z&quot;</span>
-<span class="gp">... </span>    <span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="hydrotools.nwm_client.gcp.NWMDataService.get_DataFrame">
-<span class="sig-name descname"><span class="pre">get_DataFrame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">streamflow_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#hydrotools.nwm_client.gcp.NWMDataService.get_DataFrame" title="Link to this definition">¶</a></dt>
-<dd><p>Retrieve a blob from the data service as pandas.DataFrame</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>args</strong> – Positional arguments passed to get_Dataset</p></li>
-<li><p><strong>streamflow_only</strong> (<em>bool</em><em>, </em><em>optional</em><em>, </em><em>default True</em>) – Only return streamflow and omit other variables.</p></li>
-<li><p><strong>kwargs</strong> – Keyword arguments passed to get_Dataset</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>df</strong> – The data stored in the blob.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pandas.DataFrame</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="hydrotools.nwm_client.gcp.NWMDataService.get_Dataset">
-<span class="sig-name descname"><span class="pre">get_Dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">blob_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_id_filter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_SupportsArray</span><span class="p"><span class="pre">[</span></span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">_NestedSequence</span><span class="p"><span class="pre">[</span></span><span class="pre">_SupportsArray</span><span class="p"><span class="pre">[</span></span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">complex</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">_NestedSequence</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">complex</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dataset</span></span></span><a class="headerlink" href="#hydrotools.nwm_client.gcp.NWMDataService.get_Dataset" title="Link to this definition">¶</a></dt>
-<dd><p>Retrieve a blob from the data service as xarray.Dataset</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>blob_name</strong> (<em>str</em><em>, </em><em>required</em>) – Name of blob to retrieve.</p></li>
-<li><p><strong>feature_id_filter</strong> (<em>bool</em><em> or </em><em>array-like</em><em>, </em><em>optional</em><em>, </em><em>default False</em>) – If True, filter data using default list of feature ids (USGS gaging locations).
-Alternatively, limit data returned to feature ids in feature_id_filter
-list.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ds</strong> – The data stored in the blob.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>xarray.Dataset</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="hydrotools.nwm_client.gcp.NWMDataService.get_blob">
-<span class="sig-name descname"><span class="pre">get_blob</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">blob_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="headerlink" href="#hydrotools.nwm_client.gcp.NWMDataService.get_blob" title="Link to this definition">¶</a></dt>
-<dd><p>Retrieve a blob from the data service as bytes.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>blob_name</strong> (<em>str</em><em>, </em><em>required</em>) – Name of blob to retrieve.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>data</strong> – The data stored in the blob.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bytes</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="hydrotools.nwm_client.gcp.NWMDataService.get_cycle">
-<span class="sig-name descname"><span class="pre">get_cycle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#hydrotools.nwm_client.gcp.NWMDataService.get_cycle" title="Link to this definition">¶</a></dt>
-<dd><p>Return streamflow data for a single model cycle in a pandas DataFrame.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>configuration</strong> (<em>str</em><em>, </em><em>required</em>) – Particular model simulation or forecast configuration. For a list
-of available configurations see NWMDataService.configurations</p></li>
-<li><p><strong>reference_time</strong> (<em>str</em><em>, </em><em>required</em>) – Model simulation or forecast issuance/reference time in
-YYYYmmddTHHZ format.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>df</strong> – Simluted or forecasted streamflow data associated with a single
-run of the National Water Model.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pandas.DataFrame</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hydrotools.nwm_client</span> <span class="kn">import</span> <span class="n">gcp</span> <span class="k">as</span> <span class="n">nwm</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model_data_service</span> <span class="o">=</span> <span class="n">nwm</span><span class="o">.</span><span class="n">NWMDataService</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">forecast_data</span> <span class="o">=</span> <span class="n">model_data_service</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">configuration</span> <span class="o">=</span> <span class="s2">&quot;short_range&quot;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">reference_time</span> <span class="o">=</span> <span class="s2">&quot;20210101T01Z&quot;</span>
-<span class="gp">... </span>    <span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="hydrotools.nwm_client.gcp.NWMDataService.list_blobs">
-<span class="sig-name descname"><span class="pre">list_blobs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">must_contain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'channel_rt'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#hydrotools.nwm_client.gcp.NWMDataService.list_blobs" title="Link to this definition">¶</a></dt>
-<dd><p>List available blobs with provided parameters.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>configuration</strong> (<em>str</em><em>, </em><em>required</em>) – Particular model simulation or forecast configuration. For a list
-of available configurations see NWMDataService.configurations</p></li>
-<li><p><strong>reference_time</strong> (<em>str</em><em>, </em><em>required</em>) – Model simulation or forecast issuance/reference time in
-YYYYmmddTHHZ format.</p></li>
-<li><p><strong>must_contain</strong> (<em>str</em><em>, </em><em>optional</em><em>, </em><em>default 'channel_rt'</em>) – Optional substring found in each blob name.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>blob_list</strong> – A list of blob names that satisfy the criteria set by the
-parameters.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hydrotools.nwm_client</span> <span class="kn">import</span> <span class="n">gcp</span> <span class="k">as</span> <span class="n">nwm</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model_data_service</span> <span class="o">=</span> <span class="n">nwm</span><span class="o">.</span><span class="n">NWMDataService</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">blob_list</span> <span class="o">=</span> <span class="n">model_data_service</span><span class="o">.</span><span class="n">list_blobs</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">configuration</span> <span class="o">=</span> <span class="s2">&quot;short_range&quot;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">reference_time</span> <span class="o">=</span> <span class="s2">&quot;20210101T01Z&quot;</span>
-<span class="gp">... </span>    <span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="hydrotools.nwm_client.gcp.NWMDataService.max_processes">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_processes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#hydrotools.nwm_client.gcp.NWMDataService.max_processes" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="hydrotools.nwm_client.gcp.NWMDataService.valid_unit_systems">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">valid_unit_systems</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#hydrotools.nwm_client.gcp.NWMDataService.valid_unit_systems" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+          <section id="hydrotools-nwm-client-gcp-module">
+<h1>hydrotools.nwm_client.gcp module<a class="headerlink" href="#hydrotools-nwm-client-gcp-module" title="Link to this heading">¶</a></h1>
 </section>
 
         </article>
@@ -539,46 +320,8 @@ parameters.</p>
         
       </footer>
     </div>
-    <aside class="toc-drawer">
+    <aside class="toc-drawer no-toc">
       
-      
-      <div class="toc-sticky toc-scroll">
-        <div class="toc-title-container">
-          <span class="toc-title">
-            On this page
-          </span>
-        </div>
-        <div class="toc-tree-container">
-          <div class="toc-tree">
-            <ul>
-<li><a class="reference internal" href="#">hydrotools.nwm_client.gcp module</a><ul>
-<li><a class="reference internal" href="#google-cloud-platform-nwm-client">Google Cloud Platform NWM Client</a><ul>
-<li><a class="reference internal" href="#classes">Classes</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#hydrotools.nwm_client.gcp.NWMDataService"><code class="docutils literal notranslate"><span class="pre">NWMDataService</span></code></a><ul>
-<li><a class="reference internal" href="#hydrotools.nwm_client.gcp.NWMDataService.bucket_name"><code class="docutils literal notranslate"><span class="pre">NWMDataService.bucket_name</span></code></a></li>
-<li><a class="reference internal" href="#hydrotools.nwm_client.gcp.NWMDataService.cache_group"><code class="docutils literal notranslate"><span class="pre">NWMDataService.cache_group</span></code></a></li>
-<li><a class="reference internal" href="#hydrotools.nwm_client.gcp.NWMDataService.cache_path"><code class="docutils literal notranslate"><span class="pre">NWMDataService.cache_path</span></code></a></li>
-<li><a class="reference internal" href="#hydrotools.nwm_client.gcp.NWMDataService.configurations"><code class="docutils literal notranslate"><span class="pre">NWMDataService.configurations</span></code></a></li>
-<li><a class="reference internal" href="#hydrotools.nwm_client.gcp.NWMDataService.crosswalk"><code class="docutils literal notranslate"><span class="pre">NWMDataService.crosswalk</span></code></a></li>
-<li><a class="reference internal" href="#hydrotools.nwm_client.gcp.NWMDataService.get"><code class="docutils literal notranslate"><span class="pre">NWMDataService.get()</span></code></a></li>
-<li><a class="reference internal" href="#hydrotools.nwm_client.gcp.NWMDataService.get_DataFrame"><code class="docutils literal notranslate"><span class="pre">NWMDataService.get_DataFrame()</span></code></a></li>
-<li><a class="reference internal" href="#hydrotools.nwm_client.gcp.NWMDataService.get_Dataset"><code class="docutils literal notranslate"><span class="pre">NWMDataService.get_Dataset()</span></code></a></li>
-<li><a class="reference internal" href="#hydrotools.nwm_client.gcp.NWMDataService.get_blob"><code class="docutils literal notranslate"><span class="pre">NWMDataService.get_blob()</span></code></a></li>
-<li><a class="reference internal" href="#hydrotools.nwm_client.gcp.NWMDataService.get_cycle"><code class="docutils literal notranslate"><span class="pre">NWMDataService.get_cycle()</span></code></a></li>
-<li><a class="reference internal" href="#hydrotools.nwm_client.gcp.NWMDataService.list_blobs"><code class="docutils literal notranslate"><span class="pre">NWMDataService.list_blobs()</span></code></a></li>
-<li><a class="reference internal" href="#hydrotools.nwm_client.gcp.NWMDataService.max_processes"><code class="docutils literal notranslate"><span class="pre">NWMDataService.max_processes</span></code></a></li>
-<li><a class="reference internal" href="#hydrotools.nwm_client.gcp.NWMDataService.valid_unit_systems"><code class="docutils literal notranslate"><span class="pre">NWMDataService.valid_unit_systems</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-          </div>
-        </div>
-      </div>
       
       
     </aside>
