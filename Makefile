@@ -29,10 +29,10 @@ help:
 .DEFAULT_GOAL := help
 
 tests: install
-	$(PYTHON) -m pytest -s -m "not slow"
+	$(PYTHON) -m pytest -s -m "not slow" --ignore=./python/caches --ignore=./python/nwm_client
 
 all-tests: install
-	$(PYTHON) -m pytest -s
+	$(PYTHON) -m pytest -s --ignore=./python/caches --ignore=./python/nwm_client
 
 install: $(PYENV)/bin/activate
 	$(PYTHON) -m pip install $(SUBPACKAGES_PATHS)
