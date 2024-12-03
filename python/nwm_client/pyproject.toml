@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=70"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hydrotools.nwm_client_new"
+authors = [{ name = "Jason A. Regina", email = "jason.regina@noaa.gov" }]
+description = "Retrieve National Water Model data from various sources."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { file = "LICENSE" }
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "License :: Free To Use But Restricted",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Hydrology",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "numpy>=1.20.0, <2; python_version<'3.10'",
+    "numpy>=1.20.0",
+    "pandas",
+    "xarray",
+    "beautifulsoup4",
+    "google-cloud-storage",
+    "dask",
+    "pyarrow",
+    "aiohttp",
+    "aiofiles",
+    "netcdf4",
+    "tables",
+    "pint",
+    "azure-storage-blob",
+    "planetary-computer",
+    "adlfs",
+    "hydrotools._restclient",
+    "dask[dataframe]",
+]
+dynamic = ["version"]
+
+[tool.setuptools.dynamic]
+version = { attr = "hydrotools.nwm_client_new._version.__version__" }
+
+[project.optional-dependencies]
+develop = ["pytest"]
+
+[project.urls]
+Homepage = "https://github.com/NOAA-OWP/hydrotools"
+Documentation = "https://noaa-owp.github.io/hydrotools/hydrotools.nwm_client_new.html"
+Repository = "https://github.com/NOAA-OWP/hydrotools/tree/main/python/nwm_client_new"
+"Bug Tracker" = "https://github.com/NOAA-OWP/hydrotools/issues"
