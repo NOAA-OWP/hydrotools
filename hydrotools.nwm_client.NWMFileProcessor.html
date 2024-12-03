@@ -1,13 +1,13 @@
 <!doctype html>
 <html class="no-js" lang="en" data-content_root="./">
-  <head>
-<meta charset="utf-8"/>
+  <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="#" />
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="hydrotools.nwm_client.ParquetStore module" href="hydrotools.nwm_client.ParquetStore.html" /><link rel="prev" title="hydrotools.nwm_client.NWMFileClient module" href="hydrotools.nwm_client.NWMFileClient.html" />
 
     <!-- Generated with Sphinx 7.4.7 and Furo 2024.08.06 -->
-<meta name="robots" content="noindex" />
-<title>Search - OWPHydroTools 2.4.0 documentation</title><link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+        <title>hydrotools.nwm_client.NWMFileProcessor module - OWPHydroTools 2.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
     
@@ -178,7 +178,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -192,19 +192,19 @@
   
   <span class="sidebar-brand-text">OWPHydroTools 2.4.0 documentation</span>
   
-</a><form class="sidebar-search-container" method="get" action="#" role="search">
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">API:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1 has-children"><a class="reference internal" href="hydrotools.nwis_client.html">hydrotools.nwis_client subpackage</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of hydrotools.nwis_client subpackage</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="hydrotools.nwis_client.iv.html">hydrotools.nwis_client.iv module</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="hydrotools.nwm_client.html">hydrotools.nwm_client subpackage</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of hydrotools.nwm_client subpackage</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="hydrotools.nwm_client.html">hydrotools.nwm_client subpackage</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of hydrotools.nwm_client subpackage</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.AzureFileCatalog.html">hydrotools.nwm_client.AzureFileCatalog module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.FileDownloader.html">hydrotools.nwm_client.FileDownloader module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.GCPFileCatalog.html">hydrotools.nwm_client.GCPFileCatalog module</a></li>
@@ -213,7 +213,7 @@
 <li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.NWMClientDefaults.html">hydrotools.nwm_client.NWMClientDefaults module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.NWMFileCatalog.html">hydrotools.nwm_client.NWMFileCatalog module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.NWMFileClient.html">hydrotools.nwm_client.NWMFileClient module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.NWMFileProcessor.html">hydrotools.nwm_client.NWMFileProcessor module</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">hydrotools.nwm_client.NWMFileProcessor module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.ParquetStore.html">hydrotools.nwm_client.ParquetStore module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.UnitHandler.html">hydrotools.nwm_client.UnitHandler module</a></li>
 </ul>
@@ -260,7 +260,13 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          <div class="view-this-page">
+  <a class="muted-link" href="_sources/hydrotools.nwm_client.NWMFileProcessor.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
@@ -269,31 +275,105 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          
-<noscript>
-<div class="admonition error">
-  <p class="admonition-title">Error</p>
-  <p>
-    Please activate JavaScript to enable the search functionality.
-  </p>
-</div>
-</noscript>
+          <section id="module-hydrotools.nwm_client.NWMFileProcessor">
+<span id="hydrotools-nwm-client-nwmfileprocessor-module"></span><h1>hydrotools.nwm_client.NWMFileProcessor module<a class="headerlink" href="#module-hydrotools.nwm_client.NWMFileProcessor" title="Link to this heading">¶</a></h1>
+<section id="nwm-file-processor">
+<h2>NWM File Processor<a class="headerlink" href="#nwm-file-processor" title="Link to this heading">¶</a></h2>
+<p>Tools for processing NWM data in NetCDF (.nc) format.</p>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Link to this heading">¶</a></h3>
+<p>NWMFileProcessor</p>
+</section>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="hydrotools.nwm_client.NWMFileProcessor.NWMFileProcessor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hydrotools.nwm_client.NWMFileProcessor.</span></span><span class="sig-name descname"><span class="pre">NWMFileProcessor</span></span><a class="headerlink" href="#hydrotools.nwm_client.NWMFileProcessor.NWMFileProcessor" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Provides a concrete interface for methods used to process National Water
+Model data from NetCDF (.nc) format to xarray.Dataset,
+dask.dataframe.Dataframe, or pandas.DataFrame.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hydrotools.nwm_client.NWMFileProcessor.NWMFileProcessor.convert_to_dask_dataframe">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">convert_to_dask_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dataset</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#hydrotools.nwm_client.NWMFileProcessor.NWMFileProcessor.convert_to_dask_dataframe" title="Link to this definition">¶</a></dt>
+<dd><p>Generate a dask.dataframe.DataFrame from an xarray.Dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ds</strong> (<em>xarray.Dataset</em><em>, </em><em>required</em>) – xarray.Dataset containing National Water Model data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dask.dataframe.DataFrame of NWM data.</p>
+</dd>
+</dl>
+</dd></dl>
 
-<div id="search-results"></div>
+<dl class="py method">
+<dt class="sig sig-object py" id="hydrotools.nwm_client.NWMFileProcessor.NWMFileProcessor.convert_to_dataframe">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">convert_to_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dataset</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#hydrotools.nwm_client.NWMFileProcessor.NWMFileProcessor.convert_to_dataframe" title="Link to this definition">¶</a></dt>
+<dd><p>Generate a pandas.DataFrame from an xarray.Dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ds</strong> (<em>xarray.Dataset</em><em>, </em><em>required</em>) – xarray.Dataset containing National Water Model data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>pandas.DataFrame of NWM data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hydrotools.nwm_client.NWMFileProcessor.NWMFileProcessor.get_dataset">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">paths:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">~numpy._typing._array_like._SupportsArray[~numpy.dtype[~typing.Any]]</span> <span class="pre">|</span> <span class="pre">~numpy._typing._nested_sequence._NestedSequence[~numpy._typing._array_like._SupportsArray[~numpy.dtype[~typing.Any]]]</span> <span class="pre">|</span> <span class="pre">bool</span> <span class="pre">|</span> <span class="pre">int</span> <span class="pre">|</span> <span class="pre">float</span> <span class="pre">|</span> <span class="pre">complex</span> <span class="pre">|</span> <span class="pre">bytes</span> <span class="pre">|</span> <span class="pre">~numpy._typing._nested_sequence._NestedSequence[bool</span> <span class="pre">|</span> <span class="pre">int</span> <span class="pre">|</span> <span class="pre">float</span> <span class="pre">|</span> <span class="pre">complex</span> <span class="pre">|</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">bytes],</span> <span class="pre">feature_id_filter:</span> <span class="pre">~numpy._typing._array_like._SupportsArray[~numpy.dtype[~typing.Any]]</span> <span class="pre">|</span> <span class="pre">~numpy._typing._nested_sequence._NestedSequence[~numpy._typing._array_like._SupportsArray[~numpy.dtype[~typing.Any]]]</span> <span class="pre">|</span> <span class="pre">bool</span> <span class="pre">|</span> <span class="pre">int</span> <span class="pre">|</span> <span class="pre">float</span> <span class="pre">|</span> <span class="pre">complex</span> <span class="pre">|</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">bytes</span> <span class="pre">|</span> <span class="pre">~numpy._typing._nested_sequence._NestedSequence[bool</span> <span class="pre">|</span> <span class="pre">int</span> <span class="pre">|</span> <span class="pre">float</span> <span class="pre">|</span> <span class="pre">complex</span> <span class="pre">|</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">bytes]</span> <span class="pre">=</span> <span class="pre">Index([800010123,</span> <span class="pre">800012331,</span> <span class="pre">800005662,</span> <span class="pre">800006277,</span> <span class="pre">800009690,</span> <span class="pre">800015240,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">800016809,</span> <span class="pre">800001894,</span> <span class="pre">800005664,</span> <span class="pre">800006488,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">...</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">41028035,</span>&#160; <span class="pre">41028026,</span>&#160; <span class="pre">41025904,</span>&#160; <span class="pre">15489152,</span>&#160; <span class="pre">41022861,</span>&#160; <span class="pre">41022723,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">15465127,</span>&#160; <span class="pre">15456882,</span>&#160; <span class="pre">15476223,</span>&#160; <span class="pre">15448784],</span>&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">dtype='int64',</span> <span class="pre">name='nwm_feature_id',</span> <span class="pre">length=8866),</span> <span class="pre">variables:</span> <span class="pre">~typing.List[str]</span> <span class="pre">=</span> <span class="pre">['streamflow']</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dataset</span></span></span><a class="headerlink" href="#hydrotools.nwm_client.NWMFileProcessor.NWMFileProcessor.get_dataset" title="Link to this definition">¶</a></dt>
+<dd><p>Generate an xarray.Dataset from an input directory of NWM .nc files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>paths</strong> (<em>str</em><em> or </em><em>array-like</em><em> of </em><em>paths</em><em>, </em><em>required</em>) – Glob string or array-like of paths passed directly to xarray.open_mfdataset</p></li>
+<li><p><strong>feature_id_filter</strong> (<em>array-like</em><em>, </em><em>optional</em>) – Subset of feature IDs to return. Defaults to USGS assimilation locations.</p></li>
+<li><p><strong>variables</strong> (<em>list</em><em> of </em><em>str</em><em>, </em><em>optional</em><em>, </em><em>default</em><em> [</em><em>&quot;streamflow&quot;</em><em>]</em>) – List of variables to retrieve from source files. Options include:
+‘streamflow’, ‘nudge’, ‘velocity’, ‘qSfcLatRunoff’, ‘qBucket’, ‘qBtmVertRunoff’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>xarray.Dataset of paths lazily loaded.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 
         </article>
       </div>
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="hydrotools.nwm_client.ParquetStore.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">hydrotools.nwm_client.ParquetStore module</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="hydrotools.nwm_client.NWMFileClient.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">hydrotools.nwm_client.NWMFileClient module</div>
+                
+              </div>
+            </a>
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
@@ -312,8 +392,36 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">hydrotools.nwm_client.NWMFileProcessor module</a><ul>
+<li><a class="reference internal" href="#nwm-file-processor">NWM File Processor</a><ul>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#hydrotools.nwm_client.NWMFileProcessor.NWMFileProcessor"><code class="docutils literal notranslate"><span class="pre">NWMFileProcessor</span></code></a><ul>
+<li><a class="reference internal" href="#hydrotools.nwm_client.NWMFileProcessor.NWMFileProcessor.convert_to_dask_dataframe"><code class="docutils literal notranslate"><span class="pre">NWMFileProcessor.convert_to_dask_dataframe()</span></code></a></li>
+<li><a class="reference internal" href="#hydrotools.nwm_client.NWMFileProcessor.NWMFileProcessor.convert_to_dataframe"><code class="docutils literal notranslate"><span class="pre">NWMFileProcessor.convert_to_dataframe()</span></code></a></li>
+<li><a class="reference internal" href="#hydrotools.nwm_client.NWMFileProcessor.NWMFileProcessor.get_dataset"><code class="docutils literal notranslate"><span class="pre">NWMFileProcessor.get_dataset()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
@@ -322,8 +430,5 @@
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=5fa4622c"></script>
-    
-<script src="_static/searchtools.js"></script>
-<script src="_static/language_data.js"></script>
-<script src="searchindex.js"></script></body>
+    </body>
 </html>

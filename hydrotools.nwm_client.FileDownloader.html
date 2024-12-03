@@ -1,13 +1,13 @@
 <!doctype html>
 <html class="no-js" lang="en" data-content_root="./">
-  <head>
-<meta charset="utf-8"/>
+  <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="#" />
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="hydrotools.nwm_client.GCPFileCatalog module" href="hydrotools.nwm_client.GCPFileCatalog.html" /><link rel="prev" title="hydrotools.nwm_client.AzureFileCatalog module" href="hydrotools.nwm_client.AzureFileCatalog.html" />
 
     <!-- Generated with Sphinx 7.4.7 and Furo 2024.08.06 -->
-<meta name="robots" content="noindex" />
-<title>Search - OWPHydroTools 2.4.0 documentation</title><link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+        <title>hydrotools.nwm_client.FileDownloader module - OWPHydroTools 2.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
     
@@ -178,7 +178,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -192,21 +192,21 @@
   
   <span class="sidebar-brand-text">OWPHydroTools 2.4.0 documentation</span>
   
-</a><form class="sidebar-search-container" method="get" action="#" role="search">
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">API:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1 has-children"><a class="reference internal" href="hydrotools.nwis_client.html">hydrotools.nwis_client subpackage</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of hydrotools.nwis_client subpackage</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="hydrotools.nwis_client.iv.html">hydrotools.nwis_client.iv module</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="hydrotools.nwm_client.html">hydrotools.nwm_client subpackage</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of hydrotools.nwm_client subpackage</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="hydrotools.nwm_client.html">hydrotools.nwm_client subpackage</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of hydrotools.nwm_client subpackage</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.AzureFileCatalog.html">hydrotools.nwm_client.AzureFileCatalog module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.FileDownloader.html">hydrotools.nwm_client.FileDownloader module</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">hydrotools.nwm_client.FileDownloader module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.GCPFileCatalog.html">hydrotools.nwm_client.GCPFileCatalog module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.HTTPFileCatalog.html">hydrotools.nwm_client.HTTPFileCatalog module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.NWMClient.html">hydrotools.nwm_client.NWMClient module</a></li>
@@ -260,7 +260,13 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          <div class="view-this-page">
+  <a class="muted-link" href="_sources/hydrotools.nwm_client.FileDownloader.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
@@ -269,31 +275,145 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          
-<noscript>
-<div class="admonition error">
-  <p class="admonition-title">Error</p>
-  <p>
-    Please activate JavaScript to enable the search functionality.
-  </p>
-</div>
-</noscript>
+          <section id="module-hydrotools.nwm_client.FileDownloader">
+<span id="hydrotools-nwm-client-filedownloader-module"></span><h1>hydrotools.nwm_client.FileDownloader module<a class="headerlink" href="#module-hydrotools.nwm_client.FileDownloader" title="Link to this heading">¶</a></h1>
+<section id="file-downloader">
+<h2>File Downloader<a class="headerlink" href="#file-downloader" title="Link to this heading">¶</a></h2>
+<p>Tool for downloading files asynchronously.</p>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Link to this heading">¶</a></h3>
+<p>FileDownloader</p>
+</section>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="hydrotools.nwm_client.FileDownloader.FileDownloader">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hydrotools.nwm_client.FileDownloader.</span></span><span class="sig-name descname"><span class="pre">FileDownloader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_directory:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">~pathlib.Path</span> <span class="pre">=</span> <span class="pre">PosixPath('.')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_directory:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ssl_context:</span> <span class="pre">~ssl.SSLContext</span> <span class="pre">=</span> <span class="pre">&lt;ssl.SSLContext</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hydrotools.nwm_client.FileDownloader.FileDownloader" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Provides a convenient interface to download a list of files
+asynchronously using HTTP.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="hydrotools.nwm_client.FileDownloader.FileDownloader.create_directory">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_directory</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#hydrotools.nwm_client.FileDownloader.FileDownloader.create_directory" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
 
-<div id="search-results"></div>
+<dl class="py method">
+<dt class="sig sig-object py" id="hydrotools.nwm_client.FileDownloader.FileDownloader.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src_dst_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#hydrotools.nwm_client.FileDownloader.FileDownloader.get" title="Link to this definition">¶</a></dt>
+<dd><p>Setup event loop and asynchronously download multiple files. If
+self.create_directory is True, an output directory will be
+created if needed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>src_dst_list</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>,</em><em>str</em><em>]</em><em>]</em><em>, </em><em>required</em>) – List of tuples containing two strings. The first string is the
+source URL from which to retrieve a file, the second string is the
+local filename where the file will be saved.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>optional</em><em>, </em><em>default False</em>) – If True will overwrite destination file, if it exists. If False,
+download of this file is skipped.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nwm_client.FileDownloader</span> <span class="kn">import</span> <span class="n">FileDownloader</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">downloader</span> <span class="o">=</span> <span class="n">FileDownloader</span><span class="p">(</span><span class="n">output_directory</span><span class="o">=</span><span class="s2">&quot;my_output&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># This will download the pandas homepage and save it to &quot;my_output/index.html&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">downloader</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">[(</span><span class="s2">&quot;https://pandas.pydata.org/docs/user_guide/index.html&quot;</span><span class="p">,</span><span class="s2">&quot;index.html&quot;</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hydrotools.nwm_client.FileDownloader.FileDownloader.get_file">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ClientSession</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#hydrotools.nwm_client.FileDownloader.FileDownloader.get_file" title="Link to this definition">¶</a></dt>
+<dd><p>Download a single file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> (<em>str</em><em>, </em><em>required</em>) – URL path to file.</p></li>
+<li><p><strong>filename</strong> (<em>str</em><em>, </em><em>required</em>) – Local filename used to write downloaded file. This will save the file
+to self.output_directory/filename</p></li>
+<li><p><strong>session</strong> (<em>aiohttp.ClientSession</em><em>, </em><em>required</em>) – Session object used for retrieval.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hydrotools.nwm_client.FileDownloader.FileDownloader.get_files">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src_dst_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#hydrotools.nwm_client.FileDownloader.FileDownloader.get_files" title="Link to this definition">¶</a></dt>
+<dd><p>Asynchronously download multiple files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>src_dst_list</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>,</em><em>str</em><em>]</em><em>]</em><em>, </em><em>required</em>) – List of tuples containing two strings. The first string is the
+source URL from which to retrieve a file, the second string is the
+local filename where the file will be saved.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="hydrotools.nwm_client.FileDownloader.FileDownloader.limit">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">limit</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#hydrotools.nwm_client.FileDownloader.FileDownloader.limit" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="hydrotools.nwm_client.FileDownloader.FileDownloader.output_directory">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">output_directory</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span></em><a class="headerlink" href="#hydrotools.nwm_client.FileDownloader.FileDownloader.output_directory" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="hydrotools.nwm_client.FileDownloader.FileDownloader.ssl_context">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ssl_context</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">SSLContext</span></em><a class="headerlink" href="#hydrotools.nwm_client.FileDownloader.FileDownloader.ssl_context" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
 
         </article>
       </div>
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="hydrotools.nwm_client.GCPFileCatalog.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">hydrotools.nwm_client.GCPFileCatalog module</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="hydrotools.nwm_client.AzureFileCatalog.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">hydrotools.nwm_client.AzureFileCatalog module</div>
+                
+              </div>
+            </a>
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
@@ -312,8 +432,40 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">hydrotools.nwm_client.FileDownloader module</a><ul>
+<li><a class="reference internal" href="#file-downloader">File Downloader</a><ul>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#hydrotools.nwm_client.FileDownloader.FileDownloader"><code class="docutils literal notranslate"><span class="pre">FileDownloader</span></code></a><ul>
+<li><a class="reference internal" href="#hydrotools.nwm_client.FileDownloader.FileDownloader.create_directory"><code class="docutils literal notranslate"><span class="pre">FileDownloader.create_directory</span></code></a></li>
+<li><a class="reference internal" href="#hydrotools.nwm_client.FileDownloader.FileDownloader.get"><code class="docutils literal notranslate"><span class="pre">FileDownloader.get()</span></code></a></li>
+<li><a class="reference internal" href="#hydrotools.nwm_client.FileDownloader.FileDownloader.get_file"><code class="docutils literal notranslate"><span class="pre">FileDownloader.get_file()</span></code></a></li>
+<li><a class="reference internal" href="#hydrotools.nwm_client.FileDownloader.FileDownloader.get_files"><code class="docutils literal notranslate"><span class="pre">FileDownloader.get_files()</span></code></a></li>
+<li><a class="reference internal" href="#hydrotools.nwm_client.FileDownloader.FileDownloader.limit"><code class="docutils literal notranslate"><span class="pre">FileDownloader.limit</span></code></a></li>
+<li><a class="reference internal" href="#hydrotools.nwm_client.FileDownloader.FileDownloader.output_directory"><code class="docutils literal notranslate"><span class="pre">FileDownloader.output_directory</span></code></a></li>
+<li><a class="reference internal" href="#hydrotools.nwm_client.FileDownloader.FileDownloader.ssl_context"><code class="docutils literal notranslate"><span class="pre">FileDownloader.ssl_context</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
@@ -322,8 +474,5 @@
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=5fa4622c"></script>
-    
-<script src="_static/searchtools.js"></script>
-<script src="_static/language_data.js"></script>
-<script src="searchindex.js"></script></body>
+    </body>
 </html>

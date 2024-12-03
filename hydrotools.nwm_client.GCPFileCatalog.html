@@ -1,13 +1,13 @@
 <!doctype html>
 <html class="no-js" lang="en" data-content_root="./">
-  <head>
-<meta charset="utf-8"/>
+  <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="#" />
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="hydrotools.nwm_client.HTTPFileCatalog module" href="hydrotools.nwm_client.HTTPFileCatalog.html" /><link rel="prev" title="hydrotools.nwm_client.FileDownloader module" href="hydrotools.nwm_client.FileDownloader.html" />
 
     <!-- Generated with Sphinx 7.4.7 and Furo 2024.08.06 -->
-<meta name="robots" content="noindex" />
-<title>Search - OWPHydroTools 2.4.0 documentation</title><link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+        <title>hydrotools.nwm_client.GCPFileCatalog module - OWPHydroTools 2.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
     
@@ -178,7 +178,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -192,22 +192,22 @@
   
   <span class="sidebar-brand-text">OWPHydroTools 2.4.0 documentation</span>
   
-</a><form class="sidebar-search-container" method="get" action="#" role="search">
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">API:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1 has-children"><a class="reference internal" href="hydrotools.nwis_client.html">hydrotools.nwis_client subpackage</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of hydrotools.nwis_client subpackage</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="hydrotools.nwis_client.iv.html">hydrotools.nwis_client.iv module</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="hydrotools.nwm_client.html">hydrotools.nwm_client subpackage</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of hydrotools.nwm_client subpackage</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="hydrotools.nwm_client.html">hydrotools.nwm_client subpackage</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of hydrotools.nwm_client subpackage</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.AzureFileCatalog.html">hydrotools.nwm_client.AzureFileCatalog module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.FileDownloader.html">hydrotools.nwm_client.FileDownloader module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.GCPFileCatalog.html">hydrotools.nwm_client.GCPFileCatalog module</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">hydrotools.nwm_client.GCPFileCatalog module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.HTTPFileCatalog.html">hydrotools.nwm_client.HTTPFileCatalog module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.NWMClient.html">hydrotools.nwm_client.NWMClient module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.NWMClientDefaults.html">hydrotools.nwm_client.NWMClientDefaults module</a></li>
@@ -260,7 +260,13 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          <div class="view-this-page">
+  <a class="muted-link" href="_sources/hydrotools.nwm_client.GCPFileCatalog.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
@@ -269,31 +275,90 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          
-<noscript>
-<div class="admonition error">
-  <p class="admonition-title">Error</p>
-  <p>
-    Please activate JavaScript to enable the search functionality.
-  </p>
-</div>
-</noscript>
+          <section id="module-hydrotools.nwm_client.GCPFileCatalog">
+<span id="hydrotools-nwm-client-gcpfilecatalog-module"></span><h1>hydrotools.nwm_client.GCPFileCatalog module<a class="headerlink" href="#module-hydrotools.nwm_client.GCPFileCatalog" title="Link to this heading">¶</a></h1>
+<section id="nwm-google-cloud-platform-file-catalog">
+<h2>NWM Google Cloud Platform File Catalog<a class="headerlink" href="#nwm-google-cloud-platform-file-catalog" title="Link to this heading">¶</a></h2>
+<p>Concrete implementation of a National Water Model file client for discovering
+files on Google Cloud Platform (GCP).</p>
+<p>GCP – <a class="reference external" href="https://console.cloud.google.com/marketplace/details/noaa-public/national-water-model">https://console.cloud.google.com/marketplace/details/noaa-public/national-water-model</a></p>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Link to this heading">¶</a></h3>
+<p>GCPFileCatalog</p>
+</section>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="hydrotools.nwm_client.GCPFileCatalog.GCPFileCatalog">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hydrotools.nwm_client.GCPFileCatalog.</span></span><span class="sig-name descname"><span class="pre">GCPFileCatalog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bucket_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'national-water-model'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hydrotools.nwm_client.GCPFileCatalog.GCPFileCatalog" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="hydrotools.nwm_client.NWMFileCatalog.html#hydrotools.nwm_client.NWMFileCatalog.NWMFileCatalog" title="hydrotools.nwm_client.NWMFileCatalog.NWMFileCatalog"><code class="xref py py-class docutils literal notranslate"><span class="pre">NWMFileCatalog</span></code></a></p>
+<p>A Google Cloud client class for NWM data.
+This GCPFileCatalog class provides various methods for discovering NWM
+files on Google Cloud Platform.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hydrotools.nwm_client.GCPFileCatalog.GCPFileCatalog._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#hydrotools.nwm_client.GCPFileCatalog.GCPFileCatalog._abc_impl" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
 
-<div id="search-results"></div>
+<dl class="py property">
+<dt class="sig sig-object py" id="hydrotools.nwm_client.GCPFileCatalog.GCPFileCatalog.bucket_name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bucket_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#hydrotools.nwm_client.GCPFileCatalog.GCPFileCatalog.bucket_name" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hydrotools.nwm_client.GCPFileCatalog.GCPFileCatalog.list_blobs">
+<span class="sig-name descname"><span class="pre">list_blobs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">must_contain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'channel_rt'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#hydrotools.nwm_client.GCPFileCatalog.GCPFileCatalog.list_blobs" title="Link to this definition">¶</a></dt>
+<dd><p>List available blobs with provided parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>configuration</strong> (<em>str</em><em>, </em><em>required</em>) – Particular model simulation or forecast configuration. For a list
+of available configurations see NWMDataService.configurations</p></li>
+<li><p><strong>reference_time</strong> (<em>str</em><em>, </em><em>required</em>) – Model simulation or forecast issuance/reference time in
+YYYYmmddTHHZ format.</p></li>
+<li><p><strong>must_contain</strong> (<em>str</em><em>, </em><em>optional</em><em>, </em><em>default 'channel_rt'</em>) – Optional substring found in each blob name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of blob names that satisfy the criteria set by the parameters.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 
         </article>
       </div>
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="hydrotools.nwm_client.HTTPFileCatalog.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">hydrotools.nwm_client.HTTPFileCatalog module</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="hydrotools.nwm_client.FileDownloader.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">hydrotools.nwm_client.FileDownloader module</div>
+                
+              </div>
+            </a>
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
@@ -312,8 +377,36 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">hydrotools.nwm_client.GCPFileCatalog module</a><ul>
+<li><a class="reference internal" href="#nwm-google-cloud-platform-file-catalog">NWM Google Cloud Platform File Catalog</a><ul>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#hydrotools.nwm_client.GCPFileCatalog.GCPFileCatalog"><code class="docutils literal notranslate"><span class="pre">GCPFileCatalog</span></code></a><ul>
+<li><a class="reference internal" href="#hydrotools.nwm_client.GCPFileCatalog.GCPFileCatalog._abc_impl"><code class="docutils literal notranslate"><span class="pre">GCPFileCatalog._abc_impl</span></code></a></li>
+<li><a class="reference internal" href="#hydrotools.nwm_client.GCPFileCatalog.GCPFileCatalog.bucket_name"><code class="docutils literal notranslate"><span class="pre">GCPFileCatalog.bucket_name</span></code></a></li>
+<li><a class="reference internal" href="#hydrotools.nwm_client.GCPFileCatalog.GCPFileCatalog.list_blobs"><code class="docutils literal notranslate"><span class="pre">GCPFileCatalog.list_blobs()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
@@ -322,8 +415,5 @@
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=5fa4622c"></script>
-    
-<script src="_static/searchtools.js"></script>
-<script src="_static/language_data.js"></script>
-<script src="searchindex.js"></script></body>
+    </body>
 </html>

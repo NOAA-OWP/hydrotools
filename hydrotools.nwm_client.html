@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="hydrotools.nwm_client.gcp module" href="hydrotools.nwm_client.gcp.html" /><link rel="prev" title="hydrotools.nwis_client.iv module" href="hydrotools.nwis_client.iv.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="hydrotools.nwm_client.AzureFileCatalog module" href="hydrotools.nwm_client.AzureFileCatalog.html" /><link rel="prev" title="hydrotools.nwis_client.iv module" href="hydrotools.nwis_client.iv.html" />
 
     <!-- Generated with Sphinx 7.4.7 and Furo 2024.08.06 -->
-        <title>hydrotools.nwm_client subpackage - OWPHydroTools 2.1.2 documentation</title>
+        <title>hydrotools.nwm_client subpackage - OWPHydroTools 2.4.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
@@ -166,7 +166,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">OWPHydroTools 2.1.2 documentation</div></a>
+      <a href="index.html"><div class="brand">OWPHydroTools 2.4.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -190,7 +190,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">OWPHydroTools 2.1.2 documentation</span>
+  <span class="sidebar-brand-text">OWPHydroTools 2.4.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -205,9 +205,17 @@
 </ul>
 </li>
 <li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">hydrotools.nwm_client subpackage</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of hydrotools.nwm_client subpackage</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.gcp.html">hydrotools.nwm_client.gcp module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.http.html">hydrotools.nwm_client.http module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.utils.html">hydrotools.nwm_client.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.AzureFileCatalog.html">hydrotools.nwm_client.AzureFileCatalog module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.FileDownloader.html">hydrotools.nwm_client.FileDownloader module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.GCPFileCatalog.html">hydrotools.nwm_client.GCPFileCatalog module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.HTTPFileCatalog.html">hydrotools.nwm_client.HTTPFileCatalog module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.NWMClient.html">hydrotools.nwm_client.NWMClient module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.NWMClientDefaults.html">hydrotools.nwm_client.NWMClientDefaults module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.NWMFileCatalog.html">hydrotools.nwm_client.NWMFileCatalog module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.NWMFileClient.html">hydrotools.nwm_client.NWMFileClient module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.NWMFileProcessor.html">hydrotools.nwm_client.NWMFileProcessor module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.ParquetStore.html">hydrotools.nwm_client.ParquetStore module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.UnitHandler.html">hydrotools.nwm_client.UnitHandler module</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="hydrotools._restclient.html">hydrotools._restclient subpackage</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of hydrotools._restclient subpackage</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -279,9 +287,176 @@
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="hydrotools.nwm_client.gcp.html">hydrotools.nwm_client.gcp module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hydrotools.nwm_client.http.html">hydrotools.nwm_client.http module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hydrotools.nwm_client.utils.html">hydrotools.nwm_client.utils module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hydrotools.nwm_client.AzureFileCatalog.html">hydrotools.nwm_client.AzureFileCatalog module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.AzureFileCatalog.html#nwm-azure-blob-storage-container-file-catalog">NWM Azure Blob Storage Container File Catalog</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.AzureFileCatalog.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.AzureFileCatalog.html#hydrotools.nwm_client.AzureFileCatalog.AzureFileCatalog"><code class="docutils literal notranslate"><span class="pre">AzureFileCatalog</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.AzureFileCatalog.html#hydrotools.nwm_client.AzureFileCatalog.AzureFileCatalog._abc_impl"><code class="docutils literal notranslate"><span class="pre">AzureFileCatalog._abc_impl</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.AzureFileCatalog.html#hydrotools.nwm_client.AzureFileCatalog.AzureFileCatalog.list_blobs"><code class="docutils literal notranslate"><span class="pre">AzureFileCatalog.list_blobs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.AzureFileCatalog.html#hydrotools.nwm_client.AzureFileCatalog.AzureFileCatalog.server"><code class="docutils literal notranslate"><span class="pre">AzureFileCatalog.server</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hydrotools.nwm_client.FileDownloader.html">hydrotools.nwm_client.FileDownloader module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.FileDownloader.html#file-downloader">File Downloader</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.FileDownloader.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.FileDownloader.html#hydrotools.nwm_client.FileDownloader.FileDownloader"><code class="docutils literal notranslate"><span class="pre">FileDownloader</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.FileDownloader.html#hydrotools.nwm_client.FileDownloader.FileDownloader.create_directory"><code class="docutils literal notranslate"><span class="pre">FileDownloader.create_directory</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.FileDownloader.html#hydrotools.nwm_client.FileDownloader.FileDownloader.get"><code class="docutils literal notranslate"><span class="pre">FileDownloader.get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.FileDownloader.html#hydrotools.nwm_client.FileDownloader.FileDownloader.get_file"><code class="docutils literal notranslate"><span class="pre">FileDownloader.get_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.FileDownloader.html#hydrotools.nwm_client.FileDownloader.FileDownloader.get_files"><code class="docutils literal notranslate"><span class="pre">FileDownloader.get_files()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.FileDownloader.html#hydrotools.nwm_client.FileDownloader.FileDownloader.limit"><code class="docutils literal notranslate"><span class="pre">FileDownloader.limit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.FileDownloader.html#hydrotools.nwm_client.FileDownloader.FileDownloader.output_directory"><code class="docutils literal notranslate"><span class="pre">FileDownloader.output_directory</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.FileDownloader.html#hydrotools.nwm_client.FileDownloader.FileDownloader.ssl_context"><code class="docutils literal notranslate"><span class="pre">FileDownloader.ssl_context</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hydrotools.nwm_client.GCPFileCatalog.html">hydrotools.nwm_client.GCPFileCatalog module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.GCPFileCatalog.html#nwm-google-cloud-platform-file-catalog">NWM Google Cloud Platform File Catalog</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.GCPFileCatalog.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.GCPFileCatalog.html#hydrotools.nwm_client.GCPFileCatalog.GCPFileCatalog"><code class="docutils literal notranslate"><span class="pre">GCPFileCatalog</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.GCPFileCatalog.html#hydrotools.nwm_client.GCPFileCatalog.GCPFileCatalog._abc_impl"><code class="docutils literal notranslate"><span class="pre">GCPFileCatalog._abc_impl</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.GCPFileCatalog.html#hydrotools.nwm_client.GCPFileCatalog.GCPFileCatalog.bucket_name"><code class="docutils literal notranslate"><span class="pre">GCPFileCatalog.bucket_name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.GCPFileCatalog.html#hydrotools.nwm_client.GCPFileCatalog.GCPFileCatalog.list_blobs"><code class="docutils literal notranslate"><span class="pre">GCPFileCatalog.list_blobs()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hydrotools.nwm_client.HTTPFileCatalog.html">hydrotools.nwm_client.HTTPFileCatalog module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.HTTPFileCatalog.html#nwm-http-file-catalog">NWM HTTP File Catalog</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.HTTPFileCatalog.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.HTTPFileCatalog.html#hydrotools.nwm_client.HTTPFileCatalog.HTTPFileCatalog"><code class="docutils literal notranslate"><span class="pre">HTTPFileCatalog</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.HTTPFileCatalog.html#hydrotools.nwm_client.HTTPFileCatalog.HTTPFileCatalog._abc_impl"><code class="docutils literal notranslate"><span class="pre">HTTPFileCatalog._abc_impl</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.HTTPFileCatalog.html#hydrotools.nwm_client.HTTPFileCatalog.HTTPFileCatalog.get_html"><code class="docutils literal notranslate"><span class="pre">HTTPFileCatalog.get_html()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.HTTPFileCatalog.html#hydrotools.nwm_client.HTTPFileCatalog.HTTPFileCatalog.list_blobs"><code class="docutils literal notranslate"><span class="pre">HTTPFileCatalog.list_blobs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.HTTPFileCatalog.html#hydrotools.nwm_client.HTTPFileCatalog.HTTPFileCatalog.server"><code class="docutils literal notranslate"><span class="pre">HTTPFileCatalog.server</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.HTTPFileCatalog.html#hydrotools.nwm_client.HTTPFileCatalog.HTTPFileCatalog.ssl_context"><code class="docutils literal notranslate"><span class="pre">HTTPFileCatalog.ssl_context</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hydrotools.nwm_client.NWMClient.html">hydrotools.nwm_client.NWMClient module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.NWMClient.html#nwm-client-tools">NWM Client Tools</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMClient.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.NWMClient.html#hydrotools.nwm_client.NWMClient.NWMClient"><code class="docutils literal notranslate"><span class="pre">NWMClient</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMClient.html#hydrotools.nwm_client.NWMClient.NWMClient._abc_impl"><code class="docutils literal notranslate"><span class="pre">NWMClient._abc_impl</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMClient.html#hydrotools.nwm_client.NWMClient.NWMClient.get"><code class="docutils literal notranslate"><span class="pre">NWMClient.get()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.NWMClient.html#hydrotools.nwm_client.NWMClient.QueryError"><code class="docutils literal notranslate"><span class="pre">QueryError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.NWMClient.html#hydrotools.nwm_client.NWMClient.StoreNotFoundError"><code class="docutils literal notranslate"><span class="pre">StoreNotFoundError</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hydrotools.nwm_client.NWMClientDefaults.html">hydrotools.nwm_client.NWMClientDefaults module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.NWMClientDefaults.html#nwm-client-defaults">NWM Client Defaults</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMClientDefaults.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.NWMClientDefaults.html#hydrotools.nwm_client.NWMClientDefaults.MeasurementUnitSystem"><code class="docutils literal notranslate"><span class="pre">MeasurementUnitSystem</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMClientDefaults.html#hydrotools.nwm_client.NWMClientDefaults.MeasurementUnitSystem.SI"><code class="docutils literal notranslate"><span class="pre">MeasurementUnitSystem.SI</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMClientDefaults.html#hydrotools.nwm_client.NWMClientDefaults.MeasurementUnitSystem.US"><code class="docutils literal notranslate"><span class="pre">MeasurementUnitSystem.US</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.NWMClientDefaults.html#hydrotools.nwm_client.NWMClientDefaults.NWMClientDefaults"><code class="docutils literal notranslate"><span class="pre">NWMClientDefaults</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMClientDefaults.html#hydrotools.nwm_client.NWMClientDefaults.NWMClientDefaults.CATALOG"><code class="docutils literal notranslate"><span class="pre">NWMClientDefaults.CATALOG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMClientDefaults.html#hydrotools.nwm_client.NWMClientDefaults.NWMClientDefaults.CROSSWALK"><code class="docutils literal notranslate"><span class="pre">NWMClientDefaults.CROSSWALK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMClientDefaults.html#hydrotools.nwm_client.NWMClientDefaults.NWMClientDefaults.DOWNLOAD_DIRECTORY"><code class="docutils literal notranslate"><span class="pre">NWMClientDefaults.DOWNLOAD_DIRECTORY</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMClientDefaults.html#hydrotools.nwm_client.NWMClientDefaults.NWMClientDefaults.NWM_TO_SI_UNIT_MAPPING"><code class="docutils literal notranslate"><span class="pre">NWMClientDefaults.NWM_TO_SI_UNIT_MAPPING</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMClientDefaults.html#hydrotools.nwm_client.NWMClientDefaults.NWMClientDefaults.NWM_TO_US_UNIT_CONVERSION"><code class="docutils literal notranslate"><span class="pre">NWMClientDefaults.NWM_TO_US_UNIT_CONVERSION</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMClientDefaults.html#hydrotools.nwm_client.NWMClientDefaults.NWMClientDefaults.ROUTELINK_URL"><code class="docutils literal notranslate"><span class="pre">NWMClientDefaults.ROUTELINK_URL</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMClientDefaults.html#hydrotools.nwm_client.NWMClientDefaults.NWMClientDefaults.SI_TO_US_UNIT_MAPPING"><code class="docutils literal notranslate"><span class="pre">NWMClientDefaults.SI_TO_US_UNIT_MAPPING</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMClientDefaults.html#hydrotools.nwm_client.NWMClientDefaults.NWMClientDefaults.SSL_CONTEXT"><code class="docutils literal notranslate"><span class="pre">NWMClientDefaults.SSL_CONTEXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMClientDefaults.html#hydrotools.nwm_client.NWMClientDefaults.NWMClientDefaults.STORE"><code class="docutils literal notranslate"><span class="pre">NWMClientDefaults.STORE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMClientDefaults.html#hydrotools.nwm_client.NWMClientDefaults.NWMClientDefaults.UNIT_SYSTEM"><code class="docutils literal notranslate"><span class="pre">NWMClientDefaults.UNIT_SYSTEM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMClientDefaults.html#hydrotools.nwm_client.NWMClientDefaults.NWMClientDefaults.VARIABLES"><code class="docutils literal notranslate"><span class="pre">NWMClientDefaults.VARIABLES</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMClientDefaults.html#hydrotools.nwm_client.NWMClientDefaults.NWMClientDefaults._download_and_read_routelink_file"><code class="docutils literal notranslate"><span class="pre">NWMClientDefaults._download_and_read_routelink_file()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hydrotools.nwm_client.NWMFileCatalog.html">hydrotools.nwm_client.NWMFileCatalog module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.NWMFileCatalog.html#nwm-file-catalog">NWM File Catalog</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMFileCatalog.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.NWMFileCatalog.html#hydrotools.nwm_client.NWMFileCatalog.NWMFileCatalog"><code class="docutils literal notranslate"><span class="pre">NWMFileCatalog</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMFileCatalog.html#hydrotools.nwm_client.NWMFileCatalog.NWMFileCatalog._abc_impl"><code class="docutils literal notranslate"><span class="pre">NWMFileCatalog._abc_impl</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMFileCatalog.html#hydrotools.nwm_client.NWMFileCatalog.NWMFileCatalog.configurations"><code class="docutils literal notranslate"><span class="pre">NWMFileCatalog.configurations</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMFileCatalog.html#hydrotools.nwm_client.NWMFileCatalog.NWMFileCatalog.list_blobs"><code class="docutils literal notranslate"><span class="pre">NWMFileCatalog.list_blobs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMFileCatalog.html#hydrotools.nwm_client.NWMFileCatalog.NWMFileCatalog.raise_invalid_configuration"><code class="docutils literal notranslate"><span class="pre">NWMFileCatalog.raise_invalid_configuration()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMFileCatalog.html#hydrotools.nwm_client.NWMFileCatalog.NWMFileCatalog.separate_datetime"><code class="docutils literal notranslate"><span class="pre">NWMFileCatalog.separate_datetime()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hydrotools.nwm_client.NWMFileClient.html">hydrotools.nwm_client.NWMFileClient module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.NWMFileClient.html#nwm-file-client-tools">NWM File Client Tools</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMFileClient.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.NWMFileClient.html#hydrotools.nwm_client.NWMFileClient.NWMFileClient"><code class="docutils literal notranslate"><span class="pre">NWMFileClient</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMFileClient.html#hydrotools.nwm_client.NWMFileClient.NWMFileClient._abc_impl"><code class="docutils literal notranslate"><span class="pre">NWMFileClient._abc_impl</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMFileClient.html#hydrotools.nwm_client.NWMFileClient.NWMFileClient.catalog"><code class="docutils literal notranslate"><span class="pre">NWMFileClient.catalog</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMFileClient.html#hydrotools.nwm_client.NWMFileClient.NWMFileClient.cleanup_files"><code class="docutils literal notranslate"><span class="pre">NWMFileClient.cleanup_files</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMFileClient.html#hydrotools.nwm_client.NWMFileClient.NWMFileClient.crosswalk"><code class="docutils literal notranslate"><span class="pre">NWMFileClient.crosswalk</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMFileClient.html#hydrotools.nwm_client.NWMFileClient.NWMFileClient.dataframe_store"><code class="docutils literal notranslate"><span class="pre">NWMFileClient.dataframe_store</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMFileClient.html#hydrotools.nwm_client.NWMFileClient.NWMFileClient.file_directory"><code class="docutils literal notranslate"><span class="pre">NWMFileClient.file_directory</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMFileClient.html#hydrotools.nwm_client.NWMFileClient.NWMFileClient.get"><code class="docutils literal notranslate"><span class="pre">NWMFileClient.get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMFileClient.html#hydrotools.nwm_client.NWMFileClient.NWMFileClient.get_files"><code class="docutils literal notranslate"><span class="pre">NWMFileClient.get_files()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMFileClient.html#hydrotools.nwm_client.NWMFileClient.NWMFileClient.ssl_context"><code class="docutils literal notranslate"><span class="pre">NWMFileClient.ssl_context</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hydrotools.nwm_client.NWMFileProcessor.html">hydrotools.nwm_client.NWMFileProcessor module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.NWMFileProcessor.html#nwm-file-processor">NWM File Processor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMFileProcessor.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.NWMFileProcessor.html#hydrotools.nwm_client.NWMFileProcessor.NWMFileProcessor"><code class="docutils literal notranslate"><span class="pre">NWMFileProcessor</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMFileProcessor.html#hydrotools.nwm_client.NWMFileProcessor.NWMFileProcessor.convert_to_dask_dataframe"><code class="docutils literal notranslate"><span class="pre">NWMFileProcessor.convert_to_dask_dataframe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMFileProcessor.html#hydrotools.nwm_client.NWMFileProcessor.NWMFileProcessor.convert_to_dataframe"><code class="docutils literal notranslate"><span class="pre">NWMFileProcessor.convert_to_dataframe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.NWMFileProcessor.html#hydrotools.nwm_client.NWMFileProcessor.NWMFileProcessor.get_dataset"><code class="docutils literal notranslate"><span class="pre">NWMFileProcessor.get_dataset()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hydrotools.nwm_client.ParquetStore.html">hydrotools.nwm_client.ParquetStore module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.ParquetStore.html#parquet-backed-dataframe-store">Parquet-backed DataFrame Store</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.ParquetStore.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.ParquetStore.html#hydrotools.nwm_client.ParquetStore.ParquetStore"><code class="docutils literal notranslate"><span class="pre">ParquetStore</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.ParquetStore.html#hydrotools.nwm_client.ParquetStore.ParquetStore._abc_impl"><code class="docutils literal notranslate"><span class="pre">ParquetStore._abc_impl</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.ParquetStore.html#hydrotools.nwm_client.ParquetStore.ParquetStore.append"><code class="docutils literal notranslate"><span class="pre">ParquetStore.append()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.ParquetStore.html#hydrotools.nwm_client.ParquetStore.ParquetStore.parameters"><code class="docutils literal notranslate"><span class="pre">ParquetStore.parameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.ParquetStore.html#hydrotools.nwm_client.ParquetStore.ParquetStore.root"><code class="docutils literal notranslate"><span class="pre">ParquetStore.root</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hydrotools.nwm_client.UnitHandler.html">hydrotools.nwm_client.UnitHandler module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hydrotools.nwm_client.UnitHandler.html#hydrotools.nwm_client.UnitHandler.UnitHandler"><code class="docutils literal notranslate"><span class="pre">UnitHandler</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.UnitHandler.html#hydrotools.nwm_client.UnitHandler.UnitHandler.unit_registry"><code class="docutils literal notranslate"><span class="pre">UnitHandler.unit_registry</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.UnitHandler.html#hydrotools.nwm_client.UnitHandler.UnitHandler.conversion_factor"><code class="docutils literal notranslate"><span class="pre">UnitHandler.conversion_factor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.UnitHandler.html#hydrotools.nwm_client.UnitHandler.UnitHandler.convert_values"><code class="docutils literal notranslate"><span class="pre">UnitHandler.convert_values()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydrotools.nwm_client.UnitHandler.html#id0"><code class="docutils literal notranslate"><span class="pre">UnitHandler.unit_registry</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </div>
 </section>
@@ -295,12 +470,12 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="hydrotools.nwm_client.gcp.html">
+          <a class="next-page" href="hydrotools.nwm_client.AzureFileCatalog.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">hydrotools.nwm_client.gcp module</div>
+                <div class="title">hydrotools.nwm_client.AzureFileCatalog module</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -319,7 +494,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2021, Jason A. Regina and Austin Raney
+                Copyright &#169; 2021-2024, Jason A. Regina and Austin Raney
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -359,7 +534,7 @@
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=b3e23499"></script>
+</div><script src="_static/documentation_options.js?v=4d935f96"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=5fa4622c"></script>
