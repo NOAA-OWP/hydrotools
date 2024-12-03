@@ -146,7 +146,7 @@ class FileDownloader:
 
         Examples
         --------
-        >>> from nwm_client_new.FileDownloader import FileDownloader
+        >>> from nwm_client.FileDownloader import FileDownloader
         >>> downloader = FileDownloader(output_directory="my_output")
 
         >>> # This will download the pandas homepage and save it to "my_output/index.html"

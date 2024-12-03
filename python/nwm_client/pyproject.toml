@@ -3,7 +3,7 @@ requires = ["setuptools>=70"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "hydrotools.nwm_client_new"
+name = "hydrotools.nwm_client"
 authors = [{ name = "Jason A. Regina", email = "jason.regina@noaa.gov" }]
 description = "Retrieve National Water Model data from various sources."
 readme = "README.md"
@@ -44,13 +44,13 @@ dependencies = [
 dynamic = ["version"]
 
 [tool.setuptools.dynamic]
-version = { attr = "hydrotools.nwm_client_new._version.__version__" }
+version = { attr = "hydrotools.nwm_client._version.__version__" }
 
 [project.optional-dependencies]
 develop = ["pytest"]
 
 [project.urls]
 Homepage = "https://github.com/NOAA-OWP/hydrotools"
-Documentation = "https://noaa-owp.github.io/hydrotools/hydrotools.nwm_client_new.html"
-Repository = "https://github.com/NOAA-OWP/hydrotools/tree/main/python/nwm_client_new"
+Documentation = "https://noaa-owp.github.io/hydrotools/hydrotools.nwm_client.html"
+Repository = "https://github.com/NOAA-OWP/hydrotools/tree/main/python/nwm_client"
 "Bug Tracker" = "https://github.com/NOAA-OWP/hydrotools/issues"

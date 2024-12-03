@@ -1,6 +1,6 @@
-# OWPHydroTools :: NWM Client New
+# OWPHydroTools :: NWM Client
 
-This subpackage implements various interfaces to retrieve National Water Model (NWM) data from various sources including Google Cloud Platform, NOMADS, local directories, or a generic web server directory listing. The primary use for this tool is to populate `pandas.Dataframe` objects with NWM streamflow data. See the [NWM Client New Documentation](https://noaa-owp.github.io/hydrotools/hydrotools.nwm_client_new.html) for a complete list and description of the currently available methods. To report bugs or request new features, submit an issue through the [OWPHydroTools Issue Tracker](https://github.com/NOAA-OWP/hydrotools/issues) on GitHub.
+This subpackage implements various interfaces to retrieve National Water Model (NWM) data from various sources including Google Cloud Platform, NOMADS, local directories, or a generic web server directory listing. The primary use for this tool is to populate `pandas.Dataframe` objects with NWM streamflow data. See the [NWM Client Documentation](https://noaa-owp.github.io/hydrotools/hydrotools.nwm_client.html) for a complete list and description of the currently available methods. To report bugs or request new features, submit an issue through the [OWPHydroTools Issue Tracker](https://github.com/NOAA-OWP/hydrotools/issues) on GitHub.
 
 ## Installation
 
@@ -17,12 +17,12 @@ $ source env/bin/activate
 $ python3 -m pip install --upgrade pip wheel
 
 # Install nwm_client
-$ python3 -m pip install hydrotools.nwm_client_new
+$ python3 -m pip install hydrotools.nwm_client
 ```
 
 ## Usage
 
-The following example demonstrates how one might use `hydrotools.nwm_client_new` to retrieve NWM streamflow forecasts.
+The following example demonstrates how one might use `hydrotools.nwm_client` to retrieve NWM streamflow forecasts.
 
 ### Code
 
@@ -30,7 +30,7 @@ The following example demonstrates how one might use `hydrotools.nwm_client_new`
 
 ```python
 # Import the NWM Client
-from hydrotools.nwm_client_new.NWMFileClient import NWMFileClient
+from hydrotools.nwm_client.NWMFileClient import NWMFileClient
 
 # Instantiate model data client
 model_data_client = NWMFileClient()
@@ -55,7 +55,7 @@ print(model_data_client.catalog.configurations)
 
 ```python
 # Import the NWM Client
-from hydrotools.nwm_client_new.NWMFileClient import NWMFileClient
+from hydrotools.nwm_client.NWMFileClient import NWMFileClient
 
 # Instantiate model data client
 #  By default, NWM values are in SI units
@@ -63,7 +63,7 @@ from hydrotools.nwm_client_new.NWMFileClient import NWMFileClient
 #  values in US standard units by setting the unit_system parameter 
 #  to MeasurementUnitSystem.US
 # 
-# from hydrotools.nwm_client_new.NWMClientDefaults import MeasurementUnitSystem
+# from hydrotools.nwm_client.NWMClientDefaults import MeasurementUnitSystem
 # model_data_client = NWMFileClient(unit_system=MeasurementUnitSystem.US)
 model_data_client = NWMFileClient()
 
@@ -93,8 +93,8 @@ print(forecast_data.head())
 
 ```python
 # Import the NWM Client
-from hydrotools.nwm_client_new.NWMFileClient import NWMFileClient
-from hydrotools.nwm_client_new.AzureFileCatalog import AzureFileCatalog
+from hydrotools.nwm_client.NWMFileClient import NWMFileClient
+from hydrotools.nwm_client.AzureFileCatalog import AzureFileCatalog
 import pandas as pd
 
 # Instantiate model data client
@@ -130,8 +130,8 @@ print(forecast_data.head())
 
 ```python
 # Import the NWM Client
-from hydrotools.nwm_client_new.NWMFileClient import NWMFileClient
-from hydrotools.nwm_client_new.HTTPFileCatalog import HTTPFileCatalog
+from hydrotools.nwm_client.NWMFileClient import NWMFileClient
+from hydrotools.nwm_client.HTTPFileCatalog import HTTPFileCatalog
 import pandas as pd
 
 # Instantiate model data client
@@ -167,9 +167,9 @@ print(forecast_data.head())
 
 ```python
 # Import the NWM Client
-from hydrotools.nwm_client_new.NWMFileClient import NWMFileClient
-from hydrotools.nwm_client_new.HTTPFileCatalog import HTTPFileCatalog
-from hydrotools.nwm_client_new.NWMClientDefaults import MeasurementUnitSystem
+from hydrotools.nwm_client.NWMFileClient import NWMFileClient
+from hydrotools.nwm_client.HTTPFileCatalog import HTTPFileCatalog
+from hydrotools.nwm_client.NWMClientDefaults import MeasurementUnitSystem
 import ssl
 
 # Create ssl context

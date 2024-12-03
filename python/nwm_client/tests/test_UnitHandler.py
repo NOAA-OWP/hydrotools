@@ -1,5 +1,5 @@
 import pytest
-from hydrotools.nwm_client_new import UnitHandler
+from hydrotools.nwm_client import UnitHandler
 import numpy as np
 import pandas as pd
 from tempfile import TemporaryDirectory

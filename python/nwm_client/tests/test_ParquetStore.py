@@ -1,6 +1,6 @@
 from tkinter import N
 import pytest
-from hydrotools.nwm_client_new.ParquetStore import ParquetStore
+from hydrotools.nwm_client.ParquetStore import ParquetStore
 from tempfile import TemporaryDirectory
 import pandas as pd
 import dask.dataframe as dd
