@@ -2,14 +2,6 @@ import pint
 from dataclasses import dataclass
 import numpy.typing as npt
 import pandas as pd
-import sys
-
-def _default_registry() -> pint.UnitRegistry:
-    """Get a default registry depending upon Python version."""
-    version = sys.version_info.major + sys.version_info.minor/10.0
-    if version < 3.8:
-        return pint.UnitRegistry()
-    return pint.UnitRegistry(cache_folder=":auto:")
 
 @dataclass
 class UnitHandler:
@@ -21,7 +13,7 @@ class UnitHandler:
         pint.UnitRegistry that handles all units used by UnitHandler.
     
     """
-    unit_registry: pint.UnitRegistry = _default_registry()
+    unit_registry: pint.UnitRegistry = pint.UnitRegistry()
 
     def conversion_factor(self, from_units: str, to_units: str) -> float:
         """Compute and return a conversion factor from from_units to 
