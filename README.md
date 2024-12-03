@@ -1,7 +1,7 @@
 ![hydrotools.events testing status](https://github.com/noaa-owp/hydrotools/actions/workflows/run_events.yml/badge.svg)
 ![hydrotools.metrics testing status](https://github.com/noaa-owp/hydrotools/actions/workflows/run_metrics.yml/badge.svg)
 ![hydrotools.nwis_client testing status](https://github.com/noaa-owp/hydrotools/actions/workflows/run_nwis_client.yml/badge.svg)
-![hydrotools.nwm_client_new testing status](https://github.com/noaa-owp/hydrotools/actions/workflows/run_nwm_client_new.yml/badge.svg)
+![hydrotools.nwm_client testing status](https://github.com/noaa-owp/hydrotools/actions/workflows/run_nwm_client.yml/badge.svg)
 ![hydrotools._restclient testing status](https://github.com/noaa-owp/hydrotools/actions/workflows/run_rest_client.yml/badge.svg)
 ![hydrotools.svi_client testing status](https://github.com/noaa-owp/hydrotools/actions/workflows/run_svi_client.yml/badge.svg)
 ![weekly unit tests](https://github.com/noaa-owp/hydrotools/actions/workflows/run_slow_unit_tests.yml/badge.svg)
@@ -27,7 +27,7 @@ It should be noted, we commonly refer to individual tools in OWPHydroTools as a 
 Currently the repository has the following subpackages:
 
 - `events`: Variety of methods used to perform event-based evaluations of hydrometric time series
-- `nwm_client_new`: Provides methods for retrieving National Water Model data from various sources including [Google Cloud Platform](https://console.cloud.google.com/marketplace/details/noaa-public/national-water-model) and [NOMADS](https://nomads.ncep.noaa.gov/pub/data/nccf/com/nwm/prod/)
+- `nwm_client`: Provides methods for retrieving National Water Model data from various sources including [Google Cloud Platform](https://console.cloud.google.com/marketplace/details/noaa-public/national-water-model) and [NOMADS](https://nomads.ncep.noaa.gov/pub/data/nccf/com/nwm/prod/)
 - `metrics`: Variety of methods used to compute common evaluation metrics
 - `nwis_client`: Provides easy to use methods for retrieving data from the [USGS NWIS Instantaneous Values (IV) Web Service](https://waterservices.usgs.gov/rest/IV-Service.html)
 - `svi_client`: Provides programmatic access to the Center for Disease Control's (CDC) [Social Vulnerability Index (SVI)](https://www.atsdr.cdc.gov/placeandhealth/svi/index.html)

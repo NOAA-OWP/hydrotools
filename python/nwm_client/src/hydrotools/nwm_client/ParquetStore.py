@@ -40,7 +40,7 @@ class ParquetStore(MutableMapping):
         >>> import pandas as pd
         >>> import dask.dataframe as dd
         >>> from time import sleep
-        >>> from hydrotools.nwm_client_new.ParquetStore import ParquetStore
+        >>> from hydrotools.nwm_client.ParquetStore import ParquetStore
         >>> def my_long_running_process(data: dict) -> dd.DataFrame:
         >>>     # Some long running process
         >>>     sleep(0.2)

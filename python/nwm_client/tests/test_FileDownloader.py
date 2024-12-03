@@ -1,5 +1,5 @@
 import pytest
-from hydrotools.nwm_client_new.FileDownloader import FileDownloader
+from hydrotools.nwm_client.FileDownloader import FileDownloader
 from tempfile import TemporaryDirectory
 
 def test_parameters():

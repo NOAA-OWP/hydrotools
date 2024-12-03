@@ -1,5 +1,5 @@
 import pytest
-from hydrotools.nwm_client_new.NWMFileProcessor import NWMFileProcessor
+from hydrotools.nwm_client.NWMFileProcessor import NWMFileProcessor
 from pathlib import Path
 
 input_directory = Path(__file__).parent / "short_range"

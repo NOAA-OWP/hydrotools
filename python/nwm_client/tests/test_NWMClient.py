@@ -1,8 +1,8 @@
 import pytest
-from hydrotools.nwm_client_new.NWMFileClient import NWMFileClient
-from hydrotools.nwm_client_new.HTTPFileCatalog import HTTPFileCatalog
+from hydrotools.nwm_client.NWMFileClient import NWMFileClient
+from hydrotools.nwm_client.HTTPFileCatalog import HTTPFileCatalog
 import pandas as pd
-from hydrotools.nwm_client_new.NWMClient import StoreNotFoundError, QueryError
+from hydrotools.nwm_client.NWMClient import StoreNotFoundError, QueryError
 
 # Set reference time
 yesterday = pd.Timestamp.utcnow() - pd.Timedelta("1D")

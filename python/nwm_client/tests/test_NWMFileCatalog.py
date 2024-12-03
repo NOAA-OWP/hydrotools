@@ -1,7 +1,7 @@
 import pytest
-from hydrotools.nwm_client_new.GCPFileCatalog import GCPFileCatalog
-from hydrotools.nwm_client_new.HTTPFileCatalog import HTTPFileCatalog
-from hydrotools.nwm_client_new.AzureFileCatalog import AzureFileCatalog
+from hydrotools.nwm_client.GCPFileCatalog import GCPFileCatalog
+from hydrotools.nwm_client.HTTPFileCatalog import HTTPFileCatalog
+from hydrotools.nwm_client.AzureFileCatalog import AzureFileCatalog
 import pandas as pd
 
 # Set reference time
