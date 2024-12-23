@@ -58,30 +58,6 @@ jobs:
     - name: Run all unittests 
       run: |
         python3 -m pytest -s python/nwis_client/
-  caches:
-    name: Caches
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python3 -m pip install -U pip
-        python3 -m pip install ./python/caches[develop]
-    - name: Echo dependency versions
-      run: |
-        python3 -m pip freeze
-    - name: Run all unittests 
-      run: |
-        python3 -m pytest -s python/caches/
   metrics:
     name: Metrics
     runs-on: ubuntu-latest
@@ -108,7 +84,6 @@ jobs:
         python3 -m pytest -s python/metrics/
   nwm_client:
     name: NWM Client
-    needs: caches
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -124,38 +99,13 @@ jobs:
     - name: Install dependencies
       run: |
         python3 -m pip install -U pip
-        python3 -m pip install ./python/caches
-        python3 -m pip install ./python/nwm_client[gcp,develop]
+        python3 -m pip install ./python/nwm_client[develop]
     - name: Echo dependency versions
       run: |
         python3 -m pip freeze
     - name: Run all unittests 
       run: |
         python3 -m pytest -s python/nwm_client/
-  nwm_client_new:
-    name: NWM Client New
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python3 -m pip install -U pip
-        python3 -m pip install ./python/nwm_client_new[develop]
-    - name: Echo dependency versions
-      run: |
-        python3 -m pip freeze
-    - name: Run all unittests 
-      run: |
-        python3 -m pytest -s python/nwm_client_new/
   events:
     name: Events
     runs-on: ubuntu-latest
