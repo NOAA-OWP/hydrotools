@@ -6,8 +6,8 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="hydrotools.nwm_client subpackage" href="hydrotools.nwm_client.html" /><link rel="prev" title="hydrotools.nwis_client subpackage" href="hydrotools.nwis_client.html" />
 
     <!-- Generated with Sphinx 7.4.7 and Furo 2024.08.06 -->
-        <title>hydrotools.nwis_client.iv module - OWPHydroTools 2.4.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+        <title>hydrotools.nwis_client.iv module - OWPHydroTools 3.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
     
@@ -166,7 +166,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">OWPHydroTools 2.4.0 documentation</div></a>
+      <a href="index.html"><div class="brand">OWPHydroTools 3.0.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -190,7 +190,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">OWPHydroTools 2.4.0 documentation</span>
+  <span class="sidebar-brand-text">OWPHydroTools 3.0.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -312,7 +312,7 @@ requests concurrently.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hydrotools.nwis_client</span> <span class="kn">import</span> <span class="n">IVDataService</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">hydrotools.nwis_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">IVDataService</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">service</span> <span class="o">=</span> <span class="n">IVDataService</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sites</span><span class="o">=</span><span class="s1">&#39;01646500&#39;</span><span class="p">,</span> <span class="n">startDT</span><span class="o">=</span><span class="s2">&quot;2021-01-01&quot;</span><span class="p">,</span> <span class="n">endDT</span><span class="o">=</span><span class="s2">&quot;2021-02-01&quot;</span><span class="p">)</span>
 </pre></div>
@@ -338,7 +338,7 @@ requests concurrently.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># bbox = [-83.,36.5,-81.,38.5]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1">#</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># You can also specify start and end times using datetime, np.datetime64, timestamps!</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2021</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">bBox</span><span class="o">=</span><span class="n">bbox</span><span class="p">,</span> <span class="n">startDT</span><span class="o">=</span><span class="n">start</span><span class="p">)</span>
 </pre></div>
@@ -528,7 +528,7 @@ columns to the returned dataframe.</p></li>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hydrotools.nwis_client</span> <span class="kn">import</span> <span class="n">IVDataService</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">hydrotools.nwis_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">IVDataService</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">service</span> <span class="o">=</span> <span class="n">IVDataService</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sites</span><span class="o">=</span><span class="s1">&#39;01646500&#39;</span><span class="p">,</span> <span class="n">startDT</span><span class="o">=</span><span class="s2">&quot;2021-01-01&quot;</span><span class="p">,</span> <span class="n">endDT</span><span class="o">=</span><span class="s2">&quot;2021-02-01&quot;</span><span class="p">)</span>
 </pre></div>
@@ -554,7 +554,7 @@ columns to the returned dataframe.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># bbox = [-83.,36.5,-81.,38.5]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1">#</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># You can also specify start and end times using datetime, np.datetime64, timestamps!</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2021</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">bBox</span><span class="o">=</span><span class="n">bbox</span><span class="p">,</span> <span class="n">startDT</span><span class="o">=</span><span class="n">start</span><span class="p">)</span>
 </pre></div>
@@ -737,7 +737,7 @@ result lowered.</p>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=4d935f96"></script>
+</div><script src="_static/documentation_options.js?v=acc74ff5"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=5fa4622c"></script>
