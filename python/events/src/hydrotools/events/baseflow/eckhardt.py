@@ -23,6 +23,7 @@ linear_recession_analysis
 """
 
 import numpy as np
+import numpy.lib as npl
 import numpy.typing as npt
 from numba import jit, float64
 
@@ -45,7 +46,23 @@ def linear_recession_analysis(
         recession_constant: float
             The recession parameter, a, from Eckhardt (2005, 2008).
     """
-    return 0.9
+    # Compute differences from time step to the next
+    differences = np.diff(series) < 0.0
+
+    # Inspect overlapping windows to identify recession periods
+    periods = npl.stride_tricks.sliding_window_view(
+        differences,
+        window_shape=window
+        )
+    recessions = np.all(periods, axis=1)
+
+    # Extract recession period central values
+    indices = np.where(recessions)[0] + window // 2
+    x = series[indices-1]
+    y = series[indices]
+
+    # Compute recession constant using regression through the origin
+    return np.sum(x * y) / np.sum(x * x)
 
 @jit(float64(float64[:], float64), nogil=True)
 def maximum_baseflow_analysis(
@@ -60,7 +77,8 @@ def maximum_baseflow_analysis(
         series: array-like, required
             A numpy array of streamflow values. Assumes last value in series is baseflow.
         recession_constant: float, required
-            Linear reservoir recession constant.
+            Linear reservoir recession constant, a, from Eckhardt (2005, 2008). Must be
+            between 0.0 and 1.0, typically between 0.85 and 0.95 for daily streamflow.
             
         Returns
         -------
@@ -93,9 +111,11 @@ def separate_baseflow(
         series: array-type, required
             A numpy array of streamflow values. Assumes first value in series is baseflow.
         recession_constant: float, required
-            Linear reservoir recession constant, a, from Eckhardt (2005, 2008).
+            Linear reservoir recession constant, a, from Eckhardt (2005, 2008). Must be
+            between 0.0 and 1.0, typically between 0.85 and 0.95 for daily streamflow.
         maximum_baseflow_index: float
-            The maximum baseflow index, $BFI_{max}$, from Eckhardt (2005, 2008).
+            The maximum baseflow index, $BFI_{max}$, from Eckhardt (2005, 2008). Must be
+            between 0.0 and 1.0, typically between 0.25 and 0.8 for daily streamflow.
             
         Returns
         -------
