@@ -19,13 +19,19 @@ Eckhardt, K. (2008). A comparison of baseflow indices, which were calculated
 Functions
 ---------
 linear_recession_analysis
+maximum_baseflow_analysis
+apply_filter
+separate_baseflow
 
 """
 
+import datetime
+from typing import Union
 import numpy as np
 import numpy.lib as npl
 import numpy.typing as npt
 from numba import jit, float64
+import pandas as pd
 
 def linear_recession_analysis(
         series: npt.ArrayLike,
@@ -46,18 +52,23 @@ def linear_recession_analysis(
         recession_constant: float
             The recession parameter, a, from Eckhardt (2005, 2008).
     """
-    # Compute differences from time step to the next
-    differences = np.diff(series) < 0.0
+    # Find decreases in streamflow from time step to the next
+    # Note first decrease is a[i+1] - a[i]
+    decreases = np.diff(series) < 0.0
 
     # Inspect overlapping windows to identify recession periods
+    # Periods where all values decreased are "recessions"
     periods = npl.stride_tricks.sliding_window_view(
-        differences,
+        decreases,
         window_shape=window
         )
     recessions = np.all(periods, axis=1)
 
-    # Extract recession period central values
-    indices = np.where(recessions)[0] + window // 2
+    # Determine index of recession period central values
+    # Note: Increase index by one because np.diff caused a shift
+    indices = np.where(recessions)[0] + window // 2 + 1
+
+    # Select recession values
     x = series[indices-1]
     y = series[indices]
 
@@ -98,7 +109,7 @@ def maximum_baseflow_analysis(
     return np.sum(baseflow) / np.sum(series)
 
 @jit(float64[:](float64[:], float64, float64), nogil=True)
-def separate_baseflow(
+def apply_filter(
         series: npt.NDArray,
         recession_constant: float,
         maximum_baseflow_index: float
@@ -136,3 +147,59 @@ def separate_baseflow(
     for i in range(1, series.size):
         baseflow[i] = min(series[i], A * baseflow[i-1] + B * series[i])
     return baseflow
+
+def separate_baseflow(
+        series: pd.Series,
+        output_time_scale: Union[pd.Timedelta, datetime.timedelta, np.timedelta64, str, int],
+        recession_time_scale: Union[pd.Timedelta, datetime.timedelta, np.timedelta64, str, int] = "1D",
+        recession_window: int = 5
+) -> pd.Series:
+    """Applies a digitial recursive baseflow separation filter to series
+        and returns the result. This is a higher level method than `apply_filter`
+        that includes time resampling and filter parameter estimation.
+    
+        Parameters
+        ----------
+        series: pandas.Series, required
+            A pandas.Series of streamflow values with a DateTimeIndex. Assumes
+            first value in series is baseflow.
+        output_time_scale: pandas.Timedelta, datetime.timedelta, numpy.timedelta64, str, int, required
+            Output time-scale (or 'time-step') of the output baseflow time series.
+        recession_time_scale: pandas.Timedelta, datetime.timedelta, numpy.timedelta64, str, int, optional, default '1D'
+            Time-scale or 'time-step' over which to conduct recession analysis.
+        recession_window: int, optional, default 5
+            The minimum number of consecutively decreasing values in series
+            that indicate a period of recession.
+
+        Returns
+        -------
+        baseflow: pandas.Series
+            An pandas.Series containing the separated baseflow values.
+    """
+    # Compute recession constant
+    recession_series = series.resample(recession_time_scale).nearest(limit=1)
+    a = linear_recession_analysis(
+        recession_series.values,
+        recession_window
+        )
+
+    # Convert recession constant to output time-scale
+    no_output_periods = pd.Timedelta(recession_time_scale) / pd.Timedelta(output_time_scale)
+    a = 1.0 - ((1.0 - a) / no_output_periods)
+
+    # Compute maximum baseflow index
+    baseflow_series = series.resample(output_time_scale).nearest(limit=1)
+    bfi_max = maximum_baseflow_analysis(
+        baseflow_series.values,
+        a
+    )
+
+    # Perform baseflow separation
+    return pd.Series(
+            apply_filter(
+            baseflow_series.values,
+            a,
+            bfi_max
+        ),
+        baseflow_series.index
+    )
