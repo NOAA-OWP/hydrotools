@@ -24,6 +24,7 @@ linear_recession_analysis
 
 import numpy as np
 import numpy.typing as npt
+from numba import jit, float64
 
 def linear_recession_analysis(
         series: npt.ArrayLike,
@@ -67,8 +68,9 @@ def maximum_baseflow_analysis(
     """
     return 0.5
 
+@jit(float64[:](float64[:], float64, float64), nogil=True)
 def separate_baseflow(
-        series: npt.ArrayLike,
+        series: npt.NDArray,
         recession_constant: float,
         maximum_baseflow_index: float
 ) -> npt.NDArray:
@@ -77,8 +79,8 @@ def separate_baseflow(
     
         Parameters
         ----------
-        series: array-like, required
-            An array of streamflow values. Assumes first value in series is baseflow.
+        series: array-type, required
+            A numpy array of streamflow values. Assumes first value in series is baseflow.
         recession_constant: float, required
             Linear reservoir recession constant, a, from Eckhardt (2005, 2008).
         maximum_baseflow_index: float
@@ -96,10 +98,10 @@ def separate_baseflow(
 
     # Instantiate baseflow series
     # Assume first value is baseflow
-    streamflow = np.asarray(series)
-    baseflow = np.empty(len(series))
-    baseflow[0] = streamflow[0]
-    for i in range(1, len(series)):
-        baseflow[i] = A * baseflow[i-1] + B * streamflow[i]
+    baseflow = np.empty(series.size)
+    baseflow[0] = series[0]
 
-    return np.minimum(baseflow, streamflow)
+    # Apply filter and return result
+    for i in range(1, len(series)):
+        baseflow[i] = min(series[i], A * baseflow[i-1] + B * series[i])
+    return baseflow

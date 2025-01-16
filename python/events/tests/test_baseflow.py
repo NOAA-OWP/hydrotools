@@ -18,16 +18,12 @@ def test_maximum_baseflow_analysis():
 
 def test_separate_baseflow():
     rng = np.random.default_rng()
-    s = rng.normal(100.0, 10.0, 1000)
+    s = rng.normal(100.0, 10.0, 100)
 
     # Test numpy
+    from time import perf_counter
+    start = perf_counter()
     b = bf.separate_baseflow(s, 0.9, 0.5)
-    assert b[0] == s[0]
-
-    # Test list
-    b = bf.separate_baseflow(s.tolist(), 0.9, 0.5)
-    assert b[0] == s[0]
-
-    # Test pandas
-    b = bf.separate_baseflow(pd.Series(s), 0.9, 0.5)
+    end = perf_counter()
+    print(f"{end-start:.6f} s")
     assert b[0] == s[0]
