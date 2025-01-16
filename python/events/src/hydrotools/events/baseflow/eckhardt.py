@@ -200,7 +200,7 @@ def separate_baseflow(
     # Compute recession constant
     recession_series = series.resample(recession_time_scale).nearest(limit=1)
     a = linear_recession_analysis(
-        recession_series.values,
+        recession_series.values.astype(np.float64),
         recession_window
         )
 
@@ -210,8 +210,9 @@ def separate_baseflow(
 
     # Compute maximum baseflow index
     baseflow_series = series.resample(output_time_scale).nearest(limit=1)
+    baseflow_array = baseflow_series.values.astype(np.float64)
     bfi_max = maximum_baseflow_analysis(
-        baseflow_series.values,
+        baseflow_array,
         a
     )
 
@@ -219,7 +220,7 @@ def separate_baseflow(
     return BaseflowData(
         pd.Series(
             apply_filter(
-            baseflow_series.values,
+            baseflow_array,
             a,
             bfi_max
         ),
