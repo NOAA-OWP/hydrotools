@@ -47,8 +47,9 @@ def linear_recession_analysis(
     """
     return 0.9
 
+@jit(float64(float64[:], float64), nogil=True)
 def maximum_baseflow_analysis(
-        series: npt.ArrayLike,
+        series: npt.NDArray,
         recession_constant: float
     ) -> float:
     """Applies reverse filtering to estimate the maximum baseflow index
@@ -57,7 +58,7 @@ def maximum_baseflow_analysis(
         Parameters
         ----------
         series: array-like, required
-            An array of streamflow values.
+            A numpy array of streamflow values. Assumes last value in series is baseflow.
         recession_constant: float, required
             Linear reservoir recession constant.
             
@@ -66,7 +67,17 @@ def maximum_baseflow_analysis(
         maximum_baseflow_index: float
             The maximum baseflow index, $BFI_{max}$, from Eckhardt (2005, 2008).
     """
-    return 0.5
+    # Instantiate maximum baseflow series
+    # Assume last value is baseflow
+    baseflow = np.empty(series.size)
+    baseflow[0] = series[-1]
+
+    # Apply reverse filter and compute
+    #   maximum baseflow index
+    flipped = series[::-1]
+    for i in range(1, series.size):
+        baseflow[i] = min(flipped[i], baseflow[i-1] / recession_constant)
+    return np.sum(baseflow) / np.sum(series)
 
 @jit(float64[:](float64[:], float64, float64), nogil=True)
 def separate_baseflow(
@@ -102,6 +113,6 @@ def separate_baseflow(
     baseflow[0] = series[0]
 
     # Apply filter and return result
-    for i in range(1, len(series)):
+    for i in range(1, series.size):
         baseflow[i] = min(series[i], A * baseflow[i-1] + B * series[i])
     return baseflow
