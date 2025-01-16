@@ -39,5 +39,8 @@ def test_separate_baseflow():
         )
     )
     b = bf.separate_baseflow(s, "15min")
-    print(b)
-    assert 1 > 0
+
+    assert b.recession_constant <= 1.0
+    assert b.recession_constant >= 0.0
+    assert b.maximum_baseflow_index <= 1.0
+    assert b.maximum_baseflow_index >= 0.0

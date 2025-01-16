@@ -25,6 +25,7 @@ separate_baseflow
 
 """
 
+from dataclasses import dataclass
 import datetime
 from typing import Union
 import numpy as np
@@ -32,6 +33,26 @@ import numpy.lib as npl
 import numpy.typing as npt
 from numba import jit, float64
 import pandas as pd
+
+@dataclass
+class BaseflowData:
+    """DataClass containing a pandas.Series of baseflow values with
+        a DateTimeIndex and associated filter parameter values.
+    
+        Parameters
+        ----------
+        values: pandas.Series
+            A pandas.Series of baseflow values with a DateTimeIndex.
+        recession_constant: float
+            Linear reservoir recession constant, a, from Eckhardt (2005, 2008). Must be
+            between 0.0 and 1.0, typically between 0.85 and 0.95 for daily streamflow.
+        maximum_baseflow_index: float
+            The maximum baseflow index, $BFI_{max}$, from Eckhardt (2005, 2008). Must be
+            between 0.0 and 1.0, typically between 0.25 and 0.8 for daily streamflow.
+    """
+    values: pd.Series
+    recession_constant: float
+    maximum_baseflow_index: float
 
 def linear_recession_analysis(
         series: npt.ArrayLike,
@@ -153,7 +174,7 @@ def separate_baseflow(
         output_time_scale: Union[pd.Timedelta, datetime.timedelta, np.timedelta64, str, int],
         recession_time_scale: Union[pd.Timedelta, datetime.timedelta, np.timedelta64, str, int] = "1D",
         recession_window: int = 5
-) -> pd.Series:
+) -> BaseflowData:
     """Applies a digitial recursive baseflow separation filter to series
         and returns the result. This is a higher level method than `apply_filter`
         that includes time resampling and filter parameter estimation.
@@ -173,8 +194,8 @@ def separate_baseflow(
 
         Returns
         -------
-        baseflow: pandas.Series
-            An pandas.Series containing the separated baseflow values.
+        baseflow_data: BaseflowData
+            A BaseflowData DataClass containing the separated baseflow and associated filter parameters.
     """
     # Compute recession constant
     recession_series = series.resample(recession_time_scale).nearest(limit=1)
@@ -195,11 +216,13 @@ def separate_baseflow(
     )
 
     # Perform baseflow separation
-    return pd.Series(
+    return BaseflowData(
+        pd.Series(
             apply_filter(
             baseflow_series.values,
             a,
             bfi_max
         ),
         baseflow_series.index
-    )
+    ),
+    a, bfi_max)
