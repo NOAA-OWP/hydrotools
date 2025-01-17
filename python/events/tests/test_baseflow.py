@@ -30,7 +30,7 @@ def test_linear_recession_analysis():
     assert relative_difference <= 0.02
 
 def test_maximum_baseflow_analysis():
-    rng = np.random.default_rng()
+    rng = np.random.default_rng(seed=2025)
     s = rng.normal(100.0, 10.0, 100)
 
     bfi_max = bf.maximum_baseflow_analysis(s, 0.9)
@@ -39,14 +39,15 @@ def test_maximum_baseflow_analysis():
     assert bfi_max <= 1.0
 
 def test_apply_filter():
-    rng = np.random.default_rng()
+    rng = np.random.default_rng(seed=2025)
     s = rng.normal(100.0, 10.0, 100)
 
     b = bf.apply_filter(s, 0.9, 0.5)
     assert b[0] == s[0]
+    assert b.sum() < s.sum()
 
 def test_separate_baseflow():
-    rng = np.random.default_rng()
+    rng = np.random.default_rng(seed=2025)
     s = pd.Series(
         rng.normal(0.0, 0.01, 30000) + np.exp(-0.8 * np.linspace(0.0, 1.0, 30000)),
         pd.date_range(
@@ -56,8 +57,11 @@ def test_separate_baseflow():
         )
     )
     b = bf.separate_baseflow(s, "15min")
+    s = s.resample("15min").first()
 
     assert b.recession_constant <= 1.0
     assert b.recession_constant >= 0.0
     assert b.maximum_baseflow_index <= 1.0
     assert b.maximum_baseflow_index >= 0.0
+    assert b.values.sum() < s.sum()
+    assert b.values.count() == s.count()
