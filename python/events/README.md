@@ -107,7 +107,9 @@ In general you'll want to consider the following:
 
 ## Baseflow Separation Usage
 
-The following example demonstrates how one might use `hydrotools.events.baseflow` to estimate baseflow from a time series of streamflow values. This example requires the `hydrotools.nwis_client` package.
+![Baseflow Hydrograph](https://raw.githubusercontent.com/NOAA-OWP/hydrotools/main/docs/baseflow_hydrograph.png)
+
+The following example demonstrates how to use `hydrotools.events.baseflow` to estimate baseflow from a time series of streamflow values. This example requires the `hydrotools.nwis_client` package.
 
 ### Code
 ```python
@@ -133,7 +135,8 @@ df = df.rename(columns={"value": "total_flow"})
 
 # Perform baseflow separation
 #   This catchment is pretty small, so we'll use a
-#   12-hour recession time-scale
+#   12-hour recession time-scale. The default is 1-day
+#   per Eckhardt (2008).
 results = bf.separate_baseflow(
     df["total_flow"],
     output_time_scale = TIME_SCALE,
