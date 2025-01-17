@@ -37,7 +37,6 @@ import pandas as pd
 class ConvergenceError(Exception):
     """Exception raised when iterative numerical process fails
     to converge on a solution."""
-    pass
 
 @dataclass
 class BaseflowData:
@@ -239,11 +238,15 @@ def separate_baseflow(
         ----------
         series: pandas.Series, required
             A pandas.Series of streamflow values with a DateTimeIndex. Assumes
-            first value in series is baseflow.
+            first and last values in series are baseflow.
         output_time_scale: pandas.Timedelta, datetime.timedelta, numpy.timedelta64, str, int, required
             Output time-scale (or 'time-step') of the output baseflow time series.
+            Typically the same time-scale as series.
         recession_time_scale: pandas.Timedelta, datetime.timedelta, numpy.timedelta64, str, int, optional, default '1D'
             Time-scale or 'time-step' over which to conduct recession analysis.
+            Generally, it's better to use a recession_time_scale greater than the series time-scale.
+            The default of '1D' is good for many catchments, but smaller catchments can benefit from a
+            shorter time-scale of '18h' or '12h'.
         recession_window: int, optional, default 5
             The minimum number of consecutively decreasing values in series
             that indicate a period of recession.
