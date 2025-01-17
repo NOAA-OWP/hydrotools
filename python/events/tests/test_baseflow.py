@@ -4,20 +4,41 @@ from hydrotools.events.baseflow import eckhardt as bf
 import numpy as np
 import pandas as pd
 
-def test_linear_recession_analysis():
+TEST_VALUE = -0.8
+
+@pytest.fixture
+def setup_array():
+    return np.exp(TEST_VALUE * np.linspace(0.0, 50.0, 51))
+
+@pytest.fixture
+def setup_noisy_array():
+    rng = np.random.default_rng(seed=2025)
+    return np.abs(rng.normal(0.0, 0.01, 51))
+
+@pytest.fixture
+def setup_noisy_series():
+    rng = np.random.default_rng(seed=2025)
+    return pd.Series(
+        rng.normal(0.0, 0.01, 30000) + np.exp(TEST_VALUE * np.linspace(0.0, 1.0, 30000)),
+        pd.date_range(
+            "2020-01-01",
+            periods=30000,
+            freq="5min"
+        )
+    )
+
+def test_linear_recession_analysis(setup_array, setup_noisy_array):
     # Test exponential decay (perfect linear reservoir)
-    test_value = -0.8
-    s = np.exp(test_value * np.linspace(0.0, 50.0, 51))
+    s = setup_array
     a = bf.linear_recession_analysis(s)
-    assert np.isclose(np.log(a), test_value, atol=1e-6)
+    assert np.isclose(np.log(a), TEST_VALUE, atol=1e-6)
 
     # Test with a different window size
     a = bf.linear_recession_analysis(s, window=6)
-    assert np.isclose(np.log(a), test_value, atol=1e-6)
+    assert np.isclose(np.log(a), TEST_VALUE, atol=1e-6)
 
     # Test with random noise
-    rng = np.random.default_rng(seed=2025)
-    noise = np.abs(rng.normal(0.0, 0.01, 51))
+    noise = setup_noisy_array
     a = bf.linear_recession_analysis(s+noise)
     assert a > 0.0
     assert a < 1.0
@@ -29,33 +50,23 @@ def test_linear_recession_analysis():
     relative_difference = (a_with_outliers - a_without_outliers) / a_with_outliers
     assert relative_difference <= 0.02
 
-def test_maximum_baseflow_analysis():
-    rng = np.random.default_rng(seed=2025)
-    s = rng.normal(100.0, 10.0, 100)
+def test_maximum_baseflow_analysis(setup_noisy_array):
+    s = setup_noisy_array
 
     bfi_max = bf.maximum_baseflow_analysis(s, 0.9)
 
     assert bfi_max >= 0.0
     assert bfi_max <= 1.0
 
-def test_apply_filter():
-    rng = np.random.default_rng(seed=2025)
-    s = rng.normal(100.0, 10.0, 100)
+def test_apply_filter(setup_noisy_array):
+    s = setup_noisy_array
 
     b = bf.apply_filter(s, 0.9, 0.5)
     assert b[0] == s[0]
     assert b.sum() < s.sum()
 
-def test_separate_baseflow():
-    rng = np.random.default_rng(seed=2025)
-    s = pd.Series(
-        rng.normal(0.0, 0.01, 30000) + np.exp(-0.8 * np.linspace(0.0, 1.0, 30000)),
-        pd.date_range(
-            "2020-01-01",
-            periods=30000,
-            freq="5min"
-        )
-    )
+def test_separate_baseflow(setup_noisy_series):
+    s = setup_noisy_series
     b = bf.separate_baseflow(s, "15min")
     s = s.resample("15min").first()
 
