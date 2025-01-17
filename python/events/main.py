@@ -75,6 +75,14 @@ def main():
             pad=10
         )
     )
+    fig.update_layout(
+        legend=dict(
+            yanchor="top",
+            y=0.99,
+            xanchor="left",
+            x=0.01
+        )
+    )
     fig.write_image("baseflow_hydrograph.png", width=960, height=540, scale=2)
 
 if __name__ == "__main__":
