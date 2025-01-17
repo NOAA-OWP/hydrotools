@@ -46,9 +46,13 @@ class BaseflowData:
         recession_constant: float
             Linear reservoir recession constant, a, from Eckhardt (2005, 2008). Must be
             between 0.0 and 1.0, typically between 0.85 and 0.95 for daily streamflow.
+            Influenced by basin size, precipitation frequency, and other catchment
+            characteristics.
         maximum_baseflow_index: float
             The maximum baseflow index, $BFI_{max}$, from Eckhardt (2005, 2008). Must be
             between 0.0 and 1.0, typically between 0.25 and 0.8 for daily streamflow.
+            Influenced by aquifer porosity, streamflow frequency, and other catchment
+            characteristics.
     """
     values: pd.Series
     recession_constant: float
@@ -71,7 +75,10 @@ def linear_recession_analysis(
         Returns
         -------
         recession_constant: float
-            The recession parameter, a, from Eckhardt (2005, 2008).
+            Linear reservoir recession constant, a, from Eckhardt (2005, 2008). Must be
+            between 0.0 and 1.0, typically between 0.85 and 0.95 for daily streamflow.
+            Influenced by basin size, precipitation frequency, and other catchment
+            characteristics.
     """
     # Find decreases in streamflow from time step to the next
     # Note first decrease is a[i+1] - a[i]
@@ -111,11 +118,16 @@ def maximum_baseflow_analysis(
         recession_constant: float, required
             Linear reservoir recession constant, a, from Eckhardt (2005, 2008). Must be
             between 0.0 and 1.0, typically between 0.85 and 0.95 for daily streamflow.
+            Influenced by basin size, precipitation frequency, and other catchment
+            characteristics.
             
         Returns
         -------
         maximum_baseflow_index: float
-            The maximum baseflow index, $BFI_{max}$, from Eckhardt (2005, 2008).
+            The maximum baseflow index, $BFI_{max}$, from Eckhardt (2005, 2008). Must be
+            between 0.0 and 1.0, typically between 0.25 and 0.8 for daily streamflow.
+            Influenced by aquifer porosity, streamflow frequency, and other catchment
+            characteristics.
     """
     # Instantiate maximum baseflow series
     # Assume last value is baseflow
@@ -145,9 +157,13 @@ def apply_filter(
         recession_constant: float, required
             Linear reservoir recession constant, a, from Eckhardt (2005, 2008). Must be
             between 0.0 and 1.0, typically between 0.85 and 0.95 for daily streamflow.
+            Influenced by basin size, precipitation frequency, and other catchment
+            characteristics.
         maximum_baseflow_index: float
             The maximum baseflow index, $BFI_{max}$, from Eckhardt (2005, 2008). Must be
             between 0.0 and 1.0, typically between 0.25 and 0.8 for daily streamflow.
+            Influenced by aquifer porosity, streamflow frequency, and other catchment
+            characteristics.
             
         Returns
         -------
