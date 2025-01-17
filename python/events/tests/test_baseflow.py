@@ -5,12 +5,29 @@ import numpy as np
 import pandas as pd
 
 def test_linear_recession_analysis():
-    s = np.exp(-0.8 * np.linspace(0.0, 1.0, 100))
-
+    # Test exponential decay (perfect linear reservoir)
+    test_value = -0.8
+    s = np.exp(test_value * np.linspace(0.0, 50.0, 51))
     a = bf.linear_recession_analysis(s)
+    assert np.isclose(np.log(a), test_value, atol=1e-6)
 
-    assert a >= 0.0
-    assert a <= 1.0
+    # Test with a different window size
+    a = bf.linear_recession_analysis(s, window=6)
+    assert np.isclose(np.log(a), test_value, atol=1e-6)
+
+    # Test with random noise
+    rng = np.random.default_rng(seed=2025)
+    noise = np.abs(rng.normal(0.0, 0.01, 51))
+    a = bf.linear_recession_analysis(s+noise)
+    assert a > 0.0
+    assert a < 1.0
+
+    # Test with outliers
+    a_without_outliers = bf.linear_recession_analysis(s)
+    s[30:36] = np.exp(-0.79 * np.linspace(0.0, 5.0, 6))
+    a_with_outliers = bf.linear_recession_analysis(s)
+    relative_difference = (a_with_outliers - a_without_outliers) / a_with_outliers
+    assert relative_difference <= 0.02
 
 def test_maximum_baseflow_analysis():
     rng = np.random.default_rng()

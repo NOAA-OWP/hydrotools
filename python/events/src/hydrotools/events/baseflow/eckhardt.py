@@ -34,6 +34,11 @@ import numpy.typing as npt
 from numba import jit, float64
 import pandas as pd
 
+class ConvergenceError(Exception):
+    """Exception raised when iterative numerical process fails
+    to converge on a solution."""
+    pass
+
 @dataclass
 class BaseflowData:
     """DataClass containing a pandas.Series of baseflow values with
@@ -59,19 +64,27 @@ class BaseflowData:
     maximum_baseflow_index: float
 
 def linear_recession_analysis(
-        series: npt.ArrayLike,
-        window: int = 5
+        series: npt.NDArray,
+        window: int = 5,
+        maximum_relative_error: float = 0.02,
+        maximum_iterations: int = 100
     ) -> float:
-    """Performs recession analysis on series assuming a linear reservoir.
-    
+    """Performs recession analysis on series assuming a linear reservoir. Using
+        the method from Eckhardt (2008).
+
         Parameters
         ----------
-        series: array-like, required
-            An array of streamflow values.
+        series: array-type, required
+            A numpy array of streamflow values.
         window: int, optional, default 5
             The minimum number of consecutively decreasing values in series
             that indicate a period of recession.
-            
+        maximum_relative_error: float, optional, default 0.02
+            The maximum allowable error in the recession constant due to
+            random observational errors. Defaults to 0.02 (2.0 %).
+        maximum_iterations: int, optional, default 100
+            Maximum number of times to remove outliers and recompute.
+
         Returns
         -------
         recession_constant: float
@@ -80,7 +93,7 @@ def linear_recession_analysis(
             Influenced by basin size, precipitation frequency, and other catchment
             characteristics.
     """
-    # Find decreases in streamflow from time step to the next
+    # Find decreases in streamflow
     # Note first decrease is a[i+1] - a[i]
     decreases = np.diff(series) < 0.0
 
@@ -93,15 +106,42 @@ def linear_recession_analysis(
     recessions = np.all(periods, axis=1)
 
     # Determine index of recession period central values
-    # Note: Increase index by one because np.diff caused a shift
+    # Note: Increase index by one because np.diff
+    #   dropped the original first value
     indices = np.where(recessions)[0] + window // 2 + 1
 
-    # Select recession values
+    # Select central recession values and
+    #   preceding values
     x = series[indices-1]
     y = series[indices]
 
-    # Compute recession constant using regression through the origin
-    return np.sum(x * y) / np.sum(x * x)
+    for _ in range(maximum_iterations):
+        # Check for values
+        if (x.size == 0) or (y.size == 0):
+            message = "Not enough values to estimate recession constant."
+            raise ConvergenceError(message)
+
+        # Compute recession constant using regression through the origin
+        ideal_value = np.sum(x * y) / np.sum(x * x)
+
+        # Test empirical values
+        empirical_values = y / x
+
+        # Compute deviation from ideal value
+        errors = (empirical_values - ideal_value) / ideal_value
+
+        # Note outliers, if none, return ideal value
+        outliers = errors[errors > maximum_relative_error]
+        if outliers.size == 0:
+            return ideal_value
+
+        # Remove outliers and recompute
+        x = x[errors <= maximum_relative_error]
+        y = y[errors <= maximum_relative_error]
+
+    # Did not converge
+    message = f"Recession analysis failed to converge in {maximum_iterations} iterations."
+    raise ConvergenceError(message)
 
 @jit(float64(float64[:], float64), nogil=True)
 def maximum_baseflow_analysis(
