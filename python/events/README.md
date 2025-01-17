@@ -20,7 +20,7 @@ $ python3 -m pip install --upgrade pip
 $ python3 -m pip install hydrotools.events
 ```
 
-## Usage
+## Event Detection Usage
 
 The following example demonstrates how one might use `hydrotools.events.event_detection` to extract hydrological events from a time series of real streamflow measurements. This example requires the `hydrotools.nwis_client` package.
 
@@ -104,3 +104,60 @@ In general you'll want to consider the following:
 3. Specify a `halflife` larger than the expected frequency of noise, but smaller than the event timescale
 4. Specify a `window` larger than the event timescale, but at least 4 to 5 times smaller than the entire length of the time series
 5. Filter the final list of events to remove false positive events, particularly in noisy signals. You could filter on peak event flow, event duration, or other event characteristics
+
+## Baseflow Separation Usage
+
+The following example demonstrates how one might use `hydrotools.events.baseflow` to estimate baseflow from a time series of streamflow values. This example requires the `hydrotools.nwis_client` package.
+
+### Code
+```python
+# Import tools to retrieve data and perform baseflow separation
+from hydrotools.events.baseflow import eckhardt as bf
+from hydrotools.nwis_client.iv import IVDataService
+
+# Get some streamflow data
+client = IVDataService()
+df = client.get(
+    startDT="2020-10-01",
+    endDT="2021-09-30T23:55",
+    sites="02146470"
+)
+
+# Important: Streamflow data should be continuous with
+#   no missing data and a DateTimeIndex
+TIME_SCALE = "1h"
+df = df.set_index("value_time").resample(TIME_SCALE).first().ffill()
+
+# Let's rename 'value' to 'total_flow'
+df = df.rename(columns={"value": "total_flow"})
+
+# Perform baseflow separation
+#   This catchment is pretty small, so we'll use a
+#   12-hour recession time-scale
+results = bf.separate_baseflow(
+    df["total_flow"],
+    output_time_scale = TIME_SCALE,
+    recession_time_scale = "12h"
+    )
+
+# Look at the 12-hour filter parameters
+print(f"Recession constant, a: {results.recession_constant:.4f}")
+print(f"Maximum baseflow index, bfi_max: {results.maximum_baseflow_index:.4f}")
+
+# Store the resulting baseflow in the original DataFrame
+df["baseflow"] = results.values
+print(df.head())
+```
+
+### Output
+```console
+Recession constant, a: 0.9636
+Maximum baseflow index, bfi_max: 0.3186
+                    variable_name usgs_site_code measurement_unit  total_flow qualifiers series  baseflow
+value_time                                                                                               
+2020-09-30 23:00:00    streamflow       02146470            ft3/s        1.03      ['A']      0  1.030000
+2020-10-01 00:00:00    streamflow       02146470            ft3/s        1.03      ['A']      0  0.993130
+2020-10-01 01:00:00    streamflow       02146470            ft3/s        1.03      ['A']      0  0.958197
+2020-10-01 02:00:00    streamflow       02146470            ft3/s        1.03      ['A']      0  0.925100
+2020-10-01 03:00:00    streamflow       02146470            ft3/s        1.03      ['A']      0  0.893740
+```
