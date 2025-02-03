@@ -76,3 +76,16 @@ def test_separate_baseflow(setup_noisy_series):
     assert b.maximum_baseflow_index >= 0.0
     assert b.values.sum() < s.sum()
     assert b.values.count() == s.count()
+
+def test_empty_series():
+    with pytest.raises(AssertionError, match="empty input series"):
+        b = bf.separate_baseflow(np.empty(0), "15min")
+
+    with pytest.raises(AssertionError, match="empty input series"):
+        b = bf.apply_filter(np.empty(0), 0.9, 0.5)
+
+    with pytest.raises(AssertionError, match="empty input series"):
+        b = bf.maximum_baseflow_analysis(np.empty(0), 0.9)
+
+    with pytest.raises(AssertionError, match="empty input series"):
+        a = bf.linear_recession_analysis(np.empty(0))
