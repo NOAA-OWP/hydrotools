@@ -25,9 +25,9 @@ separate_baseflow
 
 """
 
+from typing import Callable
 from dataclasses import dataclass
 import datetime
-from typing import Union
 import numpy as np
 import numpy.lib as npl
 import numpy.typing as npt
@@ -170,15 +170,16 @@ def maximum_baseflow_analysis(
     """
     # Instantiate maximum baseflow series
     # Assume last value is baseflow
-    baseflow = np.empty(series.size)
-    baseflow[0] = series[-1]
+    total_baseflow = series[-1]
+    current_baseflow = series[-1]
 
     # Apply reverse filter and compute
     #   maximum baseflow index
     flipped = series[::-1]
     for i in range(1, series.size):
-        baseflow[i] = min(flipped[i], baseflow[i-1] / recession_constant)
-    return np.sum(baseflow) / np.sum(series)
+        current_baseflow = min(flipped[i], current_baseflow / recession_constant)
+        total_baseflow += current_baseflow
+    return total_baseflow / np.sum(series)
 
 @jit(float64[:](float64[:], float64, float64), nogil=True)
 def apply_filter(
@@ -226,8 +227,9 @@ def apply_filter(
 
 def separate_baseflow(
         series: pd.Series,
-        output_time_scale: Union[pd.Timedelta, datetime.timedelta, np.timedelta64, str, int],
-        recession_time_scale: Union[pd.Timedelta, datetime.timedelta, np.timedelta64, str, int] = "1D",
+        output_time_scale: pd.Timedelta | datetime.timedelta | np.timedelta64 | str | int,
+        recession_time_scale: pd.Timedelta | datetime.timedelta | np.timedelta64 | str | int = "1D",
+        aggregation_function: str | Callable = "mean",
         recession_window: int = 5
 ) -> BaseflowData:
     """Applies a digitial recursive baseflow separation filter to series
@@ -247,6 +249,11 @@ def separate_baseflow(
             Generally, it's better to use a recession_time_scale greater than the series time-scale.
             The default of '1D' is good for many catchments, but smaller catchments can benefit from a
             shorter time-scale of '18h' or '12h'.
+        aggregation_function: str or Callable, optional, default 'mean'
+            The aggregation function to use when resampling series to the desired time-scale. Defaults
+            to 'mean' per Eckhardt 2008, which used mean daily volumetric streamflow. Generally, volumetric
+            streamflow (i.e. L^3/S) will want to use 'mean'. Discharge per unit area (i.e. L) will want to use
+            'sum'. Some other cases of "instantaneous values" or unit flux (i.e. L/S) may more appropriately use 'first'.
         recession_window: int, optional, default 5
             The minimum number of consecutively decreasing values in series
             that indicate a period of recession.
@@ -257,7 +264,7 @@ def separate_baseflow(
             A BaseflowData DataClass containing the separated baseflow and associated filter parameters.
     """
     # Compute recession constant
-    recession_series = series.resample(recession_time_scale).nearest(limit=1)
+    recession_series = series.resample(recession_time_scale).agg(aggregation_function)
     a = linear_recession_analysis(
         recession_series.values.astype(np.float64),
         recession_window
