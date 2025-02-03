@@ -92,6 +92,9 @@ def linear_recession_analysis(
             Influenced by basin size, precipitation frequency, and other catchment
             characteristics.
     """
+    # Check size of series
+    assert series.size > 0, "empty input series"
+
     # Find decreases in streamflow
     # Note first decrease is a[i+1] - a[i]
     decreases = np.diff(series) < 0.0
@@ -168,6 +171,9 @@ def maximum_baseflow_analysis(
             Influenced by aquifer porosity, streamflow frequency, and other catchment
             characteristics.
     """
+    # Check size of series
+    assert series.size > 0, "empty input series"
+
     # Instantiate maximum baseflow series
     # Assume last value is baseflow
     total_baseflow = series[-1]
@@ -210,6 +216,9 @@ def apply_filter(
         baseflow: array-type
             An array containing the separated baseflow values.
     """
+    # Check size of series
+    assert series.size > 0, "empty input series"
+
     # Compute filter parameters
     denominator = 1 - recession_constant * maximum_baseflow_index
     A = (1.0 - maximum_baseflow_index) * recession_constant / denominator
@@ -263,6 +272,9 @@ def separate_baseflow(
         baseflow_data: BaseflowData
             A BaseflowData DataClass containing the separated baseflow and associated filter parameters.
     """
+    # Check size of series
+    assert series.size > 0, "empty input series"
+
     # Compute recession constant
     recession_series = series.resample(recession_time_scale).agg(aggregation_function)
     a = linear_recession_analysis(
