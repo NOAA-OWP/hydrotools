@@ -143,10 +143,10 @@ def test_get_headers_have_precedent_over_instance(basic_test_server):
         assert all(k_v_pair in r.headers.items() for k_v_pair in method_headers.items())
 
 
-def test_build_url(loop):
+def test_build_url(event_loop):
     base_url = "http://www.test.gov/"
     query_params = {"key": "value"}
-    with RestClient(enable_cache=False, loop=loop) as client:
+    with RestClient(enable_cache=False, loop=event_loop) as client:
 
         assert client.build_url(base_url) == base_url
         assert client.build_url(base_url, query_params) == f"{base_url}?key=value"
@@ -156,7 +156,7 @@ class ModuleFoundError(Exception):
     ...
 
 
-def test_restclient_nest_asyncio_ModuleNotFoundError(loop):
+def test_restclient_nest_asyncio_ModuleNotFoundError(event_loop):
     """Test for #99. Ensure ModuleNotFoundError raised if `nest_asyncio` not installed"""
     import asyncio
     import warnings
@@ -183,4 +183,4 @@ def test_restclient_nest_asyncio_ModuleNotFoundError(loop):
                 # this test will need to change if `nest_asyncio` becomes a requirement
                 RestClient(enable_cache=False)
 
-    loop.run_until_complete(test())
+    event_loop.run_until_complete(test())
