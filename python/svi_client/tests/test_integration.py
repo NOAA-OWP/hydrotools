@@ -63,7 +63,7 @@ GEOGRAPHIC_SCALES = ("county", "census_tract")
 @pytest.mark.parametrize("location", LOCATIONS)
 @pytest.mark.parametrize("year", YEARS)
 @pytest.mark.parametrize("scale", GEOGRAPHIC_SCALES)
-def test_svi_client_get_integration(location, year, scale, loop):
+def test_svi_client_get_integration(location, year, scale, event_loop):
     client = SVIClient(enable_cache=False)
     df = client.get(location, scale, year)
     assert df.loc[0, "state_abbreviation"] == location
@@ -72,7 +72,7 @@ def test_svi_client_get_integration(location, year, scale, loop):
 @pytest.mark.slow
 @pytest.mark.parametrize("year", YEARS)
 @pytest.mark.parametrize("scale", GEOGRAPHIC_SCALES)
-def test_svi_client_get_integration_us(year, scale, loop):
+def test_svi_client_get_integration_us(year, scale, event_loop):
     client = SVIClient(enable_cache=False)
     df = client.get("us", scale, year)
     assert df.state_abbreviation.isin(LOCATIONS).all()
