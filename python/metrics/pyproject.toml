@@ -25,6 +25,8 @@ classifiers = [
 dependencies = [
     "numpy>=1.20.0",
     "pandas",
+    "scipy",
+    "arch"
 ]
 dynamic = ["version"]
 
