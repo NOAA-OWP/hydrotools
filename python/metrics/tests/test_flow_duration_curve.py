@@ -108,25 +108,25 @@ def test_pearson_bootstrap():
         assert q[0] >= q[1]
         assert len(q) == 100
 
-def test_exceedance():
+def test_interpolate_exceedance():
     """Test exceedance values are correctly interpolated given trivial
     FDCs."""
 
-    e = fdc.exceedance_values(0.5, [0.0, 1.0], [10.0, 0.0])
+    e = fdc.interpolate_exceedance_values(0.5, [0.0, 1.0], [10.0, 0.0])
     assert e == 5.0
 
-    es = fdc.exceedance_values([0.2, 0.8], [0.0, 1.0], [10.0, 0.0])
+    es = fdc.interpolate_exceedance_values([0.2, 0.8], [0.0, 1.0], [10.0, 0.0])
     assert es[0] == 8.0
     assert es[1] == 2.0
 
-def test_recurrence():
+def test_interpolate_recurrence():
     """Test recurrence intervals are correctly interpolated given trivial
     FDCs."""
 
-    r = fdc.recurrence_values(2.0, [0.0, 1.0], [10.0, 0.0])
+    r = fdc.interpolate_recurrence_values(2.0, [0.0, 1.0], [10.0, 0.0])
     assert r == 5.0
 
-    rs = fdc.recurrence_values([5.0, 1.25], [0.0, 1.0], [10.0, 0.0])
+    rs = fdc.interpolate_recurrence_values([5.0, 1.25], [0.0, 1.0], [10.0, 0.0])
     assert rs[0] == 8.0
     assert rs[1] == 2.0
 
