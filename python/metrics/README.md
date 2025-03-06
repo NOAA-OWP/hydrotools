@@ -337,19 +337,19 @@ _, boundaries = fdc.bootstrap_flow_duration_curve(
 
 # Interpolate values for specific exceedance probabilities
 exceedance_probabilities = [0.01, 0.5, 0.67]
-exceedance_values = fdc.exceedance_values(
+exceedance_values = fdc.interpolate_exceedance_values(
     points=exceedance_probabilities,
     probabilities=probabilities,
     values=values
 )
 
 # Get corresponding confidence intervals
-lower_exceedance_values = fdc.exceedance_values(
+lower_exceedance_values = fdc.interpolate_exceedance_values(
     points=exceedance_probabilities,
     probabilities=probabilities,
     values=boundaries[0]
 )
-upper_exceedance_values = fdc.exceedance_values(
+upper_exceedance_values = fdc.interpolate_exceedance_values(
     points=exceedance_probabilities,
     probabilities=probabilities,
     values=boundaries[1]
@@ -357,19 +357,19 @@ upper_exceedance_values = fdc.exceedance_values(
 
 # Interpolate values for specific recurrence intervals
 recurrence_intervals = [1.5, 10.0, 100.0]
-recurrence_values = fdc.recurrence_values(
+recurrence_values = fdc.interpolate_recurrence_values(
     points=recurrence_intervals,
     probabilities=probabilities,
     values=values
 )
 
 # Get corresponding confidence intervals
-lower_recurrence_values = fdc.recurrence_values(
+lower_recurrence_values = fdc.interpolate_recurrence_values(
     points=recurrence_intervals,
     probabilities=probabilities,
     values=boundaries[0]
 )
-upper_recurrence_values = fdc.recurrence_values(
+upper_recurrence_values = fdc.interpolate_recurrence_values(
     points=recurrence_intervals,
     probabilities=probabilities,
     values=boundaries[1]
