@@ -118,11 +118,11 @@ def pearson_flow_duration_curve(
         ) -> tuple[npt.NDArray, npt.NDArray]:
     """
     Generate a flow duration curve (FDC) by fitting an array of streamflow
-    values to a log-pearson type III distribution. The series values determine
-    the type of FDC returned. A series of daily or hourly streamflow values
-    will result in a "period-of-record" FDC. A series of annual maximum flows
-    will result in an annual peak FDC, from which you can derive "annual
-    recurrence intervals."
+    values to a log-pearson type III distribution using Maximum Likelihood 
+    Estimation. The series values determine the type of FDC returned. A series
+    of daily or hourly streamflow values will result in a "period-of-record"
+    FDC. A series of annual maximum flows will result in an annual peak FDC,
+    from which you can derive "annual recurrence intervals."
 
     Parameters
     ----------
@@ -252,7 +252,7 @@ def bootstrap_flow_duration_curve(
         np.quantile(posterior, quantiles, axis=0)
         )
 
-def exceedance_values(
+def interpolate_exceedance_values(
         points: npt.ArrayLike,
         probabilities: npt.ArrayLike,
         values: npt.ArrayLike
@@ -288,7 +288,7 @@ def exceedance_values(
     """
     return np.interp(points, probabilities, values)
 
-def recurrence_values(
+def interpolate_recurrence_values(
         points: npt.ArrayLike,
         probabilities: npt.ArrayLike,
         values: npt.ArrayLike
@@ -327,7 +327,8 @@ def recurrence_values(
     recurrence_values: float or numpy.ndarray
         The interpolated values. Same shape as points.
     """
-    return exceedance_values(1.0 / np.asarray(points), probabilities, values)
+    return interpolate_exceedance_values(1.0 / np.asarray(points),
+        probabilities, values)
 
 def richards_flow_responsiveness(
         probabilities: npt.ArrayLike,
@@ -377,7 +378,7 @@ def richards_flow_responsiveness(
     assert np.any(0.95 >= probabilities), "Unable to interpolate probabilities"
 
     points = np.arange(0.05, 1.0, 0.05)
-    exceedances = exceedance_values(points, probabilities, values)
+    exceedances = interpolate_exceedance_values(points, probabilities, values)
     mapping = {f"{p:.2f}": e for p, e in list(zip(points, exceedances))}
     return {
         "10R90": mapping["0.10"] / mapping["0.90"],
