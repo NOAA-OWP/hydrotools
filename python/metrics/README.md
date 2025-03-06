@@ -106,19 +106,19 @@ This example requires the `hydrotools.nwis_client` and `hydrotools.events` packa
 from hydrotools.nwis_client.iv import IVDataService
 from hydrotools.events.baseflow import eckhardt as bf
 from hydrotools.events.event_detection import decomposition as ev
-import hydrtools.metrics.events as emet
+import hydrotools.metrics.events as emet
 
 # Retrieve streamflow observations and precipitation
 service = IVDataService()
 streamflow = service.get(
-    sites="02146750",
-    startDT="2023-10-01",
-    endDT="2024-09-30"
+    sites="02146470",
+    startDT="2024-03-07",
+    endDT="2025-03-07"
     )
 precipitation = service.get(
     sites="351104080521845",
-    startDT="2023-10-01",
-    endDT="2024-09-30",
+    startDT="2024-03-07",
+    endDT="2025-03-07",
     parameterCd="00045"
     )
 
@@ -164,7 +164,8 @@ streamflow = streamflow * 3.0 / (drainage_area * 1936.0)
 events = ev.list_events(
     streamflow["value"],
     halflife="6h",
-    window="7d"
+    window="7d",
+    minimum_event_duration="6h"
 )
 
 # We'll use a buffer to accumulate precipitation before the hydrograph rise
@@ -183,8 +184,9 @@ events["runoff_ratio"] = events.apply(
 
 # Limit to events with physically consistent runoff ratios
 #  This catchment is highly urbanized, so assumptions about baseflow
-#  separation may not always apply.
-print(events.query("runoff_ratio <= 1.0"))
+#  separation may not always apply. Furthermore, our scheme to capture
+#  relevant rainfall is not perfect.
+print(events.query("runoff_ratio <= 1.0").head())
 ```
 
 ### Output
