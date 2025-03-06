@@ -40,7 +40,12 @@ def test_compute_canopy_saturation() -> None:
         itc.compute_canopy_saturation(5.0, 0.4, 0.2, 0.0)
 
 def test_compute_trunk_saturation() -> None:
-    estimate = itc.compute_trunk_saturation(5.0, 0.5, 0.2, 0.3, 0.02, 0.02, 0.02)
+    """Tests basic functionality of method that computes the maximum amount
+    of rainfall intercepted by 'trunks.' Also tests whether the method
+    correctly raises if the rainfall rate, canopy fraction, or trunk fraction
+    is 0.0."""
+    estimate = itc.compute_trunk_saturation(
+        5.0, 0.5, 0.2, 0.3, 0.02, 0.02, 0.02)
     assert np.isclose(estimate, 2.3, atol=0.1)
 
     # Errors
@@ -54,6 +59,9 @@ def test_compute_trunk_saturation() -> None:
         itc.compute_trunk_saturation(5.0, 0.5, 0.2, 0.3, 0.02, 0.0, 0.02)
 
 def test_compute_canopy_loss() -> None:
+    """Tests a method that computes the amount of rainfall interceped by the
+    non-trunk portion of the canopy. Includes testing that method correctly
+    raises if the gross rainfall, rainfall rate, or canopy fraction is 0.0."""
     estimate = itc.compute_canopy_loss(50.0, 5.0, 0.2, 0.5, 0.3, 0.02)
     assert np.isclose(estimate, 1.5, atol=0.1)
 
@@ -68,6 +76,9 @@ def test_compute_canopy_loss() -> None:
         itc.compute_canopy_loss(50.0, 5.0, 0.2, 0.0, 0.3, 0.02)
 
 def test_compute_trunk_loss() -> None:
+    """Tests a method that computes the amount of rainfall interceped by the
+    trunk portion of the canopy. Includes testing that method correctly
+    raises if the gross rainfall, rainfall rate, or canopy fraction is 0.0."""
     estimate = itc.compute_trunk_loss(
         5.0, 5.0, 0.2, 0.5, 0.3, 0.02, 0.02, 0.02, 0.2)
     assert np.isclose(estimate, 0.04, atol=0.01)
