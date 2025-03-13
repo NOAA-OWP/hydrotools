@@ -68,6 +68,12 @@ def compute_canopy_saturation(
     Returns
     -------
     Maximum canopy storage (L) as a float.
+
+    Raises
+    ------
+    AssertionError
+        If rainfall_rate, canopy_storage, or evaporation_rate are not > 0. If
+        trunk_evaporation is not >= 0 and < 1.0.
     """
     # Validate
     assert rainfall_rate > 0, "rainfall rate must be a number > 0"
@@ -129,6 +135,13 @@ def compute_trunk_saturation(
     Returns
     -------
     Maximum trunk storage (L) as a float.
+
+    Raises
+    ------
+    AssertionError
+        If rainfall_rate, canopy_storage, or evaporation_rate are not > 0. If
+        trunk_evaporation, trunk_fraction, or canopy_fraction are not >= 0 and 
+        < 1.0.
     """
     # Validate
     assert rainfall_rate > 0, "rainfall rate must be a number > 0"
@@ -182,6 +195,12 @@ def compute_canopy_loss(
     Returns
     -------
     Depth of canopy intercepted rainfall (L) as a float.
+
+    Raises
+    ------
+    AssertionError
+        If gross_rainfall or rainfall_rate are not > 0. If
+        canopy_fraction is not > 0 and <= 1.0.
     """
     # Validate
     assert gross_rainfall > 0, "gross rainfall must be a number > 0"
@@ -249,6 +268,12 @@ def compute_trunk_loss(
     Returns
     -------
     Depth of canopy intercepted rainfall (L) as a float.
+
+    Raises
+    ------
+    AssertionError
+        If gross_rainfall or rainfall_rate are not > 0. If
+        canopy_fraction is not > 0 and <= 1.0.
     """
     # Validate
     assert gross_rainfall > 0, "gross rainfall must be a number > 0"
@@ -315,6 +340,12 @@ def compute_interception(
     Returns
     -------
     Depth of canopy intercepted rainfall (L) as a float.
+
+    Raises
+    ------
+    AssertionError
+        If gross_rainfall, evaporation_rate, or rainfall_rate are not > 0. If
+        canopy_fraction is not > 0 and <= 1.0.
     """
     # Validate
     assert gross_rainfall > 0, "gross rainfall must be a number > 0"
