@@ -73,7 +73,8 @@ def compute_canopy_saturation(
     ------
     AssertionError
         If rainfall_rate, canopy_storage, or evaporation_rate are not > 0. If
-        trunk_evaporation is not >= 0 and < 1.0.
+        trunk_evaporation is not >= 0 and < 1.0. This is true only if python
+        optimization is not enabled.
     """
     # Validate
     assert rainfall_rate > 0, "rainfall rate must be a number > 0"
@@ -141,7 +142,7 @@ def compute_trunk_saturation(
     AssertionError
         If rainfall_rate, canopy_storage, or evaporation_rate are not > 0. If
         trunk_evaporation, trunk_fraction, or canopy_fraction are not >= 0 and 
-        < 1.0.
+        < 1.0. This is true only if python optimization is not enabled.
     """
     # Validate
     assert rainfall_rate > 0, "rainfall rate must be a number > 0"
@@ -200,7 +201,8 @@ def compute_canopy_loss(
     ------
     AssertionError
         If gross_rainfall or rainfall_rate are not > 0. If
-        canopy_fraction is not > 0 and <= 1.0.
+        canopy_fraction is not > 0 and <= 1.0. This is true only if python
+        optimization is not enabled.
     """
     # Validate
     assert gross_rainfall > 0, "gross rainfall must be a number > 0"
@@ -273,7 +275,8 @@ def compute_trunk_loss(
     ------
     AssertionError
         If gross_rainfall or rainfall_rate are not > 0. If
-        canopy_fraction is not > 0 and <= 1.0.
+        canopy_fraction is not > 0 and <= 1.0. This is true only if python
+        optimization is not enabled.
     """
     # Validate
     assert gross_rainfall > 0, "gross rainfall must be a number > 0"
@@ -345,7 +348,8 @@ def compute_interception(
     ------
     AssertionError
         If gross_rainfall, evaporation_rate, or rainfall_rate are not > 0. If
-        canopy_fraction is not > 0 and <= 1.0.
+        canopy_fraction is not > 0 and <= 1.0. This is true only if python
+        optimization is not enabled.
     """
     # Validate
     assert gross_rainfall > 0, "gross rainfall must be a number > 0"
