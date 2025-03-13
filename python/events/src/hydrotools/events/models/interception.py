@@ -83,8 +83,7 @@ def compute_canopy_saturation(
     assert 0.0 <= trunk_evaporation < 1.0, \
         "trunk evaporation range is [0.0, 1.0)"
     if evaporation_rate >= rainfall_rate:
-        message = ("evaporation rate >= rainfall rate, " +
-            "use result with caution")
+        message = "evaporation rate >= rainfall rate, use result with caution"
         warnings.warn(message, UserWarning)
 
     return (-((rainfall_rate * canopy_storage) /
@@ -153,8 +152,7 @@ def compute_trunk_saturation(
     assert 0.0 < canopy_fraction <= 1.0, \
         "canopy fraction range is (0.0, 1.0]"
     if evaporation_rate >= rainfall_rate:
-        message = ("evaporation rate >= rainfall rate, " +
-            "use result with caution")
+        message = "evaporation rate >= rainfall rate, use result with caution"
         warnings.warn(message, UserWarning)
 
     return canopy_saturation + (rainfall_rate * trunk_capacity /
@@ -210,8 +208,7 @@ def compute_canopy_loss(
     assert 0.0 < canopy_fraction <= 1.0, \
         "canopy fraction range is (0.0, 1.0]"
     if evaporation_rate >= rainfall_rate:
-        message = ("evaporation rate >= rainfall rate, " +
-            "use result with caution")
+        message = "evaporation rate >= rainfall rate, use result with caution"
         warnings.warn(message, UserWarning)
 
     if gross_rainfall <= canopy_saturation:
@@ -284,8 +281,7 @@ def compute_trunk_loss(
     assert 0.0 < canopy_fraction <= 1.0, \
         "canopy fraction range is (0.0, 1.0]"
     if evaporation_rate >= rainfall_rate:
-        message = ("evaporation rate >= rainfall rate, " +
-            "use result with caution")
+        message = "evaporation rate >= rainfall rate, use result with caution"
         warnings.warn(message, UserWarning)
 
     if gross_rainfall <= trunk_saturation:
@@ -358,8 +354,7 @@ def compute_interception(
     assert 0.0 < canopy_fraction <= 1.0, \
         "canopy fraction range is (0.0, 1.0]"
     if evaporation_rate >= rainfall_rate:
-        message = ("evaporation rate >= rainfall rate, " +
-            "use result with caution")
+        message = "evaporation rate >= rainfall rate, use result with caution"
         warnings.warn(message, UserWarning)
 
     # Maximum canopy saturation
