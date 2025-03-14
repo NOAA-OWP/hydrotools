@@ -99,15 +99,14 @@ def compute_canopy_saturation(
         location and leaf type (± 0.4 mm, standard deviation). Measurement
         units should correspond to rainfall_rate (i.e. if rainfall_rate is in
         mm/hour, then canopy_storage should be in mm).
-    trunk_evaporation: float, required
-        Fraction of evaporation originating from vegetation "trunks." Typically
-        0.02 (Miralles et al, 2010). Notated $\\epsilon$. Unitless. Valid
-        range is [0.0, 1.0)
-    evaporation_rate: float, required
+    evaporation_rate: float, optional, default 0.3
         Average evaporation rate. Typically 0.3 mm/hour (Miralles et al, 2010).
         Notated $E_c$. Expected to vary little between locations
         (± 0.1 mm/hour, standard deviation). Should be in the same measurement
         units as rainfall_rate.
+    trunk_evaporation: float, optional, default 0.02
+        Fraction of evaporation originating from vegetation "trunks." Typically
+        0.02 (Miralles et al, 2010). Notated $\\epsilon$. Unitless.
 
     Returns
     -------
@@ -157,24 +156,22 @@ def compute_trunk_saturation(
     canopy_saturation: float, required
         Maximum canopy storage, typically mm. Notated $P_g'$. Can be computed
         using `compute_canopy_saturation`.
-    evaporation_rate: float, required
+    evaporation_rate: float, optional, default 0.3
         Average evaporation rate. Typically 0.3 mm/hour (Miralles et al, 2010).
         Notated $E_c$. Expected to vary little between locations
         (± 0.1 mm/hour, standard deviation). Should be in the same measurement
         units as rainfall_rate.
-    trunk_capacity: float, required
+    trunk_fraction: float, optional, default 0.02
+        Fraction of rainfall hitting the "trunks" under the canopy. Typically
+        0.02 (Miralles et al, 2010). Notated $p_d$. Unitless.
+    trunk_evaporation: float, optional, default 0.02
+        Fraction of evaporation originating from vegetation "trunks." Typically
+        0.02 (Miralles et al, 2010). Notated $\\epsilon$. Unitless.
+    trunk_capacity: float, optional, default 0.02
         Minimum depth of water required to saturate trunks under the canopy.
         Typically 0.02 mm (Miralles et al, 2010). Notated $S_t$. Measurement
         units should correspond to rainfall_rate (i.e. if rainfall_rate is in
         mm/hour, then trunk_capacity should be in mm).
-    trunk_fraction: float, required
-        Fraction of rainfall hitting the "trunks" under the canopy. Typically
-        0.02 (Miralles et al, 2010). Notated $p_d$. Unitless. Valid
-        range is (0.0, 1.0]
-    trunk_evaporation: float, required
-        Fraction of evaporation originating from vegetation "trunks." Typically
-        0.02 (Miralles et al, 2010). Notated $\\epsilon$. Unitless. Valid
-        range is [0.0, 1.0)
 
     Returns
     -------
@@ -226,12 +223,12 @@ def compute_canopy_loss(
     canopy_fraction: float, required
         Projected portion of canopy cover, unitless. Notated 'c'. Valid
         range is (0.0, 1.0]
-    evaporation_rate: float, required
+    evaporation_rate: float, optional, default 0.3
         Average evaporation rate. Typically 0.3 mm/hour (Miralles et al, 2010).
         Notated $E_c$. Expected to vary little between locations
         (± 0.1 mm/hour, standard deviation). Should be in the same measurement
         units as rainfall_rate.
-    trunk_evaporation: float, required
+    trunk_evaporation: float, optional, default 0.02
         Fraction of evaporation originating from vegetation "trunks." Typically
         0.02 (Miralles et al, 2010). Notated $\\epsilon$. Unitless.
 
@@ -288,25 +285,25 @@ def compute_trunk_loss(
     canopy_fraction: float, required
         Projected portion of canopy cover, unitless. Notated 'c'. Valid
         range is (0.0, 1.0]
-    evaporation_rate: float, required
+    trunk_saturation: float, required
+        Maximum trunk storage, typically mm. Notated $P_g''$. Can be computed
+        using `compute_trunk_saturation`.
+    evaporation_rate: float, optional, default 0.3
         Average evaporation rate. Typically 0.3 mm/hour (Miralles et al, 2010).
         Notated $E_c$. Expected to vary little between locations
         (± 0.1 mm/hour, standard deviation). Should be in the same measurement
         units as rainfall_rate.
-    trunk_saturation: float, required
-        Maximum trunk storage, typically mm. Notated $P_g''$. Can be computed
-        using `compute_trunk_saturation`.
-    trunk_capacity: float, required
+    trunk_fraction: float, optional, default 0.02
+        Fraction of rainfall hitting the "trunks" under the canopy. Typically
+        0.02 (Miralles et al, 2010). Notated $p_d$. Unitless.
+    trunk_evaporation: float, optional, default 0.02
+        Fraction of evaporation originating from vegetation "trunks." Typically
+        0.02 (Miralles et al, 2010). Notated $\\epsilon$. Unitless.
+    trunk_capacity: float, optional, default 0.02
         Minimum depth of water required to saturate trunks under the canopy.
         Typically 0.02 mm (Miralles et al, 2010). Notated $S_t$. Measurement
         units should correspond to rainfall_rate (i.e. if rainfall_rate is in
         mm/hour, then trunk_capacity should be in mm).
-    trunk_fraction: float, required
-        Fraction of rainfall hitting the "trunks" under the canopy. Typically
-        0.02 (Miralles et al, 2010). Notated $p_d$. Unitless.
-    trunk_evaporation: float, required
-        Fraction of evaporation originating from vegetation "trunks." Typically
-        0.02 (Miralles et al, 2010). Notated $\\epsilon$. Unitless.
 
     Returns
     -------
