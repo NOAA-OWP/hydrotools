@@ -436,8 +436,8 @@ def compute_interception(
         rainfall_rate,
         canopy_saturation,
         canopy_fraction,
-        evaporation_rate,
         trunk_saturation,
+        evaporation_rate,
         trunk_capacity,
         trunk_fraction,
         trunk_evaporation
