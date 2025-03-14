@@ -3,6 +3,21 @@ import pytest
 import hydrotools.events.models.interception as itc
 import numpy as np
 
+def test_default_parameters():
+    dp = itc._DEFAULT_PARAMETERS
+    assert dp.canopy_storage == 1.2
+    assert dp.evaporation_rate == 0.3
+    assert dp.trunk_fraction == 0.02
+    assert dp.trunk_evaporation == 0.02
+    assert dp.trunk_capacity == 0.02
+
+    dp = itc.DefaultParameters()
+    assert dp.canopy_storage == 1.2
+    assert dp.evaporation_rate == 0.3
+    assert dp.trunk_fraction == 0.02
+    assert dp.trunk_evaporation == 0.02
+    assert dp.trunk_capacity == 0.02
+
 def test_compute_interception() -> None:
     """Tests basic functionality of top level method of interception module.
     Also tests that the method correctly raises with bad inputs. Specifically,
