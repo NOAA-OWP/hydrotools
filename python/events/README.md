@@ -164,3 +164,36 @@ value_time
 2020-10-01 02:00:00    streamflow       02146470            ft3/s        1.03      ['A']      0  0.925100
 2020-10-01 03:00:00    streamflow       02146470            ft3/s        1.03      ['A']      0  0.893740
 ```
+
+## Interception
+
+The `hydrotools.events.models.interception` module includes a basic method that estimates canopy interception. The method includes reasonable defaults from the literature for average evaporation rates and trunk fractions. The primary point of entry is the `compute_interception` method which estimates canopy intercepted rainfall in units of depth. `compute_interception` requires a gross rainfall amount, an average rain rate, and a canopy fraction. The defaults assume that gross rainfall is in mm, rainfall rate is in mm/h, and canopy fraction is dimensionless. While this method can be used in different contexts, expected usage is for event-scale (single storm) catchment-wide estimates of intercepted rainfall.
+
+### Example usage
+
+```python
+# Imports
+from hydrotools.events.models.interception import compute_interception
+
+# Assumed values for a single event
+storm_total_rainfall = 50.0 # mm
+mean_rainfall_rate = 5.0 # mm/h
+vegetative_fraction = 0.5 # 50% vegetative landcover
+
+# Estimate interception
+estimate = compute_interception(
+    gross_rainfall = storm_total_rainfall,
+    rainfall_rate = mean_rainfall_rate,
+    canopy_fraction = vegetative_fraction
+)
+print(f"Storm total intercepted rainfall (mm): {estimate:.1f}")
+print(f"Storm total intercepted rainfall (%): {(estimate/storm_total_rainfall)*100:.1f}")
+print(f"Effective rainfall (mm): {storm_total_rainfall-estimate:.1f}")
+```
+
+### Output
+```console
+Storm total intercepted rainfall (mm): 2.5
+Storm total intercepted rainfall (%): 5.0
+Effective rainfall (mm): 47.5
+```
