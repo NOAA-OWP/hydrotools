@@ -4,6 +4,8 @@ import hydrotools.events.models.interception as itc
 import numpy as np
 
 def test_default_parameters():
+    """Tests that module level default parameters match expected values from
+    the literature."""
     dp = itc._DEFAULT_PARAMETERS
     assert dp.canopy_storage == 1.2
     assert dp.evaporation_rate == 0.3
