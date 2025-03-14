@@ -167,7 +167,7 @@ value_time
 
 ## Interception
 
-The `hydrotools.events.models.interception` module includes a basic method that estimates canopy interception. The method includes reasonable defaults from the literature for average evaporation rates and trunk fractions. The primary point of entry is the `compute_interception` method which estimates canopy intercepted rainfall in units of depth. `compute_interception` requires a gross rainfall amount, an average rain rate, and a canopy fraction. The defaults assume that gross rainfall is in mm, rainfall rate in in mm/h, and canopy fraction is dimensionless. While this method can be used in different contexts, expected usage is for event-scale (single storm) catchment-wide estimates of intercepted rainfall.
+The `hydrotools.events.models.interception` module includes a basic method that estimates canopy interception. The method includes reasonable defaults from the literature for average evaporation rates and trunk fractions. The primary point of entry is the `compute_interception` method which estimates canopy intercepted rainfall in units of depth. `compute_interception` requires a gross rainfall amount, an average rain rate, and a canopy fraction. The defaults assume that gross rainfall is in mm, rainfall rate is in mm/h, and canopy fraction is dimensionless. While this method can be used in different contexts, expected usage is for event-scale (single storm) catchment-wide estimates of intercepted rainfall.
 
 ### Example usage
 

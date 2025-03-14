@@ -54,7 +54,7 @@ def compute_canopy_saturation(
         mm (Miralles et al, 2010). Notated $S_c$. Expected to vary little by
         location and leaf type (± 0.4 mm, standard deviation). Measurement
         units should correspond to rainfall_rate (i.e. if rainfall_rate is in
-        mm/hour, then canopy_storate should be in mm).
+        mm/hour, then canopy_storage should be in mm).
     trunk_evaporation: float, required
         Fraction of evaporation originating from vegetation "trunks." Typically
         0.02 (Miralles et al, 2010). Notated $\\epsilon$. Unitless. Valid
@@ -172,7 +172,7 @@ def compute_canopy_loss(
 
     Parameters
     ----------
-    gross_rainfall: float, require
+    gross_rainfall: float, required
         Storm total rainfall, typically in mm. Notated $P_g$.
     rainfall_rate: float, required
         Mean rainfall rate in L/T, typically mm/hour. Notated 'R'.
@@ -234,7 +234,7 @@ def compute_trunk_loss(
 
     Parameters
     ----------
-    gross_rainfall: float, require
+    gross_rainfall: float, required
         Storm total rainfall, typically in mm. Notated $P_g$.
     rainfall_rate: float, required
         Mean rainfall rate in L/T, typically mm/hour. Notated 'R'.
@@ -306,7 +306,7 @@ def compute_interception(
 
     Parameters
     ----------
-    gross_rainfall: float, require
+    gross_rainfall: float, required
         Storm total rainfall, typically in mm. Notated $P_g$.
     rainfall_rate: float, required
         Mean rainfall rate in L/T, typically mm/hour. Notated 'R'.
@@ -318,7 +318,7 @@ def compute_interception(
         mm (Miralles et al, 2010). Notated $S_c$. Expected to vary little by
         location and leaf type (± 0.4 mm, standard deviation). Measurement
         units should correspond to rainfall_rate (i.e. if rainfall_rate is in
-        mm/hour, then canopy_storate should be in mm).
+        mm/hour, then canopy_storage should be in mm).
     evaporation_rate: float, optional, default 0.3
         Average evaporation rate. Typically 0.3 mm/hour (Miralles et al, 2010).
         Notated $E_c$. Expected to vary little between locations
