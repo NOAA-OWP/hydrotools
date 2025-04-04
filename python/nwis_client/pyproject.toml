@@ -27,7 +27,7 @@ classifiers = [
 dependencies = [
     "pandas",
     "numpy",
-    "hydrotools._restclient>=4.0.0",
+    "hydrotools._restclient>=4.1.0",
     "aiohttp",
     "click",
 ]

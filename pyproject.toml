@@ -20,15 +20,16 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering :: Hydrology",
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "hydrotools.nwis_client==4.0.0",
-    "hydrotools.nwm_client==9.0.0",
-    "hydrotools.events==2.0.0",
-    "hydrotools.metrics==2.0.0",
-    "hydrotools.svi_client==1.0.0"
+    "hydrotools.nwis_client==4.1.0",
+    "hydrotools.nwm_client==9.1.0",
+    "hydrotools.events==2.2.0",
+    "hydrotools.metrics==2.2.0",
+    "hydrotools.svi_client==1.1.0"
 ]
 dynamic = ["version"]
 
