@@ -38,7 +38,7 @@ dependencies = [
     "azure-storage-blob",
     "planetary-computer",
     "adlfs",
-    "hydrotools._restclient>=4.0.0",
+    "hydrotools._restclient>=4.1.0",
     "dask[dataframe]",
 ]
 dynamic = ["version"]
