@@ -7,22 +7,22 @@ name = "hydrotools.svi_client"
 authors = [{ name = "Austin Raney", email = "aaraney@protonmail.com" }]
 description = "Retrieve Social Vulnerability Index data from The Center for Disease Control / The Agency for Toxic Substances and Disease Registry."
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 license = { file = "LICENSE" }
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Education",
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: Apache Software License",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering :: Hydrology",
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "hydrotools._restclient>=4.0.0",
+    "hydrotools._restclient>=4.1.0",
     "numpy >=1.20.0",
     "pandas",
     "geopandas",
