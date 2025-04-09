@@ -28,6 +28,7 @@ jobs:
     - name: Install dependencies
       run: |
         python3 -m pip install -U pip
+        python3 -m pip install ./python/_restclient
         python3 -m pip install ./python/nwm_client[develop]
     - name: Echo dependency versions
       run: |
