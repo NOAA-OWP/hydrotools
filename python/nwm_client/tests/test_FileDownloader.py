@@ -32,3 +32,19 @@ def test_overwrite_warning():
             downloader.get(
                 [("https://pandas.pydata.org/docs/user_guide/index.html","index.html")]
                 )
+
+@pytest.mark.slow
+def test_get_404():
+    url = "https://pandas.pydata.org/docs/user_guide/fake_data.nc"
+    message = (
+        "HTTP Status: 404" + 
+        " - Not Found" + 
+        " - Nothing matches the given URI\n" + 
+        f"{url}"
+        )
+    with TemporaryDirectory() as td:
+        downloader = FileDownloader(output_directory=td)
+        with pytest.warns(RuntimeWarning, match=message):
+            downloader.get(
+                [(url,"data.nc")]
+                )

@@ -85,7 +85,7 @@ class FileDownloader:
         async with session.get(url, ssl=self.ssl_context, timeout=900) as response:
             # Warn if unable to locate file
             if response.status != HTTPStatus.OK:
-                status = HTTPStatus(response.status_code)
+                status = HTTPStatus(response.status)
                 message = (
                     f"HTTP Status: {status.value}" + 
                     f" - {status.phrase}" + 
