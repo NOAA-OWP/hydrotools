@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import pytest
 from aiohttp import web
+import asyncio
 
 from hydrotools._restclient.async_client import ClientSession
 
@@ -81,12 +82,13 @@ async def test_get_check_cache(basic_test_server):
         assert r.from_cache is False
         assert r2.from_cache is True
 
-
-def test_get_non_async(basic_test_server, event_loop):
+@pytest.mark.asyncio
+async def test_get_non_async(basic_test_server):
+    event_loop = asyncio.get_running_loop()
     session = ClientSession(loop=event_loop)
-    resp_coro = session.get(basic_test_server["uri"])
-    resp = event_loop.run_until_complete(resp_coro)
-    assert event_loop.run_until_complete(resp.json()) == basic_test_server["data"]
+    resp_coro = await session.get(basic_test_server["uri"])
+    resp = await resp_coro.json()
+    assert resp  == basic_test_server["data"]
 
 
 @pytest.fixture
