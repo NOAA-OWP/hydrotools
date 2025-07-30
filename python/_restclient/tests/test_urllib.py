@@ -204,7 +204,6 @@ def test_plus():
     base_url = "http://www.fake.gov"
     params = {"key": "+12"}
     url = Url(base_url, quote_treatment=Quote.QUOTE) + params
-    print(url.quote_url)
 
 
 def test_quote_overide_map():
