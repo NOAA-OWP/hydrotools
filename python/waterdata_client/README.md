@@ -1,6 +1,6 @@
 # OWPHydroTools :: WaterData Client
 
-This subpackage implements an interface to the USGS [WaterData APIs](https://api.waterdata.usgs.gov/). The primary use for this tool is to populate `pandas.Dataframe` objects with USGS streamflow data. See the [WaterData Client Documentation](https://noaa-owp.github.io/hydrotools/hydrotools.water_data.html) for a complete list and description of the currently available methods. To report bugs or request new features, submit an issue through the [OWPHydroTools Issue Tracker](https://github.com/NOAA-OWP/hydrotools/issues) on GitHub.
+This subpackage implements an interface to the USGS [WaterData APIs](https://api.waterdata.usgs.gov/). The primary use for this tool is to populate `pandas.Dataframe` objects with USGS streamflow data. See the [WaterData Client Documentation](https://noaa-owp.github.io/hydrotools/hydrotools.waterdata_client.html) for a complete list and description of the currently available methods. To report bugs or request new features, submit an issue through the [OWPHydroTools Issue Tracker](https://github.com/NOAA-OWP/hydrotools/issues) on GitHub.
 
 ## Installation
 
@@ -31,17 +31,17 @@ The following example demonstrates how one might use `hydrotools.waterdata_clien
 from hydrotools.waterdata_client import ContinuousClient
 
 # Retrieve data from a single site
-service = ContinuousClient(
+client = ContinuousClient(
     value_time_label="value_time"
 )
-observations_data = service.get(
+observations = client.get(
     sites='01646500',
     startDT='2019-08-01',
     endDT='2020-08-01'
     )
 
 # Look at the data
-print(observations_data.head())
+print(observations.head())
 ```
 
 ### Output
