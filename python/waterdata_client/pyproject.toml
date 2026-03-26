@@ -23,7 +23,8 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "aiohttp"
+    "aiohttp",
+    "tenacity"
 ]
 dynamic = ["version"]
 
