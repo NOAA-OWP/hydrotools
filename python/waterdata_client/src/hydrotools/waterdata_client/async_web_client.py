@@ -4,7 +4,11 @@ This module provides a low-level asynchronous client designed to handle
 concurrent HTTP requests. It includes built-in throttling 
 via semaphores and automatic retry logic.
 
-Example:
+This module provides two main interfaces: a high-level sychronous interace that
+runs concurrent requests in a separate thread and a lower-level interface that
+offers direct access to asychronous methods using a context manager.
+
+High-level interface example:
 >>> from hydrotools.waterdata_client import get_all
 >>> base_url = "https://api.waterdata.usgs.gov/ogcapi/v0/collections/"
 >>> collection = "monitoring-locations/items"
@@ -12,6 +16,20 @@ Example:
 >>> req = base_url + collection + query
 >>> urls = [req]
 >>> results = get_all(urls)
+
+Low-level interace example:
+>>> import asyncio
+>>> from yarl import URL
+>>> from hydrotools.waterdata_client import AsyncWebClient
+>>> base_url = "https://api.waterdata.usgs.gov/ogcapi/v0/collections/"
+>>> collection = "monitoring-locations/items"
+>>> query = "?f=json&id=USGS-02146470"
+>>> req = base_url + collection + query
+>>> async def main():
+...     async with AsyncWebClient() as client:
+...         urls = [URL(req)]
+...         results = await client.fetch_all(urls)
+>>> asyncio.run(main())
 """
 
 import asyncio
@@ -113,8 +131,6 @@ class AsyncWebClient:
         Returns:
             Decoded JSON or raw bytes. Returns None if all retries fail.
         """
-        if self.session is None or self.session.closed:
-            raise RuntimeError("AsyncWebClient must be used within an 'async with' block.")
         return await self.retrier(self._execute_request, url)
 
     async def _execute_request(self, url: URL) -> Optional[dict[str, Any] | bytes]:
@@ -123,6 +139,9 @@ class AsyncWebClient:
         Args:
             url: The URL to retrieve.
         """
+        if self.session is None or self.session.closed:
+            raise RuntimeError("AsyncWebClient must be used within an 'async with' block.")
+
         async with self.semaphore:
             async with self.session.get(url) as response:
                 # Retry on 5xx
