@@ -1,4 +1,16 @@
-"""Persistent disk caching for client data."""
+"""Persistent disk caching for client data.
+
+Example:
+>>> from pathlib import Path
+>>> from hydrotools.waterdata_client.client_cache import ClientCache
+>>> cache = ClientCache(
+...     cache_dir=Path("./my_cache"),
+...     expire=3600
+... )
+>>> cache["my_unique_hasable_key"] = {"value": 123}
+>>> retrieved_value = cache["my_unique_hasable_key"]
+>>> none_value = cache["non_existent_key"]
+"""
 from pathlib import Path
 from typing import Any, Optional
 

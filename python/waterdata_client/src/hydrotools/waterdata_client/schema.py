@@ -1,6 +1,6 @@
 """USGS OGC API schema handling."""
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 import logging
 from io import BytesIO
 
@@ -8,7 +8,7 @@ import jsonref
 import yaml
 from yarl import URL
 
-from .client_config import ClientConfig
+from .client_config import CLIENT_DEFAULT_CONFIGURATION
 from .async_web_client import get_all, ResponseContentType
 
 LOGGER: logging.Logger = logging.getLogger(Path(__file__).stem)
@@ -26,14 +26,17 @@ def retrieve_yaml(url: str) -> dict[str, Any]:
     Raises:
         RuntimeError if url does not return bytes.
     """
-    result = get_all([URL(url)], content_type=ResponseContentType.BYTES)[0]
+    result = get_all(
+        [URL(url)],
+        concurrency_limit=CLIENT_DEFAULT_CONFIGURATION.default_concurrency,
+        max_retries=CLIENT_DEFAULT_CONFIGURATION.default_retries,
+        timeout_seconds=CLIENT_DEFAULT_CONFIGURATION.timeout_seconds,
+        content_type=ResponseContentType.BYTES)[0]
     if isinstance(result, bytes):
         return yaml.safe_load(BytesIO(result))
     raise RuntimeError(f"Did not receive bytes from {url}")
 
-def get_schema_bytes(
-        client_config: Optional[ClientConfig] = None
-        ) -> bytes:
+def get_schema_bytes() -> bytes:
     """Retrieves and resolves the OGC schema with disk caching.
 
     Args:
@@ -42,12 +45,9 @@ def get_schema_bytes(
     Returns:
         Schema as raw bytes.
     """
-    # Load default config
-    client_config = client_config or ClientConfig()
-
     # Check disk cache
-    client_cache = client_config.build_cache()
-    schema_disk_cache_key = str(client_config.schema_url)
+    client_cache = CLIENT_DEFAULT_CONFIGURATION.default_cache
+    schema_disk_cache_key = str(CLIENT_DEFAULT_CONFIGURATION.schema_url)
     cached_schema = client_cache[schema_disk_cache_key]
     if cached_schema:
         LOGGER.debug("Loaded OGC schema from disk cache.")
@@ -56,8 +56,10 @@ def get_schema_bytes(
     # Fetch
     LOGGER.info("Fetching fresh OGC schema from USGS...")
     raw_bytes = get_all(
-        urls=[client_config.schema_url],
-        max_retries=client_config.default_retries,
+        urls=[CLIENT_DEFAULT_CONFIGURATION.schema_url],
+        concurrency_limit=CLIENT_DEFAULT_CONFIGURATION.default_concurrency,
+        max_retries=CLIENT_DEFAULT_CONFIGURATION.default_retries,
+        timeout_seconds=CLIENT_DEFAULT_CONFIGURATION.timeout_seconds,
         content_type=ResponseContentType.BYTES
     )[0]
 
@@ -68,9 +70,7 @@ def get_schema_bytes(
     client_cache[schema_disk_cache_key] = raw_bytes
     return raw_bytes
 
-def get_schema(
-        client_config: Optional[ClientConfig] = None
-        ) -> dict[str, Any]:
+def get_schema() -> dict[str, Any]:
     """Retrieves and resolves the OGC schema with disk caching.
 
     Args:
@@ -80,7 +80,7 @@ def get_schema(
         De-serialized JSON schema as dict.
     """
     schema = jsonref.loads(
-        get_schema_bytes(client_config),
+        get_schema_bytes(),
         loader=retrieve_yaml,
         lazy_load=True
     )
