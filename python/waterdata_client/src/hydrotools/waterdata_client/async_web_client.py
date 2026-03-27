@@ -5,19 +5,13 @@ concurrent HTTP requests. It includes built-in throttling
 via semaphores and automatic retry logic.
 
 Example:
->>> import asyncio
->>> from yarl import URL
->>> from hydrotools.waterdata_client import AsyncWebClient
+>>> from hydrotools.waterdata_client import get_all
 >>> base_url = "https://api.waterdata.usgs.gov/ogcapi/v0/collections/"
 >>> collection = "monitoring-locations/items"
 >>> query = "?f=json&id=USGS-02146470"
 >>> req = base_url + collection + query
->>> async def main():
-...     async with AsyncWebClient(concurrency_limit=5) as client:
-...         urls = [URL(req)]
-...         results = await client.fetch_all(urls)
-...         print(results)
->>> asyncio.run(main())
+>>> urls = [req]
+>>> results = get_all(urls)
 """
 
 import asyncio
@@ -25,15 +19,16 @@ import logging
 import ssl
 from pathlib import Path
 from typing import Any, Optional, Self, Sequence
+from concurrent.futures import ThreadPoolExecutor
 
 import aiohttp
 from tenacity import (
+    AsyncRetrying,
     RetryCallState,
     before_sleep_log,
-    retry,
     retry_if_exception_type,
     stop_after_attempt,
-    wait_exponential,
+    wait_exponential
 )
 from yarl import URL
 
@@ -46,28 +41,32 @@ def return_none_on_failure(retry_state: RetryCallState) -> None:
     Args:
         retry_state: The current state of the retry call.
     """
-    LOGGER.error("Retries exhausted for %s. Returning None.", retry_state.args[1])
+    url = retry_state.args[0] if retry_state.args else "Unknown URL"
+    LOGGER.error("Retries exhausted for %s. Returning None.", url)
 
 class AsyncWebClient:
-    """An asynchronous HTTP client with concurrency throttling.
+    """An asynchronous HTTP client.
 
     Attributes:
         ssl_context: SSL configuration for secure requests.
         semaphore: Controller for the maximum number of concurrent requests.
         timeout: The total timeout settings for aiohttp requests.
         session: The underlying persistent aiohttp client session.
+        retrier: The tenacity AsyncRetrying instance used for requests.
     """
 
     def __init__(
         self,
         concurrency_limit: int = 10,
+        max_retries: int = 3,
         ssl_context: Optional[ssl.SSLContext] = None,
         timeout_seconds: int = 900
     ) -> None:
-        """Initializes the client with a semaphore for throttling.
+        """Initializes the client.
 
         Args:
             concurrency_limit: Max simultaneous requests. Defaults to 10.
+            max_retries: Number of times to attempt a failed request. Defaults to 3.
             ssl_context: Custom SSL context. Defaults to default system context.
             timeout_seconds: Total request timeout in seconds. Defaults to 900.
         """
@@ -75,6 +74,17 @@ class AsyncWebClient:
         self.semaphore = asyncio.Semaphore(concurrency_limit)
         self.timeout = aiohttp.ClientTimeout(total=timeout_seconds)
         self.session: Optional[aiohttp.ClientSession] = None
+
+        self.retrier = AsyncRetrying(
+            retry=retry_if_exception_type(
+                (aiohttp.ClientResponseError, asyncio.TimeoutError, aiohttp.ClientError)
+            ),
+            stop=stop_after_attempt(max_retries),
+            wait=wait_exponential(multiplier=1, min=2, max=10),
+            before_sleep=before_sleep_log(LOGGER, logging.WARNING),
+            retry_error_callback=return_none_on_failure,
+            reraise=False
+        )
 
     async def __aenter__(self) -> Self:
         """Initializes the session with a pooled connector."""
@@ -94,15 +104,6 @@ class AsyncWebClient:
         if self.session:
             await self.session.close()
 
-    @retry(
-        retry=retry_if_exception_type(
-            (aiohttp.ClientResponseError, asyncio.TimeoutError, aiohttp.ClientError)
-        ),
-        stop=stop_after_attempt(5),
-        wait=wait_exponential(multiplier=1, min=2, max=10),
-        before_sleep=before_sleep_log(LOGGER, logging.WARNING),
-        retry_error_callback=return_none_on_failure,
-    )
     async def fetch(self, url: URL) -> Optional[dict[str, Any] | bytes]:
         """Fetches a URL with semaphore-based throttling and retries.
 
@@ -114,7 +115,14 @@ class AsyncWebClient:
         """
         if self.session is None or self.session.closed:
             raise RuntimeError("AsyncWebClient must be used within an 'async with' block.")
+        return await self.retrier(self._execute_request, url)
 
+    async def _execute_request(self, url: URL) -> Optional[dict[str, Any] | bytes]:
+        """Internal method to perform the actual network I/O.
+        
+        Args:
+            url: The URL to retrieve.
+        """
         async with self.semaphore:
             async with self.session.get(url) as response:
                 # Retry on 5xx
@@ -142,5 +150,43 @@ class AsyncWebClient:
         Returns:
             List of responses in the order of the input URLs.
         """
-        tasks = [self.fetch(url) for url in url_list]
-        return list(await asyncio.gather(*tasks))
+        return list(await asyncio.gather(*[self.fetch(url) for url in url_list]))
+
+def get_all(
+    urls: Sequence[str | URL],
+    concurrency_limit: int = 10,
+    max_retries: int = 3,
+    ssl_context: Optional[ssl.SSLContext] = None,
+    timeout_seconds: int = 900
+) -> list[dict[str, Any] | bytes | None]:
+    """Synchronously retrieves data from multiple URLs concurrently.
+
+    This function provides a wrapper around AsyncWebClient to handle the asyncio
+    event loop internally.
+
+    Args:
+        urls: A sequence of URL strings or yarl URL objects.
+        concurrency_limit: Max simultaneous requests. Defaults to 10.
+        max_retries: Number of times to attempt a failed request. Defaults to 3.
+        ssl_context: Custom SSL context. Defaults to default system context.
+        timeout_seconds: Total request timeout in seconds. Defaults to 900.
+
+    Returns:
+        A list of parsed JSON objects, bytes, or None for each URL.
+    """
+    # Convert strings to URL objects if necessary
+    url_objects = [URL(u) if isinstance(u, str) else u for u in urls]
+
+    async def _run() -> list[Any]:
+        async with AsyncWebClient(
+            concurrency_limit=concurrency_limit,
+            max_retries=max_retries,
+            ssl_context=ssl_context,
+            timeout_seconds=timeout_seconds
+        ) as client:
+            return await client.fetch_all(url_objects)
+
+    # Isolate the event loop from the main thread to avoid nested event loops
+    with ThreadPoolExecutor(max_workers=1) as executor:
+        future = executor.submit(asyncio.run, _run())
+        return future.result()

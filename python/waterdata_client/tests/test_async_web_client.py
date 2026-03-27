@@ -7,11 +7,15 @@ AsyncWebClient.
 Example:
     $ pytest test_async_web_client.py
 """
+import asyncio
+import time
+import threading
+
 import pytest
 from aiohttp import web
 from yarl import URL
 
-from hydrotools.waterdata_client import AsyncWebClient
+from hydrotools.waterdata_client import AsyncWebClient, get_all
 
 def create_web_application() -> web.Application:
     """Creates a mock aiohttp application for testing.
@@ -104,6 +108,47 @@ async def test_retry_exhaustion_returns_none(aiohttp_client) -> None:
     mock_client = await aiohttp_client(create_web_application())
     url = URL(f"http://{mock_client.host}:{mock_client.port}/error")
 
-    async with AsyncWebClient() as client:
+    async with AsyncWebClient(max_retries=1) as client:
         result = await client.fetch(url)
     assert result is None
+
+SYNCHRONOUS_HOST: str = "127.0.0.1"
+"""Default host to use for testing sycnhronous get_all method."""
+
+SYCHNRONOUS_PORT: int = 35683
+"""Default server port to use for testing synchronous get_all method."""
+
+def run_server(
+        app: web.Application,
+        host: str = SYNCHRONOUS_HOST,
+        port: int = SYCHNRONOUS_PORT
+    ) -> None:
+    """Helper to run a server in a separate thread for testing get_all."""
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    runner = web.AppRunner(app)
+    loop.run_until_complete(runner.setup())
+    site = web.TCPSite(runner, host, port)
+    loop.run_until_complete(site.start())
+    loop.run_forever()
+
+@pytest.fixture(scope="module")
+def persistent_server():
+    """Starts a mock server in a background thread that doesn't share the test loop."""
+    app = create_web_application()
+
+    thread = threading.Thread(target=run_server, args=(app,), daemon=True)
+    thread.start()
+
+    # Give the server a moment to spin up
+    time.sleep(1)
+    yield f"http://{SYNCHRONOUS_HOST}:{SYCHNRONOUS_PORT}"
+
+def test_get_all(persistent_server) -> None:
+    """Tests get_all against an independent server thread."""
+    urls = [f"{persistent_server}/json", f"{persistent_server}/binary"]
+
+    results = get_all(urls, max_retries=1)
+
+    assert results[0] == {"status": "ok", "data": 123}
+    assert results[1] == b"binary_data"
