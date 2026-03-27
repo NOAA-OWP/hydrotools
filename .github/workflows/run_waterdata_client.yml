@@ -1,0 +1,37 @@
+name: hydrotools.waterdata_client
+
+on:
+  push:
+    paths:
+    - 'python/waterdata_client/**'
+  pull_request:
+    paths:
+    - 'python/waterdata_client/**'
+  workflow_dispatch:
+
+jobs:
+  unittests:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+
+    steps:
+    - uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v6
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python3 -m pip install -U pip
+        python3 -m pip install ./python/waterdata_client[develop]
+    - name: Echo dependency versions
+      run: |
+        python3 -m pip freeze
+    - name: Run unittests 
+      run: |
+        python3 -m pytest -s -m "not slow" ./python/waterdata_client/

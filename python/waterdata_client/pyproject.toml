@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=70"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hydrotools.waterdata_client"
+authors = [
+    { name = "Jason A. Regina", email = "jason.regina@noaa.gov" }
+]
+description = "A convenient interface for USGS WaterData APIs."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Hydrology",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "aiohttp",
+    "tenacity"
+]
+dynamic = ["version"]
+
+[tool.setuptools.dynamic]
+version = { attr = "hydrotools.waterdata_client._version.__version__" }
+
+[project.optional-dependencies]
+develop = ["pytest", "pytest-aiohttp"]
+
+[project.urls]
+Homepage = "https://github.com/NOAA-OWP/hydrotools"
+Documentation = "https://noaa-owp.github.io/hydrotools/hydrotools.waterdata_client.html"
+Repository = "https://github.com/NOAA-OWP/hydrotools/tree/main/python/waterdata_client"
+"Bug Tracker" = "https://github.com/NOAA-OWP/hydrotools/issues"
