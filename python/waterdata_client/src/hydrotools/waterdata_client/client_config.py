@@ -1,20 +1,78 @@
 """Package-wide configuration and defaults.
 
-Most modules will just import the default configuration:
->>> from .client_config import CLIENT_DEFAULT_CONFIGURATION
+This module provides a thread-safe, environment-aware configuration singleton 
+for hydrotools WaterData clients.
+
+Example:
+    >>> from hydrotools.waterdata_client.client_config import SETTINGS
+    >>> print(SETTINGS.usgs_base_url)
+    https://api.waterdata.usgs.gov/ogcapi/v0
 """
+__all__ = ["SETTINGS"]
+
+import os
+from sys import stdout
+from enum import StrEnum
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Final
+from typing import Any, Final, Optional, TextIO, Self
 from functools import cached_property
+import threading
+
+try:
+    import dotenv
+    dotenv.load_dotenv()
+except ImportError:
+    pass
 
 from yarl import URL
 from platformdirs import user_cache_dir
 
 from diskcache import Cache
 
+DEFAULT_USER_CACHE: Path = Path(user_cache_dir("hydrotools")) / "waterdata_client"
+"""Default user cache location."""
+
+APPLICATION_PREFIX: Final[str] = "HYDROTOOLS"
+"""A prefix to use in order to preserve application setting isolation."""
+
+KEY_SEPARATOR: Final[str] = os.environ.get(f"{APPLICATION_PREFIX}_KEY_SEPARATOR", "_")
+"""A separator to use for environment variable keys."""
+
+_KEY_START: Final[str] = APPLICATION_PREFIX + KEY_SEPARATOR if APPLICATION_PREFIX else ""
+"""Helper constant for the beginning of environment keys"""
+
+class EnvironmentKey(StrEnum):
+    """Keys for environment variable."""
+    BASE_URL = f"{_KEY_START}USGS_BASE_URL"
+    SCHEMA_PATH = f"{_KEY_START}OGC_SCHEMA_PATH"
+    CACHE_DIRECTORY = f"{_KEY_START}CACHE_DIRECTORY"
+    CACHE_EXPIRES = f"{_KEY_START}CACHE_EXPIRES"
+    CONCURRENCY = f"{_KEY_START}CONCURRENCY"
+    RETRIES = f"{_KEY_START}RETRIES"
+    TIMEOUT = f"{_KEY_START}TIMEOUT"
+    API_KEY = f"{_KEY_START}USGS_API_KEY"
+
+    @classmethod
+    def describe_keys(cls) -> str:
+        """Create a text listing for each configured key."""
+        return os.linesep.join(list(cls))
+
+    @classmethod
+    def print_keys(cls, stream: TextIO = stdout, flush: bool = False) -> None:
+        """Write each key to a buffer
+
+        Args:
+            stream: Where to write each key. Defaults to stdout
+            flush: Whether to flush the buffer after writing.
+        """
+        stream.write(cls.describe_keys())
+
+        if flush:
+            stream.flush()
+
 @dataclass(frozen=True)
-class ClientConfig:
+class _Settings:
     """Default settings for hydrotools WaterData clients.
 
     Attributes:
@@ -26,8 +84,7 @@ class ClientConfig:
         default_concurrency: Max simultaneous requests.
         default_retries: Number of retry attempts.
         timeout_seconds: Number of seconds to wait for response completion.
-    
-    Properties:
+        usgs_api_key: Individual USGS API key for increased usage limits.
         schema_url: Returns URL to API schema from usgs_base_url, schema_path, and
             default_query.
         default_cache: Returns a diskcache.Cache object parameterized by cache_dir and
@@ -36,23 +93,44 @@ class ClientConfig:
     usgs_base_url: URL = URL("https://api.waterdata.usgs.gov/ogcapi/v0")
     schema_path: str = "openapi"
     default_query: dict[str, Any] = field(default_factory=lambda: {"f": "json"})
-    cache_dir: Path = field(
-        default_factory=lambda: Path(user_cache_dir("hydrotools")) / "waterdata_client"
-    )
+    cache_dir: Path = field(default_factory=lambda: DEFAULT_USER_CACHE)
     cache_expires: int = 604_800
     default_concurrency: int = 10
     default_retries: int = 3
     timeout_seconds: int = 900
+    usgs_api_key: Optional[str] = None
+    _lock: threading.RLock = field(default_factory=threading.RLock)
+
+    @classmethod
+    def from_env(cls) -> Self:
+        """Creates a configuration object using environment variable overrides.
+
+        Returns:
+            A _Settings instance with values pulled from HYDROTOOLS_ prefixed 
+            environment variables if they exist.
+        """
+        return cls(
+            usgs_base_url=URL(os.getenv(EnvironmentKey.BASE_URL, cls.usgs_base_url)),
+            schema_path=os.getenv(EnvironmentKey.SCHEMA_PATH, cls.schema_path),
+            cache_dir=Path(os.getenv(EnvironmentKey.CACHE_DIRECTORY, DEFAULT_USER_CACHE)),
+            cache_expires=int(os.getenv(EnvironmentKey.CACHE_EXPIRES, cls.cache_expires)),
+            default_concurrency=int(os.getenv(EnvironmentKey.CONCURRENCY, cls.default_concurrency)),
+            default_retries=int(os.getenv(EnvironmentKey.RETRIES, cls.default_retries)),
+            timeout_seconds=int(os.getenv(EnvironmentKey.TIMEOUT, cls.timeout_seconds)),
+            usgs_api_key=os.getenv(EnvironmentKey.API_KEY, cls.usgs_api_key)
+            )
 
     @cached_property
     def schema_url(self) -> URL:
         """Builds and returns schema URL."""
-        return (self.usgs_base_url / self.schema_path).with_query(self.default_query)
+        with self._lock:
+            return (self.usgs_base_url / self.schema_path).with_query(self.default_query)
 
     @cached_property
     def default_cache(self) -> Cache:
         """Builds and returns ClientCache object using defaults."""
-        return Cache(str(self.cache_dir))
+        with self._lock:
+            return Cache(str(self.cache_dir))
 
-CLIENT_DEFAULT_CONFIGURATION: Final[ClientConfig] = ClientConfig()
-"""Package-wide defaults."""
+SETTINGS: Final[_Settings] = _Settings.from_env()
+"""Package-wide default settings."""
