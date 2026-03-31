@@ -48,7 +48,7 @@ def get_schema_bytes() -> bytes:
     # Check disk cache
     client_cache = CLIENT_DEFAULT_CONFIGURATION.default_cache
     schema_disk_cache_key = str(CLIENT_DEFAULT_CONFIGURATION.schema_url)
-    cached_schema = client_cache[schema_disk_cache_key]
+    cached_schema = client_cache.get(schema_disk_cache_key)
     if cached_schema:
         LOGGER.debug("Loaded OGC schema from disk cache.")
         return cached_schema
@@ -67,7 +67,11 @@ def get_schema_bytes() -> bytes:
         raise RuntimeError("Could not retrieve OGC schema from USGS.")
 
     # Save to disk
-    client_cache[schema_disk_cache_key] = raw_bytes
+    client_cache.set(
+        schema_disk_cache_key,
+        raw_bytes,
+        expire=CLIENT_DEFAULT_CONFIGURATION.cache_expires
+    )
     return raw_bytes
 
 def get_schema() -> dict[str, Any]:

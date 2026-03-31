@@ -1,6 +1,6 @@
 """Package-wide configuration and defaults.
 
-Most modules will just import default configuration:
+Most modules will just import the default configuration:
 >>> from .client_config import CLIENT_DEFAULT_CONFIGURATION
 """
 from dataclasses import dataclass, field
@@ -11,7 +11,7 @@ from functools import cached_property
 from yarl import URL
 from platformdirs import user_cache_dir
 
-from .client_cache import ClientCache
+from diskcache import Cache
 
 @dataclass(frozen=True)
 class ClientConfig:
@@ -30,7 +30,7 @@ class ClientConfig:
     Properties:
         schema_url: Returns URL to API schema from usgs_base_url, schema_path, and
             default_query.
-        build_cache: Returns a ClientCache object parameterized by cache_dir and
+        default_cache: Returns a diskcache.Cache object parameterized by cache_dir and
             cache_expires.
     """
     usgs_base_url: URL = URL("https://api.waterdata.usgs.gov/ogcapi/v0")
@@ -44,18 +44,15 @@ class ClientConfig:
     default_retries: int = 3
     timeout_seconds: int = 900
 
-    @property
+    @cached_property
     def schema_url(self) -> URL:
         """Builds and returns schema URL."""
         return (self.usgs_base_url / self.schema_path).with_query(self.default_query)
 
     @cached_property
-    def default_cache(self) -> ClientCache:
+    def default_cache(self) -> Cache:
         """Builds and returns ClientCache object using defaults."""
-        return ClientCache(
-            cache_dir=self.cache_dir,
-            expire=self.cache_expires
-        )
+        return Cache(str(self.cache_dir))
 
 CLIENT_DEFAULT_CONFIGURATION: Final[ClientConfig] = ClientConfig()
 """Package-wide defaults."""
