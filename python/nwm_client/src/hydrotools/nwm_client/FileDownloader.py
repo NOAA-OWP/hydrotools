@@ -13,9 +13,12 @@ import ssl
 import aiohttp
 import aiofiles
 from pathlib import Path
-from typing import List, Tuple, Union
+from typing import List, Tuple, Union, Final, Optional
 import warnings
 from http import HTTPStatus
+
+
+DEFAULT_TIMEOUT_SECONDS: Final[int] = 900
 
 class FileDownloader:
     """Provides a convenient interface to download a list of files
@@ -27,8 +30,9 @@ class FileDownloader:
         output_directory: Union[str, Path] = Path("."), 
         create_directory: bool = False,
         ssl_context: ssl.SSLContext = ssl.create_default_context(),
-        limit: int = 10
-        ) -> None:
+        limit: int = 10,
+        timeout: int = DEFAULT_TIMEOUT_SECONDS
+    ) -> None:
         """Initialize File Downloader object with specified output directory.
         
         Parameters
@@ -42,6 +46,8 @@ class FileDownloader:
             SSL configuration context.
         limit: int, optional, default 10
             Number of simultaneous connections.
+        timeout: int, optional
+            The default number of seconds to wait for each network call
             
         Returns
         -------
@@ -59,12 +65,16 @@ class FileDownloader:
         # Set limit
         self.limit = limit
 
+        # Set timeout
+        self.timeout: int = timeout
+
     async def get_file(
         self,
         url: str,
         filename: str,
-        session: aiohttp.ClientSession
-        ) -> None:
+        session: aiohttp.ClientSession,
+        timeout: Optional[int] = None
+    ) -> None:
         """Download a single file.
         
         Parameters
@@ -76,13 +86,18 @@ class FileDownloader:
             to self.output_directory/filename
         session: aiohttp.ClientSession, required
             Session object used for retrieval.
+        timeout: int, optional
+            The number of seconds to wait for a network call
             
         Returns
         -------
         None
         """
+        if not timeout:
+            timeout = self.timeout
+
         # Retrieve a single file
-        async with session.get(url, ssl=self.ssl_context, timeout=900) as response:
+        async with session.get(url, ssl=self.ssl_context, timeout=timeout) as response:
             # Warn if unable to locate file
             if response.status != HTTPStatus.OK:
                 status = HTTPStatus(response.status)
@@ -106,7 +121,11 @@ class FileDownloader:
                         break
                     await fo.write(chunk)
 
-    async def get_files(self, src_dst_list: List[Tuple[str,str]]) -> None:
+    async def get_files(
+        self,
+        src_dst_list: List[Tuple[str,str]],
+        timeout: Optional[int] = None
+    ) -> None:
         """Asynchronously download multiple files.
         
         Parameters
@@ -115,17 +134,27 @@ class FileDownloader:
             List of tuples containing two strings. The first string is the 
             source URL from which to retrieve a file, the second string is the
             local filename where the file will be saved.
+        timeout: int, Optional
+            The number of seconds to wait on each network call
             
         Returns
         -------
         None
         """
+        if not timeout:
+            timeout = self.timeout
+
         # Retrieve each file
         connector = aiohttp.TCPConnector(limit=self.limit)
         async with aiohttp.ClientSession(connector=connector) as session:
-            await asyncio.gather(*[self.get_file(url, filename, session) for url, filename in src_dst_list])
+            await asyncio.gather(*[self.get_file(url, filename, session, timeout) for url, filename in src_dst_list])
 
-    def get(self, src_dst_list: List[Tuple[str,str]], overwrite: bool = False) -> None:
+    def get(
+        self,
+        src_dst_list: List[Tuple[str,str]],
+        overwrite: bool = False,
+        timeout: Optional[int] = None
+    ) -> None:
         """Setup event loop and asynchronously download multiple files. If 
         self.create_directory is True, an output directory will be 
         created if needed.
@@ -139,6 +168,8 @@ class FileDownloader:
         overwrite: bool, optional, default False
             If True will overwrite destination file, if it exists. If False, 
             download of this file is skipped.
+        timeout: int, optional
+            The number of seconds to wait for network calls
             
         Returns
         -------
@@ -154,6 +185,9 @@ class FileDownloader:
         >>>     [("https://pandas.pydata.org/docs/user_guide/index.html","index.html")]
         >>>     )
         """
+        if not timeout:
+            timeout = self.timeout
+
         # Shorten list to files that do not exist
         if not overwrite:
             short = []
@@ -174,7 +208,7 @@ class FileDownloader:
                 raise FileNotFoundError(message)
 
         # Start event loop to retrieve files
-        asyncio.run(self.get_files(src_dst_list))
+        asyncio.run(self.get_files(src_dst_list, timeout=timeout))
 
     @property
     def output_directory(self) -> Path:
