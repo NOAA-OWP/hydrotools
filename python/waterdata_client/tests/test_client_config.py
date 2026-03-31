@@ -10,6 +10,7 @@ Example:
 import os
 from pathlib import Path
 from io import StringIO
+from dataclasses import FrozenInstanceError
 import pytest
 from yarl import URL
 from diskcache import Cache
@@ -99,3 +100,19 @@ def test_settings_singleton_initialization() -> None:
     """Verifies the global SETTINGS singleton is initialized."""
     # Ensure the exported singleton is an instance of the settings class
     assert isinstance(SETTINGS, _Settings)
+
+def test_settings_is_frozen() -> None:
+    """Verifies that SETTINGS is immutable and raises FrozenInstanceError on mutation.
+    
+    This ensures that package-wide defaults cannot be accidentally changed 
+    at runtime by other modules.
+    """
+    with pytest.raises(FrozenInstanceError):
+        # Attempting to modify a frozen dataclass field
+        SETTINGS.default_concurrency = 999
+
+def test_settings_cannot_delete_attr() -> None:
+    """Verifies that attributes cannot be deleted from the SETTINGS singleton."""
+    with pytest.raises(FrozenInstanceError):
+        # Attempting to delete a field also triggers FrozenInstanceError
+        del SETTINGS.timeout_seconds
