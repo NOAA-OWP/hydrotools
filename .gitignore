@@ -151,3 +151,4 @@ data/
 
 # vscode settings
 .vscode/
+.idea
