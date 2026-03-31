@@ -17,7 +17,6 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Final, Optional, TextIO, Self
 from functools import cached_property
-import threading
 
 try:
     import dotenv
@@ -31,7 +30,7 @@ from platformdirs import user_cache_dir
 from diskcache import Cache
 
 DEFAULT_USER_CACHE: Path = Path(user_cache_dir("hydrotools")) / "waterdata_client"
-"""Default user cache location."""
+"""Default user disk cache location."""
 
 APPLICATION_PREFIX: Final[str] = "HYDROTOOLS"
 """A prefix to use in order to preserve application setting isolation."""
@@ -99,7 +98,6 @@ class _Settings:
     default_retries: int = 3
     timeout_seconds: int = 900
     usgs_api_key: Optional[str] = None
-    _lock: threading.RLock = field(default_factory=threading.RLock)
 
     @classmethod
     def from_env(cls) -> Self:
@@ -123,14 +121,12 @@ class _Settings:
     @cached_property
     def schema_url(self) -> URL:
         """Builds and returns schema URL."""
-        with self._lock:
-            return (self.usgs_base_url / self.schema_path).with_query(self.default_query)
+        return (self.usgs_base_url / self.schema_path).with_query(self.default_query)
 
     @cached_property
     def default_cache(self) -> Cache:
         """Builds and returns ClientCache object using defaults."""
-        with self._lock:
-            return Cache(str(self.cache_dir))
+        return Cache(str(self.cache_dir))
 
 SETTINGS: Final[_Settings] = _Settings.from_env()
 """Package-wide default settings."""
