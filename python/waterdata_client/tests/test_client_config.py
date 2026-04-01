@@ -17,8 +17,15 @@ from diskcache import Cache
 from hydrotools.waterdata_client.client_config import (
     EnvironmentKey,
     _Settings,
-    SETTINGS
+    SETTINGS,
+    generate_default_user_cache_path
 )
+from platformdirs import user_cache_dir
+
+def test_generate_default_cache_path():
+    """Verfies default cache path."""
+    expected = Path(user_cache_dir("hydrotools")) / "waterdata_client"
+    assert expected == generate_default_user_cache_path()
 
 def test_environment_key_describe_keys() -> None:
     """Verifies that describe_keys returns a newline-separated string of keys."""

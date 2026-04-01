@@ -41,7 +41,7 @@ KEY_SEPARATOR: Final[str] = os.environ.get(f"{APPLICATION_PREFIX}_KEY_SEPARATOR"
 _KEY_START: Final[str] = APPLICATION_PREFIX + KEY_SEPARATOR if APPLICATION_PREFIX else ""
 """Helper constant for the beginning of environment keys"""
 
-def generate_default_user_cache(
+def generate_default_user_cache_path(
         application: str = APPLICATION_PREFIX,
         subpackage: str = SUBPACKAGE_NAME
 ) -> Path:
@@ -109,7 +109,7 @@ class _Settings:
     usgs_base_url: URL = URL("https://api.waterdata.usgs.gov/ogcapi/v0")
     schema_path: str = "openapi"
     default_query: dict[str, Any] = field(default_factory=lambda: {"f": "json"})
-    cache_dir: Path = field(default_factory=generate_default_user_cache)
+    cache_dir: Path = field(default_factory=generate_default_user_cache_path)
     cache_expires: int = 604_800
     default_concurrency: int = 10
     default_retries: int = 3
@@ -128,7 +128,7 @@ class _Settings:
             usgs_base_url=URL(os.getenv(EnvironmentKey.BASE_URL, cls.usgs_base_url)),
             schema_path=os.getenv(EnvironmentKey.SCHEMA_PATH, cls.schema_path),
             cache_dir=Path(
-                os.getenv(EnvironmentKey.CACHE_DIRECTORY, generate_default_user_cache())
+                os.getenv(EnvironmentKey.CACHE_DIRECTORY, generate_default_user_cache_path())
             ),
             cache_expires=int(os.getenv(EnvironmentKey.CACHE_EXPIRES, cls.cache_expires)),
             default_concurrency=int(os.getenv(EnvironmentKey.CONCURRENCY, cls.default_concurrency)),
