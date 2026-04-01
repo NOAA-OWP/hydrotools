@@ -144,8 +144,8 @@ class NWMFileClient(NWMClient):
         downloader.get(zip(urls,filenames))
 
         # Return nested list of files
-        files = sorted(list(subdirectory.glob("*.nc")))
-        num_groups = len(files) // group_size + 1
+        files: list[Path] = sorted(list(subdirectory.glob("*.nc")))
+        num_groups: int = len(files) // group_size + 1
         file_groups = np.array_split(files, num_groups)
         return {f"group_{idx}": fg for idx, fg in enumerate(file_groups)}
 
@@ -249,11 +249,13 @@ class NWMFileClient(NWMClient):
                         # Add required columns
                         df["measurement_unit"] = ds[var].attrs["units"]
                         df["variable_name"] = var
-                        df["configuration"] = ds.attrs["model_configuration"]
 
-                        # Address ambigious "No-DA" cycle names
-                        if cfg.endswith("no_da"):
-                            df["configuration"] = df["configuration"] + "_no_da"
+                        model_configuration: str = ds.attrs.get("model_configuration", cfg).lower()
+
+                        if cfg.endswith("no_da") and not model_configuration.endswith("no_da"):
+                            model_configuration += "_no_da"
+
+                        df["configuration"] = model_configuration
                             
                         # Map crosswalk
                         for col in self.crosswalk:
