@@ -51,6 +51,8 @@ from tenacity import (
 )
 from yarl import URL
 
+from .client_config import SETTINGS
+
 LOGGER: logging.Logger = logging.getLogger(Path(__file__).stem)
 """Module-level logger."""
 
@@ -81,10 +83,10 @@ class AsyncWebClient:
 
     def __init__(
         self,
-        concurrency_limit: int = 10,
-        max_retries: int = 3,
+        concurrency_limit: int = SETTINGS.default_concurrency,
+        max_retries: int = SETTINGS.default_retries,
         ssl_context: Optional[ssl.SSLContext] = None,
-        timeout_seconds: int = 900
+        timeout_seconds: int = SETTINGS.timeout_seconds
     ) -> None:
         """Initializes the client.
 
@@ -191,10 +193,10 @@ class AsyncWebClient:
 
 def get_all(
     urls: Sequence[str | URL],
-    concurrency_limit: int = 10,
-    max_retries: int = 3,
+    concurrency_limit: int = SETTINGS.default_concurrency,
+    max_retries: int = SETTINGS.default_retries,
     ssl_context: Optional[ssl.SSLContext] = None,
-    timeout_seconds: int = 900,
+    timeout_seconds: int = SETTINGS.timeout_seconds,
     content_type: ResponseContentType = ResponseContentType.JSON
 ) -> list[dict[str, Any] | bytes | None]:
     """Synchronously retrieves data from multiple URLs concurrently.
