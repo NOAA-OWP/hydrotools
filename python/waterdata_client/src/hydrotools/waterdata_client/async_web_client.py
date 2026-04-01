@@ -38,6 +38,7 @@ import ssl
 from pathlib import Path
 from typing import Any, Optional, Self, Sequence
 from concurrent.futures import ThreadPoolExecutor
+from enum import StrEnum
 
 import aiohttp
 from tenacity import (
@@ -50,8 +51,15 @@ from tenacity import (
 )
 from yarl import URL
 
+from .client_config import SETTINGS
+
 LOGGER: logging.Logger = logging.getLogger(Path(__file__).stem)
 """Module-level logger."""
+
+class ResponseContentType(StrEnum):
+    """Expected response content types."""
+    JSON = "json"
+    BYTES = "bytes"
 
 def return_none_on_failure(retry_state: RetryCallState) -> None:
     """Callback function to handle exhausted retries.
@@ -75,10 +83,10 @@ class AsyncWebClient:
 
     def __init__(
         self,
-        concurrency_limit: int = 10,
-        max_retries: int = 3,
+        concurrency_limit: int = SETTINGS.default_concurrency,
+        max_retries: int = SETTINGS.default_retries,
         ssl_context: Optional[ssl.SSLContext] = None,
-        timeout_seconds: int = 900
+        timeout_seconds: int = SETTINGS.timeout_seconds
     ) -> None:
         """Initializes the client.
 
@@ -122,22 +130,32 @@ class AsyncWebClient:
         if self.session:
             await self.session.close()
 
-    async def fetch(self, url: URL) -> Optional[dict[str, Any] | bytes]:
+    async def fetch(
+            self,
+            url: URL,
+            content_type: ResponseContentType = ResponseContentType.JSON
+        ) -> Optional[dict[str, Any] | bytes]:
         """Fetches a URL with semaphore-based throttling and retries.
 
         Args:
             url: The URL to retrieve.
+            content_type: Expected response content type. Defaults to "json".
 
         Returns:
             Decoded JSON or raw bytes. Returns None if all retries fail.
         """
-        return await self.retrier(self._execute_request, url)
+        return await self.retrier(self._execute_request, url, content_type)
 
-    async def _execute_request(self, url: URL) -> Optional[dict[str, Any] | bytes]:
+    async def _execute_request(
+            self,
+            url: URL,
+            content_type: ResponseContentType = ResponseContentType.JSON
+        ) -> Optional[dict[str, Any] | bytes]:
         """Internal method to perform the actual network I/O.
         
         Args:
             url: The URL to retrieve.
+            content_type: Expected response content type. Defaults to "json".
         """
         if self.session is None or self.session.closed:
             raise RuntimeError("AsyncWebClient must be used within an 'async with' block.")
@@ -153,30 +171,33 @@ class AsyncWebClient:
                     LOGGER.error("Request to %s failed with status %s", url, response.status)
                     return None
 
-                content_type = response.headers.get("Content-Type", "").lower()
-                if "json" in content_type:
+                if content_type == ResponseContentType.JSON:
                     return await response.json()
                 return await response.read()
 
     async def fetch_all(
-        self, url_list: Sequence[URL]
+        self,
+        url_list: Sequence[URL],
+        content_type: ResponseContentType = ResponseContentType.JSON
     ) -> list[dict[str, Any] | bytes | None]:
         """Concurrently fetches a list of URLs.
 
         Args:
             url_list: Sequence of URLs to fetch.
+            content_type: Expected response content type. Defaults to "json".
 
         Returns:
             List of responses in the order of the input URLs.
         """
-        return list(await asyncio.gather(*[self.fetch(url) for url in url_list]))
+        return list(await asyncio.gather(*[self.fetch(url, content_type) for url in url_list]))
 
 def get_all(
     urls: Sequence[str | URL],
-    concurrency_limit: int = 10,
-    max_retries: int = 3,
+    concurrency_limit: int = SETTINGS.default_concurrency,
+    max_retries: int = SETTINGS.default_retries,
     ssl_context: Optional[ssl.SSLContext] = None,
-    timeout_seconds: int = 900
+    timeout_seconds: int = SETTINGS.timeout_seconds,
+    content_type: ResponseContentType = ResponseContentType.JSON
 ) -> list[dict[str, Any] | bytes | None]:
     """Synchronously retrieves data from multiple URLs concurrently.
 
@@ -189,6 +210,7 @@ def get_all(
         max_retries: Number of times to attempt a failed request. Defaults to 3.
         ssl_context: Custom SSL context. Defaults to default system context.
         timeout_seconds: Total request timeout in seconds. Defaults to 900.
+        content_type: Expected response content type. Defaults to "json".
 
     Returns:
         A list of parsed JSON objects, bytes, or None for each URL.
@@ -203,7 +225,7 @@ def get_all(
             ssl_context=ssl_context,
             timeout_seconds=timeout_seconds
         ) as client:
-            return await client.fetch_all(url_objects)
+            return await client.fetch_all(url_objects, content_type)
 
     # Isolate the event loop from the main thread to avoid nested event loops
     with ThreadPoolExecutor(max_workers=1) as executor:

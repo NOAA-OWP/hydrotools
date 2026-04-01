@@ -24,7 +24,11 @@ classifiers = [
 ]
 dependencies = [
     "aiohttp",
-    "tenacity"
+    "tenacity",
+    "platformdirs",
+    "jsonref",
+    "diskcache",
+    "PyYAML"
 ]
 dynamic = ["version"]
 
@@ -33,6 +37,7 @@ version = { attr = "hydrotools.waterdata_client._version.__version__" }
 
 [project.optional-dependencies]
 develop = ["pytest", "pytest-aiohttp"]
+env = ["dotenv"]
 
 [project.urls]
 Homepage = "https://github.com/NOAA-OWP/hydrotools"

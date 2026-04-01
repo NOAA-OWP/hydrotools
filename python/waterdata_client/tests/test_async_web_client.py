@@ -16,6 +16,7 @@ from aiohttp import web
 from yarl import URL
 
 from hydrotools.waterdata_client import AsyncWebClient, get_all
+from hydrotools.waterdata_client.async_web_client import ResponseContentType
 
 def create_web_application() -> web.Application:
     """Creates a mock aiohttp application for testing.
@@ -27,6 +28,11 @@ def create_web_application() -> web.Application:
         if request.path != "/json":
             return web.Response(status=400)
         return web.json_response({"status": "ok", "data": 123})
+
+    async def json2_handler(request: web.Request) -> web.Response:
+        if request.path != "/json2":
+            return web.Response(status=400)
+        return web.json_response({"status": "ok", "data": 456})
 
     async def binary_handler(request: web.Request) -> web.Response:
         if request.path != "/binary":
@@ -40,6 +46,7 @@ def create_web_application() -> web.Application:
 
     app = web.Application()
     app.router.add_get("/json", json_handler)
+    app.router.add_get("/json2", json2_handler)
     app.router.add_get("/binary", binary_handler)
     app.router.add_get("/error", error_handler)
     return app
@@ -67,7 +74,7 @@ async def test_fetch_binary(aiohttp_client):
     url = URL(f"http://{mock_client.host}:{mock_client.port}/binary")
 
     async with AsyncWebClient() as client:
-        result = await client.fetch(url)
+        result = await client.fetch(url, ResponseContentType.BYTES)
     assert result == b"binary_data"
 
 async def test_fetch_all_order(aiohttp_client) -> None:
@@ -78,14 +85,14 @@ async def test_fetch_all_order(aiohttp_client) -> None:
     """
     mock_client = await aiohttp_client(create_web_application())
     base = f"http://{mock_client.host}:{mock_client.port}"
-    urls = [URL(f"{base}/json"), URL(f"{base}/binary"), URL(f"{base}/json")]
+    urls = [URL(f"{base}/json"), URL(f"{base}/json2"), URL(f"{base}/json")]
 
     async with AsyncWebClient() as client:
         results = await client.fetch_all(urls)
 
     assert len(results) == 3
     assert results[0] == {"status": "ok", "data": 123}
-    assert results[1] == b"binary_data"
+    assert results[1] == {"status": "ok", "data": 456}
     assert results[2] == {"status": "ok", "data": 123}
 
 async def test_uninitialized_session_raises_error() -> None:
@@ -144,11 +151,20 @@ def persistent_server():
     time.sleep(1)
     yield f"http://{SYNCHRONOUS_HOST}:{SYCHNRONOUS_PORT}"
 
-def test_get_all(persistent_server) -> None:
+def test_get_all_json(persistent_server) -> None:
     """Tests get_all against an independent server thread."""
-    urls = [f"{persistent_server}/json", f"{persistent_server}/binary"]
+    urls = [f"{persistent_server}/json", f"{persistent_server}/json"]
 
     results = get_all(urls, max_retries=1)
 
     assert results[0] == {"status": "ok", "data": 123}
+    assert results[1] == {"status": "ok", "data": 123}
+
+def test_get_all_bytes(persistent_server) -> None:
+    """Tests get_all against an independent server thread."""
+    urls = [f"{persistent_server}/binary", f"{persistent_server}/binary"]
+
+    results = get_all(urls, max_retries=1, content_type=ResponseContentType.BYTES)
+
+    assert results[0] == b"binary_data"
     assert results[1] == b"binary_data"
