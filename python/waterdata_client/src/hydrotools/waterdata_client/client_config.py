@@ -29,17 +29,34 @@ from platformdirs import user_cache_dir
 
 from diskcache import Cache
 
-DEFAULT_USER_CACHE: Path = Path(user_cache_dir("hydrotools")) / "waterdata_client"
-"""Default user disk cache location."""
-
 APPLICATION_PREFIX: Final[str] = "HYDROTOOLS"
 """A prefix to use in order to preserve application setting isolation."""
+
+SUBPACKAGE_NAME: Final[str] = __name__.split(".")[1]
+"""Name of subpackage."""
 
 KEY_SEPARATOR: Final[str] = os.environ.get(f"{APPLICATION_PREFIX}_KEY_SEPARATOR", "_")
 """A separator to use for environment variable keys."""
 
 _KEY_START: Final[str] = APPLICATION_PREFIX + KEY_SEPARATOR if APPLICATION_PREFIX else ""
 """Helper constant for the beginning of environment keys"""
+
+def generate_default_user_cache(
+        application: str = APPLICATION_PREFIX,
+        subpackage: str = SUBPACKAGE_NAME
+) -> Path:
+    """Generate the Path to the default user cache.
+    
+    Args:
+        application: The overall application name (e.g. "hydrotools"). Used for
+            the main cache directory.
+        subpackage: The specific subpackage name (e.g. "waterdata_client"). Used
+            for the subdirectory under the main cache directory.
+    
+    Returns:
+        pathlib.Path to the system specific user cache directory.
+    """
+    return Path(user_cache_dir(application.lower())) / subpackage
 
 class EnvironmentKey(StrEnum):
     """Keys for environment variable."""
@@ -92,7 +109,7 @@ class _Settings:
     usgs_base_url: URL = URL("https://api.waterdata.usgs.gov/ogcapi/v0")
     schema_path: str = "openapi"
     default_query: dict[str, Any] = field(default_factory=lambda: {"f": "json"})
-    cache_dir: Path = field(default_factory=lambda: DEFAULT_USER_CACHE)
+    cache_dir: Path = field(default_factory=generate_default_user_cache)
     cache_expires: int = 604_800
     default_concurrency: int = 10
     default_retries: int = 3
@@ -110,7 +127,9 @@ class _Settings:
         return cls(
             usgs_base_url=URL(os.getenv(EnvironmentKey.BASE_URL, cls.usgs_base_url)),
             schema_path=os.getenv(EnvironmentKey.SCHEMA_PATH, cls.schema_path),
-            cache_dir=Path(os.getenv(EnvironmentKey.CACHE_DIRECTORY, DEFAULT_USER_CACHE)),
+            cache_dir=Path(
+                os.getenv(EnvironmentKey.CACHE_DIRECTORY, generate_default_user_cache())
+            ),
             cache_expires=int(os.getenv(EnvironmentKey.CACHE_EXPIRES, cls.cache_expires)),
             default_concurrency=int(os.getenv(EnvironmentKey.CONCURRENCY, cls.default_concurrency)),
             default_retries=int(os.getenv(EnvironmentKey.RETRIES, cls.default_retries)),
