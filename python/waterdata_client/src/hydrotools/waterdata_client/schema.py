@@ -49,8 +49,8 @@ def retrieve_yaml(url: str) -> dict[str, Any]:
 def get_schema_bytes() -> bytes:
     """Retrieves the OGC schema as raw bytes from the cache or USGS.
 
-    This function checks the persistent disk cache before attempting 
-     a network request.
+    This function checks the persistent disk cache before attempting a network
+    request.
 
     Returns:
         The raw OGC schema content as bytes.
