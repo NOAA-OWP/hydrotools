@@ -4,7 +4,7 @@ This module provides a thread-safe, environment-aware configuration singleton
 for hydrotools WaterData clients.
 
 Example:
-    >>> from hydrotools.waterdata_client.client_config import SETTINGS
+    >>> from hydrotools.waterdata_client import SETTINGS
     >>> print(SETTINGS.usgs_base_url)
     https://api.waterdata.usgs.gov/ogcapi/v0
 """
@@ -26,8 +26,9 @@ except ImportError:
 
 from yarl import URL
 from platformdirs import user_cache_dir
-
 from diskcache import Cache
+
+from .constants import OGCAPI, OGCPATH, USGSCollection
 
 APPLICATION_PREFIX: Final[str] = "HYDROTOOLS"
 """A prefix to use in order to preserve application setting isolation."""
@@ -59,9 +60,12 @@ def generate_default_user_cache_path(
     return Path(user_cache_dir(application.lower())) / subpackage
 
 class EnvironmentKey(StrEnum):
-    """Keys for environment variable."""
+    """Keys for environment variables."""
     BASE_URL = f"{_KEY_START}USGS_BASE_URL"
     SCHEMA_PATH = f"{_KEY_START}OGC_SCHEMA_PATH"
+    API = f"{_KEY_START}OGC_API"
+    COLLECTION = f"{_KEY_START}USGS_COLLECTION"
+    PATH = f"{_KEY_START}OGC_PATH"
     CACHE_DIRECTORY = f"{_KEY_START}CACHE_DIRECTORY"
     CACHE_EXPIRES = f"{_KEY_START}CACHE_EXPIRES"
     CONCURRENCY = f"{_KEY_START}CONCURRENCY"
@@ -94,6 +98,9 @@ class _Settings:
     Attributes:
         usgs_base_url: The root URL for USGS OGC API services.
         schema_path: Specific path appended to base url to retrieve schema.
+        default_api: Default api for individual client get requests.
+        default_collection: Default USGS OGC API collection for client get requests.
+        default_path: Default path for individual client get requests.
         default_query: Default query parameters.
         cache_dir: OS-specific directory for persistent storage.
         cache_expires: Seconds after-which items in cache expire.
@@ -108,6 +115,9 @@ class _Settings:
     """
     usgs_base_url: URL = URL("https://api.waterdata.usgs.gov/ogcapi/v0")
     schema_path: str = "openapi"
+    default_api: OGCAPI = OGCAPI.COLLECTIONS
+    default_collection: USGSCollection = USGSCollection.CONTINUOUS
+    default_path: OGCPATH = OGCPATH.ITEMS
     default_query: dict[str, Any] = field(default_factory=lambda: {"f": "json"})
     cache_dir: Path = field(default_factory=generate_default_user_cache_path)
     cache_expires: int = 604_800
@@ -127,6 +137,11 @@ class _Settings:
         return cls(
             usgs_base_url=URL(os.getenv(EnvironmentKey.BASE_URL, cls.usgs_base_url)),
             schema_path=os.getenv(EnvironmentKey.SCHEMA_PATH, cls.schema_path),
+            default_api=OGCAPI(os.getenv(EnvironmentKey.API, cls.default_api)),
+            default_collection=USGSCollection(
+                os.getenv(EnvironmentKey.COLLECTION, cls.default_collection)
+            ),
+            default_path=OGCPATH(os.getenv(EnvironmentKey.PATH, cls.default_path)),
             cache_dir=Path(
                 os.getenv(EnvironmentKey.CACHE_DIRECTORY, generate_default_user_cache_path())
             ),

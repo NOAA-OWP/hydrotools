@@ -218,7 +218,7 @@ def get_all(
     # Convert strings to URL objects if necessary
     url_objects = [URL(u) if isinstance(u, str) else u for u in urls]
 
-    async def _run() -> list[Any]:
+    async def _run() -> list[dict[str, Any] | bytes | None]:
         async with AsyncWebClient(
             concurrency_limit=concurrency_limit,
             max_retries=max_retries,
