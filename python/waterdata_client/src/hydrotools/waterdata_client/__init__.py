@@ -5,11 +5,10 @@ interacting with OGC-compliant APIs.
 """
 
 from .client_config import SETTINGS
-from .async_web_client import AsyncWebClient, get_all
+from .async_web_client import get_all
 from ._version import __version__
 
 __all__ = [
     "SETTINGS",
-    "AsyncWebClient",
     "get_all"
 ]

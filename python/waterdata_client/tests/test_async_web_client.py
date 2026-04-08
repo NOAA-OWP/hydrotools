@@ -15,7 +15,8 @@ import pytest
 from aiohttp import web
 from yarl import URL
 
-from hydrotools.waterdata_client import AsyncWebClient, get_all
+from hydrotools.waterdata_client import get_all
+from hydrotools.waterdata_client.async_web_client import AsyncWebClient
 from hydrotools.waterdata_client.async_web_client import ResponseContentType
 
 def create_web_application() -> web.Application:
