@@ -4,7 +4,7 @@ This module provides a thread-safe, environment-aware configuration singleton
 for hydrotools WaterData clients.
 
 Example:
-    >>> from hydrotools.waterdata_client.client_config import SETTINGS
+    >>> from hydrotools.waterdata_client import SETTINGS
     >>> print(SETTINGS.usgs_base_url)
     https://api.waterdata.usgs.gov/ogcapi/v0
 """
@@ -60,7 +60,7 @@ def generate_default_user_cache_path(
     return Path(user_cache_dir(application.lower())) / subpackage
 
 class EnvironmentKey(StrEnum):
-    """Keys for environment variable."""
+    """Keys for environment variables."""
     BASE_URL = f"{_KEY_START}USGS_BASE_URL"
     SCHEMA_PATH = f"{_KEY_START}OGC_SCHEMA_PATH"
     API = f"{_KEY_START}OGC_API"
