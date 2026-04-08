@@ -21,8 +21,13 @@ def build_request(
     """Constructs a single yarl.URL.
 
     Args:
-        feature_id: Optional specific identifier (e.g., 'USGS-01013550').
-        query: Query parameters to add or override default_query.
+        server: The root URL for USGS OGC API services.
+            URL('https://api.waterdata.usgs.gov/ogcapi/v0')
+        api: USGS OGC API (e.g. 'collections').
+        endpoint: USGS OGC API collection (e.g. 'continuous').
+        path: USGS OGC path (e.g. 'items')
+        feature_id: Optional specific feature identifier.
+        query: Optional query parameters.
 
     Returns:
         A yarl.URL object.
