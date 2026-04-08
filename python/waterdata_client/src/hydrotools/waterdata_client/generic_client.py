@@ -21,7 +21,9 @@ from .url_builder import (
 )
 
 class GenericClient:
-    """Base class for USGS OGC API clients.
+    """Base class for USGS OGC API clients. Specific child classes may overwrite
+    private attributes: _server, _api, _endpoint, _path, _content_type.
+    Otherwise, these are set to package SETTINGS defaults.
 
     Attributes:
         concurrency_limit: Max simultaneous requests allowed for this client.
