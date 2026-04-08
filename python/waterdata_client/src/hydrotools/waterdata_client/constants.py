@@ -2,7 +2,7 @@
 from enum import StrEnum
 
 class OGCAPI(StrEnum):
-    """OGC base APIs strings."""
+    """OGC base API strings."""
     ROOT = ""
     COLLECTIONS = "collections"
     CONFORMANCE = "conformance"
