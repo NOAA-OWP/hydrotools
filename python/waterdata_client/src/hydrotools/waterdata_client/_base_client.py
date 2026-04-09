@@ -1,4 +1,4 @@
-"""Generic OGC API Client.
+"""Base OGC API Client.
 
 This module provides the base class for all collection-specific USGS OGC API 
 clients. It handles configuration state and the low-level request pipeline.
@@ -20,7 +20,7 @@ from .url_builder import (
     QueryType
 )
 
-class GenericClient:
+class _BaseClient:
     """Base class for USGS OGC API clients. Specific child classes may overwrite
     private attributes: _server, _api, _endpoint, _path, _content_type.
     Otherwise, these are set to package SETTINGS defaults.

@@ -1,10 +1,10 @@
 import pytest
 from unittest.mock import patch
 
-from hydrotools.waterdata_client.generic_client import GenericClient
+from hydrotools.waterdata_client._base_client import _BaseClient
 from hydrotools.waterdata_client.constants import USGSCollection, OGCPATH
 
-class MockUSGSClient(GenericClient):
+class MockUSGSClient(_BaseClient):
     _endpoint = USGSCollection.CONTINUOUS
     _path = OGCPATH.ITEMS
 
@@ -24,7 +24,7 @@ def test_client_initialization(mock_client):
 
 def test_get_responses_queries_only(mock_client):
     """Verify _get_responses correctly dispatches a query-only request."""
-    with patch("hydrotools.waterdata_client.generic_client.get_all") as mock_get:
+    with patch("hydrotools.waterdata_client._base_client.get_all") as mock_get:
         mock_get.return_value = [{"data": "test"}]
 
         queries = [{"parameter_code": "00060"}]
@@ -41,7 +41,7 @@ def test_get_responses_queries_only(mock_client):
 
 def test_get_responses_feature_ids_only(mock_client):
     """Verify _get_responses correctly dispatches an ID-only request."""
-    with patch("hydrotools.waterdata_client.generic_client.get_all") as mock_get:
+    with patch("hydrotools.waterdata_client._base_client.get_all") as mock_get:
         feature_ids = ["USGS-123", "USGS-456"]
         mock_client._get_responses(feature_ids=feature_ids)
         mock_get.assert_called_once()
@@ -52,7 +52,7 @@ def test_get_responses_feature_ids_only(mock_client):
 
 def test_get_responses_paired_batch(mock_client):
     """Verify _get_responses handles paired IDs and queries."""
-    with patch("hydrotools.waterdata_client.generic_client.get_all") as mock_get:
+    with patch("hydrotools.waterdata_client._base_client.get_all") as mock_get:
         ids = ["USGS-1"]
         queries = [{"f": "json"}]
         mock_client._get_responses(feature_ids=ids, queries=queries)
@@ -68,39 +68,39 @@ def test_bad_client_attribute_raises():
     """Verify RuntimeError is raised if _endpoint is missing."""
     with pytest.raises(TypeError,
         match="failed to define required attribute: _endpoint"):
-        class BadClient1(GenericClient):
+        class BadClient1(_BaseClient):
             _endpoint = None
 
     with pytest.raises(TypeError,
         match="failed to define required attribute: _server"):
-        class BadClient2(GenericClient):
+        class BadClient2(_BaseClient):
             _server = None
 
     with pytest.raises(TypeError,
         match="failed to define required attribute: _api"):
-        class BadClient3(GenericClient):
+        class BadClient3(_BaseClient):
             _api = None
 
     with pytest.raises(TypeError,
         match="failed to define required attribute: _path"):
-        class BadClient4(GenericClient):
+        class BadClient4(_BaseClient):
             _path = None
 
     with pytest.raises(TypeError,
         match="failed to define required attribute: _content_type"):
-        class BadClient5(GenericClient):
+        class BadClient5(_BaseClient):
             _content_type = None
 
 def test_bad_client_get_raises():
     """Verify RuntimeError is raised if _endpoint is missing."""
     with pytest.raises(NotImplementedError,
         match="must implement a public 'get' method"):
-        class BadClient(GenericClient):
+        class BadClient(_BaseClient):
             _endpoint = USGSCollection.LATEST_CONTINUOUS
 
 def test_get_responses_default_request(mock_client):
     """Verify a parameterless call builds a default URL."""
-    with patch("hydrotools.waterdata_client.generic_client.get_all") as mock_get:
+    with patch("hydrotools.waterdata_client._base_client.get_all") as mock_get:
         mock_client._get_responses()
         mock_get.assert_called_once()
 
