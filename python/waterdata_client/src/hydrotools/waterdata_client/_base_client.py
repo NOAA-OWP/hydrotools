@@ -76,6 +76,39 @@ class _BaseClient:
                 "that wraps the internal '_get_responses' pipeline."
             )
 
+    def _build_urls(
+        self,
+        feature_ids: Optional[Sequence[str]] = None,
+        queries: Optional[Sequence[QueryType]] = None
+    ) -> list[URL]:
+        """Constructs a list of yarl.URL objects given arguments.
+
+        Args:
+            feature_ids: Sequence of specific feature identifiers.
+            queries: A sequence of query parameter dictionaries.
+
+        Returns:
+            A list of yarl.URL objects.
+
+        """
+        if (feature_ids is not None) and (queries is not None):
+            return build_request_batch(
+                feature_ids=feature_ids,
+                queries=queries,
+                request_builder=self._builder
+            )
+        elif queries is not None:
+            return build_request_batch_from_queries(
+                queries=queries,
+                request_builder=self._builder
+                )
+        elif feature_ids is not None:
+            return build_request_batch_from_feature_ids(
+                feature_ids=feature_ids,
+                request_builder=self._builder
+                )
+        return [self._builder()]
+
     def _get_responses(
         self,
         feature_ids: Optional[Sequence[str]] = None,
@@ -91,27 +124,10 @@ class _BaseClient:
             A list of responses in the order of the input queries.
 
         """
-        # Build URLs
-        if (feature_ids is not None) and (queries is not None):
-            urls = build_request_batch(
-                feature_ids=feature_ids,
-                queries=queries,
-                request_builder=self._builder
-            )
-        elif queries is not None:
-            urls = build_request_batch_from_queries(
-                queries=queries,
-                request_builder=self._builder
-                )
-        elif feature_ids is not None:
-            urls = build_request_batch_from_feature_ids(
-                feature_ids=feature_ids,
-                request_builder=self._builder
-                )
-        else:
-            urls = [self._builder()]
+        # Get URLs
+        urls = self._build_urls(feature_ids, queries)
 
-        # Fetch URLs
+        # Fetch data
         return get_all(
             urls=urls,
             concurrency_limit=self.concurrency_limit,
