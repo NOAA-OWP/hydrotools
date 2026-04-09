@@ -49,6 +49,15 @@ class _BaseClient:
         self.timeout_seconds = timeout_seconds
         self.ssl_context = ssl_context
 
+        # Setup request builder
+        self._builder = partial(
+            build_request,
+            server=self._server,
+            api=self._api,
+            endpoint=self._endpoint,
+            path=self._path
+            )
+
     def __init_subclass__(cls):
         super().__init_subclass__()
 
@@ -82,34 +91,25 @@ class _BaseClient:
             A list of responses in the order of the input queries.
 
         """
-        # Set request builder
-        request_builder = partial(
-            build_request,
-            server=self._server,
-            api=self._api,
-            endpoint=self._endpoint,
-            path=self._path
-            )
-
         # Build URLs
         if (feature_ids is not None) and (queries is not None):
             urls = build_request_batch(
                 feature_ids=feature_ids,
                 queries=queries,
-                request_builder=request_builder
+                request_builder=self._builder
             )
         elif queries is not None:
             urls = build_request_batch_from_queries(
                 queries=queries,
-                request_builder=request_builder
+                request_builder=self._builder
                 )
         elif feature_ids is not None:
             urls = build_request_batch_from_feature_ids(
                 feature_ids=feature_ids,
-                request_builder=request_builder
+                request_builder=self._builder
                 )
         else:
-            urls = [request_builder()]
+            urls = [self._builder()]
 
         # Fetch URLs
         return get_all(
