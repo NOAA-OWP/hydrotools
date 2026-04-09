@@ -49,6 +49,16 @@ class GenericClient:
         self.timeout_seconds = timeout_seconds
         self.ssl_context = ssl_context
 
+    def __init_subclass__(cls):
+        super().__init_subclass__()
+
+        required = ["_endpoint", "_path", "_api", "_server", "_content_type"]
+        for attr in required:
+            if not hasattr(cls, attr) or getattr(cls, attr) is None:
+                raise TypeError(
+                    f"Class {cls.__name__} failed to define required attribute: {attr}"
+                )
+
     def _get_responses(
         self,
         feature_ids: Optional[Sequence[str]] = None,
