@@ -1,14 +1,15 @@
 import pytest
-from unittest.mock import MagicMock, patch
-from yarl import URL
+from unittest.mock import patch
 
 from hydrotools.waterdata_client.generic_client import GenericClient
-from hydrotools.waterdata_client.constants import USGSCollection, OGCPATH, OGCAPI
-from hydrotools.waterdata_client.async_web_client import ResponseContentType
+from hydrotools.waterdata_client.constants import USGSCollection, OGCPATH
 
 class MockUSGSClient(GenericClient):
     _endpoint = USGSCollection.CONTINUOUS
     _path = OGCPATH.ITEMS
+
+    def get(self, **kwargs):
+        return self._get_responses(**kwargs)
 
 @pytest.fixture
 def mock_client():
@@ -63,32 +64,39 @@ def test_get_responses_paired_batch(mock_client):
         assert "USGS-1" in url_str
         assert "f=json" in url_str
 
-def test_bad_client_raises():
+def test_bad_client_attribute_raises():
     """Verify RuntimeError is raised if _endpoint is missing."""
     with pytest.raises(TypeError,
         match="failed to define required attribute: _endpoint"):
-        class BadClient(GenericClient):
+        class BadClient1(GenericClient):
             _endpoint = None
 
     with pytest.raises(TypeError,
         match="failed to define required attribute: _server"):
-        class BadClient(GenericClient):
+        class BadClient2(GenericClient):
             _server = None
 
     with pytest.raises(TypeError,
         match="failed to define required attribute: _api"):
-        class BadClient(GenericClient):
+        class BadClient3(GenericClient):
             _api = None
 
     with pytest.raises(TypeError,
         match="failed to define required attribute: _path"):
-        class BadClient(GenericClient):
+        class BadClient4(GenericClient):
             _path = None
 
     with pytest.raises(TypeError,
         match="failed to define required attribute: _content_type"):
-        class BadClient(GenericClient):
+        class BadClient5(GenericClient):
             _content_type = None
+
+def test_bad_client_get_raises():
+    """Verify RuntimeError is raised if _endpoint is missing."""
+    with pytest.raises(NotImplementedError,
+        match="must implement a public 'get' method"):
+        class BadClient(GenericClient):
+            _endpoint = USGSCollection.LATEST_CONTINUOUS
 
 def test_get_responses_default_request(mock_client):
     """Verify a parameterless call builds a default URL."""

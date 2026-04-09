@@ -52,12 +52,20 @@ class GenericClient:
     def __init_subclass__(cls):
         super().__init_subclass__()
 
+        # Enfore required attributes
         required = ["_endpoint", "_path", "_api", "_server", "_content_type"]
         for attr in required:
             if not hasattr(cls, attr) or getattr(cls, attr) is None:
                 raise TypeError(
                     f"Class {cls.__name__} failed to define required attribute: {attr}"
                 )
+
+        # Check for `get` method
+        if not callable(getattr(cls, "get", None)):
+            raise NotImplementedError(
+                f"Class {cls.__name__} must implement a public 'get' method "
+                "that wraps the internal '_get_responses' pipeline."
+            )
 
     def _get_responses(
         self,
