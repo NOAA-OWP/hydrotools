@@ -1,12 +1,15 @@
 import pytest
 from unittest.mock import patch
 
+from yarl import URL
+
 from hydrotools.waterdata_client._base_client import _BaseClient
 from hydrotools.waterdata_client.constants import USGSCollection, OGCPATH
 
 class MockUSGSClient(_BaseClient):
     _endpoint = USGSCollection.CONTINUOUS
     _path = OGCPATH.ITEMS
+    _max_pages = 2
 
     def get(self, **kwargs):
         return self._get_json_responses(**kwargs)
@@ -107,3 +110,46 @@ def test_get_json_responses_default_request(mock_client):
         args, kwargs = mock_get.call_args
         # Should result in a single URL using default path/endpoint
         assert len(kwargs["urls"]) == 1
+
+def test_get_json_responses_pagination(mock_client):
+    """Verify pagination follow logic using a mock sequence."""
+    resp1, resp2 = (
+        {"data": "page1", "links": [{"rel": "next", "href": "http://api/page2"}]},
+        {"data": "page2"}
+    )
+
+    with patch("hydrotools.waterdata_client._base_client.get_all") as mock_get:
+        mock_get.side_effect = [[resp1], [resp2]]
+
+        # This triggers the 'for' loop in _get_json_responses
+        results = mock_client._get_json_responses()
+
+    assert mock_get.call_count == 2
+    assert len(results) == 2
+    assert results == [resp1, resp2]
+
+    # Verify the second call used the URL extracted from the first response
+    last_call_kwargs = mock_get.call_args.kwargs
+    assert last_call_kwargs["urls"] == [URL("http://api/page2")]
+
+def test_get_json_responses_filters_non_dict(mock_client):
+    """Verify that None and bytes are filtered out of results."""
+    with patch("hydrotools.waterdata_client._base_client.get_all") as mock_get:
+        mock_get.return_value = [{"ok": True}, None, b"binary"]
+
+        results = mock_client._get_json_responses()
+
+        assert results == [{"ok": True}]
+
+def test_get_json_responses_max_pages_limit(mock_client):
+    """Verify the loop stops at _max_pages even if 'next' exists."""
+    response = {"links": [{"rel": "next", "href": "http://more"}]}
+    with patch("hydrotools.waterdata_client._base_client.get_all") as mock_get:
+        # Always return a 'next' link to simulate infinite data
+        mock_get.return_value = [response]
+
+        results = mock_client._get_json_responses()
+
+        # Should only be called twice based on _max_pages
+        assert mock_get.call_count == 2
+        assert results == [response] * 2
