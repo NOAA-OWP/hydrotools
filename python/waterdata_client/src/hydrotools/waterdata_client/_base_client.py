@@ -22,7 +22,8 @@ from .url_builder import (
 
 class _BaseClient:
     """Base class for USGS OGC API clients. Specific child classes may overwrite
-    private attributes: _server, _api, _endpoint, _path, _content_type.
+    private attributes: _server, _api, _endpoint, _path, _content_type,
+    _max_pages.
     Otherwise, these are set to package SETTINGS defaults.
 
     Attributes:
@@ -36,6 +37,7 @@ class _BaseClient:
     _endpoint: USGSCollection = SETTINGS.default_collection
     _path: OGCPATH = SETTINGS.default_path
     _content_type: ResponseContentType = ResponseContentType.JSON
+    _max_pages: int = SETTINGS.max_pages
 
     def __init__(
         self,
@@ -109,30 +111,66 @@ class _BaseClient:
                 )
         return [self._builder()]
 
-    def _get_responses(
+    def _get_json_responses(
         self,
         feature_ids: Optional[Sequence[str]] = None,
         queries: Optional[Sequence[QueryType]] = None
-    ) -> list[dict[str, Any] | bytes | None]:
-        """Internal method to build URLs and execute concurrent requests.
+    ) -> list[dict[str, Any]]:
+        """Internal method to build URLs and execute concurrent requests. Note
+        that this method will silently drop bytes and None responses returned
+        by `get_all`. These responses are logged in `async_web_client`.
 
         Args:
             feature_ids: Sequence of specific feature identifiers.
             queries: A sequence of query parameter dictionaries.
 
         Returns:
-            A list of responses in the order of the input queries.
+            A list of responses. Paginated responses are appended to the end
+            of the list.
 
         """
-        # Get URLs
+        # Prepare initial fetch
         urls = self._build_urls(feature_ids, queries)
+        results: list[dict[str, Any]] = []
 
         # Fetch data
-        return get_all(
-            urls=urls,
-            concurrency_limit=self.concurrency_limit,
-            max_retries=self.max_retries,
-            ssl_context=self.ssl_context,
-            timeout_seconds=self.timeout_seconds,
-            content_type=self._content_type
-        )
+        for _ in range(self._max_pages):
+            # Get batch of URLs
+            batch = get_all(
+                urls=urls,
+                concurrency_limit=self.concurrency_limit,
+                max_retries=self.max_retries,
+                ssl_context=self.ssl_context,
+                timeout_seconds=self.timeout_seconds,
+                content_type=self._content_type
+            )
+
+            # Filter batch
+            json_batch: list[dict[str, Any]] = [b for b in batch if isinstance(b, dict)]
+
+            # Extend results
+            results.extend(json_batch)
+
+            # Inspect links for pagination
+            urls = [self._get_next_url(r) for r in json_batch if self._has_next_url(r)]
+
+            # No more data to fetch
+            if not urls:
+                break
+        return results
+
+    def _has_next_url(self, response: dict[str, Any] | bytes | None) -> bool:
+        """Checks response for the presence of pagination 'next' link."""
+        if not isinstance(response, dict):
+            return False
+        return any(link.get("rel") == "next" for link in response.get("links", []))
+
+    def _get_next_url(self, response: dict[str, Any]) -> URL:
+        """Attempts to return the first 'next' link encountered in response."""
+        if not isinstance(response, dict):
+            raise TypeError("response is not a dict")
+
+        for link in response.get("links", []):
+            if link.get("rel") == "next":
+                return URL(link["href"])
+        raise KeyError("response does not contain 'next' link")
