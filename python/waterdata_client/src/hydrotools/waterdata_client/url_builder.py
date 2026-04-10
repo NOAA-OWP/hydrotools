@@ -7,7 +7,7 @@ from multidict import MultiDict
 from .client_config import SETTINGS
 from .constants import OGCAPI, OGCPATH, USGSCollection
 
-QueryType = dict[str, Any] | MultiDict[str] | Sequence[tuple[str, Any]]
+QueryType = dict[str, Any] | MultiDict[Any] | Sequence[tuple[str, Any]]
 """Type alias for USGS OGC API compatible queryables."""
 
 class RequestBuilder(Protocol):
