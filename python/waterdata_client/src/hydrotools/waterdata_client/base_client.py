@@ -20,7 +20,7 @@ from .url_builder import (
     QueryType
 )
 
-class _BaseClient:
+class BaseClient:
     """Base class for USGS OGC API clients. Specific child classes may overwrite
     private attributes: _server, _api, _endpoint, _path, _content_type,
     _max_pages.
