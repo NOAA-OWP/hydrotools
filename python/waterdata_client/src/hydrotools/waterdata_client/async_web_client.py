@@ -39,6 +39,7 @@ from pathlib import Path
 from typing import Any, Optional, Self, Sequence
 from concurrent.futures import ThreadPoolExecutor
 from enum import StrEnum
+from json import JSONDecodeError
 
 import aiohttp
 from tenacity import (
@@ -172,7 +173,19 @@ class AsyncWebClient:
                     return None
 
                 if content_type == ResponseContentType.JSON:
-                    return await response.json()
+                    try:
+                        return await response.json()
+                    except (
+                        aiohttp.ContentTypeError,
+                        ValueError,
+                        JSONDecodeError
+                    ) as exc:
+                        LOGGER.error(
+                            "Failed to decode JSON from %s: %s",
+                            url,
+                            exc
+                        )
+                        return None
                 return await response.read()
 
     async def fetch_all(

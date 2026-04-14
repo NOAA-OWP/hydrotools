@@ -109,3 +109,25 @@ def test_build_request_batch_from_queries():
     assert len(urls) == 2
     assert "site=A" in str(urls[0])
     assert "site=B" in str(urls[1])
+
+def test_build_request_with_multidict():
+    """Verify build_request handles MultiDict with duplicate keys."""
+    query = MultiDict([("site", "1"), ("site", "2")])
+    url = build_request(query=query)
+    assert str(url).count("site=") == 2
+
+def test_build_request_batch_custom_builder():
+    """Verify batch methods respect a custom request_builder."""
+    fixed_url = URL("https://custom.com")
+    def fixed_builder(feature_id=None, query=None):
+        return fixed_url
+
+    urls = build_request_batch_from_feature_ids(["ID1"], request_builder=fixed_builder)
+    assert urls[0] == fixed_url
+
+def test_build_request_with_tuple_sequence():
+    """Verify build_request handles a sequence of tuples for query params."""
+    query = [("parameter_code", "00060"), ("f", "json")]
+    url = build_request(query=query)
+    assert "parameter_code=00060" in str(url)
+    assert "f=json" in str(url)

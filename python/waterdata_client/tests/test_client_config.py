@@ -123,3 +123,23 @@ def test_settings_cannot_delete_attr() -> None:
     with pytest.raises(FrozenInstanceError):
         # Attempting to delete a field also triggers FrozenInstanceError
         del SETTINGS.timeout_seconds
+
+def test_settings_max_pages_override(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Verifies that MAX_PAGES environment override is respected."""
+    monkeypatch.setenv(EnvironmentKey.MAX_PAGES, "50")
+    settings = _Settings.from_env()
+    assert settings.max_pages == 50
+
+def test_settings_cache_properties_are_cached() -> None:
+    """Verifies that cached properties return the same instance."""
+    settings = _Settings()
+    # Access twice to ensure it's not re-instantiated
+    cache1 = settings.default_cache
+    cache2 = settings.default_cache
+    assert cache1 is cache2
+
+def test_settings_invalid_numeric_env_raises(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Verifies that non-numeric environment variables raise ValueError."""
+    monkeypatch.setenv(EnvironmentKey.RETRIES, "not-an-int")
+    with pytest.raises(ValueError):
+        _Settings.from_env()

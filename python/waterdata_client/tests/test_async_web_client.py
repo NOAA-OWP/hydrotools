@@ -45,11 +45,17 @@ def create_web_application() -> web.Application:
             return web.Response(status=400)
         return web.Response(status=500)
 
+    async def malformed_json_handler(request: web.Request) -> web.Response:
+        if request.path != "/binary":
+            return web.Response(status=400)
+        return web.Response(body="{'invalid': json", content_type="application/json")
+
     app = web.Application()
     app.router.add_get("/json", json_handler)
     app.router.add_get("/json2", json2_handler)
     app.router.add_get("/binary", binary_handler)
     app.router.add_get("/error", error_handler)
+    app.router.add_get("/malformed", malformed_json_handler)
     return app
 
 async def test_fetch_json(aiohttp_client):
@@ -169,3 +175,21 @@ def test_get_all_bytes(persistent_server) -> None:
 
     assert results[0] == b"binary_data"
     assert results[1] == b"binary_data"
+
+async def test_fetch_invalid_json(aiohttp_client):
+    """Verifies that malformed JSON returns None rather than raising an error."""
+    mock_client = await aiohttp_client(create_web_application())
+    url = URL(f"http://{mock_client.host}:{mock_client.port}/malformed")
+
+    async with AsyncWebClient() as client:
+        result = await client.fetch(url)
+    assert result is None
+
+async def test_fetch_status_404_returns_none(aiohttp_client):
+    """Verifies that 4xx errors (non-retriable) return None immediately."""
+    mock_client = await aiohttp_client(create_web_application())
+    url = URL(f"http://{mock_client.host}:{mock_client.port}/missing_path")
+
+    async with AsyncWebClient() as client:
+        result = await client.fetch(url)
+    assert result is None
