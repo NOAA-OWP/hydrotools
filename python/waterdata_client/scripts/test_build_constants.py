@@ -29,6 +29,28 @@ def mock_schema() -> dict[str, Any]:
         }
     }
 
+@pytest.fixture
+def bad_schema_special() -> dict[str, Any]:
+    """Bad test schema with special characters."""
+    return {
+        "paths": {
+            "/collections/@@$$%%/items": {"get": {}},
+            "/collections/daily/items": {"get": {}},
+            "/conformance": {"get": {}} 
+        }
+    }
+
+@pytest.fixture
+def bad_schema_digits() -> dict[str, Any]:
+    """Bad test schema with initial digit."""
+    return {
+        "paths": {
+            "/collections/123/items": {"get": {}},
+            "/collections/daily/items": {"get": {}},
+            "/conformance": {"get": {}} 
+        }
+    }
+
 def test_get_template_data(mock_schema):
     """Verify extraction of collections."""
     data = get_template_data(mock_schema)
@@ -120,3 +142,45 @@ def test_cli_overwrite(mock_schema, mock_template, tmp_path):
         )
 
         assert result.exit_code == 0
+
+def test_bad_schema_special(bad_schema_special):
+    """Verify raises SyntaxError."""
+    with pytest.raises(SyntaxError):
+        data = get_template_data(bad_schema_special)
+
+def test_bad_schema_digits(bad_schema_digits):
+    """Verify raises SyntaxError."""
+    with pytest.raises(SyntaxError):
+        data = get_template_data(bad_schema_digits)
+
+def test_ignore_bad_schema(bad_schema_special):
+    """Verify extraction of collections."""
+    data = get_template_data(bad_schema_special, ignore_errors=True)
+
+    assert len(data) == 1
+    assert data[0]["value"] == "daily"
+    assert data[0]["enum_member"] == "DAILY"
+
+def test_cli_ignore_errors(bad_schema_digits, mock_template, tmp_path):
+    """Verify CLI."""
+    # Setup template file
+    template_directory = tmp_path / "templates"
+    template_directory.mkdir()
+    template_name = "constants.py.j2"
+    template_file = template_directory / template_name
+    template_file.write_text(mock_template)
+
+    # Patch and run CLI
+    with patch("build_constants.get_schema") as mock_get_schema:
+        mock_get_schema.return_value = bad_schema_digits
+
+        runner = CliRunner()
+        result = runner.invoke(
+            write_constants_module,
+            [str(template_directory), "--name", template_name, "--ignore-errors"],
+        )
+
+        assert result.exit_code == 0
+        assert "class USGSCollection" in result.output
+        assert "daily" in result.output
+        assert "DAILY" in result.output

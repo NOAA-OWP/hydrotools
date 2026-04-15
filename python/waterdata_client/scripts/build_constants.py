@@ -12,6 +12,7 @@ Python virtual environment called "env".
 (env) $ python scripts/build_constants.py ./templates/ --output src/hydrotools/waterdata_client/constants.py
 ```
 """
+import keyword
 from pathlib import Path
 import re
 from typing import Any
@@ -22,32 +23,43 @@ from hydrotools.waterdata_client.schema import get_schema
 from hydrotools.waterdata_client.client_config import SETTINGS
 from hydrotools.waterdata_client._version import __version__
 
-def get_template_data(schema: dict[str, Any]) -> list[dict[str, str]]:
+def get_template_data(
+        schema: dict[str, Any],
+        ignore_errors: bool = False
+    ) -> list[dict[str, str]]:
     """Extracts collection metadata for the constants template.
     
     Args:
         schema: Deserialized dict derived from USGS OGC API schema.
+        ignore_errors: If True, skips collections with invalid Python identifier
+            characters. If False, raises.
     
     Returns:
         List of extracted mappings (dict) from enum members in screaming
             SNAKE_CASE to enum values for use with Jinja2 StrEnum building
             template.
+    
+    Raises:
+        SyntaxError if unable to translate collection label to valid Python
+            identifier.
     """
     collections = []
     paths = schema.get("paths", {})
 
-    # TODO Assuming all cid values will be valid Python identifiers once
-    # capitalized. If a collection starts with a digit or contains a reserved
-    # keyword (e.g., from, class), the generated code will fail to import.
-    # We should implement some kind of safety check and a way to convert invalid
-    # identifiers to valid identifiers.
     for path in paths.keys():
         # Match pattern: /collections/{collectionId}/items
         match = re.search(r"/collections/(?P<cid>[^/]+)/items$", path)
         if match:
             cid = match.group("cid")
+            enum_member = cid.upper().replace("-", "_")
+
+            # Validate identifier
+            if not enum_member.isidentifier() or keyword.iskeyword(enum_member):
+                if ignore_errors:
+                    continue
+                raise SyntaxError(f"{enum_member} is not a valid identifier")
             collections.append({
-                "enum_member": cid.upper().replace("-", "_"),
+                "enum_member": enum_member,
                 "value": cid
             })
 
@@ -63,11 +75,14 @@ def get_template_data(schema: dict[str, Any]) -> list[dict[str, str]]:
     help="Output file path", default="-")
 @click.option('--overwrite/--no-overwrite', default=False,
     help="Overwrite existing file, disabled by default")
+@click.option('--ignore-errors/--no-ignore-errors', default=False,
+    help="Overwrite existing file, disabled by default")
 def write_constants_module(
         templates: Path,
         name: str,
         output: Path,
-        overwrite: bool = False
+        overwrite: bool = False,
+        ignore_errors: bool = False
 ) -> None:
     """Renders the constants.py file from the OGC schema.
 
@@ -77,6 +92,8 @@ def write_constants_module(
         name: Template file name. Defaults to 'constants.py.j2'.
         output: The location to write the resulting file. Defaults to stdout.
         overwrite: If true, overwrite the file if it exists. Defaults to false.
+        ignore_errors: If True, skips collections with invalid Python identifier
+            characters. If False, raises.
     
     \b
     Raises:
@@ -88,7 +105,7 @@ def write_constants_module(
 
     # Resolve schema
     schema = get_schema()
-    template_data = get_template_data(schema)
+    template_data = get_template_data(schema, ignore_errors=ignore_errors)
 
     # Metadata
     timestamp = datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S Z")
