@@ -36,6 +36,11 @@ def get_template_data(schema: dict[str, Any]) -> list[dict[str, str]]:
     collections = []
     paths = schema.get("paths", {})
 
+    # TODO Assuming all cid values will be valid Python identifiers once
+    # capitalized. If a collection starts with a digit or contains a reserved
+    # keyword (e.g., from, class), the generated code will fail to import.
+    # We should implement some kind of safety check and a way to convert invalid
+    # identifiers to valid identifiers.
     for path in paths.keys():
         # Match pattern: /collections/{collectionId}/items
         match = re.search(r"/collections/(?P<cid>[^/]+)/items$", path)
