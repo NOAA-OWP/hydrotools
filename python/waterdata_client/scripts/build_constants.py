@@ -20,6 +20,7 @@ import click
 from jinja2 import Environment, FileSystemLoader
 from hydrotools.waterdata_client.schema import get_schema
 from hydrotools.waterdata_client.client_config import SETTINGS
+from hydrotools.waterdata_client._version import __version__
 
 def get_template_data(schema: dict[str, Any]) -> list[dict[str, str]]:
     """Extracts collection metadata for the constants template.
@@ -101,7 +102,9 @@ def write_constants_module(
         schema_source=str(SETTINGS.schema_url),
         schema_version=schema.get("info", {}).get("version", "UNKNOWN"),
         openapi_version=schema.get("openapi", "UNKNOWN"),
-        collections=template_data
+        collections=template_data,
+        package_version=__version__,
+        script_name=Path(__file__).name
         )
     with click.open_file(output, "w", encoding="utf-8") as fo:
         fo.write(content)
