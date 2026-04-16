@@ -36,7 +36,7 @@ dynamic = ["version"]
 version = { attr = "hydrotools.waterdata_client._version.__version__" }
 
 [project.optional-dependencies]
-develop = ["pytest", "pytest-aiohttp"]
+develop = ["pytest", "pytest-aiohttp", "Jinja2", "click"]
 env = ["dotenv"]
 
 [project.urls]
