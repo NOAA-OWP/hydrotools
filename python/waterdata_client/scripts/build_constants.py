@@ -81,20 +81,27 @@ def get_template_data(
 @click.command()
 @click.argument("templates", type=click.Path(exists=True, file_okay=False,
     dir_okay=True, path_type=Path))
-@click.option("-n", "--name", nargs=1, type=str, default="constants.py.j2")
+@click.option("-n", "--name", nargs=1, type=str, default="constants.py.j2",
+    help="Output file name.")
 @click.option("-o", "--output", nargs=1, type=click.Path(
     exists=False, file_okay=True, dir_okay=False, path_type=Path, allow_dash=True),
     help="Output file path", default="-") # NOTE: "-" means stdout
 @click.option('--overwrite/--no-overwrite', default=False,
     help="Overwrite existing file, disabled by default")
 @click.option('--ignore-errors/--no-ignore-errors', default=False,
-    help="Overwrite existing file, disabled by default")
+    help="Ignore non-Python friendly collection labels, disabled by default")
+@click.option('--fix-errors/--no-fix-errors', default=False,
+    help="Attempt to fix incompatible collection labels, disabled by default.")
+@click.option("-p", "--prefix", nargs=1, type=str, default="COLLECTIONS_",
+    help="If fix-errors enabled, prepends this to problematic labels. Defaults to 'COLLECTIONS_'")
 def write_constants_module(
         templates: Path,
         name: str,
         output: Path,
         overwrite: bool = False,
-        ignore_errors: bool = False
+        ignore_errors: bool = False,
+        fix_errors: bool = False,
+        prefix: str = "COLLECTION_"
 ) -> None:
     """Renders the constants.py file from the OGC schema.
 
@@ -106,6 +113,10 @@ def write_constants_module(
         overwrite: If true, overwrite the file if it exists. Defaults to false.
         ignore_errors: If True, skips collections with invalid Python identifier
             characters. If False, raises.
+        fix_errors: If True, prepend error_prefix to erroneous collection labels.
+            Defaults to False.
+        prefix: String added to front of collection enumeration value, if
+            fix_errors is True. Defaults to 'COLLECTION_'.
     
     \b
     Raises:
@@ -117,7 +128,9 @@ def write_constants_module(
 
     # Resolve schema
     schema = get_schema()
-    template_data = get_template_data(schema, ignore_errors=ignore_errors)
+    template_data = get_template_data(
+        schema, ignore_errors=ignore_errors, fix_errors=fix_errors,
+        error_prefix=prefix)
 
     # Metadata
     timestamp = datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S Z")
