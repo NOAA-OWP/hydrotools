@@ -72,7 +72,7 @@ def get_template_data(
 @click.option("-n", "--name", nargs=1, type=str, default="constants.py.j2")
 @click.option("-o", "--output", nargs=1, type=click.Path(
     exists=False, file_okay=True, dir_okay=False, path_type=Path, allow_dash=True),
-    help="Output file path", default="-")
+    help="Output file path", default="-") # NOTE: "-" means stdout
 @click.option('--overwrite/--no-overwrite', default=False,
     help="Overwrite existing file, disabled by default")
 @click.option('--ignore-errors/--no-ignore-errors', default=False,
