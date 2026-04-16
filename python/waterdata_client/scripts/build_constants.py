@@ -6,10 +6,13 @@ The following assumes you are developing in an UNIX-like environment and using a
 Python virtual environment called "env".
 
 ```bash
-(env) $ git clone git@github.com:NOAA-OWP/hydrotools.git
-(env) $ cd hydrotools/python/waterdata_client
+$ git clone git@github.com:NOAA-OWP/hydrotools.git
+$ cd hydrotools/python/waterdata_client
+$ python3 -m venv env
+$ source env/bin/activate
+(env) $ python3 -m pip install -U pip wheel
 (env) $ pip install -e .[develop]
-(env) $ python scripts/build_constants.py ./templates/ --output src/hydrotools/waterdata_client/constants.py
+(env) $ python3 scripts/build_constants.py ./templates/ --output src/hydrotools/waterdata_client/constants.py
 ```
 """
 import keyword
