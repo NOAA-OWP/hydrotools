@@ -4,6 +4,32 @@ import re
 from typing import Any
 from hydrotools.waterdata_client._version import __version__
 
+def validate_identifier(
+        identifier: str,
+        fix_errors: bool = False,
+        error_prefix: str = "ID_"
+    ) -> str:
+    """Validates and returns valid Python identifier string.
+    
+    Args:
+        identifier: Identifier to be validated.
+        fix_errors: If True, prepend error_prefix to erroneous identifier.
+            Defaults to False.
+        error_prefix: String added to front of identifier, if
+            fix_errors is True. Defaults to 'ID_'.
+    
+    Returns:
+        Valid identifier.
+    
+    Raises:
+        SyntaxError if unable to translate identifier to valid Python identifier.
+    """
+    if not identifier.isidentifier() or keyword.iskeyword(identifier):
+        if fix_errors:
+            return f"{error_prefix}{identifier}"
+        raise SyntaxError(f"{identifier} is not a valid identifier")
+    return identifier
+
 def get_template_data(
         schema: dict[str, Any],
         ignore_errors: bool = False,
@@ -41,13 +67,18 @@ def get_template_data(
             enum_member = cid.upper().replace("-", "_").replace(".", "_")
 
             # Validate identifier
-            if not enum_member.isidentifier() or keyword.iskeyword(enum_member):
+            try:
+                enum_member = validate_identifier(
+                    enum_member,
+                    fix_errors=fix_errors,
+                    error_prefix=error_prefix
+                )
+            except SyntaxError as e:
                 if ignore_errors:
                     continue
-                elif fix_errors:
-                    enum_member = f"{error_prefix}{enum_member}"
-                else:
-                    raise SyntaxError(f"{enum_member} is not a valid identifier")
+                raise e
+
+            # Add collection
             collections.append({
                 "enum_member": enum_member,
                 "value": cid
