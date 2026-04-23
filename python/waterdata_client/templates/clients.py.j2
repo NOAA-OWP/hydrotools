@@ -11,9 +11,8 @@ JSON Schema version: {{ schema_version }}
 OpenAPI version: {{ openapi_version }}
 """
 from typing import Any, Sequence, Literal, Optional
-# TODO UPDATE TO RELATIVE IMPORTS
-from hydrotools.waterdata_client.base_client import BaseClient
-from hydrotools.waterdata_client.constants import USGSCollection
+from .base_client import BaseClient
+from .constants import USGSCollection
 
 {% for item in collections %}
 class {{ item.class_name }}(BaseClient):
