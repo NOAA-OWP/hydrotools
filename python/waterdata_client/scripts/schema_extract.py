@@ -136,7 +136,7 @@ def parse_parameters(
         param_list: list[dict[str, Any]]
     ) -> list[ParameterMetadata]:
     """Parse endpoint parameters."""
-    parsed = []
+    parsed: list[ParameterMetadata] = []
     for param in param_list:
         # Limit to query parameters (ignore path/header parameters)
         if param.get("in") != "query":
@@ -208,7 +208,7 @@ def get_template_data(
         SyntaxError if unable to translate collection label to valid Python
             identifier.
     """
-    collections = []
+    collections: list[CollectionMetadata] = []
     paths = schema.get("paths", {})
 
     for path, details in paths.items():
@@ -254,5 +254,4 @@ def get_template_data(
             })
 
     # Return sorted by value for a deterministic file
-    print(collections)
     return sorted(collections, key=lambda x: x["class_name"])
