@@ -97,5 +97,5 @@ def test_fix_errors_custom(weird_schema):
     data = get_template_data(weird_schema, fix_errors=True, error_prefix="ENDPOINT_")
 
     assert len(data) == 5
-    assert data[0]["value"] == "123-items"
-    assert data[0]["enum_member"] == "ENDPOINT_123_ITEMS"
+    assert data[2]["value"] == "123-items"
+    assert data[2]["enum_member"] == "ENDPOINT_123_ITEMS"
