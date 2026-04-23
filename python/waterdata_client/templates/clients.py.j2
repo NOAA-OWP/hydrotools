@@ -11,8 +11,9 @@ JSON Schema version: {{ schema_version }}
 OpenAPI version: {{ openapi_version }}
 """
 from typing import Any, Sequence, Literal, Optional
-from .base_client import BaseClient
-from .constants import USGSCollection
+# TODO UPDATE TO RELATIVE IMPORTS
+from hydrotools.waterdata_client.base_client import BaseClient
+from hydrotools.waterdata_client.constants import USGSCollection
 
 {% for item in collections %}
 class {{ item.class_name }}(BaseClient):
@@ -27,6 +28,24 @@ class {{ item.class_name }}(BaseClient):
         {{ p.python_name }}: {{ p.type_hint }} = {{ p.default }},
         {% endfor %}
         ) -> list[dict[str, Any]]:
-        pass
+        """Retrieve items from {{ item.value }}.
+
+        Args:
+        {% for p in item.parameters %}
+            {{ p.python_name }}: {{ p.description | wordwrap(70) | indent(16) }}
+        {% endfor %}
+        """
+        # Translate Python parameters to API parameters
+        query = {
+        {% for p in item.parameters %}
+            "{{ p.name }}": {{ p.python_name }},
+        {% endfor %}
+        }
+
+        # Ignore None
+        valid_query = {k: v for k, v in query.items() if v is not None}
+
+        # Get responses
+        return self._get_json_responses(queries=[valid_query])
 
 {% endfor %}
