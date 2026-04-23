@@ -22,7 +22,6 @@ class ParameterMetadata(TypedDict):
     type_hint: str
     description: str
     default: str
-    required: bool
 
 class CollectionMetadata(TypedDict):
     """Defines collection metadata used by Jinja2 templates."""
@@ -161,9 +160,11 @@ def parse_parameters(
 
         # Determine Python type hint
         type_hint = JSON_TO_PYTHON_TYPES.get(open_api_type, "str")
+        default_value = schema.get("default")
         if enum_values:
             formatted_enums = ", ".join(f'"{v}"' for v in enum_values)
             type_hint = f"Literal[{formatted_enums}]"
+            default_value = f'"{default_value}"'
         match open_api_type:
             case "integer":
                 type_hint = "int"
@@ -173,13 +174,17 @@ def parse_parameters(
                 sequence_type = JSON_TO_PYTHON_TYPES.get("array", "list")
                 type_hint = f"{sequence_type}[{item_py_type}]"
 
+        # Check for optional parameter without default value
+        required = param.get("required", False)
+        if not required and not default_value:
+            type_hint = f"Optional[{type_hint}]"
+
         parsed.append({
             "name": name,
             "python_name": python_name,
             "type_hint": type_hint,
-            "description": param.get("description"),
-            "default": schema.get("default"),
-            "required": param.get("required", False)
+            "description": param.get("description", ""),
+            "default": default_value
         })
 
     return parsed
