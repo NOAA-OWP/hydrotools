@@ -164,7 +164,8 @@ def parse_parameters(
         if enum_values:
             formatted_enums = ", ".join(f'"{v}"' for v in enum_values)
             type_hint = f"Literal[{formatted_enums}]"
-            default_value = f'"{default_value}"'
+            if default_value is not None:
+                default_value = f'"{default_value}"'
         match open_api_type:
             case "integer":
                 type_hint = "int"
@@ -176,7 +177,7 @@ def parse_parameters(
 
         # Check for optional parameter without default value
         required = param.get("required", False)
-        if not required and not default_value:
+        if not required or default_value is None:
             type_hint = f"Optional[{type_hint}]"
 
         parsed.append({
