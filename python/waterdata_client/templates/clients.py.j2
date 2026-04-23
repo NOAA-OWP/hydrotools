@@ -1,0 +1,33 @@
+# AUTO-GENERATED FILE. DO NOT EDIT MANUALLY.
+"""This is a Jinja2 auto-generated module. This module contains individual
+client classes for USGS OGC API items endpoints. These classes are generated
+by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints.
+
+Package version: {{ package_version }}
+Generation script: {{ script_name }}
+Generated: {{ timestamp }}
+JSON Schema source: {{ schema_source }}
+JSON Schema version: {{ schema_version }}
+OpenAPI version: {{ openapi_version }}
+"""
+from enum import StrEnum
+
+class OGCAPI(StrEnum):
+    """OGC base API strings."""
+    ROOT = ""
+    COLLECTIONS = "collections"
+    CONFORMANCE = "conformance"
+    OPENAPI = "openapi"
+
+class OGCPATH(StrEnum):
+    """OGC endpoint path strings."""
+    METADATA = ""
+    ITEMS = "items"
+    QUERYABLES = "queryables"
+    SCHEMA = "schema"
+
+class USGSCollection(StrEnum):
+    """USGS OGC API Collections."""
+    {% for item in collections %}
+    {{ item.enum_member }} = "{{ item.value }}"
+    {% endfor %}
