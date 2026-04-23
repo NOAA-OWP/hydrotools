@@ -91,6 +91,15 @@ def mock_parameter_schema() -> dict[str, Any]:
                         "default": {"key": "key", "value": 1.0},
                         "type": "object"
                     }
+                },
+                {
+                    "description": "FILTER",
+                    "in": "query",
+                    "name": "filter",
+                    "required": False,
+                    "schema": {
+                        "type": "string"
+                    }
                 }]
             }},
         }
@@ -149,7 +158,7 @@ def test_get_template_parameters(mock_parameter_schema):
     assert data[0]["class_name"] == "MonitoringLocationsClient"
     assert data[0]["description"] == "MONITORING LOCATIONS"
     assert data[0]["value"] == "monitoring-locations"
-    assert len(data[0]["parameters"]) == 6
+    assert len(data[0]["parameters"]) == 7
 
     # Check parameter one
     assert data[0]["parameters"][0]["name"] == "parameter_one"
@@ -180,9 +189,14 @@ def test_get_template_parameters(mock_parameter_schema):
     assert data[0]["parameters"][4]["type_hint"] == 'Optional[Sequence[float]]'
     assert data[0]["parameters"][4]["default"] is None
 
+    # Check parameter filter
+    assert data[0]["parameters"][5]["type_hint"] == 'Optional[str]'
+    assert data[0]["parameters"][5]["default"] is None
+    assert data[0]["parameters"][5]["python_name"] == "query_filter"
+
     # Check object parameter
-    assert data[0]["parameters"][5]["type_hint"] == 'dict'
-    assert data[0]["parameters"][5]["default"] == {"key": "key", "value": 1.0}
+    assert data[0]["parameters"][6]["type_hint"] == 'dict'
+    assert data[0]["parameters"][6]["default"] == {"key": "key", "value": 1.0}
 
 def test_bad_schema_special(bad_schema_special):
     """Verify raises SyntaxError."""
