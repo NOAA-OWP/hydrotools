@@ -189,7 +189,7 @@ def get_template_data(
         ignore_errors: bool = False,
         fix_errors: bool = False,
         error_prefix: str = "COLLECTION_"
-    ) -> list[dict[str, str]]:
+    ) -> list[CollectionMetadata]:
     """Extracts collection metadata for the jinja2 templates.
     
     Args:
