@@ -38,8 +38,8 @@ from schema_extract import get_template_data
     help="Ignore non-Python friendly collection labels, disabled by default")
 @click.option('--fix-errors/--no-fix-errors', default=False,
     help="Attempt to fix incompatible collection labels, disabled by default.")
-@click.option("-p", "--prefix", nargs=1, type=str, default="COLLECTIONS_",
-    help="If fix-errors enabled, prepends this to problematic labels. Defaults to 'COLLECTIONS_'")
+@click.option("-p", "--prefix", nargs=1, type=str, default="COLLECTION_",
+    help="If fix-errors enabled, prepends this to problematic labels. Defaults to 'COLLECTION_'")
 def write_constants_module(
         templates: Path,
         name: str,
