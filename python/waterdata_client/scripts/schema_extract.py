@@ -1,9 +1,36 @@
 """JSON Schema extraction utility functions."""
 import keyword
 import re
-from typing import Any, Optional
+from typing import Any, Optional, TypedDict
 import builtins
 from hydrotools.waterdata_client._version import __version__
+
+JSON_TO_PYTHON_TYPES = {
+    "string": "str",
+    "integer": "int",
+    "number": "float",
+    "boolean": "bool",
+    "array": "Sequence",
+    "object": "dict"
+}
+"""Mapping from types in OpenAPI JSON schema types to Python types."""
+
+class ParameterMetadata(TypedDict):
+    """Defines API parameter metadata used by Jinja2 templates."""
+    name: str
+    python_name: str
+    type_hint: str
+    description: str
+    default: str
+    required: bool
+
+class CollectionMetadata(TypedDict):
+    """Defines collection metadata used by Jinja2 templates."""
+    value: str
+    enum_member: str
+    class_name: str
+    description: str
+    parameters: list[ParameterMetadata]
 
 def to_screaming_snake_case(
         text: str,
@@ -107,7 +134,7 @@ def validate_identifier(
 
 def parse_parameters(
         param_list: list[dict[str, Any]]
-    ) -> list[dict[str, Any]]:
+    ) -> list[ParameterMetadata]:
     """Parse endpoint parameters."""
     parsed = []
     for param in param_list:
@@ -130,15 +157,21 @@ def parse_parameters(
         # Extract type information
         schema = param.get("schema", {})
         open_api_type = schema.get("type", "Any")
+        enum_values = schema.get("enum", [])
 
         # Determine Python type hint
-        type_hint = "str"
+        type_hint = JSON_TO_PYTHON_TYPES.get(open_api_type, "str")
+        if enum_values:
+            formatted_enums = ", ".join(f'"{v}"' for v in enum_values)
+            type_hint = f"Literal[{formatted_enums}]"
         match open_api_type:
             case "integer":
                 type_hint = "int"
             case "array":
-                item_type = schema.get("items", {}).get("type", "str")
-                type_hint = f"list[{item_type}]"
+                item_oa_type = schema.get("items", {}).get("type", "str")
+                item_py_type = JSON_TO_PYTHON_TYPES.get(item_oa_type, "str")
+                sequence_type = JSON_TO_PYTHON_TYPES.get("array", "list")
+                type_hint = f"{sequence_type}[{item_py_type}]"
 
         parsed.append({
             "name": name,
@@ -157,7 +190,7 @@ def get_template_data(
         fix_errors: bool = False,
         error_prefix: str = "COLLECTION_"
     ) -> list[dict[str, str]]:
-    """Extracts collection metadata for the constants template.
+    """Extracts collection metadata for the jinja2 templates.
     
     Args:
         schema: Deserialized dict derived from USGS OGC API schema.
@@ -169,9 +202,7 @@ def get_template_data(
             fix_errors is True. Defaults to 'COLLECTION_'.
     
     Returns:
-        List of extracted mappings (dict) from enum members in screaming
-            SNAKE_CASE to enum values for use with Jinja2 StrEnum building
-            template.
+        List of extracted metadata for each USGS collection identified.
     
     Raises:
         SyntaxError if unable to translate collection label to valid Python
@@ -223,4 +254,5 @@ def get_template_data(
             })
 
     # Return sorted by value for a deterministic file
+    print(collections)
     return sorted(collections, key=lambda x: x["class_name"])
