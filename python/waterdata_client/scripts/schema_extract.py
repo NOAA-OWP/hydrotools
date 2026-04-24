@@ -5,7 +5,7 @@ from typing import Any, Optional, TypedDict
 import builtins
 from hydrotools.waterdata_client._version import __version__
 
-JSON_TO_PYTHON_TYPES = {
+OPENAPI_TO_PYTHON_TYPES: dict[str, str] = {
     "string": "str",
     "integer": "int",
     "number": "float",
@@ -99,6 +99,69 @@ def to_pascal_case(
     # Capitalize and join split words
     return "".join(word.capitalize() for word in words if word)
 
+def get_type_hint(
+        type_schema: dict[str, Any], required: bool = False
+) -> tuple[str, Any]:
+    """Returns type hint and default value.
+
+    Args:
+        type_schema: 'schema' object in OpenAPI JSON schema parameter.
+        required: If False, designates type as 'Optional'. Defaults to False.
+    
+    Returns:
+        type_hint, default_value.
+    
+    Raises:
+        ValueError if unable to determine type.
+    """
+    # Check for empty schema
+    if not type_schema:
+        raise ValueError("Schema is empty. Unable to determine type.")
+
+    # Get base type
+    oa_type = type_schema.get("type", "string")
+    type_hint = OPENAPI_TO_PYTHON_TYPES.get(oa_type, "str")
+    default = type_schema.get("default")
+
+    # Handle string
+    if oa_type == "string":
+        # Add quotes to string default
+        if default:
+            default = f'"{default}"'
+
+        # Handle URI types
+        if type_schema.get("format") == "uri":
+            type_hint = "URL"
+
+    # Handle array
+    if oa_type == "array":
+        item_schema = type_schema.get("items", {})
+        oa_element_type = item_schema.get("type", "string")
+        element_type = OPENAPI_TO_PYTHON_TYPES.get(oa_element_type)
+
+        # Handle URI
+        if oa_element_type == "string":
+            if type_schema.get("format") == "uri":
+                element_type = "URL"
+
+        # Handle enum
+        if item_schema.get("enum"):
+            enums = ", ".join(f'"{v}"' for v in item_schema.get("enum", []))
+            element_type = f"Literal[{enums}]"
+
+        type_hint = f"{type_hint}[{element_type}]"
+
+    # Handle enum
+    if type_schema.get("enum"):
+        enums = ", ".join(f'"{v}"' for v in type_schema.get("enum", []))
+        type_hint = f"Literal[{enums}]"
+
+    # Handle optional
+    if not required:
+        type_hint = f"Optional[{type_hint}]"
+
+    return type_hint, default
+
 def validate_identifier(
         identifier: str,
         fix_errors: bool = False,
@@ -162,35 +225,8 @@ def parse_parameters(
             raise SyntaxError(f"Unable to make `{name}` a valid Python identifier.") from e
 
         # Extract type information
-        schema = param.get("schema", {})
-        open_api_type = schema.get("type", "Any")
-        enum_values = schema.get("enum", [])
-
-        # Determine Python type hint
-        type_hint = JSON_TO_PYTHON_TYPES.get(open_api_type, "str")
-        default_value = schema.get("default")
-        if enum_values:
-            formatted_enums = ", ".join(f'"{v}"' for v in enum_values)
-            type_hint = f"Literal[{formatted_enums}]"
-            if default_value is not None:
-                default_value = f'"{default_value}"'
-        match open_api_type:
-            case "integer":
-                type_hint = "int"
-            case "array":
-                item_oa_type = schema.get("items", {}).get("type", "str")
-                item_py_type = JSON_TO_PYTHON_TYPES.get(item_oa_type, "str")
-                sequence_type = JSON_TO_PYTHON_TYPES.get("array", "list")
-                type_hint = f"{sequence_type}[{item_py_type}]"
-
-        # Check for optional parameter without default value
         required = param.get("required", False)
-        if not required or default_value is None:
-            type_hint = f"Optional[{type_hint}]"
-
-        # Add quotes to default strings
-        if default_value and "str" in type_hint:
-            default_value = f'"{default_value}"'
+        type_hint, default_value = get_type_hint(param.get("schema", {}), required)
 
         parsed.append({
             "name": name,
