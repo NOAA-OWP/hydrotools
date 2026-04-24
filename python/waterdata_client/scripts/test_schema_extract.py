@@ -106,6 +106,47 @@ def mock_parameter_schema() -> dict[str, Any]:
     }
 
 @pytest.fixture
+def mock_schema_bad_parameter() -> dict[str, Any]:
+    """Mock test schema."""
+    return {
+        "paths": {
+            "/collections/monitoring-locations/items": {"get": {
+                "description": "MONITORING LOCATIONS",
+                "parameters": [{
+                    "description": "PARAMETER ONE",
+                    "in": "query",
+                    "required": False,
+                    "schema": {
+                        "default": 10_000,
+                        "type": "integer"
+                    }
+                }]
+            }},
+        }
+    }
+
+@pytest.fixture
+def mock_schema_bad_parameter_name() -> dict[str, Any]:
+    """Mock test schema."""
+    return {
+        "paths": {
+            "/collections/monitoring-locations/items": {"get": {
+                "description": "MONITORING LOCATIONS",
+                "parameters": [{
+                    "description": "PARAMETER ONE",
+                    "name": "$$%%",
+                    "in": "query",
+                    "required": False,
+                    "schema": {
+                        "default": 10_000,
+                        "type": "integer"
+                    }
+                }]
+            }},
+        }
+    }
+
+@pytest.fixture
 def bad_schema_special() -> dict[str, Any]:
     """Bad test schema with special characters."""
     return {
@@ -197,6 +238,16 @@ def test_get_template_parameters(mock_parameter_schema):
     # Check object parameter
     assert data[0]["parameters"][6]["type_hint"] == 'dict'
     assert data[0]["parameters"][6]["default"] == {"key": "key", "value": 1.0}
+
+def test_bad_parameters(mock_schema_bad_parameter):
+    """Verify extraction of collection parameters."""
+    with pytest.raises(KeyError):
+        data = get_template_data(mock_schema_bad_parameter)
+
+def test_bad_parameter_name(mock_schema_bad_parameter_name):
+    """Verify extraction of collection parameters."""
+    with pytest.raises(SyntaxError):
+        data = get_template_data(mock_schema_bad_parameter_name)
 
 def test_bad_schema_special(bad_schema_special):
     """Verify raises SyntaxError."""

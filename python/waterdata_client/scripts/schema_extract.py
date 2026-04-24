@@ -146,12 +146,20 @@ def parse_parameters(
 
         # Validate name
         if name is None:
-            raise ValueError(f"Unable to parse parameter {param}")
+            raise KeyError(f"Unable to parse parameter {param}, no value for 'name'")
+
+        # Attempt to make valid argument from parameter
         python_name = validate_identifier(
             to_snake_case(name),
             fix_errors=True,
             error_prefix="query_"
             )
+
+        # Validate
+        try:
+            python_name = validate_identifier(python_name)
+        except SyntaxError as e:
+            raise SyntaxError(f"Unable to make `{name}` a valid Python identifier.") from e
 
         # Extract type information
         schema = param.get("schema", {})
@@ -225,7 +233,7 @@ def get_template_data(
             enum_member = to_screaming_snake_case(cid)
             class_name = f"{to_pascal_case(cid)}Client"
 
-            # Validate identifier
+            # Validate enum member and class name
             try:
                 enum_member = validate_identifier(
                     enum_member,
