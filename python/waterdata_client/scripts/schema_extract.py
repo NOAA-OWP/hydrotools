@@ -188,6 +188,10 @@ def parse_parameters(
         if not required or default_value is None:
             type_hint = f"Optional[{type_hint}]"
 
+        # Add quotes to default strings
+        if default_value and "str" in type_hint:
+            default_value = f'"{default_value}"'
+
         parsed.append({
             "name": name,
             "python_name": python_name,
