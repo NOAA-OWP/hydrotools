@@ -15,6 +15,12 @@ from yarl import URL
 from .base_client import BaseClient
 from .constants import USGSCollection
 
+__all__ = [
+{% for item in collections %}
+    "{{ item.class_name }}",
+{% endfor %}
+]
+
 {% for item in collections %}
 class {{ item.class_name }}(BaseClient):
     """

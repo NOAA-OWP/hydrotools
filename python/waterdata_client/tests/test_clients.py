@@ -4,7 +4,7 @@ from unittest.mock import patch
 from yarl import URL
 
 # Import a few representative generated clients
-from hydrotools.waterdata_client.clients import (
+from hydrotools.waterdata_client import (
     AgencyCodesClient,
     MonitoringLocationsClient,
     DailyClient,

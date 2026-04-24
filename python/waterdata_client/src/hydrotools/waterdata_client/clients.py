@@ -3,9 +3,9 @@
 client classes for USGS OGC API items endpoints. These classes are generated
 by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints.
 
-Package version: 0.1.0
+Package version: 0.8.0
 Generation script: build_clients.py
-Generated: 2026-04-24 15:04:31 Z
+Generated: 2026-04-24 15:52:44 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.47.0
 OpenAPI version: 3.0.2
@@ -14,6 +14,42 @@ from typing import Any, Sequence, Literal, Optional
 from yarl import URL
 from .base_client import BaseClient
 from .constants import USGSCollection
+
+__all__ = [
+    "AgencyCodesClient",
+    "AltitudeDatumsClient",
+    "AquiferCodesClient",
+    "AquiferTypesClient",
+    "ChannelMeasurementsClient",
+    "CitationsClient",
+    "CombinedMetadataClient",
+    "ContinuousClient",
+    "CoordinateAccuracyCodesClient",
+    "CoordinateDatumCodesClient",
+    "CoordinateMethodCodesClient",
+    "CountiesClient",
+    "CountriesClient",
+    "DailyClient",
+    "FieldMeasurementsClient",
+    "FieldMeasurementsMetadataClient",
+    "HydrologicUnitCodesClient",
+    "LatestContinuousClient",
+    "LatestDailyClient",
+    "MediumCodesClient",
+    "MethodCategoriesClient",
+    "MethodCitationsClient",
+    "MethodsClient",
+    "MonitoringLocationsClient",
+    "NationalAquiferCodesClient",
+    "ParameterCodesClient",
+    "ReliabilityCodesClient",
+    "SiteTypesClient",
+    "StatesClient",
+    "StatisticCodesClient",
+    "TimeSeriesMetadataClient",
+    "TimeZoneCodesClient",
+    "TopographicCodesClient",
+]
 
 class AgencyCodesClient(BaseClient):
     """
