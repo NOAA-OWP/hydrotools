@@ -5,9 +5,9 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.1.0
 Generation script: build_constants.py
-Generated: 2026-04-15 17:50:47 Z
+Generated: 2026-04-23 18:14:02 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
-JSON Schema version: 0.44.0
+JSON Schema version: 0.47.0
 OpenAPI version: 3.0.2
 """
 from enum import StrEnum
@@ -33,6 +33,7 @@ class USGSCollection(StrEnum):
     AQUIFER_CODES = "aquifer-codes"
     AQUIFER_TYPES = "aquifer-types"
     CHANNEL_MEASUREMENTS = "channel-measurements"
+    CITATIONS = "citations"
     COMBINED_METADATA = "combined-metadata"
     CONTINUOUS = "continuous"
     COORDINATE_ACCURACY_CODES = "coordinate-accuracy-codes"
@@ -47,6 +48,9 @@ class USGSCollection(StrEnum):
     LATEST_CONTINUOUS = "latest-continuous"
     LATEST_DAILY = "latest-daily"
     MEDIUM_CODES = "medium-codes"
+    METHOD_CATEGORIES = "method-categories"
+    METHOD_CITATIONS = "method-citations"
+    METHODS = "methods"
     MONITORING_LOCATIONS = "monitoring-locations"
     NATIONAL_AQUIFER_CODES = "national-aquifer-codes"
     PARAMETER_CODES = "parameter-codes"

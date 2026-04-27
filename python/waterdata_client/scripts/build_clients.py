@@ -1,4 +1,4 @@
-"""Run this script to generate and write the `constants.py` file using the Jinja2
+"""Run this script to generate and write the `clients.py` file using the Jinja2
 template and the "items" collections found in the USGS OGC API schema.
 
 # Usage
@@ -12,7 +12,7 @@ $ python3 -m venv env
 $ source env/bin/activate
 (env) $ python3 -m pip install -U pip wheel
 (env) $ pip install -e .[develop]
-(env) $ python3 scripts/build_constants.py ./templates/ --output src/hydrotools/waterdata_client/constants.py
+(env) $ python3 scripts/build_clients.py ./templates/ --output src/hydrotools/waterdata_client/clients.py
 ```
 """
 from pathlib import Path
@@ -27,7 +27,7 @@ from schema_extract import get_template_data
 @click.command()
 @click.argument("templates", type=click.Path(exists=True, file_okay=False,
     dir_okay=True, path_type=Path))
-@click.option("-n", "--name", nargs=1, type=str, default="constants.py.j2",
+@click.option("-n", "--name", nargs=1, type=str, default="clients.py.j2",
     help="Output file name.")
 @click.option("-o", "--output", nargs=1, type=click.Path(
     exists=False, file_okay=True, dir_okay=False, path_type=Path, allow_dash=True),
@@ -38,23 +38,23 @@ from schema_extract import get_template_data
     help="Ignore non-Python friendly collection labels, disabled by default")
 @click.option('--fix-errors/--no-fix-errors', default=False,
     help="Attempt to fix incompatible collection labels, disabled by default.")
-@click.option("-p", "--prefix", nargs=1, type=str, default="COLLECTION_",
-    help="If fix-errors enabled, prepends this to problematic labels. Defaults to 'COLLECTION_'")
-def write_constants_module(
+@click.option("-p", "--prefix", nargs=1, type=str, default="Collection",
+    help="If fix-errors enabled, prepends this to problematic labels. Defaults to 'Collection'")
+def write_clients_module(
         templates: Path,
         name: str,
         output: Path,
         overwrite: bool = False,
         ignore_errors: bool = False,
         fix_errors: bool = False,
-        prefix: str = "COLLECTION_"
+        prefix: str = "Collection"
 ) -> None:
-    """Renders the constants.py file from the OGC schema.
+    """Renders the clients.py file from the OGC schema.
 
     \b
     Args:
         templates: File system directory containing Jinja2 template files.
-        name: Template file name. Defaults to 'constants.py.j2'.
+        name: Template file name. Defaults to 'clients.py.j2'.
         output: The location to write the resulting file. Defaults to stdout.
         overwrite: If true, overwrite the file if it exists. Defaults to false.
         ignore_errors: If True, skips collections with invalid Python identifier
@@ -62,7 +62,7 @@ def write_constants_module(
         fix_errors: If True, prepend error_prefix to erroneous collection labels.
             Defaults to False.
         prefix: String added to front of collection enumeration value, if
-            fix_errors is True. Defaults to 'COLLECTION_'.
+            fix_errors is True. Defaults to 'Collection'.
     
     \b
     Raises:
@@ -104,4 +104,4 @@ def write_constants_module(
 
 if __name__ == "__main__":
     # pylint: disable=no-value-for-parameter
-    write_constants_module()
+    write_clients_module()

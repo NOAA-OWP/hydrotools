@@ -60,7 +60,12 @@ def build_request(
     if query:
         query_params.update(query)
 
-    return url.with_query(query_params)
+    # Sanitize booleans
+    sanitized_query = MultiDict([
+        (str(k), (str(v).lower()) if isinstance(v, bool) else v)
+        for k, v in query_params.items()])
+
+    return url.with_query(sanitized_query)
 
 def build_request_batch(
     feature_ids: Sequence[str],
