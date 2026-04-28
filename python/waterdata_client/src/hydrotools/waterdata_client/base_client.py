@@ -19,7 +19,7 @@ from .url_builder import (
     build_request_batch_from_feature_ids,
     QueryType
 )
-from .transformers import TransformedResponse_co, ResponseTransformer, to_geodataframe
+from .transformers import TransformedResponse_co, ResponseTransformer
 
 class BaseClient(Generic[TransformedResponse_co]):
     """Base class for USGS OGC API clients. Specific child classes may overwrite
@@ -48,7 +48,7 @@ class BaseClient(Generic[TransformedResponse_co]):
         max_retries: int = SETTINGS.default_retries,
         timeout_seconds: int = SETTINGS.timeout_seconds,
         ssl_context: Optional[ssl.SSLContext] = None,
-        transformer: Optional[ResponseTransformer] = to_geodataframe
+        transformer: Optional[ResponseTransformer] = None
     ) -> None:
         self.concurrency_limit = concurrency_limit
         self.max_retries = max_retries
