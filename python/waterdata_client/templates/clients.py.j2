@@ -14,6 +14,7 @@ from typing import Any, Sequence, Literal, Optional
 from yarl import URL
 from .base_client import BaseClient
 from .constants import USGSCollection
+from .transformers import TransformedResponse_co
 
 __all__ = [
 {% for item in collections %}
@@ -22,7 +23,7 @@ __all__ = [
 ]
 
 {% for item in collections %}
-class {{ item.class_name }}(BaseClient):
+class {{ item.class_name }}(BaseClient[TransformedResponse_co]):
     """
     {{ item.description | wordwrap(70) | indent(4) }}
     """
@@ -33,7 +34,7 @@ class {{ item.class_name }}(BaseClient):
         {% for p in item.parameters %}
         {{ p.python_name }}: {{ p.type_hint }} = {{ p.default }},
         {% endfor %}
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from {{ item.value }}.
 
         Args:
@@ -52,6 +53,9 @@ class {{ item.class_name }}(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
+
+        # Transform
+        return self._handle_responses(data)
 
 {% endfor %}
