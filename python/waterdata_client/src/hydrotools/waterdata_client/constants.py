@@ -5,7 +5,7 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.0a0
 Generation script: build_constants.py
-Generated: 2026-04-29 17:29:45 Z
+Generated: 2026-04-29 18:08:03 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.47.0
 OpenAPI version: 3.0.2
@@ -82,6 +82,13 @@ class HydroToolsColumn(StrEnum):
     USACE_GAUGE_ID = "usace_gauge_id"
     START = "start"
     END = "end"
+    ID = "id"
+    TIME_SERIES_ID = "time_series_id"
+    PARAMETER_CODE = "parameter_code"
+    STATISTIC_ID = "statistic_id"
+    APPROVAL_STATUS = "approval_status"
+    LAST_MODIFIED = "last_modified"
+    GEO_FEATURE_ID = "geo_feature_id"
 
 CATEGORICAL_COLUMNS: list[HydroToolsColumn] = [
     HydroToolsColumn.VARIABLE_NAME,
@@ -90,3 +97,19 @@ CATEGORICAL_COLUMNS: list[HydroToolsColumn] = [
     HydroToolsColumn.QUALIFIERS
 ]
 """List of columns to transform to categorical types."""
+
+HYDROTOOLS_DATAFRAME_COLUMN_MAPPING: dict[str, HydroToolsColumn] = {
+    "properties.id": HydroToolsColumn.GEO_FEATURE_ID,
+    "properties.time_series_id": HydroToolsColumn.TIME_SERIES_ID,
+    "properties.monitoring_location_id": HydroToolsColumn.USGS_SITE_CODE,
+    "properties.parameter_code": HydroToolsColumn.PARAMETER_CODE,
+    "properties.statistic_id": HydroToolsColumn.STATISTIC_ID,
+    "properties.time": HydroToolsColumn.VALUE_TIME,
+    "properties.value": HydroToolsColumn.VALUE,
+    "properties.unit_of_measure": HydroToolsColumn.MEASUREMENT_UNIT,
+    "properties.approval_status": HydroToolsColumn.APPROVAL_STATUS,
+    "properties.qualifier": HydroToolsColumn.QUALIFIERS,
+    "properties.last_modified": HydroToolsColumn.LAST_MODIFIED
+}
+"""Mapping from default pandas.json_normalize column names to HydroTools
+canonical column labels."""

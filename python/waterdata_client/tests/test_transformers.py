@@ -63,7 +63,7 @@ def test_raise_on_no_data_zero_features(empty_geojson_response):
 
 def test_to_dataframe_success(mock_geojson_response):
     """Verify JSON to DataFrame flattening."""
-    df = to_dataframe(mock_geojson_response)
+    df = to_dataframe(mock_geojson_response, column_mapper=None)
 
     assert isinstance(df, pd.DataFrame)
     assert len(df) == 2
@@ -86,6 +86,6 @@ def test_transformer_integration_logic(mock_geojson_response):
     # Simulate two pages/batches of data
     multi_batch = mock_geojson_response + mock_geojson_response
 
-    df = to_dataframe(multi_batch)
+    df = to_dataframe(multi_batch, column_mapper=None)
     assert len(df) == 4
     assert df.iloc[0]["properties.id"] == df.iloc[2]["properties.id"]
