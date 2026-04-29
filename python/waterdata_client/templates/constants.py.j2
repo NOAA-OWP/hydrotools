@@ -31,3 +31,33 @@ class USGSCollection(StrEnum):
     {% for item in collections %}
     {{ item.enum_member }} = "{{ item.value }}"
     {% endfor %}
+
+class HydroToolsColumn(StrEnum):
+    """Canonical HydroTools column labels."""
+    VALUE = "value"
+    VALUE_TIME = "value_time"
+    VARIABLE_NAME = "variable_name"
+    MEASUREMENT_UNIT = "measurement_unit"
+    QUALIFIERS = "qualifiers"
+    SERIES = "series"
+    CONFIGURATION = "configuration"
+    REFERENCE_TIME = "reference_time"
+    LONGITUDE = "longitude"
+    LATITUDE = "latitude"
+    CRS = "crs"
+    GEOMETRY = "geometry"
+    USGS_SITE_CODE = "usgs_site_code"
+    NWM_FEATURE_ID = "nwm_feature_id"
+    NWS_LID = "nws_lid"
+    USACE_GAUGE_ID = "usace_gauge_id"
+    START = "start"
+    END = "end"
+
+CATEGORICAL_COLUMNS: list[HydroToolsColumn] = [
+    HydroToolsColumn.VARIABLE_NAME,
+    HydroToolsColumn.USGS_SITE_CODE,
+    HydroToolsColumn.MEASUREMENT_UNIT,
+    HydroToolsColumn.QUALIFIERS
+]
+"""List of columns to transform to categorical types."""
+

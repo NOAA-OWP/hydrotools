@@ -3,9 +3,9 @@
 and constants used package-wide. The `USGSCollection` StrEnum is generated
 by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints.
 
-Package version: 0.1.0
+Package version: 0.8.0a0
 Generation script: build_constants.py
-Generated: 2026-04-23 18:14:02 Z
+Generated: 2026-04-29 17:29:45 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.47.0
 OpenAPI version: 3.0.2
@@ -61,3 +61,32 @@ class USGSCollection(StrEnum):
     TIME_SERIES_METADATA = "time-series-metadata"
     TIME_ZONE_CODES = "time-zone-codes"
     TOPOGRAPHIC_CODES = "topographic-codes"
+
+class HydroToolsColumn(StrEnum):
+    """Canonical HydroTools column labels."""
+    VALUE = "value"
+    VALUE_TIME = "value_time"
+    VARIABLE_NAME = "variable_name"
+    MEASUREMENT_UNIT = "measurement_unit"
+    QUALIFIERS = "qualifiers"
+    SERIES = "series"
+    CONFIGURATION = "configuration"
+    REFERENCE_TIME = "reference_time"
+    LONGITUDE = "longitude"
+    LATITUDE = "latitude"
+    CRS = "crs"
+    GEOMETRY = "geometry"
+    USGS_SITE_CODE = "usgs_site_code"
+    NWM_FEATURE_ID = "nwm_feature_id"
+    NWS_LID = "nws_lid"
+    USACE_GAUGE_ID = "usace_gauge_id"
+    START = "start"
+    END = "end"
+
+CATEGORICAL_COLUMNS: list[HydroToolsColumn] = [
+    HydroToolsColumn.VARIABLE_NAME,
+    HydroToolsColumn.USGS_SITE_CODE,
+    HydroToolsColumn.MEASUREMENT_UNIT,
+    HydroToolsColumn.QUALIFIERS
+]
+"""List of columns to transform to categorical types."""
