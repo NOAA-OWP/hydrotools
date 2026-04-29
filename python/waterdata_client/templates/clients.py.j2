@@ -56,6 +56,6 @@ class {{ item.class_name }}(BaseClient[TransformedResponse_co]):
         data = self._get_json_responses(queries=[valid_query])
 
         # Transform
-        return self._handle_responses(data)
+        return self._handle_response(data)
 
 {% endfor %}

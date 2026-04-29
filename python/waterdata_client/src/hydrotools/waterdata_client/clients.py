@@ -3,9 +3,9 @@
 client classes for USGS OGC API items endpoints. These classes are generated
 by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints.
 
-Package version: 0.8.0
+Package version: 0.8.0a0
 Generation script: build_clients.py
-Generated: 2026-04-24 15:52:44 Z
+Generated: 2026-04-29 12:26:54 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.47.0
 OpenAPI version: 3.0.2
@@ -14,6 +14,7 @@ from typing import Any, Sequence, Literal, Optional
 from yarl import URL
 from .base_client import BaseClient
 from .constants import USGSCollection
+from .transformers import TransformedResponse_co
 
 __all__ = [
     "AgencyCodesClient",
@@ -51,7 +52,7 @@ __all__ = [
     "TopographicCodesClient",
 ]
 
-class AgencyCodesClient(BaseClient):
+class AgencyCodesClient(BaseClient[TransformedResponse_co]):
     """
     Code identifying the agency or organization used for site information,
     data sources, and permitting agencies. Agency codes are fixed values
@@ -74,7 +75,7 @@ class AgencyCodesClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from agency-codes.
 
         Args:
@@ -146,9 +147,12 @@ class AgencyCodesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class AltitudeDatumsClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class AltitudeDatumsClient(BaseClient[TransformedResponse_co]):
     """
     The recommended vertical datum is NAVD88 (North American Vertical
     Datum of 1988) where applicable as stated in Office of Information
@@ -175,7 +179,7 @@ class AltitudeDatumsClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from altitude-datums.
 
         Args:
@@ -247,9 +251,12 @@ class AltitudeDatumsClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class AquiferCodesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class AquiferCodesClient(BaseClient[TransformedResponse_co]):
     """
     Local aquifers in USGS data are identified by an aquifer name and
     geohydrologic unit code (a three-digit number related to the age of
@@ -283,7 +290,7 @@ class AquiferCodesClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from aquifer-codes.
 
         Args:
@@ -358,9 +365,12 @@ class AquiferCodesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class AquiferTypesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class AquiferTypesClient(BaseClient[TransformedResponse_co]):
     """
     Groundwater occurs in aquifers under two different conditions. Where
     water only partly fills an aquifer, the upper surface is free to rise
@@ -388,7 +398,7 @@ class AquiferTypesClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from aquifer-types.
 
         Args:
@@ -460,9 +470,12 @@ class AquiferTypesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class ChannelMeasurementsClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class ChannelMeasurementsClient(BaseClient[TransformedResponse_co]):
     """
     Channel measurements taken as part of streamflow field measurements.
     """
@@ -508,7 +521,7 @@ class ChannelMeasurementsClient(BaseClient):
         sortby: Optional[Sequence[str]] = None,
         time: Optional[str] = None,
         vertical_velocity_description: Optional[str] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from channel-measurements.
 
         Args:
@@ -696,9 +709,12 @@ class ChannelMeasurementsClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class CitationsClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class CitationsClient(BaseClient[TransformedResponse_co]):
     """
     Citations associated with water measurement methods.
     """
@@ -719,7 +735,7 @@ class CitationsClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from citations.
 
         Args:
@@ -792,9 +808,12 @@ class CitationsClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class CombinedMetadataClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class CombinedMetadataClient(BaseClient[TransformedResponse_co]):
     """
     This endpoint combines metadata from timeseries and field measurements
     collections by site.
@@ -870,7 +889,7 @@ class CombinedMetadataClient(BaseClient):
         vertical_datum_name: Optional[str] = None,
         web_description: Optional[str] = None,
         well_constructed_depth: Optional[float] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from combined-metadata.
 
         Args:
@@ -1272,9 +1291,12 @@ class CombinedMetadataClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class ContinuousClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class ContinuousClient(BaseClient[TransformedResponse_co]):
     """
     Continuous data are collected via automated sensors installed at a
     monitoring location. They are collected at a high frequency and often
@@ -1312,7 +1334,7 @@ class ContinuousClient(BaseClient):
         time_series_id: Optional[str] = None,
         unit_of_measure: Optional[str] = None,
         value: Optional[str] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from continuous.
 
         Args:
@@ -1488,9 +1510,12 @@ class ContinuousClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class CoordinateAccuracyCodesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class CoordinateAccuracyCodesClient(BaseClient[TransformedResponse_co]):
     """
     Appropriate code on the schedule to indicate the accuracy of the
     latitude-longitude values.
@@ -1512,7 +1537,7 @@ class CoordinateAccuracyCodesClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from coordinate-accuracy-codes.
 
         Args:
@@ -1584,9 +1609,12 @@ class CoordinateAccuracyCodesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class CoordinateDatumCodesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class CoordinateDatumCodesClient(BaseClient[TransformedResponse_co]):
     """
     Horizontal datum code for the latitude/longitude coordinates. There
     are currently more than 300 horizontal datums available for entry.
@@ -1608,7 +1636,7 @@ class CoordinateDatumCodesClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from coordinate-datum-codes.
 
         Args:
@@ -1680,9 +1708,12 @@ class CoordinateDatumCodesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class CoordinateMethodCodesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class CoordinateMethodCodesClient(BaseClient[TransformedResponse_co]):
     """
     Methods used to determine latitude-longitude values.
     """
@@ -1703,7 +1734,7 @@ class CoordinateMethodCodesClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from coordinate-method-codes.
 
         Args:
@@ -1775,9 +1806,12 @@ class CoordinateMethodCodesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class CountiesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class CountiesClient(BaseClient[TransformedResponse_co]):
     """
     The name of the county or county equivalent (parish, borough, planning
     reagion, etc.) in which the site is located. List includes Census
@@ -1803,7 +1837,7 @@ class CountiesClient(BaseClient):
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
         state_fips_code: Optional[str] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from counties.
 
         Args:
@@ -1884,9 +1918,12 @@ class CountiesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class CountriesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class CountriesClient(BaseClient[TransformedResponse_co]):
     """
     FIPS country codes and names.
     """
@@ -1907,7 +1944,7 @@ class CountriesClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from countries.
 
         Args:
@@ -1981,9 +2018,12 @@ class CountriesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class DailyClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class DailyClient(BaseClient[TransformedResponse_co]):
     """
     Daily data provide one data value to represent water conditions for
     the day. Throughout much of the history of the USGS, the primary water
@@ -2024,7 +2064,7 @@ class DailyClient(BaseClient):
         time_series_id: Optional[str] = None,
         unit_of_measure: Optional[str] = None,
         value: Optional[str] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from daily.
 
         Args:
@@ -2210,9 +2250,12 @@ class DailyClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class FieldMeasurementsClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class FieldMeasurementsClient(BaseClient[TransformedResponse_co]):
     """
     Field measurements are physically measured values collected during a
     visit to the monitoring location. Field measurements consist of
@@ -2255,7 +2298,7 @@ class FieldMeasurementsClient(BaseClient):
         unit_of_measure: Optional[str] = None,
         value: Optional[str] = None,
         vertical_datum: Optional[str] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from field-measurements.
 
         Args:
@@ -2451,9 +2494,12 @@ class FieldMeasurementsClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class FieldMeasurementsMetadataClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class FieldMeasurementsMetadataClient(BaseClient[TransformedResponse_co]):
     """
     This endpoint provides metadata about field measurement collections,
     including when the earliest and most recent observations for a
@@ -2482,7 +2528,7 @@ class FieldMeasurementsMetadataClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from field-measurements-metadata.
 
         Args:
@@ -2641,9 +2687,12 @@ class FieldMeasurementsMetadataClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class HydrologicUnitCodesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class HydrologicUnitCodesClient(BaseClient[TransformedResponse_co]):
     """
     Hydrologic units are geographic areas representing part or all of a
     surface drainage basin or distinct hydrologic feature identified by a
@@ -2673,7 +2722,7 @@ class HydrologicUnitCodesClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from hydrologic-unit-codes.
 
         Args:
@@ -2760,9 +2809,12 @@ class HydrologicUnitCodesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class LatestContinuousClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class LatestContinuousClient(BaseClient[TransformedResponse_co]):
     """
     This endpoint provides the most recent observation for each time
     series of continuous data. Continuous data are collected via automated
@@ -2803,7 +2855,7 @@ class LatestContinuousClient(BaseClient):
         time_series_id: Optional[str] = None,
         unit_of_measure: Optional[str] = None,
         value: Optional[str] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from latest-continuous.
 
         Args:
@@ -2987,9 +3039,12 @@ class LatestContinuousClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class LatestDailyClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class LatestDailyClient(BaseClient[TransformedResponse_co]):
     """
     Daily data provide one data value to represent water conditions for
     the day. Throughout much of the history of the USGS, the primary water
@@ -3030,7 +3085,7 @@ class LatestDailyClient(BaseClient):
         time_series_id: Optional[str] = None,
         unit_of_measure: Optional[str] = None,
         value: Optional[str] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from latest-daily.
 
         Args:
@@ -3216,9 +3271,12 @@ class LatestDailyClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class MediumCodesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class MediumCodesClient(BaseClient[TransformedResponse_co]):
     """
     Medium refers to the specific environmental medium from which the
     sample was collected. Medium type differs from site type because one
@@ -3244,7 +3302,7 @@ class MediumCodesClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from medium-codes.
 
         Args:
@@ -3332,9 +3390,12 @@ class MediumCodesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class MethodCategoriesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class MethodCategoriesClient(BaseClient[TransformedResponse_co]):
     """
     Categorical standards for methods describing the associated data's
     appropriateness for an intended use.
@@ -3357,7 +3418,7 @@ class MethodCategoriesClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from method-categories.
 
         Args:
@@ -3433,9 +3494,12 @@ class MethodCategoriesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class MethodCitationsClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class MethodCitationsClient(BaseClient[TransformedResponse_co]):
     """
     Citation identifiers for water measurement methods.
     """
@@ -3459,7 +3523,7 @@ class MethodCitationsClient(BaseClient):
         query_id: Optional[int] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from method-citations.
 
         Args:
@@ -3540,9 +3604,12 @@ class MethodCitationsClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class MethodsClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class MethodsClient(BaseClient[TransformedResponse_co]):
     """
     Water measurement or water-quality analytical methods. Codes and
     descriptions defining a method for calculating or measuring the value
@@ -3569,7 +3636,7 @@ class MethodsClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from methods.
 
         Args:
@@ -3648,9 +3715,12 @@ class MethodsClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class MonitoringLocationsClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class MonitoringLocationsClient(BaseClient[TransformedResponse_co]):
     """
     Location information is basic information about the monitoring
     location including the name, identifier, agency responsible for data
@@ -3717,7 +3787,7 @@ class MonitoringLocationsClient(BaseClient):
         vertical_datum: Optional[str] = None,
         vertical_datum_name: Optional[str] = None,
         well_constructed_depth: Optional[float] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from monitoring-locations.
 
         Args:
@@ -3999,9 +4069,12 @@ class MonitoringLocationsClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class NationalAquiferCodesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class NationalAquiferCodesClient(BaseClient[TransformedResponse_co]):
     """
     National aquifers are the principal aquifers or aquifer systems in the
     United States, defined as regionally extensive aquifers or aquifer
@@ -4025,7 +4098,7 @@ class NationalAquiferCodesClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from national-aquifer-codes.
 
         Args:
@@ -4097,9 +4170,12 @@ class NationalAquiferCodesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class ParameterCodesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class ParameterCodesClient(BaseClient[TransformedResponse_co]):
     """
     Parameter codes are 5-digit codes and associated descriptions used to
     identify the constituent measured and the units of measure. Some
@@ -4138,7 +4214,7 @@ class ParameterCodesClient(BaseClient):
         time_basis: Optional[str] = None,
         unit_of_measure: Optional[str] = None,
         weight_basis: Optional[str] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from parameter-codes.
 
         Args:
@@ -4234,9 +4310,12 @@ class ParameterCodesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class ReliabilityCodesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class ReliabilityCodesClient(BaseClient[TransformedResponse_co]):
     """
     Code indicating the reliability of the data available for the site.
     """
@@ -4257,7 +4336,7 @@ class ReliabilityCodesClient(BaseClient):
         reliability_description: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from reliability-codes.
 
         Args:
@@ -4329,9 +4408,12 @@ class ReliabilityCodesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class SiteTypesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class SiteTypesClient(BaseClient[TransformedResponse_co]):
     """
     The hydrologic cycle setting or a man-made feature thought to affect
     the hydrologic conditions measured at a site. Primary and secondary
@@ -4358,7 +4440,7 @@ class SiteTypesClient(BaseClient):
         site_type_primary_flag: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from site-types.
 
         Args:
@@ -4434,9 +4516,12 @@ class SiteTypesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class StatesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class StatesClient(BaseClient[TransformedResponse_co]):
     """
     State name or territory. Includes U.S. states and foreign entities
     classified under FIPS as 'Principal Administrative Divisions'.
@@ -4461,7 +4546,7 @@ class StatesClient(BaseClient):
         state_fips_code: Optional[str] = None,
         state_name: Optional[str] = None,
         state_postal_code: Optional[str] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from states.
 
         Args:
@@ -4542,9 +4627,12 @@ class StatesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class StatisticCodesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class StatisticCodesClient(BaseClient[TransformedResponse_co]):
     """
     Statistic codes.
     """
@@ -4566,7 +4654,7 @@ class StatisticCodesClient(BaseClient):
         sortby: Optional[Sequence[str]] = None,
         statistic_description: Optional[str] = None,
         statistic_name: Optional[str] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from statistic-codes.
 
         Args:
@@ -4640,9 +4728,12 @@ class StatisticCodesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class TimeSeriesMetadataClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class TimeSeriesMetadataClient(BaseClient[TransformedResponse_co]):
     """
     Daily data and continuous measurements are grouped into time series,
     which represent a collection of observations of a single parameter,
@@ -4688,7 +4779,7 @@ class TimeSeriesMetadataClient(BaseClient):
         thresholds: Optional[str] = None,
         unit_of_measure: Optional[str] = None,
         web_description: Optional[str] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from time-series-metadata.
 
         Args:
@@ -4912,9 +5003,12 @@ class TimeSeriesMetadataClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class TimeZoneCodesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class TimeZoneCodesClient(BaseClient[TransformedResponse_co]):
     """
     The ISO 8601 standard defines time zone offsets as a numerical value
     added to a local time to convert it to Coordinated Universal Time
@@ -4945,7 +5039,7 @@ class TimeZoneCodesClient(BaseClient):
         time_zone_description: Optional[str] = None,
         time_zone_name: Optional[str] = None,
         time_zone_utc_offset: Optional[str] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from time-zone-codes.
 
         Args:
@@ -5029,9 +5123,12 @@ class TimeZoneCodesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class TopographicCodesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class TopographicCodesClient(BaseClient[TransformedResponse_co]):
     """
     The code that best describes the topographic setting in which the site
     is located. Topographic setting refers to the geomorphic features in
@@ -5056,7 +5153,7 @@ class TopographicCodesClient(BaseClient):
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
         topography_name: Optional[str] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Retrieve items from topographic-codes.
 
         Args:
@@ -5132,5 +5229,8 @@ class TopographicCodesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
+
+        # Transform
+        return self._handle_response(data)
 
