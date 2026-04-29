@@ -6,8 +6,7 @@ from typing import Any, Protocol, TypeVar, runtime_checkable
 import pandas as pd
 import geopandas as gpd
 
-TransformedResponse_co = TypeVar("TransformedResponse_co",
-    default=list[dict[str, Any]], covariant=True)
+TransformedResponse_co = TypeVar("TransformedResponse_co", covariant=True)
 """Generic transformed response type for transformer methods."""
 
 class NoDataError(Exception):
