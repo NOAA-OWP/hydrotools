@@ -76,3 +76,23 @@ def to_geodataframe(data: list[dict[str, Any]]) -> gpd.GeoDataFrame:
     return gpd.GeoDataFrame(pd.concat([
         gpd.GeoDataFrame.from_features(d) for d in data if d is not None
         ], ignore_index=True))
+
+def to_dataframe(data: list[dict[str, Any]]) -> pd.DataFrame:
+    """Transforms a list of GeoJSON-derived dictionaries to a single DataFrame.
+    
+    Args:
+        data: A list of deserialized GeoJSON responses from an OGC-compliant API.
+    
+    Returns:
+        Transformed and concatenated responses in a single DataFrame.
+    
+    Raises:
+        NoDataError if data is empty or all items are None.
+    """
+    # Check for data
+    raise_on_no_data(data)
+
+    # Transform data
+    return pd.concat([
+        pd.json_normalize(d, record_path=['features']) for d in data if d is not None
+        ], ignore_index=True)
