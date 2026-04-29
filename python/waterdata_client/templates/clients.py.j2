@@ -34,7 +34,7 @@ class {{ item.class_name }}(BaseClient[TransformedResponse_co]):
         {% for p in item.parameters %}
         {{ p.python_name }}: {{ p.type_hint }} = {{ p.default }},
         {% endfor %}
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from {{ item.value }}.
 
         Args:

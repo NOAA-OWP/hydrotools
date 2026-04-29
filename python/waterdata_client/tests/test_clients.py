@@ -39,7 +39,7 @@ from hydrotools.waterdata_client import (
 ])
 def test_generated_client_get_mapping(client_class, test_args, expected_query_subset):
     """Verify that generated get methods correctly pack arguments into API query keys."""
-    client = client_class()
+    client = client_class(transformer=None)
 
     # We patch the internal pipeline to inspect the queries before network I/O
     with patch.object(client_class, "_get_json_responses") as mock_pipeline:
@@ -58,7 +58,7 @@ def test_generated_client_get_mapping(client_class, test_args, expected_query_su
 
 def test_generated_client_filters_none():
     """Verify that None arguments are excluded from the final query dictionary."""
-    client = DailyClient()
+    client = DailyClient(transformer=None)
 
     with patch.object(DailyClient, "_get_json_responses") as mock_pipeline:
         # Call with some Nones and some values
@@ -86,7 +86,7 @@ def test_generated_client_uses_correct_endpoint():
 
 def test_get_all_is_called_with_client_config():
     """Verify that the high-level get method passes client settings to the network layer."""
-    client = ContinuousClient(concurrency_limit=99, max_retries=5)
+    client = ContinuousClient(concurrency_limit=99, max_retries=5, transformer=None)
 
     # Patch the lower-level get_all called by _get_json_responses
     with patch("hydrotools.waterdata_client.base_client.get_all") as mock_get_all:

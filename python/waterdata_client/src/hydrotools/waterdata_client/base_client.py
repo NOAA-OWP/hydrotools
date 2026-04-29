@@ -19,7 +19,7 @@ from .url_builder import (
     build_request_batch_from_feature_ids,
     QueryType
 )
-from .transformers import TransformedResponse_co, ResponseTransformer
+from .transformers import TransformedResponse_co, ResponseTransformer, check_features
 
 class BaseClient(Generic[TransformedResponse_co]):
     """Base class for USGS OGC API clients. Specific child classes may overwrite
@@ -33,7 +33,8 @@ class BaseClient(Generic[TransformedResponse_co]):
         timeout_seconds: Total request timeout in seconds.
         ssl_context: Custom SSL context for requests.
         transformer: Callable object that takes a list[dict[str, Any]] and returns
-            a transformed result. Defaults to GeoDataFrame.
+            a transformed result. Defaults to no transformation with validation
+            that some data were returned. Set to None to omit validation.
     """
     _server: URL = SETTINGS.usgs_base_url
     _api: OGCAPI = SETTINGS.default_api
@@ -48,7 +49,7 @@ class BaseClient(Generic[TransformedResponse_co]):
         max_retries: int = SETTINGS.default_retries,
         timeout_seconds: int = SETTINGS.timeout_seconds,
         ssl_context: Optional[ssl.SSLContext] = None,
-        transformer: Optional[ResponseTransformer] = None
+        transformer: Optional[ResponseTransformer[TransformedResponse_co]] = check_features
     ) -> None:
         self.concurrency_limit = concurrency_limit
         self.max_retries = max_retries
@@ -183,7 +184,7 @@ class BaseClient(Generic[TransformedResponse_co]):
     def _handle_response(
             self,
             data: list[dict[str, Any]]
-    ) -> list[dict[str, Any]] | TransformedResponse_co:
+    ) -> TransformedResponse_co:
         """Handle JSON response and optionally transform.
     
         Args:
@@ -194,5 +195,5 @@ class BaseClient(Generic[TransformedResponse_co]):
             transformed responses.
         """
         if self.transformer is None:
-            return data
+            return data # type: ignore
         return self.transformer(data)

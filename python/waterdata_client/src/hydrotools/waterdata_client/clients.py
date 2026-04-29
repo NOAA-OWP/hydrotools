@@ -5,7 +5,7 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.0a0
 Generation script: build_clients.py
-Generated: 2026-04-29 12:26:54 Z
+Generated: 2026-04-29 14:54:35 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.47.0
 OpenAPI version: 3.0.2
@@ -75,7 +75,7 @@ class AgencyCodesClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from agency-codes.
 
         Args:
@@ -179,7 +179,7 @@ class AltitudeDatumsClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from altitude-datums.
 
         Args:
@@ -290,7 +290,7 @@ class AquiferCodesClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from aquifer-codes.
 
         Args:
@@ -398,7 +398,7 @@ class AquiferTypesClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from aquifer-types.
 
         Args:
@@ -521,7 +521,7 @@ class ChannelMeasurementsClient(BaseClient[TransformedResponse_co]):
         sortby: Optional[Sequence[str]] = None,
         time: Optional[str] = None,
         vertical_velocity_description: Optional[str] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from channel-measurements.
 
         Args:
@@ -735,7 +735,7 @@ class CitationsClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from citations.
 
         Args:
@@ -889,7 +889,7 @@ class CombinedMetadataClient(BaseClient[TransformedResponse_co]):
         vertical_datum_name: Optional[str] = None,
         web_description: Optional[str] = None,
         well_constructed_depth: Optional[float] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from combined-metadata.
 
         Args:
@@ -1334,7 +1334,7 @@ class ContinuousClient(BaseClient[TransformedResponse_co]):
         time_series_id: Optional[str] = None,
         unit_of_measure: Optional[str] = None,
         value: Optional[str] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from continuous.
 
         Args:
@@ -1537,7 +1537,7 @@ class CoordinateAccuracyCodesClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from coordinate-accuracy-codes.
 
         Args:
@@ -1636,7 +1636,7 @@ class CoordinateDatumCodesClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from coordinate-datum-codes.
 
         Args:
@@ -1734,7 +1734,7 @@ class CoordinateMethodCodesClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from coordinate-method-codes.
 
         Args:
@@ -1837,7 +1837,7 @@ class CountiesClient(BaseClient[TransformedResponse_co]):
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
         state_fips_code: Optional[str] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from counties.
 
         Args:
@@ -1944,7 +1944,7 @@ class CountriesClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from countries.
 
         Args:
@@ -2064,7 +2064,7 @@ class DailyClient(BaseClient[TransformedResponse_co]):
         time_series_id: Optional[str] = None,
         unit_of_measure: Optional[str] = None,
         value: Optional[str] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from daily.
 
         Args:
@@ -2298,7 +2298,7 @@ class FieldMeasurementsClient(BaseClient[TransformedResponse_co]):
         unit_of_measure: Optional[str] = None,
         value: Optional[str] = None,
         vertical_datum: Optional[str] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from field-measurements.
 
         Args:
@@ -2528,7 +2528,7 @@ class FieldMeasurementsMetadataClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from field-measurements-metadata.
 
         Args:
@@ -2722,7 +2722,7 @@ class HydrologicUnitCodesClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from hydrologic-unit-codes.
 
         Args:
@@ -2855,7 +2855,7 @@ class LatestContinuousClient(BaseClient[TransformedResponse_co]):
         time_series_id: Optional[str] = None,
         unit_of_measure: Optional[str] = None,
         value: Optional[str] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from latest-continuous.
 
         Args:
@@ -3085,7 +3085,7 @@ class LatestDailyClient(BaseClient[TransformedResponse_co]):
         time_series_id: Optional[str] = None,
         unit_of_measure: Optional[str] = None,
         value: Optional[str] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from latest-daily.
 
         Args:
@@ -3302,7 +3302,7 @@ class MediumCodesClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from medium-codes.
 
         Args:
@@ -3418,7 +3418,7 @@ class MethodCategoriesClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from method-categories.
 
         Args:
@@ -3523,7 +3523,7 @@ class MethodCitationsClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[int] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from method-citations.
 
         Args:
@@ -3636,7 +3636,7 @@ class MethodsClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from methods.
 
         Args:
@@ -3787,7 +3787,7 @@ class MonitoringLocationsClient(BaseClient[TransformedResponse_co]):
         vertical_datum: Optional[str] = None,
         vertical_datum_name: Optional[str] = None,
         well_constructed_depth: Optional[float] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from monitoring-locations.
 
         Args:
@@ -4098,7 +4098,7 @@ class NationalAquiferCodesClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from national-aquifer-codes.
 
         Args:
@@ -4214,7 +4214,7 @@ class ParameterCodesClient(BaseClient[TransformedResponse_co]):
         time_basis: Optional[str] = None,
         unit_of_measure: Optional[str] = None,
         weight_basis: Optional[str] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from parameter-codes.
 
         Args:
@@ -4336,7 +4336,7 @@ class ReliabilityCodesClient(BaseClient[TransformedResponse_co]):
         reliability_description: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from reliability-codes.
 
         Args:
@@ -4440,7 +4440,7 @@ class SiteTypesClient(BaseClient[TransformedResponse_co]):
         site_type_primary_flag: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from site-types.
 
         Args:
@@ -4546,7 +4546,7 @@ class StatesClient(BaseClient[TransformedResponse_co]):
         state_fips_code: Optional[str] = None,
         state_name: Optional[str] = None,
         state_postal_code: Optional[str] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from states.
 
         Args:
@@ -4654,7 +4654,7 @@ class StatisticCodesClient(BaseClient[TransformedResponse_co]):
         sortby: Optional[Sequence[str]] = None,
         statistic_description: Optional[str] = None,
         statistic_name: Optional[str] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from statistic-codes.
 
         Args:
@@ -4779,7 +4779,7 @@ class TimeSeriesMetadataClient(BaseClient[TransformedResponse_co]):
         thresholds: Optional[str] = None,
         unit_of_measure: Optional[str] = None,
         web_description: Optional[str] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from time-series-metadata.
 
         Args:
@@ -5039,7 +5039,7 @@ class TimeZoneCodesClient(BaseClient[TransformedResponse_co]):
         time_zone_description: Optional[str] = None,
         time_zone_name: Optional[str] = None,
         time_zone_utc_offset: Optional[str] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from time-zone-codes.
 
         Args:
@@ -5153,7 +5153,7 @@ class TopographicCodesClient(BaseClient[TransformedResponse_co]):
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
         topography_name: Optional[str] = None,
-        ) -> TransformedResponse_co | list[dict[str, Any]]:
+        ) -> TransformedResponse_co:
         """Retrieve items from topographic-codes.
 
         Args:
