@@ -73,7 +73,7 @@ def test_to_dataframe_success(mock_geojson_response):
 
 def test_to_geodataframe_success(mock_geojson_response):
     """Verify JSON to GeoDataFrame conversion."""
-    gdf = to_geodataframe(mock_geojson_response)
+    gdf = to_geodataframe(mock_geojson_response, column_mapper=None)
 
     assert isinstance(gdf, gpd.GeoDataFrame)
     assert len(gdf) == 2
