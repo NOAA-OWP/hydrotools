@@ -5,7 +5,7 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.0a0
 Generation script: build_constants.py
-Generated: 2026-04-29 18:08:03 Z
+Generated: 2026-04-29 18:15:52 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.47.0
 OpenAPI version: 3.0.2
@@ -109,7 +109,18 @@ HYDROTOOLS_DATAFRAME_COLUMN_MAPPING: dict[str, HydroToolsColumn] = {
     "properties.unit_of_measure": HydroToolsColumn.MEASUREMENT_UNIT,
     "properties.approval_status": HydroToolsColumn.APPROVAL_STATUS,
     "properties.qualifier": HydroToolsColumn.QUALIFIERS,
-    "properties.last_modified": HydroToolsColumn.LAST_MODIFIED
+    "properties.last_modified": HydroToolsColumn.LAST_MODIFIED,
+    "id": HydroToolsColumn.ID,
+    "time_series_id": HydroToolsColumn.TIME_SERIES_ID,
+    "monitoring_location_id": HydroToolsColumn.USGS_SITE_CODE,
+    "parameter_code": HydroToolsColumn.PARAMETER_CODE,
+    "statistic_id": HydroToolsColumn.STATISTIC_ID,
+    "time": HydroToolsColumn.VALUE_TIME,
+    "value": HydroToolsColumn.VALUE,
+    "unit_of_measure": HydroToolsColumn.MEASUREMENT_UNIT,
+    "approval_status": HydroToolsColumn.APPROVAL_STATUS,
+    "qualifier": HydroToolsColumn.QUALIFIERS,
+    "last_modified": HydroToolsColumn.LAST_MODIFIED
 }
 """Mapping from default pandas.json_normalize column names to HydroTools
 canonical column labels."""
