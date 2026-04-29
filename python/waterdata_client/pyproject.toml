@@ -27,7 +27,8 @@ dependencies = [
     "platformdirs",
     "jsonref",
     "diskcache",
-    "PyYAML"
+    "PyYAML",
+    "geopandas"
 ]
 dynamic = ["version"]
 
