@@ -83,10 +83,14 @@ def to_geodataframe(
     # Check for data
     raise_on_no_data(data)
 
+    # Flatten features
+    flat_features = []
+    for d in data:
+        if d and "features" in d:
+            flat_features.extend(d["features"])
+
     # Transform data
-    dataframe = gpd.GeoDataFrame(pd.concat([
-        gpd.GeoDataFrame.from_features(d) for d in data if d is not None
-        ], ignore_index=True))
+    dataframe = gpd.GeoDataFrame.from_features(flat_features)
 
     # Apply optional mapping
     if column_mapper is None:
@@ -113,10 +117,14 @@ def to_dataframe(
     # Check for data
     raise_on_no_data(data)
 
+    # Flatten features
+    flat_features = []
+    for d in data:
+        if d and "features" in d:
+            flat_features.extend(d["features"])
+
     # Transform data
-    dataframe = pd.concat([
-        pd.json_normalize(d, record_path=['features']) for d in data if d is not None
-        ], ignore_index=True)
+    dataframe = pd.json_normalize(flat_features)
 
     # Apply optional mapping
     if column_mapper is None:
