@@ -2,7 +2,6 @@
 USGS OGC APIs.
 """
 from typing import Any, Protocol, TypeVar, runtime_checkable, Optional
-from enum import StrEnum
 
 import pandas as pd
 from pandas._typing import Renamer
