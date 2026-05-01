@@ -27,7 +27,6 @@ The following example demonstrates how one might use `hydrotools.waterdata_clien
 ### Code
 
 ```python
-import geopandas as gpd
 from hydrotools.waterdata_client import LatestContinuousClient
 from hydrotools.waterdata_client.transformers import to_geodataframe
 
