@@ -184,7 +184,7 @@ class BaseClient(Generic[TransformedResponse_co]):
     def _handle_response(
             self,
             data: list[dict[str, Any]]
-    ) -> TransformedResponse_co:
+    ) -> TransformedResponse_co | list[dict[str, Any]]:
         """Handle JSON response and optionally transform.
     
         Args:
@@ -195,5 +195,5 @@ class BaseClient(Generic[TransformedResponse_co]):
             transformed responses.
         """
         if self.transformer is None:
-            return data # type: ignore
+            return data
         return self.transformer(data)
