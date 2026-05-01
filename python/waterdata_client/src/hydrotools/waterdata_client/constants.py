@@ -5,9 +5,9 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.0a0
 Generation script: build_constants.py
-Generated: 2026-04-29 18:15:52 Z
+Generated: 2026-05-01 15:29:03 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
-JSON Schema version: 0.47.0
+JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
 """
 from enum import StrEnum
@@ -54,6 +54,7 @@ class USGSCollection(StrEnum):
     MONITORING_LOCATIONS = "monitoring-locations"
     NATIONAL_AQUIFER_CODES = "national-aquifer-codes"
     PARAMETER_CODES = "parameter-codes"
+    PEAKS = "peaks"
     RELIABILITY_CODES = "reliability-codes"
     SITE_TYPES = "site-types"
     STATES = "states"
@@ -89,14 +90,6 @@ class HydroToolsColumn(StrEnum):
     APPROVAL_STATUS = "approval_status"
     LAST_MODIFIED = "last_modified"
     GEO_FEATURE_ID = "geo_feature_id"
-
-CATEGORICAL_COLUMNS: list[HydroToolsColumn] = [
-    HydroToolsColumn.VARIABLE_NAME,
-    HydroToolsColumn.USGS_SITE_CODE,
-    HydroToolsColumn.MEASUREMENT_UNIT,
-    HydroToolsColumn.QUALIFIERS
-]
-"""List of columns to transform to categorical types."""
 
 HYDROTOOLS_DATAFRAME_COLUMN_MAPPING: dict[str, HydroToolsColumn] = {
     "properties.id": HydroToolsColumn.GEO_FEATURE_ID,

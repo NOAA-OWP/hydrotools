@@ -5,9 +5,9 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.0a0
 Generation script: build_clients.py
-Generated: 2026-04-29 18:12:04 Z
+Generated: 2026-05-01 15:29:23 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
-JSON Schema version: 0.47.0
+JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
 """
 from typing import Sequence, Literal, Optional
@@ -43,6 +43,7 @@ __all__ = [
     "MonitoringLocationsClient",
     "NationalAquiferCodesClient",
     "ParameterCodesClient",
+    "PeaksClient",
     "ReliabilityCodesClient",
     "SiteTypesClient",
     "StatesClient",
@@ -928,7 +929,7 @@ class CombinedMetadataClient(BaseClient[TransformedResponse_co]):
             bbox_crs: Indicates the coordinate reference system for the given bbox
                 coordinates.
             begin: The datetime of the earliest observation in the time series. Together
-                with `end`, this field represents the period of record of a time
+                with `end_utc`, this field represents the period of record of a time
                 series. Note that some time series may have large gaps in their
                 collection record.
                 You can query this field using date-times or intervals, adhering to
@@ -943,11 +944,12 @@ class CombinedMetadataClient(BaseClient[TransformedResponse_co]):
                   - Duration objects: "P1M" for data from the past month or "PT36H"
                 for the last 36 hours
 
-                Only features that have a `begin` that intersects the value of
+                Only features that have a `begin_utc` that intersects the value of
                 datetime are selected.
-            computation_identifier: Indicates whether the data from this time series represent a specific
-                statistical computation. Split parameters are enabled for this field,
-                so you can supply multiple values separated by commas.
+            computation_identifier: Indicates the computation performed to calculate this time series.
+                Values of "Instantaneous" reflect point measurements. Split parameters
+                are enabled for this field, so you can supply multiple values
+                separated by commas.
             construction_date: Date the well was completed.
             contributing_drainage_area: The contributing drainage area of a lake, stream, wetland, or estuary
                 monitoring location, in square miles. This item should be present only
@@ -971,7 +973,8 @@ class CombinedMetadataClient(BaseClient[TransformedResponse_co]):
                 ties/items).
             crs: Indicates the coordinate reference system for the results.
             data_type: The computational period type of data collected at the monitoring
-                location.
+                location. Split parameters are enabled for this field, so you can
+                supply multiple values separated by commas.
             depth_source_code: A code indicating the source of water-level data.
             district_code: The Water Science Centers (WSCs) across the United States use the FIPS
                 state code as the district code. In some case, monitoring locations
@@ -986,10 +989,10 @@ class CombinedMetadataClient(BaseClient[TransformedResponse_co]):
             end: The datetime of the most recent observation in the time series. Data
                 returned by this endpoint updates at most once per day, and
                 potentially less frequently than that, and as such there may be more
-                recent observations within a time series than the time series `end`
-                value reflects. Together with `begin`, this field represents the
-                period of record of a time series. It is additionally used to
-                determine whether a time series is "active".
+                recent observations within a time series than the time series
+                `end_utc` value reflects. Together with `begin_utc`, this field
+                represents the period of record of a time series. It is additionally
+                used to determine whether a time series is "active".
                 You can query this field using date-times or intervals, adhering to
                 RFC 3339, or using ISO 8601 duration objects. Intervals may be bounded
                 or half-bounded (double-dots at start or end).
@@ -1002,8 +1005,8 @@ class CombinedMetadataClient(BaseClient[TransformedResponse_co]):
                   - Duration objects: "P1M" for data from the past month or "PT36H"
                 for the last 36 hours
 
-                Only features that have a `end` that intersects the value of datetime
-                are selected.
+                Only features that have a `end_utc` that intersects the value of
+                datetime are selected.
             f: The optional f parameter indicates the output format which the server
                 shall provide as part of the response document.  The default format is
                 GeoJSON.
@@ -1209,8 +1212,11 @@ class CombinedMetadataClient(BaseClient[TransformedResponse_co]):
                 [https://api.waterdata.usgs.gov/ogcapi/v0/collections/altitude-datums/
                 items](https://api.waterdata.usgs.gov/ogcapi/v0/collections/altitude-
                 datums/items).
-            web_description: A description of what this time series represents, as used by WDFN and
-                other USGS data dissemination products.
+            web_description: An optional description of the time series. WDFN and other USGS data
+                dissemination products use this field, in combination with
+                sublocation_identifier, to distinguish the differences between
+                multiple time series for the same parameter code, statistic code, and
+                monitoring location.
             well_constructed_depth: The depth of the finished well, in feet below land surface datum.
                 Note: Not all groundwater monitoring locations have information on
                 Well Depth. Such monitoring locations will not be retrieved using this
@@ -2319,7 +2325,7 @@ class FieldMeasurementsClient(BaseClient[TransformedResponse_co]):
                 vertical axis (height or depth).
             bbox_crs: Indicates the coordinate reference system for the given bbox
                 coordinates.
-            control_condition: 
+            control_condition: The state of the control feature at the time of observation.
             crs: Indicates the coordinate reference system for the results.
             datetime: Either a date-time or an interval. Date and time expressions adhere to
                 RFC 3339.
@@ -2345,8 +2351,10 @@ class FieldMeasurementsClient(BaseClient[TransformedResponse_co]):
                 shall provide as part of the response document.  The default format is
                 GeoJSON.
             field_measurements_series_id: A unique identifier representing a single collection series. This
-                corresponds to the `id` field in the  `field-measurements-metadata`
-                endpoint.
+                corresponds to the `id` field in the `field-measurements-metadata`
+                endpoint. Collection series are defined as the set of field
+                measurements at a given monitoring location for a single parameter
+                code using a single reading type.
             field_visit_id: A universally unique identifier (UUID) for the field visit. Multiple
                 measurements may be made during a single field visit.
             lang: The optional lang parameter instructs the server return a response in
@@ -2377,7 +2385,7 @@ class FieldMeasurementsClient(BaseClient[TransformedResponse_co]):
                 datetime are selected.
             limit: The optional limit parameter limits the number of items that are
                 presented in the response document (maximum=50000, default=10).
-            measurement_rated: 
+            measurement_rated: A qualitative estimate of the quality of a measurement.
             measuring_agency: The agency performing the measurement.
             monitoring_location_id: A unique identifier representing a single monitoring location. This
                 corresponds to the `id` field in the `monitoring-locations` endpoint.
@@ -2416,9 +2424,9 @@ class FieldMeasurementsClient(BaseClient[TransformedResponse_co]):
                 of a record. It is not stable over time. Every time the record is
                 refreshed in our database (which may happen as part of normal
                 operations and does not imply any change to the data itself) a new ID
-                will be generated. To uniquely identify a single observation over
-                time, compare the `time` and `time_series_id` fields; each time series
-                will only have a single observation at a given `time`.
+                will be generated. There may be multiple readings occurring at
+                identical times during a single field visit; to uniquely identify a
+                set of readings over time, use the `field_visit_id` field.
             skipgeometry: This option can be used to skip response geometries for each feature.
             sortby: Specifies a comma-separated list of property names by which the
                 response shall be sorted.  If the property name is preceded by a plus
@@ -2539,7 +2547,7 @@ class FieldMeasurementsMetadataClient(BaseClient[TransformedResponse_co]):
             bbox_crs: Indicates the coordinate reference system for the given bbox
                 coordinates.
             begin: The datetime of the earliest observation in the time series. Together
-                with `end`, this field represents the period of record of a time
+                with `end_utc`, this field represents the period of record of a time
                 series. Note that some time series may have large gaps in their
                 collection record.
                 You can query this field using date-times or intervals, adhering to
@@ -2554,16 +2562,16 @@ class FieldMeasurementsMetadataClient(BaseClient[TransformedResponse_co]):
                   - Duration objects: "P1M" for data from the past month or "PT36H"
                 for the last 36 hours
 
-                Only features that have a `begin` that intersects the value of
+                Only features that have a `begin_utc` that intersects the value of
                 datetime are selected.
             crs: Indicates the coordinate reference system for the results.
             end: The datetime of the most recent observation in the time series. Data
                 returned by this endpoint updates at most once per day, and
                 potentially less frequently than that, and as such there may be more
-                recent observations within a time series than the time series `end`
-                value reflects. Together with `begin`, this field represents the
-                period of record of a time series. It is additionally used to
-                determine whether a time series is "active".
+                recent observations within a time series than the time series
+                `end_utc` value reflects. Together with `begin_utc`, this field
+                represents the period of record of a time series. It is additionally
+                used to determine whether a time series is "active".
                 You can query this field using date-times or intervals, adhering to
                 RFC 3339, or using ISO 8601 duration objects. Intervals may be bounded
                 or half-bounded (double-dots at start or end).
@@ -2576,8 +2584,8 @@ class FieldMeasurementsMetadataClient(BaseClient[TransformedResponse_co]):
                   - Duration objects: "P1M" for data from the past month or "PT36H"
                 for the last 36 hours
 
-                Only features that have a `end` that intersects the value of datetime
-                are selected.
+                Only features that have a `end_utc` that intersects the value of
+                datetime are selected.
             f: The optional f parameter indicates the output format which the server
                 shall provide as part of the response document.  The default format is
                 GeoJSON.
@@ -2639,13 +2647,11 @@ class FieldMeasurementsMetadataClient(BaseClient[TransformedResponse_co]):
 
                 Example: time_series_id IN ('64ee32f5350a4ec4967435dcd2e364ea',
                 '3e55d9c2d8a54bec9ca5e292b07d5a96')
-            query_id: A universally unique identifier (UUID) representing a single version
-                of a record. It is not stable over time. Every time the record is
-                refreshed in our database (which may happen as part of normal
-                operations and does not imply any change to the data itself) a new ID
-                will be generated. To uniquely identify a single observation over
-                time, compare the `time` and `time_series_id` fields; each time series
-                will only have a single observation at a given `time`.
+            query_id: A unique identifier representing a single collection series. This
+                corresponds to the `field_measurement_series_id` field in the `field-
+                measurements` endpoint. Collection series are defined as the set of
+                field measurements at a given monitoring location for a single
+                parameter code using a single reading type.
                  Split parameters are enabled for this field, so you can supply
                 multiple values separated by commas.
             skipgeometry: This option can be used to skip response geometries for each feature.
@@ -3946,16 +3952,24 @@ class MonitoringLocationsClient(BaseClient[TransformedResponse_co]):
                 Example: time_series_id IN ('64ee32f5350a4ec4967435dcd2e364ea',
                 '3e55d9c2d8a54bec9ca5e292b07d5a96')
             query_id: A unique identifier representing a single monitoring location. This
-                corresponds to the `id` field in the `monitoring-locations` endpoint.
+                corresponds to the `monitoring_location_id` field in other endpoints.
                 Monitoring location IDs are created by combining the agency code of
                 the agency responsible for the monitoring location (e.g. USGS) with
                 the ID number of the monitoring location (e.g. 02238500), separated by
                 a hyphen (e.g. USGS-02238500).
                  Split parameters are enabled for this field, so you can supply
                 multiple values separated by commas.
-            revision_created: 
-            revision_modified: 
-            revision_note: 
+            revision_created: The date a revision statement was created.
+            revision_modified: The most recent date a revision statement was modified.
+            revision_note: Approved water data are considered published record, but on occasion
+                changes or deletions (revisions) must be made to data after they are
+                approved. Data revisions are rare because of USGS quality assurance
+                practices, including documentation of all data before they are
+                officially approved. This field contains text explanations for data
+                revisions at this monitoring location. Changes to data also are
+                indicated with revision qualifier codes alongside the data. Text
+                explanations before 2017 are not necessarily available online, but can
+                be requested.
             site_type: A description of the hydrologic setting of the monitoring location. A
                 list of codes is available at
                 [https://api.waterdata.usgs.gov/ogcapi/v0/collections/site-types/items
@@ -4304,6 +4318,210 @@ class ParameterCodesClient(BaseClient[TransformedResponse_co]):
             "time_basis": time_basis,
             "unit_of_measure": unit_of_measure,
             "weight_basis": weight_basis,
+        }
+
+        # Ignore None
+        valid_query = {k: v for k, v in query.items() if v is not None}
+
+        # Get responses
+        data = self._get_json_responses(queries=[valid_query])
+
+        # Transform
+        return self._handle_response(data)
+
+class PeaksClient(BaseClient[TransformedResponse_co]):
+    """
+    Annual peak flow values are the maximum instantaneous streamflow
+    values recorded at a particular site for the entire water year from
+    October 1 to September 30. Note that the annual peak flow value may
+    not occur at the same time the maximum water level occurs due to
+    conditions such as backwater, tidal fluctuations, etc.
+    """
+    _endpoint = USGSCollection.PEAKS
+
+    def get(
+        self,
+        bbox: Optional[Sequence[float]] = None,
+        bbox_crs: Optional[URL] = None,
+        crs: Optional[URL] = None,
+        day: Optional[int] = None,
+        f: Optional[Literal["json", "html", "jsonld", "csv"]] = "json",
+        lang: Optional[Literal["en-US"]] = "en-US",
+        last_modified: Optional[str] = None,
+        limit: Optional[int] = 10,
+        monitoring_location_id: Optional[str] = None,
+        month: Optional[int] = None,
+        offset: Optional[int] = 0,
+        parameter_code: Optional[str] = None,
+        peak_since: Optional[int] = None,
+        properties: Optional[Sequence[Literal["time_series_id", "monitoring_location_id", "parameter_code", "id", "unit_of_measure", "value", "last_modified", "time", "water_year", "year", "month", "day", "time_of_day", "peak_since"]]] = None,
+        query_filter: Optional[str] = None,
+        query_id: Optional[str] = None,
+        skipgeometry: Optional[bool] = False,
+        sortby: Optional[Sequence[str]] = None,
+        time: Optional[str] = None,
+        time_of_day: Optional[str] = None,
+        time_series_id: Optional[str] = None,
+        unit_of_measure: Optional[str] = None,
+        value: Optional[str] = None,
+        water_year: Optional[int] = None,
+        year: Optional[int] = None,
+        ) -> TransformedResponse_co:
+        """Retrieve items from peaks.
+
+        Args:
+            bbox: Only features that have a geometry that intersects the bounding box
+                are selected.The bounding box is provided as four or six numbers,
+                depending on whether the coordinate reference system includes a
+                vertical axis (height or depth).
+            bbox_crs: Indicates the coordinate reference system for the given bbox
+                coordinates.
+            crs: Indicates the coordinate reference system for the results.
+            day: The day of the month a peak occurred. If null, the day a peak occurred
+                is unknown.
+                 Split parameters are enabled for this field, so you can supply
+                multiple values separated by commas.
+            f: The optional f parameter indicates the output format which the server
+                shall provide as part of the response document.  The default format is
+                GeoJSON.
+            lang: The optional lang parameter instructs the server return a response in
+                a certain language, if supported.  If the language is not among the
+                available values, the Accept-Language header language will be used if
+                it is supported. If the header is missing, the default server language
+                is used. Note that providers may only support a single language (or
+                often no language at all), that can be different from the server
+                language.  Language strings can be written in a complex (e.g. "fr-
+                CA,fr;q=0.9,en-US;q=0.8,en;q=0.7"), simple (e.g. "de") or locale-like
+                (e.g. "de-CH" or "fr_BE") fashion.
+            last_modified: The last time a record was refreshed in our database. This may happen
+                due to regular operational processes and does not necessarily indicate
+                anything about the measurement has changed.
+                You can query this field using date-times or intervals, adhering to
+                RFC 3339, or using ISO 8601 duration objects. Intervals may be bounded
+                or half-bounded (double-dots at start or end).
+                Examples:
+
+                  - A date-time: "2018-02-12T23:20:50Z"
+                  - A bounded interval: "2018-02-12T00:00:00Z/2018-03-18T12:31:12Z"
+                  - Half-bounded intervals: "2018-02-12T00:00:00Z/.." or
+                "../2018-03-18T12:31:12Z"
+                  - Duration objects: "P1M" for data from the past month or "PT36H"
+                for the last 36 hours
+
+                Only features that have a `last_modified` that intersects the value of
+                datetime are selected.
+            limit: The optional limit parameter limits the number of items that are
+                presented in the response document (maximum=50000, default=10).
+            monitoring_location_id: A unique identifier representing a single monitoring location. This
+                corresponds to the `id` field in the `monitoring-locations` endpoint.
+                Monitoring location IDs are created by combining the agency code of
+                the agency responsible for the monitoring location (e.g. USGS) with
+                the ID number of the monitoring location (e.g. 02238500), separated by
+                a hyphen (e.g. USGS-02238500).
+                 Split parameters are enabled for this field, so you can supply
+                multiple values separated by commas.
+            month: The calendar month a peak occurred. If null, the month a peak occurred
+                is unknown.
+                 Split parameters are enabled for this field, so you can supply
+                multiple values separated by commas.
+            offset: The optional offset parameter indicates the index within the result
+                set from which the server shall begin presenting results in the
+                response document.  The first element has an index of 0 (default).
+            parameter_code: Parameter codes are 5-digit codes used to identify the constituent
+                measured and the units of measure. A complete list of parameter codes
+                and associated groupings can be found at
+                [https://api.waterdata.usgs.gov/ogcapi/v0/collections/parameter-codes/
+                items](https://api.waterdata.usgs.gov/ogcapi/v0/collections/parameter-
+                codes/items).
+                 Split parameters are enabled for this field, so you can supply
+                multiple values separated by commas.
+            peak_since: If not null, this record represents the peak value for the parameter
+                code since the year contained in "peak_since".
+                 Split parameters are enabled for this field, so you can supply
+                multiple values separated by commas.
+            properties: The properties that should be included. The parameter value is a
+                comma-separated list of property names.
+            query_filter: CQL Text filter expression.  CQL JSON cannot be used here, only in the
+                body.
+                See also: https://docs.pygeoapi.io/en/latest/cql.html
+
+                Example: time_series_id IN ('64ee32f5350a4ec4967435dcd2e364ea',
+                '3e55d9c2d8a54bec9ca5e292b07d5a96')
+            query_id: Split parameters are enabled for this field, so you can supply
+                multiple values separated by commas.
+            skipgeometry: This option can be used to skip response geometries for each feature.
+            sortby: Specifies a comma-separated list of property names by which the
+                response shall be sorted.  If the property name is preceded by a plus
+                (+) sign it indicates an ascending sort for that property.  If the
+                property name is preceded by a minus (-) sign it indicates a
+                descending sort for that property.  If the property is not preceded by
+                a plus or minus, then the default sort order implied is ascending (+).
+
+                Only a single page of data can be returned when specifying sortby. If
+                you need more than a single page of data, don't specify a sortby value
+                and sort the full data set after it's been downloaded.
+            time: The date an observation represents. You can query this field using
+                date-times or intervals, adhering to RFC 3339, or using ISO 8601
+                duration objects. Intervals may be bounded or half-bounded (double-
+                dots at start or end).
+                Examples:
+
+                  - A date-time: "2018-02-12T23:20:50Z"
+                  - A bounded interval: "2018-02-12T00:00:00Z/2018-03-18T12:31:12Z"
+                  - Half-bounded intervals: "2018-02-12T00:00:00Z/.." or
+                "../2018-03-18T12:31:12Z"
+                  - Duration objects: "P1M" for data from the past month or "PT36H"
+                for the last 36 hours
+
+                Only features that have a `time` that intersects the value of datetime
+                are selected. If a feature has multiple temporal properties, it is the
+                decision of the server whether only a single temporal property is used
+                to determine the extent or all relevant temporal properties.
+            time_of_day: The time of day a peak occurred. If null, the time of day a peak
+                occurred is unknown.
+            time_series_id: A unique identifier representing a single time series. This
+                corresponds to the `id` field in the `time-series-metadata` endpoint.
+                 Split parameters are enabled for this field, so you can supply
+                multiple values separated by commas.
+            unit_of_measure: A human-readable description of the units of measurement associated
+                with an observation.
+            value: The value of the observation. Values are transmitted as strings in the
+                JSON response format in order to preserve precision.
+            water_year: The water year (running from October 1st to September 30th) a peak
+                occurred.
+                 Split parameters are enabled for this field, so you can supply
+                multiple values separated by commas.
+            year: The calendar year a peak occurred.
+                 Split parameters are enabled for this field, so you can supply
+                multiple values separated by commas.
+        """
+        # Translate Python parameters to API parameters
+        query = {
+            "bbox": bbox,
+            "bbox-crs": bbox_crs,
+            "crs": crs,
+            "day": day,
+            "f": f,
+            "lang": lang,
+            "last_modified": last_modified,
+            "limit": limit,
+            "monitoring_location_id": monitoring_location_id,
+            "month": month,
+            "offset": offset,
+            "parameter_code": parameter_code,
+            "peak_since": peak_since,
+            "properties": properties,
+            "filter": query_filter,
+            "id": query_id,
+            "skipGeometry": skipgeometry,
+            "sortby": sortby,
+            "time": time,
+            "time_of_day": time_of_day,
+            "time_series_id": time_series_id,
+            "unit_of_measure": unit_of_measure,
+            "value": value,
+            "water_year": water_year,
+            "year": year,
         }
 
         # Ignore None
@@ -4793,7 +5011,7 @@ class TimeSeriesMetadataClient(BaseClient[TransformedResponse_co]):
                 local time of the monitoring location. It is retained for backwards
                 compatibility, but will be removed in V1 of these APIs.
             begin_utc: The datetime of the earliest observation in the time series. Together
-                with `end`, this field represents the period of record of a time
+                with `end_utc`, this field represents the period of record of a time
                 series. Note that some time series may have large gaps in their
                 collection record.
                 You can query this field using date-times or intervals, adhering to
@@ -4808,11 +5026,12 @@ class TimeSeriesMetadataClient(BaseClient[TransformedResponse_co]):
                   - Duration objects: "P1M" for data from the past month or "PT36H"
                 for the last 36 hours
 
-                Only features that have a `begin` that intersects the value of
+                Only features that have a `begin_utc` that intersects the value of
                 datetime are selected.
-            computation_identifier: Indicates whether the data from this time series represent a specific
-                statistical computation. Split parameters are enabled for this field,
-                so you can supply multiple values separated by commas.
+            computation_identifier: Indicates the computation performed to calculate this time series.
+                Values of "Instantaneous" reflect point measurements. Split parameters
+                are enabled for this field, so you can supply multiple values
+                separated by commas.
             computation_period_identifier: Indicates the period of data used for any statistical computations.
                 Split parameters are enabled for this field, so you can supply
                 multiple values separated by commas.
@@ -4823,10 +5042,10 @@ class TimeSeriesMetadataClient(BaseClient[TransformedResponse_co]):
             end_utc: The datetime of the most recent observation in the time series. Data
                 returned by this endpoint updates at most once per day, and
                 potentially less frequently than that, and as such there may be more
-                recent observations within a time series than the time series `end`
-                value reflects. Together with `begin`, this field represents the
-                period of record of a time series. It is additionally used to
-                determine whether a time series is "active".
+                recent observations within a time series than the time series
+                `end_utc` value reflects. Together with `begin_utc`, this field
+                represents the period of record of a time series. It is additionally
+                used to determine whether a time series is "active".
                 You can query this field using date-times or intervals, adhering to
                 RFC 3339, or using ISO 8601 duration objects. Intervals may be bounded
                 or half-bounded (double-dots at start or end).
@@ -4839,8 +5058,8 @@ class TimeSeriesMetadataClient(BaseClient[TransformedResponse_co]):
                   - Duration objects: "P1M" for data from the past month or "PT36H"
                 for the last 36 hours
 
-                Only features that have a `end` that intersects the value of datetime
-                are selected.
+                Only features that have a `end_utc` that intersects the value of
+                datetime are selected.
             f: The optional f parameter indicates the output format which the server
                 shall provide as part of the response document.  The default format is
                 GeoJSON.
@@ -4927,9 +5146,9 @@ class TimeSeriesMetadataClient(BaseClient[TransformedResponse_co]):
                 Example: time_series_id IN ('64ee32f5350a4ec4967435dcd2e364ea',
                 '3e55d9c2d8a54bec9ca5e292b07d5a96')
             query_id: A unique identifier representing a single time series. This
-                corresponds to the `id` field in the `time-series-metadata` endpoint.
-                 Split parameters are enabled for this field, so you can supply
-                multiple values separated by commas.
+                corresponds to the "time_series_id" field in other endpoints. Split
+                parameters are enabled for this field, so you can supply multiple
+                values separated by commas.
             skipgeometry: This option can be used to skip response geometries for each feature.
             sortby: Specifies a comma-separated list of property names by which the
                 response shall be sorted.  If the property name is preceded by a plus
@@ -4960,8 +5179,11 @@ class TimeSeriesMetadataClient(BaseClient[TransformedResponse_co]):
                 sensor error, and therefore shouldn't be included in the time series.
             unit_of_measure: A human-readable description of the units of measurement associated
                 with an observation.
-            web_description: A description of what this time series represents, as used by WDFN and
-                other USGS data dissemination products.
+            web_description: An optional description of the time series. WDFN and other USGS data
+                dissemination products use this field, in combination with
+                sublocation_identifier, to distinguish the differences between
+                multiple time series for the same parameter code, statistic code, and
+                monitoring location.
         """
         # Translate Python parameters to API parameters
         query = {

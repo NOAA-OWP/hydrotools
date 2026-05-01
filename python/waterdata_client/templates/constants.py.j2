@@ -60,14 +60,6 @@ class HydroToolsColumn(StrEnum):
     LAST_MODIFIED = "last_modified"
     GEO_FEATURE_ID = "geo_feature_id"
 
-CATEGORICAL_COLUMNS: list[HydroToolsColumn] = [
-    HydroToolsColumn.VARIABLE_NAME,
-    HydroToolsColumn.USGS_SITE_CODE,
-    HydroToolsColumn.MEASUREMENT_UNIT,
-    HydroToolsColumn.QUALIFIERS
-]
-"""List of columns to transform to categorical types."""
-
 HYDROTOOLS_DATAFRAME_COLUMN_MAPPING: dict[str, HydroToolsColumn] = {
     "properties.id": HydroToolsColumn.GEO_FEATURE_ID,
     "properties.time_series_id": HydroToolsColumn.TIME_SERIES_ID,
