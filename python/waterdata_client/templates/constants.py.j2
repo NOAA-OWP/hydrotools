@@ -31,3 +31,59 @@ class USGSCollection(StrEnum):
     {% for item in collections %}
     {{ item.enum_member }} = "{{ item.value }}"
     {% endfor %}
+
+class HydroToolsColumn(StrEnum):
+    """Canonical HydroTools column labels."""
+    VALUE = "value"
+    VALUE_TIME = "value_time"
+    VARIABLE_NAME = "variable_name"
+    MEASUREMENT_UNIT = "measurement_unit"
+    QUALIFIERS = "qualifiers"
+    SERIES = "series"
+    CONFIGURATION = "configuration"
+    REFERENCE_TIME = "reference_time"
+    LONGITUDE = "longitude"
+    LATITUDE = "latitude"
+    CRS = "crs"
+    GEOMETRY = "geometry"
+    USGS_SITE_CODE = "usgs_site_code"
+    NWM_FEATURE_ID = "nwm_feature_id"
+    NWS_LID = "nws_lid"
+    USACE_GAUGE_ID = "usace_gauge_id"
+    START = "start"
+    END = "end"
+    ID = "id"
+    TIME_SERIES_ID = "time_series_id"
+    PARAMETER_CODE = "parameter_code"
+    STATISTIC_ID = "statistic_id"
+    APPROVAL_STATUS = "approval_status"
+    LAST_MODIFIED = "last_modified"
+    GEO_FEATURE_ID = "geo_feature_id"
+
+HYDROTOOLS_DATAFRAME_COLUMN_MAPPING: dict[str, HydroToolsColumn] = {
+    "properties.id": HydroToolsColumn.GEO_FEATURE_ID,
+    "properties.time_series_id": HydroToolsColumn.TIME_SERIES_ID,
+    "properties.monitoring_location_id": HydroToolsColumn.USGS_SITE_CODE,
+    "properties.parameter_code": HydroToolsColumn.PARAMETER_CODE,
+    "properties.statistic_id": HydroToolsColumn.STATISTIC_ID,
+    "properties.time": HydroToolsColumn.VALUE_TIME,
+    "properties.value": HydroToolsColumn.VALUE,
+    "properties.unit_of_measure": HydroToolsColumn.MEASUREMENT_UNIT,
+    "properties.approval_status": HydroToolsColumn.APPROVAL_STATUS,
+    "properties.qualifier": HydroToolsColumn.QUALIFIERS,
+    "properties.last_modified": HydroToolsColumn.LAST_MODIFIED,
+    "id": HydroToolsColumn.ID,
+    "time_series_id": HydroToolsColumn.TIME_SERIES_ID,
+    "monitoring_location_id": HydroToolsColumn.USGS_SITE_CODE,
+    "parameter_code": HydroToolsColumn.PARAMETER_CODE,
+    "statistic_id": HydroToolsColumn.STATISTIC_ID,
+    "time": HydroToolsColumn.VALUE_TIME,
+    "value": HydroToolsColumn.VALUE,
+    "unit_of_measure": HydroToolsColumn.MEASUREMENT_UNIT,
+    "approval_status": HydroToolsColumn.APPROVAL_STATUS,
+    "qualifier": HydroToolsColumn.QUALIFIERS,
+    "last_modified": HydroToolsColumn.LAST_MODIFIED
+}
+"""Mapping from default pandas.json_normalize column names to HydroTools
+canonical column labels."""
+

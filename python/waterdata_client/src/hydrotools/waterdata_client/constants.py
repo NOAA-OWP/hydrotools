@@ -3,11 +3,11 @@
 and constants used package-wide. The `USGSCollection` StrEnum is generated
 by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints.
 
-Package version: 0.1.0
+Package version: 0.8.0a0
 Generation script: build_constants.py
-Generated: 2026-04-23 18:14:02 Z
+Generated: 2026-05-01 15:29:03 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
-JSON Schema version: 0.47.0
+JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
 """
 from enum import StrEnum
@@ -54,6 +54,7 @@ class USGSCollection(StrEnum):
     MONITORING_LOCATIONS = "monitoring-locations"
     NATIONAL_AQUIFER_CODES = "national-aquifer-codes"
     PARAMETER_CODES = "parameter-codes"
+    PEAKS = "peaks"
     RELIABILITY_CODES = "reliability-codes"
     SITE_TYPES = "site-types"
     STATES = "states"
@@ -61,3 +62,58 @@ class USGSCollection(StrEnum):
     TIME_SERIES_METADATA = "time-series-metadata"
     TIME_ZONE_CODES = "time-zone-codes"
     TOPOGRAPHIC_CODES = "topographic-codes"
+
+class HydroToolsColumn(StrEnum):
+    """Canonical HydroTools column labels."""
+    VALUE = "value"
+    VALUE_TIME = "value_time"
+    VARIABLE_NAME = "variable_name"
+    MEASUREMENT_UNIT = "measurement_unit"
+    QUALIFIERS = "qualifiers"
+    SERIES = "series"
+    CONFIGURATION = "configuration"
+    REFERENCE_TIME = "reference_time"
+    LONGITUDE = "longitude"
+    LATITUDE = "latitude"
+    CRS = "crs"
+    GEOMETRY = "geometry"
+    USGS_SITE_CODE = "usgs_site_code"
+    NWM_FEATURE_ID = "nwm_feature_id"
+    NWS_LID = "nws_lid"
+    USACE_GAUGE_ID = "usace_gauge_id"
+    START = "start"
+    END = "end"
+    ID = "id"
+    TIME_SERIES_ID = "time_series_id"
+    PARAMETER_CODE = "parameter_code"
+    STATISTIC_ID = "statistic_id"
+    APPROVAL_STATUS = "approval_status"
+    LAST_MODIFIED = "last_modified"
+    GEO_FEATURE_ID = "geo_feature_id"
+
+HYDROTOOLS_DATAFRAME_COLUMN_MAPPING: dict[str, HydroToolsColumn] = {
+    "properties.id": HydroToolsColumn.GEO_FEATURE_ID,
+    "properties.time_series_id": HydroToolsColumn.TIME_SERIES_ID,
+    "properties.monitoring_location_id": HydroToolsColumn.USGS_SITE_CODE,
+    "properties.parameter_code": HydroToolsColumn.PARAMETER_CODE,
+    "properties.statistic_id": HydroToolsColumn.STATISTIC_ID,
+    "properties.time": HydroToolsColumn.VALUE_TIME,
+    "properties.value": HydroToolsColumn.VALUE,
+    "properties.unit_of_measure": HydroToolsColumn.MEASUREMENT_UNIT,
+    "properties.approval_status": HydroToolsColumn.APPROVAL_STATUS,
+    "properties.qualifier": HydroToolsColumn.QUALIFIERS,
+    "properties.last_modified": HydroToolsColumn.LAST_MODIFIED,
+    "id": HydroToolsColumn.ID,
+    "time_series_id": HydroToolsColumn.TIME_SERIES_ID,
+    "monitoring_location_id": HydroToolsColumn.USGS_SITE_CODE,
+    "parameter_code": HydroToolsColumn.PARAMETER_CODE,
+    "statistic_id": HydroToolsColumn.STATISTIC_ID,
+    "time": HydroToolsColumn.VALUE_TIME,
+    "value": HydroToolsColumn.VALUE,
+    "unit_of_measure": HydroToolsColumn.MEASUREMENT_UNIT,
+    "approval_status": HydroToolsColumn.APPROVAL_STATUS,
+    "qualifier": HydroToolsColumn.QUALIFIERS,
+    "last_modified": HydroToolsColumn.LAST_MODIFIED
+}
+"""Mapping from default pandas.json_normalize column names to HydroTools
+canonical column labels."""

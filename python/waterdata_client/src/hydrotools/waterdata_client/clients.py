@@ -3,17 +3,18 @@
 client classes for USGS OGC API items endpoints. These classes are generated
 by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints.
 
-Package version: 0.8.0
+Package version: 0.8.0a0
 Generation script: build_clients.py
-Generated: 2026-04-24 15:52:44 Z
+Generated: 2026-05-01 17:52:23 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
-JSON Schema version: 0.47.0
+JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
 """
-from typing import Any, Sequence, Literal, Optional
+from typing import Sequence, Literal, Optional
 from yarl import URL
 from .base_client import BaseClient
 from .constants import USGSCollection
+from .transformers import TransformedResponseT_co
 
 __all__ = [
     "AgencyCodesClient",
@@ -42,6 +43,7 @@ __all__ = [
     "MonitoringLocationsClient",
     "NationalAquiferCodesClient",
     "ParameterCodesClient",
+    "PeaksClient",
     "ReliabilityCodesClient",
     "SiteTypesClient",
     "StatesClient",
@@ -51,7 +53,7 @@ __all__ = [
     "TopographicCodesClient",
 ]
 
-class AgencyCodesClient(BaseClient):
+class AgencyCodesClient(BaseClient[TransformedResponseT_co]):
     """
     Code identifying the agency or organization used for site information,
     data sources, and permitting agencies. Agency codes are fixed values
@@ -74,7 +76,7 @@ class AgencyCodesClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from agency-codes.
 
         Args:
@@ -146,9 +148,12 @@ class AgencyCodesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class AltitudeDatumsClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class AltitudeDatumsClient(BaseClient[TransformedResponseT_co]):
     """
     The recommended vertical datum is NAVD88 (North American Vertical
     Datum of 1988) where applicable as stated in Office of Information
@@ -175,7 +180,7 @@ class AltitudeDatumsClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from altitude-datums.
 
         Args:
@@ -247,9 +252,12 @@ class AltitudeDatumsClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class AquiferCodesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class AquiferCodesClient(BaseClient[TransformedResponseT_co]):
     """
     Local aquifers in USGS data are identified by an aquifer name and
     geohydrologic unit code (a three-digit number related to the age of
@@ -283,7 +291,7 @@ class AquiferCodesClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from aquifer-codes.
 
         Args:
@@ -358,9 +366,12 @@ class AquiferCodesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class AquiferTypesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class AquiferTypesClient(BaseClient[TransformedResponseT_co]):
     """
     Groundwater occurs in aquifers under two different conditions. Where
     water only partly fills an aquifer, the upper surface is free to rise
@@ -388,7 +399,7 @@ class AquiferTypesClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from aquifer-types.
 
         Args:
@@ -460,9 +471,12 @@ class AquiferTypesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class ChannelMeasurementsClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class ChannelMeasurementsClient(BaseClient[TransformedResponseT_co]):
     """
     Channel measurements taken as part of streamflow field measurements.
     """
@@ -508,7 +522,7 @@ class ChannelMeasurementsClient(BaseClient):
         sortby: Optional[Sequence[str]] = None,
         time: Optional[str] = None,
         vertical_velocity_description: Optional[str] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from channel-measurements.
 
         Args:
@@ -696,9 +710,12 @@ class ChannelMeasurementsClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class CitationsClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class CitationsClient(BaseClient[TransformedResponseT_co]):
     """
     Citations associated with water measurement methods.
     """
@@ -719,7 +736,7 @@ class CitationsClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from citations.
 
         Args:
@@ -792,9 +809,12 @@ class CitationsClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class CombinedMetadataClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class CombinedMetadataClient(BaseClient[TransformedResponseT_co]):
     """
     This endpoint combines metadata from timeseries and field measurements
     collections by site.
@@ -870,7 +890,7 @@ class CombinedMetadataClient(BaseClient):
         vertical_datum_name: Optional[str] = None,
         web_description: Optional[str] = None,
         well_constructed_depth: Optional[float] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from combined-metadata.
 
         Args:
@@ -909,7 +929,7 @@ class CombinedMetadataClient(BaseClient):
             bbox_crs: Indicates the coordinate reference system for the given bbox
                 coordinates.
             begin: The datetime of the earliest observation in the time series. Together
-                with `end`, this field represents the period of record of a time
+                with `end_utc`, this field represents the period of record of a time
                 series. Note that some time series may have large gaps in their
                 collection record.
                 You can query this field using date-times or intervals, adhering to
@@ -924,11 +944,12 @@ class CombinedMetadataClient(BaseClient):
                   - Duration objects: "P1M" for data from the past month or "PT36H"
                 for the last 36 hours
 
-                Only features that have a `begin` that intersects the value of
+                Only features that have a `begin_utc` that intersects the value of
                 datetime are selected.
-            computation_identifier: Indicates whether the data from this time series represent a specific
-                statistical computation. Split parameters are enabled for this field,
-                so you can supply multiple values separated by commas.
+            computation_identifier: Indicates the computation performed to calculate this time series.
+                Values of "Instantaneous" reflect point measurements. Split parameters
+                are enabled for this field, so you can supply multiple values
+                separated by commas.
             construction_date: Date the well was completed.
             contributing_drainage_area: The contributing drainage area of a lake, stream, wetland, or estuary
                 monitoring location, in square miles. This item should be present only
@@ -952,7 +973,8 @@ class CombinedMetadataClient(BaseClient):
                 ties/items).
             crs: Indicates the coordinate reference system for the results.
             data_type: The computational period type of data collected at the monitoring
-                location.
+                location. Split parameters are enabled for this field, so you can
+                supply multiple values separated by commas.
             depth_source_code: A code indicating the source of water-level data.
             district_code: The Water Science Centers (WSCs) across the United States use the FIPS
                 state code as the district code. In some case, monitoring locations
@@ -967,10 +989,10 @@ class CombinedMetadataClient(BaseClient):
             end: The datetime of the most recent observation in the time series. Data
                 returned by this endpoint updates at most once per day, and
                 potentially less frequently than that, and as such there may be more
-                recent observations within a time series than the time series `end`
-                value reflects. Together with `begin`, this field represents the
-                period of record of a time series. It is additionally used to
-                determine whether a time series is "active".
+                recent observations within a time series than the time series
+                `end_utc` value reflects. Together with `begin_utc`, this field
+                represents the period of record of a time series. It is additionally
+                used to determine whether a time series is "active".
                 You can query this field using date-times or intervals, adhering to
                 RFC 3339, or using ISO 8601 duration objects. Intervals may be bounded
                 or half-bounded (double-dots at start or end).
@@ -983,8 +1005,8 @@ class CombinedMetadataClient(BaseClient):
                   - Duration objects: "P1M" for data from the past month or "PT36H"
                 for the last 36 hours
 
-                Only features that have a `end` that intersects the value of datetime
-                are selected.
+                Only features that have a `end_utc` that intersects the value of
+                datetime are selected.
             f: The optional f parameter indicates the output format which the server
                 shall provide as part of the response document.  The default format is
                 GeoJSON.
@@ -1190,8 +1212,11 @@ class CombinedMetadataClient(BaseClient):
                 [https://api.waterdata.usgs.gov/ogcapi/v0/collections/altitude-datums/
                 items](https://api.waterdata.usgs.gov/ogcapi/v0/collections/altitude-
                 datums/items).
-            web_description: A description of what this time series represents, as used by WDFN and
-                other USGS data dissemination products.
+            web_description: An optional description of the time series. WDFN and other USGS data
+                dissemination products use this field, in combination with
+                sublocation_identifier, to distinguish the differences between
+                multiple time series for the same parameter code, statistic code, and
+                monitoring location.
             well_constructed_depth: The depth of the finished well, in feet below land surface datum.
                 Note: Not all groundwater monitoring locations have information on
                 Well Depth. Such monitoring locations will not be retrieved using this
@@ -1272,9 +1297,12 @@ class CombinedMetadataClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class ContinuousClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class ContinuousClient(BaseClient[TransformedResponseT_co]):
     """
     Continuous data are collected via automated sensors installed at a
     monitoring location. They are collected at a high frequency and often
@@ -1312,7 +1340,7 @@ class ContinuousClient(BaseClient):
         time_series_id: Optional[str] = None,
         unit_of_measure: Optional[str] = None,
         value: Optional[str] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from continuous.
 
         Args:
@@ -1488,9 +1516,12 @@ class ContinuousClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class CoordinateAccuracyCodesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class CoordinateAccuracyCodesClient(BaseClient[TransformedResponseT_co]):
     """
     Appropriate code on the schedule to indicate the accuracy of the
     latitude-longitude values.
@@ -1512,7 +1543,7 @@ class CoordinateAccuracyCodesClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from coordinate-accuracy-codes.
 
         Args:
@@ -1584,9 +1615,12 @@ class CoordinateAccuracyCodesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class CoordinateDatumCodesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class CoordinateDatumCodesClient(BaseClient[TransformedResponseT_co]):
     """
     Horizontal datum code for the latitude/longitude coordinates. There
     are currently more than 300 horizontal datums available for entry.
@@ -1608,7 +1642,7 @@ class CoordinateDatumCodesClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from coordinate-datum-codes.
 
         Args:
@@ -1680,9 +1714,12 @@ class CoordinateDatumCodesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class CoordinateMethodCodesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class CoordinateMethodCodesClient(BaseClient[TransformedResponseT_co]):
     """
     Methods used to determine latitude-longitude values.
     """
@@ -1703,7 +1740,7 @@ class CoordinateMethodCodesClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from coordinate-method-codes.
 
         Args:
@@ -1775,9 +1812,12 @@ class CoordinateMethodCodesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class CountiesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class CountiesClient(BaseClient[TransformedResponseT_co]):
     """
     The name of the county or county equivalent (parish, borough, planning
     reagion, etc.) in which the site is located. List includes Census
@@ -1803,7 +1843,7 @@ class CountiesClient(BaseClient):
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
         state_fips_code: Optional[str] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from counties.
 
         Args:
@@ -1884,9 +1924,12 @@ class CountiesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class CountriesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class CountriesClient(BaseClient[TransformedResponseT_co]):
     """
     FIPS country codes and names.
     """
@@ -1907,7 +1950,7 @@ class CountriesClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from countries.
 
         Args:
@@ -1981,9 +2024,12 @@ class CountriesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class DailyClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class DailyClient(BaseClient[TransformedResponseT_co]):
     """
     Daily data provide one data value to represent water conditions for
     the day. Throughout much of the history of the USGS, the primary water
@@ -2024,7 +2070,7 @@ class DailyClient(BaseClient):
         time_series_id: Optional[str] = None,
         unit_of_measure: Optional[str] = None,
         value: Optional[str] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from daily.
 
         Args:
@@ -2210,9 +2256,12 @@ class DailyClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class FieldMeasurementsClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class FieldMeasurementsClient(BaseClient[TransformedResponseT_co]):
     """
     Field measurements are physically measured values collected during a
     visit to the monitoring location. Field measurements consist of
@@ -2255,7 +2304,7 @@ class FieldMeasurementsClient(BaseClient):
         unit_of_measure: Optional[str] = None,
         value: Optional[str] = None,
         vertical_datum: Optional[str] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from field-measurements.
 
         Args:
@@ -2276,7 +2325,7 @@ class FieldMeasurementsClient(BaseClient):
                 vertical axis (height or depth).
             bbox_crs: Indicates the coordinate reference system for the given bbox
                 coordinates.
-            control_condition: 
+            control_condition: The state of the control feature at the time of observation.
             crs: Indicates the coordinate reference system for the results.
             datetime: Either a date-time or an interval. Date and time expressions adhere to
                 RFC 3339.
@@ -2302,8 +2351,10 @@ class FieldMeasurementsClient(BaseClient):
                 shall provide as part of the response document.  The default format is
                 GeoJSON.
             field_measurements_series_id: A unique identifier representing a single collection series. This
-                corresponds to the `id` field in the  `field-measurements-metadata`
-                endpoint.
+                corresponds to the `id` field in the `field-measurements-metadata`
+                endpoint. Collection series are defined as the set of field
+                measurements at a given monitoring location for a single parameter
+                code using a single reading type.
             field_visit_id: A universally unique identifier (UUID) for the field visit. Multiple
                 measurements may be made during a single field visit.
             lang: The optional lang parameter instructs the server return a response in
@@ -2334,7 +2385,7 @@ class FieldMeasurementsClient(BaseClient):
                 datetime are selected.
             limit: The optional limit parameter limits the number of items that are
                 presented in the response document (maximum=50000, default=10).
-            measurement_rated: 
+            measurement_rated: A qualitative estimate of the quality of a measurement.
             measuring_agency: The agency performing the measurement.
             monitoring_location_id: A unique identifier representing a single monitoring location. This
                 corresponds to the `id` field in the `monitoring-locations` endpoint.
@@ -2373,9 +2424,9 @@ class FieldMeasurementsClient(BaseClient):
                 of a record. It is not stable over time. Every time the record is
                 refreshed in our database (which may happen as part of normal
                 operations and does not imply any change to the data itself) a new ID
-                will be generated. To uniquely identify a single observation over
-                time, compare the `time` and `time_series_id` fields; each time series
-                will only have a single observation at a given `time`.
+                will be generated. There may be multiple readings occurring at
+                identical times during a single field visit; to uniquely identify a
+                set of readings over time, use the `field_visit_id` field.
             skipgeometry: This option can be used to skip response geometries for each feature.
             sortby: Specifies a comma-separated list of property names by which the
                 response shall be sorted.  If the property name is preceded by a plus
@@ -2451,9 +2502,12 @@ class FieldMeasurementsClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class FieldMeasurementsMetadataClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class FieldMeasurementsMetadataClient(BaseClient[TransformedResponseT_co]):
     """
     This endpoint provides metadata about field measurement collections,
     including when the earliest and most recent observations for a
@@ -2482,7 +2536,7 @@ class FieldMeasurementsMetadataClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from field-measurements-metadata.
 
         Args:
@@ -2493,7 +2547,7 @@ class FieldMeasurementsMetadataClient(BaseClient):
             bbox_crs: Indicates the coordinate reference system for the given bbox
                 coordinates.
             begin: The datetime of the earliest observation in the time series. Together
-                with `end`, this field represents the period of record of a time
+                with `end_utc`, this field represents the period of record of a time
                 series. Note that some time series may have large gaps in their
                 collection record.
                 You can query this field using date-times or intervals, adhering to
@@ -2508,16 +2562,16 @@ class FieldMeasurementsMetadataClient(BaseClient):
                   - Duration objects: "P1M" for data from the past month or "PT36H"
                 for the last 36 hours
 
-                Only features that have a `begin` that intersects the value of
+                Only features that have a `begin_utc` that intersects the value of
                 datetime are selected.
             crs: Indicates the coordinate reference system for the results.
             end: The datetime of the most recent observation in the time series. Data
                 returned by this endpoint updates at most once per day, and
                 potentially less frequently than that, and as such there may be more
-                recent observations within a time series than the time series `end`
-                value reflects. Together with `begin`, this field represents the
-                period of record of a time series. It is additionally used to
-                determine whether a time series is "active".
+                recent observations within a time series than the time series
+                `end_utc` value reflects. Together with `begin_utc`, this field
+                represents the period of record of a time series. It is additionally
+                used to determine whether a time series is "active".
                 You can query this field using date-times or intervals, adhering to
                 RFC 3339, or using ISO 8601 duration objects. Intervals may be bounded
                 or half-bounded (double-dots at start or end).
@@ -2530,8 +2584,8 @@ class FieldMeasurementsMetadataClient(BaseClient):
                   - Duration objects: "P1M" for data from the past month or "PT36H"
                 for the last 36 hours
 
-                Only features that have a `end` that intersects the value of datetime
-                are selected.
+                Only features that have a `end_utc` that intersects the value of
+                datetime are selected.
             f: The optional f parameter indicates the output format which the server
                 shall provide as part of the response document.  The default format is
                 GeoJSON.
@@ -2593,13 +2647,11 @@ class FieldMeasurementsMetadataClient(BaseClient):
 
                 Example: time_series_id IN ('64ee32f5350a4ec4967435dcd2e364ea',
                 '3e55d9c2d8a54bec9ca5e292b07d5a96')
-            query_id: A universally unique identifier (UUID) representing a single version
-                of a record. It is not stable over time. Every time the record is
-                refreshed in our database (which may happen as part of normal
-                operations and does not imply any change to the data itself) a new ID
-                will be generated. To uniquely identify a single observation over
-                time, compare the `time` and `time_series_id` fields; each time series
-                will only have a single observation at a given `time`.
+            query_id: A unique identifier representing a single collection series. This
+                corresponds to the `field_measurement_series_id` field in the `field-
+                measurements` endpoint. Collection series are defined as the set of
+                field measurements at a given monitoring location for a single
+                parameter code using a single reading type.
                  Split parameters are enabled for this field, so you can supply
                 multiple values separated by commas.
             skipgeometry: This option can be used to skip response geometries for each feature.
@@ -2641,9 +2693,12 @@ class FieldMeasurementsMetadataClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class HydrologicUnitCodesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class HydrologicUnitCodesClient(BaseClient[TransformedResponseT_co]):
     """
     Hydrologic units are geographic areas representing part or all of a
     surface drainage basin or distinct hydrologic feature identified by a
@@ -2673,7 +2728,7 @@ class HydrologicUnitCodesClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from hydrologic-unit-codes.
 
         Args:
@@ -2760,9 +2815,12 @@ class HydrologicUnitCodesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class LatestContinuousClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class LatestContinuousClient(BaseClient[TransformedResponseT_co]):
     """
     This endpoint provides the most recent observation for each time
     series of continuous data. Continuous data are collected via automated
@@ -2803,7 +2861,7 @@ class LatestContinuousClient(BaseClient):
         time_series_id: Optional[str] = None,
         unit_of_measure: Optional[str] = None,
         value: Optional[str] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from latest-continuous.
 
         Args:
@@ -2987,9 +3045,12 @@ class LatestContinuousClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class LatestDailyClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class LatestDailyClient(BaseClient[TransformedResponseT_co]):
     """
     Daily data provide one data value to represent water conditions for
     the day. Throughout much of the history of the USGS, the primary water
@@ -3030,7 +3091,7 @@ class LatestDailyClient(BaseClient):
         time_series_id: Optional[str] = None,
         unit_of_measure: Optional[str] = None,
         value: Optional[str] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from latest-daily.
 
         Args:
@@ -3216,9 +3277,12 @@ class LatestDailyClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class MediumCodesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class MediumCodesClient(BaseClient[TransformedResponseT_co]):
     """
     Medium refers to the specific environmental medium from which the
     sample was collected. Medium type differs from site type because one
@@ -3244,7 +3308,7 @@ class MediumCodesClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from medium-codes.
 
         Args:
@@ -3332,9 +3396,12 @@ class MediumCodesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class MethodCategoriesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class MethodCategoriesClient(BaseClient[TransformedResponseT_co]):
     """
     Categorical standards for methods describing the associated data's
     appropriateness for an intended use.
@@ -3357,7 +3424,7 @@ class MethodCategoriesClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from method-categories.
 
         Args:
@@ -3433,9 +3500,12 @@ class MethodCategoriesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class MethodCitationsClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class MethodCitationsClient(BaseClient[TransformedResponseT_co]):
     """
     Citation identifiers for water measurement methods.
     """
@@ -3459,7 +3529,7 @@ class MethodCitationsClient(BaseClient):
         query_id: Optional[int] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from method-citations.
 
         Args:
@@ -3540,9 +3610,12 @@ class MethodCitationsClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class MethodsClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class MethodsClient(BaseClient[TransformedResponseT_co]):
     """
     Water measurement or water-quality analytical methods. Codes and
     descriptions defining a method for calculating or measuring the value
@@ -3569,7 +3642,7 @@ class MethodsClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from methods.
 
         Args:
@@ -3648,9 +3721,12 @@ class MethodsClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class MonitoringLocationsClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class MonitoringLocationsClient(BaseClient[TransformedResponseT_co]):
     """
     Location information is basic information about the monitoring
     location including the name, identifier, agency responsible for data
@@ -3717,7 +3793,7 @@ class MonitoringLocationsClient(BaseClient):
         vertical_datum: Optional[str] = None,
         vertical_datum_name: Optional[str] = None,
         well_constructed_depth: Optional[float] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from monitoring-locations.
 
         Args:
@@ -3876,16 +3952,24 @@ class MonitoringLocationsClient(BaseClient):
                 Example: time_series_id IN ('64ee32f5350a4ec4967435dcd2e364ea',
                 '3e55d9c2d8a54bec9ca5e292b07d5a96')
             query_id: A unique identifier representing a single monitoring location. This
-                corresponds to the `id` field in the `monitoring-locations` endpoint.
+                corresponds to the `monitoring_location_id` field in other endpoints.
                 Monitoring location IDs are created by combining the agency code of
                 the agency responsible for the monitoring location (e.g. USGS) with
                 the ID number of the monitoring location (e.g. 02238500), separated by
                 a hyphen (e.g. USGS-02238500).
                  Split parameters are enabled for this field, so you can supply
                 multiple values separated by commas.
-            revision_created: 
-            revision_modified: 
-            revision_note: 
+            revision_created: The date a revision statement was created.
+            revision_modified: The most recent date a revision statement was modified.
+            revision_note: Approved water data are considered published record, but on occasion
+                changes or deletions (revisions) must be made to data after they are
+                approved. Data revisions are rare because of USGS quality assurance
+                practices, including documentation of all data before they are
+                officially approved. This field contains text explanations for data
+                revisions at this monitoring location. Changes to data also are
+                indicated with revision qualifier codes alongside the data. Text
+                explanations before 2017 are not necessarily available online, but can
+                be requested.
             site_type: A description of the hydrologic setting of the monitoring location. A
                 list of codes is available at
                 [https://api.waterdata.usgs.gov/ogcapi/v0/collections/site-types/items
@@ -3999,9 +4083,12 @@ class MonitoringLocationsClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class NationalAquiferCodesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class NationalAquiferCodesClient(BaseClient[TransformedResponseT_co]):
     """
     National aquifers are the principal aquifers or aquifer systems in the
     United States, defined as regionally extensive aquifers or aquifer
@@ -4025,7 +4112,7 @@ class NationalAquiferCodesClient(BaseClient):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from national-aquifer-codes.
 
         Args:
@@ -4097,9 +4184,12 @@ class NationalAquiferCodesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class ParameterCodesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class ParameterCodesClient(BaseClient[TransformedResponseT_co]):
     """
     Parameter codes are 5-digit codes and associated descriptions used to
     identify the constituent measured and the units of measure. Some
@@ -4138,7 +4228,7 @@ class ParameterCodesClient(BaseClient):
         time_basis: Optional[str] = None,
         unit_of_measure: Optional[str] = None,
         weight_basis: Optional[str] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from parameter-codes.
 
         Args:
@@ -4234,9 +4324,216 @@ class ParameterCodesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class ReliabilityCodesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class PeaksClient(BaseClient[TransformedResponseT_co]):
+    """
+    Annual peak flow values are the maximum instantaneous streamflow
+    values recorded at a particular site for the entire water year from
+    October 1 to September 30. Note that the annual peak flow value may
+    not occur at the same time the maximum water level occurs due to
+    conditions such as backwater, tidal fluctuations, etc.
+    """
+    _endpoint = USGSCollection.PEAKS
+
+    def get(
+        self,
+        bbox: Optional[Sequence[float]] = None,
+        bbox_crs: Optional[URL] = None,
+        crs: Optional[URL] = None,
+        day: Optional[int] = None,
+        f: Optional[Literal["json", "html", "jsonld", "csv"]] = "json",
+        lang: Optional[Literal["en-US"]] = "en-US",
+        last_modified: Optional[str] = None,
+        limit: Optional[int] = 10,
+        monitoring_location_id: Optional[str] = None,
+        month: Optional[int] = None,
+        offset: Optional[int] = 0,
+        parameter_code: Optional[str] = None,
+        peak_since: Optional[int] = None,
+        properties: Optional[Sequence[Literal["time_series_id", "monitoring_location_id", "parameter_code", "id", "unit_of_measure", "value", "last_modified", "time", "water_year", "year", "month", "day", "time_of_day", "peak_since"]]] = None,
+        query_filter: Optional[str] = None,
+        query_id: Optional[str] = None,
+        skipgeometry: Optional[bool] = False,
+        sortby: Optional[Sequence[str]] = None,
+        time: Optional[str] = None,
+        time_of_day: Optional[str] = None,
+        time_series_id: Optional[str] = None,
+        unit_of_measure: Optional[str] = None,
+        value: Optional[str] = None,
+        water_year: Optional[int] = None,
+        year: Optional[int] = None,
+        ) -> TransformedResponseT_co:
+        """Retrieve items from peaks.
+
+        Args:
+            bbox: Only features that have a geometry that intersects the bounding box
+                are selected.The bounding box is provided as four or six numbers,
+                depending on whether the coordinate reference system includes a
+                vertical axis (height or depth).
+            bbox_crs: Indicates the coordinate reference system for the given bbox
+                coordinates.
+            crs: Indicates the coordinate reference system for the results.
+            day: The day of the month a peak occurred. If null, the day a peak occurred
+                is unknown.
+                 Split parameters are enabled for this field, so you can supply
+                multiple values separated by commas.
+            f: The optional f parameter indicates the output format which the server
+                shall provide as part of the response document.  The default format is
+                GeoJSON.
+            lang: The optional lang parameter instructs the server return a response in
+                a certain language, if supported.  If the language is not among the
+                available values, the Accept-Language header language will be used if
+                it is supported. If the header is missing, the default server language
+                is used. Note that providers may only support a single language (or
+                often no language at all), that can be different from the server
+                language.  Language strings can be written in a complex (e.g. "fr-
+                CA,fr;q=0.9,en-US;q=0.8,en;q=0.7"), simple (e.g. "de") or locale-like
+                (e.g. "de-CH" or "fr_BE") fashion.
+            last_modified: The last time a record was refreshed in our database. This may happen
+                due to regular operational processes and does not necessarily indicate
+                anything about the measurement has changed.
+                You can query this field using date-times or intervals, adhering to
+                RFC 3339, or using ISO 8601 duration objects. Intervals may be bounded
+                or half-bounded (double-dots at start or end).
+                Examples:
+
+                  - A date-time: "2018-02-12T23:20:50Z"
+                  - A bounded interval: "2018-02-12T00:00:00Z/2018-03-18T12:31:12Z"
+                  - Half-bounded intervals: "2018-02-12T00:00:00Z/.." or
+                "../2018-03-18T12:31:12Z"
+                  - Duration objects: "P1M" for data from the past month or "PT36H"
+                for the last 36 hours
+
+                Only features that have a `last_modified` that intersects the value of
+                datetime are selected.
+            limit: The optional limit parameter limits the number of items that are
+                presented in the response document (maximum=50000, default=10).
+            monitoring_location_id: A unique identifier representing a single monitoring location. This
+                corresponds to the `id` field in the `monitoring-locations` endpoint.
+                Monitoring location IDs are created by combining the agency code of
+                the agency responsible for the monitoring location (e.g. USGS) with
+                the ID number of the monitoring location (e.g. 02238500), separated by
+                a hyphen (e.g. USGS-02238500).
+                 Split parameters are enabled for this field, so you can supply
+                multiple values separated by commas.
+            month: The calendar month a peak occurred. If null, the month a peak occurred
+                is unknown.
+                 Split parameters are enabled for this field, so you can supply
+                multiple values separated by commas.
+            offset: The optional offset parameter indicates the index within the result
+                set from which the server shall begin presenting results in the
+                response document.  The first element has an index of 0 (default).
+            parameter_code: Parameter codes are 5-digit codes used to identify the constituent
+                measured and the units of measure. A complete list of parameter codes
+                and associated groupings can be found at
+                [https://api.waterdata.usgs.gov/ogcapi/v0/collections/parameter-codes/
+                items](https://api.waterdata.usgs.gov/ogcapi/v0/collections/parameter-
+                codes/items).
+                 Split parameters are enabled for this field, so you can supply
+                multiple values separated by commas.
+            peak_since: If not null, this record represents the peak value for the parameter
+                code since the year contained in "peak_since".
+                 Split parameters are enabled for this field, so you can supply
+                multiple values separated by commas.
+            properties: The properties that should be included. The parameter value is a
+                comma-separated list of property names.
+            query_filter: CQL Text filter expression.  CQL JSON cannot be used here, only in the
+                body.
+                See also: https://docs.pygeoapi.io/en/latest/cql.html
+
+                Example: time_series_id IN ('64ee32f5350a4ec4967435dcd2e364ea',
+                '3e55d9c2d8a54bec9ca5e292b07d5a96')
+            query_id: Split parameters are enabled for this field, so you can supply
+                multiple values separated by commas.
+            skipgeometry: This option can be used to skip response geometries for each feature.
+            sortby: Specifies a comma-separated list of property names by which the
+                response shall be sorted.  If the property name is preceded by a plus
+                (+) sign it indicates an ascending sort for that property.  If the
+                property name is preceded by a minus (-) sign it indicates a
+                descending sort for that property.  If the property is not preceded by
+                a plus or minus, then the default sort order implied is ascending (+).
+
+                Only a single page of data can be returned when specifying sortby. If
+                you need more than a single page of data, don't specify a sortby value
+                and sort the full data set after it's been downloaded.
+            time: The date an observation represents. You can query this field using
+                date-times or intervals, adhering to RFC 3339, or using ISO 8601
+                duration objects. Intervals may be bounded or half-bounded (double-
+                dots at start or end).
+                Examples:
+
+                  - A date-time: "2018-02-12T23:20:50Z"
+                  - A bounded interval: "2018-02-12T00:00:00Z/2018-03-18T12:31:12Z"
+                  - Half-bounded intervals: "2018-02-12T00:00:00Z/.." or
+                "../2018-03-18T12:31:12Z"
+                  - Duration objects: "P1M" for data from the past month or "PT36H"
+                for the last 36 hours
+
+                Only features that have a `time` that intersects the value of datetime
+                are selected. If a feature has multiple temporal properties, it is the
+                decision of the server whether only a single temporal property is used
+                to determine the extent or all relevant temporal properties.
+            time_of_day: The time of day a peak occurred. If null, the time of day a peak
+                occurred is unknown.
+            time_series_id: A unique identifier representing a single time series. This
+                corresponds to the `id` field in the `time-series-metadata` endpoint.
+                 Split parameters are enabled for this field, so you can supply
+                multiple values separated by commas.
+            unit_of_measure: A human-readable description of the units of measurement associated
+                with an observation.
+            value: The value of the observation. Values are transmitted as strings in the
+                JSON response format in order to preserve precision.
+            water_year: The water year (running from October 1st to September 30th) a peak
+                occurred.
+                 Split parameters are enabled for this field, so you can supply
+                multiple values separated by commas.
+            year: The calendar year a peak occurred.
+                 Split parameters are enabled for this field, so you can supply
+                multiple values separated by commas.
+        """
+        # Translate Python parameters to API parameters
+        query = {
+            "bbox": bbox,
+            "bbox-crs": bbox_crs,
+            "crs": crs,
+            "day": day,
+            "f": f,
+            "lang": lang,
+            "last_modified": last_modified,
+            "limit": limit,
+            "monitoring_location_id": monitoring_location_id,
+            "month": month,
+            "offset": offset,
+            "parameter_code": parameter_code,
+            "peak_since": peak_since,
+            "properties": properties,
+            "filter": query_filter,
+            "id": query_id,
+            "skipGeometry": skipgeometry,
+            "sortby": sortby,
+            "time": time,
+            "time_of_day": time_of_day,
+            "time_series_id": time_series_id,
+            "unit_of_measure": unit_of_measure,
+            "value": value,
+            "water_year": water_year,
+            "year": year,
+        }
+
+        # Ignore None
+        valid_query = {k: v for k, v in query.items() if v is not None}
+
+        # Get responses
+        data = self._get_json_responses(queries=[valid_query])
+
+        # Transform
+        return self._handle_response(data)
+
+class ReliabilityCodesClient(BaseClient[TransformedResponseT_co]):
     """
     Code indicating the reliability of the data available for the site.
     """
@@ -4257,7 +4554,7 @@ class ReliabilityCodesClient(BaseClient):
         reliability_description: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from reliability-codes.
 
         Args:
@@ -4329,9 +4626,12 @@ class ReliabilityCodesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class SiteTypesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class SiteTypesClient(BaseClient[TransformedResponseT_co]):
     """
     The hydrologic cycle setting or a man-made feature thought to affect
     the hydrologic conditions measured at a site. Primary and secondary
@@ -4358,7 +4658,7 @@ class SiteTypesClient(BaseClient):
         site_type_primary_flag: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from site-types.
 
         Args:
@@ -4434,9 +4734,12 @@ class SiteTypesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class StatesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class StatesClient(BaseClient[TransformedResponseT_co]):
     """
     State name or territory. Includes U.S. states and foreign entities
     classified under FIPS as 'Principal Administrative Divisions'.
@@ -4461,7 +4764,7 @@ class StatesClient(BaseClient):
         state_fips_code: Optional[str] = None,
         state_name: Optional[str] = None,
         state_postal_code: Optional[str] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from states.
 
         Args:
@@ -4542,9 +4845,12 @@ class StatesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class StatisticCodesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class StatisticCodesClient(BaseClient[TransformedResponseT_co]):
     """
     Statistic codes.
     """
@@ -4566,7 +4872,7 @@ class StatisticCodesClient(BaseClient):
         sortby: Optional[Sequence[str]] = None,
         statistic_description: Optional[str] = None,
         statistic_name: Optional[str] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from statistic-codes.
 
         Args:
@@ -4640,9 +4946,12 @@ class StatisticCodesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class TimeSeriesMetadataClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class TimeSeriesMetadataClient(BaseClient[TransformedResponseT_co]):
     """
     Daily data and continuous measurements are grouped into time series,
     which represent a collection of observations of a single parameter,
@@ -4688,7 +4997,7 @@ class TimeSeriesMetadataClient(BaseClient):
         thresholds: Optional[str] = None,
         unit_of_measure: Optional[str] = None,
         web_description: Optional[str] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from time-series-metadata.
 
         Args:
@@ -4702,7 +5011,7 @@ class TimeSeriesMetadataClient(BaseClient):
                 local time of the monitoring location. It is retained for backwards
                 compatibility, but will be removed in V1 of these APIs.
             begin_utc: The datetime of the earliest observation in the time series. Together
-                with `end`, this field represents the period of record of a time
+                with `end_utc`, this field represents the period of record of a time
                 series. Note that some time series may have large gaps in their
                 collection record.
                 You can query this field using date-times or intervals, adhering to
@@ -4717,11 +5026,12 @@ class TimeSeriesMetadataClient(BaseClient):
                   - Duration objects: "P1M" for data from the past month or "PT36H"
                 for the last 36 hours
 
-                Only features that have a `begin` that intersects the value of
+                Only features that have a `begin_utc` that intersects the value of
                 datetime are selected.
-            computation_identifier: Indicates whether the data from this time series represent a specific
-                statistical computation. Split parameters are enabled for this field,
-                so you can supply multiple values separated by commas.
+            computation_identifier: Indicates the computation performed to calculate this time series.
+                Values of "Instantaneous" reflect point measurements. Split parameters
+                are enabled for this field, so you can supply multiple values
+                separated by commas.
             computation_period_identifier: Indicates the period of data used for any statistical computations.
                 Split parameters are enabled for this field, so you can supply
                 multiple values separated by commas.
@@ -4732,10 +5042,10 @@ class TimeSeriesMetadataClient(BaseClient):
             end_utc: The datetime of the most recent observation in the time series. Data
                 returned by this endpoint updates at most once per day, and
                 potentially less frequently than that, and as such there may be more
-                recent observations within a time series than the time series `end`
-                value reflects. Together with `begin`, this field represents the
-                period of record of a time series. It is additionally used to
-                determine whether a time series is "active".
+                recent observations within a time series than the time series
+                `end_utc` value reflects. Together with `begin_utc`, this field
+                represents the period of record of a time series. It is additionally
+                used to determine whether a time series is "active".
                 You can query this field using date-times or intervals, adhering to
                 RFC 3339, or using ISO 8601 duration objects. Intervals may be bounded
                 or half-bounded (double-dots at start or end).
@@ -4748,8 +5058,8 @@ class TimeSeriesMetadataClient(BaseClient):
                   - Duration objects: "P1M" for data from the past month or "PT36H"
                 for the last 36 hours
 
-                Only features that have a `end` that intersects the value of datetime
-                are selected.
+                Only features that have a `end_utc` that intersects the value of
+                datetime are selected.
             f: The optional f parameter indicates the output format which the server
                 shall provide as part of the response document.  The default format is
                 GeoJSON.
@@ -4836,9 +5146,9 @@ class TimeSeriesMetadataClient(BaseClient):
                 Example: time_series_id IN ('64ee32f5350a4ec4967435dcd2e364ea',
                 '3e55d9c2d8a54bec9ca5e292b07d5a96')
             query_id: A unique identifier representing a single time series. This
-                corresponds to the `id` field in the `time-series-metadata` endpoint.
-                 Split parameters are enabled for this field, so you can supply
-                multiple values separated by commas.
+                corresponds to the "time_series_id" field in other endpoints. Split
+                parameters are enabled for this field, so you can supply multiple
+                values separated by commas.
             skipgeometry: This option can be used to skip response geometries for each feature.
             sortby: Specifies a comma-separated list of property names by which the
                 response shall be sorted.  If the property name is preceded by a plus
@@ -4869,8 +5179,11 @@ class TimeSeriesMetadataClient(BaseClient):
                 sensor error, and therefore shouldn't be included in the time series.
             unit_of_measure: A human-readable description of the units of measurement associated
                 with an observation.
-            web_description: A description of what this time series represents, as used by WDFN and
-                other USGS data dissemination products.
+            web_description: An optional description of the time series. WDFN and other USGS data
+                dissemination products use this field, in combination with
+                sublocation_identifier, to distinguish the differences between
+                multiple time series for the same parameter code, statistic code, and
+                monitoring location.
         """
         # Translate Python parameters to API parameters
         query = {
@@ -4912,9 +5225,12 @@ class TimeSeriesMetadataClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class TimeZoneCodesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class TimeZoneCodesClient(BaseClient[TransformedResponseT_co]):
     """
     The ISO 8601 standard defines time zone offsets as a numerical value
     added to a local time to convert it to Coordinated Universal Time
@@ -4945,7 +5261,7 @@ class TimeZoneCodesClient(BaseClient):
         time_zone_description: Optional[str] = None,
         time_zone_name: Optional[str] = None,
         time_zone_utc_offset: Optional[str] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from time-zone-codes.
 
         Args:
@@ -5029,9 +5345,12 @@ class TimeZoneCodesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
 
-class TopographicCodesClient(BaseClient):
+        # Transform
+        return self._handle_response(data)
+
+class TopographicCodesClient(BaseClient[TransformedResponseT_co]):
     """
     The code that best describes the topographic setting in which the site
     is located. Topographic setting refers to the geomorphic features in
@@ -5056,7 +5375,7 @@ class TopographicCodesClient(BaseClient):
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
         topography_name: Optional[str] = None,
-        ) -> list[dict[str, Any]]:
+        ) -> TransformedResponseT_co:
         """Retrieve items from topographic-codes.
 
         Args:
@@ -5132,5 +5451,8 @@ class TopographicCodesClient(BaseClient):
         valid_query = {k: v for k, v in query.items() if v is not None}
 
         # Get responses
-        return self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[valid_query])
+
+        # Transform
+        return self._handle_response(data)
 

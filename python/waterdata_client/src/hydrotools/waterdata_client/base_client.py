@@ -4,7 +4,7 @@ This module provides the base class for all collection-specific USGS OGC API
 clients. It handles configuration state and the low-level request pipeline.
 """
 import ssl
-from typing import Any, Optional, Sequence
+from typing import Any, Optional, Sequence, Generic
 from functools import partial
 
 from yarl import URL
@@ -19,8 +19,9 @@ from .url_builder import (
     build_request_batch_from_feature_ids,
     QueryType
 )
+from .transformers import TransformedResponseT_co, ResponseTransformer, check_features
 
-class BaseClient:
+class BaseClient(Generic[TransformedResponseT_co]):
     """Base class for USGS OGC API clients. Specific child classes may overwrite
     private attributes: _server, _api, _endpoint, _path, _content_type,
     _max_pages.
@@ -31,6 +32,9 @@ class BaseClient:
         max_retries: Number of times to attempt a failed request.
         timeout_seconds: Total request timeout in seconds.
         ssl_context: Custom SSL context for requests.
+        transformer: Callable object that takes a list[dict[str, Any]] and returns
+            a transformed result. Defaults to no transformation with validation
+            that some data were returned. Set to None to omit validation.
     """
     _server: URL = SETTINGS.usgs_base_url
     _api: OGCAPI = SETTINGS.default_api
@@ -44,12 +48,14 @@ class BaseClient:
         concurrency_limit: int = SETTINGS.default_concurrency,
         max_retries: int = SETTINGS.default_retries,
         timeout_seconds: int = SETTINGS.timeout_seconds,
-        ssl_context: Optional[ssl.SSLContext] = None
+        ssl_context: Optional[ssl.SSLContext] = None,
+        transformer: Optional[ResponseTransformer[TransformedResponseT_co]] = check_features
     ) -> None:
         self.concurrency_limit = concurrency_limit
         self.max_retries = max_retries
         self.timeout_seconds = timeout_seconds
         self.ssl_context = ssl_context
+        self.transformer = transformer
 
         # Setup request builder
         self._builder = partial(
@@ -174,3 +180,20 @@ class BaseClient:
             if link.get("rel") == "next":
                 return URL(link["href"])
         raise KeyError("response does not contain 'next' link")
+
+    def _handle_response(
+            self,
+            data: list[dict[str, Any]]
+    ) -> TransformedResponseT_co | list[dict[str, Any]]:
+        """Handle JSON response and optionally transform.
+    
+        Args:
+            data: A list of deserialized GeoJSON responses from an OGC-compliant API.
+        
+        Returns:
+            If self.transformer is None, returns untransformed data, else returns
+            transformed responses.
+        """
+        if self.transformer is None:
+            return data
+        return self.transformer(data)

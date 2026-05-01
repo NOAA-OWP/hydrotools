@@ -27,20 +27,18 @@ The following example demonstrates how one might use `hydrotools.waterdata_clien
 ### Code
 
 ```python
-# Import client and geopandas for easy parsing
-import geopandas as gpd
 from hydrotools.waterdata_client import LatestContinuousClient
+from hydrotools.waterdata_client.transformers import to_geodataframe
 
 # Instantiate client
-client = LatestContinuousClient()
+client = LatestContinuousClient(transformer=to_geodataframe)
 
 # Retrieve data
-data = client.get(
+observations = client.get(
     monitoring_location_id="USGS-02146470"
     )
 
 # Look at values
-observations = gpd.GeoDataFrame.from_features(data[0])
 print(observations)
 print(observations.columns)
 ```
@@ -48,14 +46,14 @@ print(observations.columns)
 ### Output
 
 ```console
-                     geometry                                    id                    time_series_id  ... approval_status qualifier                     last_modified
-0  POINT (-80.85306 35.16444)  1b39aa0f-6adb-40ea-ab4e-453f88b8b16c  6ec29c85c72246ea83912c6f02f6fd63  ...     Provisional      None  2026-04-24T16:06:22.291045+00:00
-1  POINT (-80.85306 35.16444)  b3ce8113-2a1a-4d13-9d88-8a0237c11df6  27d30d4d1a4749bb887d1435da9fd278  ...     Provisional      None  2026-04-24T16:06:35.455215+00:00
-2  POINT (-80.85306 35.16444)  e56f5a19-8a93-489d-a2a0-98cae31f9529  b1f149deee984fcea8768c17076b1d7f  ...     Provisional      None  2026-04-24T16:06:17.732760+00:00
+                     geometry                                    id                    time_series_id  ... approval_status qualifiers                     last_modified
+0  POINT (-80.85306 35.16444)  3373c03d-ef10-41b9-be8f-afcd1511dc27  27d30d4d1a4749bb887d1435da9fd278  ...     Provisional       None  2026-05-01T15:47:32.759180+00:00
+1  POINT (-80.85306 35.16444)  48ba1d22-3278-449f-b767-a08f3ccffb2c  b1f149deee984fcea8768c17076b1d7f  ...     Provisional       None  2026-05-01T15:52:15.484900+00:00
+2  POINT (-80.85306 35.16444)  c387f069-f5f4-4954-8810-38b1ad3ba1ab  6ec29c85c72246ea83912c6f02f6fd63  ...     Provisional       None  2026-05-01T15:52:20.586492+00:00
 
 [3 rows x 12 columns]
-Index(['geometry', 'id', 'time_series_id', 'monitoring_location_id',
-       'parameter_code', 'statistic_id', 'time', 'value', 'unit_of_measure',
-       'approval_status', 'qualifier', 'last_modified'],
+Index(['geometry', 'id', 'time_series_id', 'usgs_site_code', 'parameter_code',
+       'statistic_id', 'value_time', 'value', 'measurement_unit',
+       'approval_status', 'qualifiers', 'last_modified'],
       dtype='str')
 ```
