@@ -54,7 +54,7 @@ def check_features(data: list[dict[str, Any]]) -> list[dict[str, Any]]:
         data: A list of deserialized GeoJSON responses from an OGC-compliant API.
     
     Returns:
-        Original responses in a single GeoDataFrame.
+        Original list of responses.
     
     Raises:
         NoDataError if data is empty or all items are None.
