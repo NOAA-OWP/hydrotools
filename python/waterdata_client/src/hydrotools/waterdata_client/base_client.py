@@ -19,9 +19,9 @@ from .url_builder import (
     build_request_batch_from_feature_ids,
     QueryType
 )
-from .transformers import TransformedResponse_co, ResponseTransformer, check_features
+from .transformers import TransformedResponseT_co, ResponseTransformer, check_features
 
-class BaseClient(Generic[TransformedResponse_co]):
+class BaseClient(Generic[TransformedResponseT_co]):
     """Base class for USGS OGC API clients. Specific child classes may overwrite
     private attributes: _server, _api, _endpoint, _path, _content_type,
     _max_pages.
@@ -49,7 +49,7 @@ class BaseClient(Generic[TransformedResponse_co]):
         max_retries: int = SETTINGS.default_retries,
         timeout_seconds: int = SETTINGS.timeout_seconds,
         ssl_context: Optional[ssl.SSLContext] = None,
-        transformer: Optional[ResponseTransformer[TransformedResponse_co]] = check_features
+        transformer: Optional[ResponseTransformer[TransformedResponseT_co]] = check_features
     ) -> None:
         self.concurrency_limit = concurrency_limit
         self.max_retries = max_retries
@@ -184,7 +184,7 @@ class BaseClient(Generic[TransformedResponse_co]):
     def _handle_response(
             self,
             data: list[dict[str, Any]]
-    ) -> TransformedResponse_co | list[dict[str, Any]]:
+    ) -> TransformedResponseT_co | list[dict[str, Any]]:
         """Handle JSON response and optionally transform.
     
         Args:

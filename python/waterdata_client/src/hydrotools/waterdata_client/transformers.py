@@ -9,16 +9,16 @@ import geopandas as gpd
 
 from .constants import HYDROTOOLS_DATAFRAME_COLUMN_MAPPING
 
-TransformedResponse_co = TypeVar("TransformedResponse_co", covariant=True)
+TransformedResponseT_co = TypeVar("TransformedResponseT_co", covariant=True)
 """Generic transformed response type for transformer methods."""
 
 class NoDataError(Exception):
     """Custom exception raised when all data retrieval fails."""
 
 @runtime_checkable
-class ResponseTransformer(Protocol[TransformedResponse_co]):
+class ResponseTransformer(Protocol[TransformedResponseT_co]):
     """Protocol definition for response transformer methods."""
-    def __call__(self, data: list[dict[str, Any]]) -> TransformedResponse_co:
+    def __call__(self, data: list[dict[str, Any]]) -> TransformedResponseT_co:
         """Transforms a list of JSON-derived dictionaries to the target type."""
         ...
 

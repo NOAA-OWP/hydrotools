@@ -5,7 +5,7 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.0a0
 Generation script: build_clients.py
-Generated: 2026-05-01 15:29:23 Z
+Generated: 2026-05-01 17:52:23 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -14,7 +14,7 @@ from typing import Sequence, Literal, Optional
 from yarl import URL
 from .base_client import BaseClient
 from .constants import USGSCollection
-from .transformers import TransformedResponse_co
+from .transformers import TransformedResponseT_co
 
 __all__ = [
     "AgencyCodesClient",
@@ -53,7 +53,7 @@ __all__ = [
     "TopographicCodesClient",
 ]
 
-class AgencyCodesClient(BaseClient[TransformedResponse_co]):
+class AgencyCodesClient(BaseClient[TransformedResponseT_co]):
     """
     Code identifying the agency or organization used for site information,
     data sources, and permitting agencies. Agency codes are fixed values
@@ -76,7 +76,7 @@ class AgencyCodesClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from agency-codes.
 
         Args:
@@ -153,7 +153,7 @@ class AgencyCodesClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class AltitudeDatumsClient(BaseClient[TransformedResponse_co]):
+class AltitudeDatumsClient(BaseClient[TransformedResponseT_co]):
     """
     The recommended vertical datum is NAVD88 (North American Vertical
     Datum of 1988) where applicable as stated in Office of Information
@@ -180,7 +180,7 @@ class AltitudeDatumsClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from altitude-datums.
 
         Args:
@@ -257,7 +257,7 @@ class AltitudeDatumsClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class AquiferCodesClient(BaseClient[TransformedResponse_co]):
+class AquiferCodesClient(BaseClient[TransformedResponseT_co]):
     """
     Local aquifers in USGS data are identified by an aquifer name and
     geohydrologic unit code (a three-digit number related to the age of
@@ -291,7 +291,7 @@ class AquiferCodesClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from aquifer-codes.
 
         Args:
@@ -371,7 +371,7 @@ class AquiferCodesClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class AquiferTypesClient(BaseClient[TransformedResponse_co]):
+class AquiferTypesClient(BaseClient[TransformedResponseT_co]):
     """
     Groundwater occurs in aquifers under two different conditions. Where
     water only partly fills an aquifer, the upper surface is free to rise
@@ -399,7 +399,7 @@ class AquiferTypesClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from aquifer-types.
 
         Args:
@@ -476,7 +476,7 @@ class AquiferTypesClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class ChannelMeasurementsClient(BaseClient[TransformedResponse_co]):
+class ChannelMeasurementsClient(BaseClient[TransformedResponseT_co]):
     """
     Channel measurements taken as part of streamflow field measurements.
     """
@@ -522,7 +522,7 @@ class ChannelMeasurementsClient(BaseClient[TransformedResponse_co]):
         sortby: Optional[Sequence[str]] = None,
         time: Optional[str] = None,
         vertical_velocity_description: Optional[str] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from channel-measurements.
 
         Args:
@@ -715,7 +715,7 @@ class ChannelMeasurementsClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class CitationsClient(BaseClient[TransformedResponse_co]):
+class CitationsClient(BaseClient[TransformedResponseT_co]):
     """
     Citations associated with water measurement methods.
     """
@@ -736,7 +736,7 @@ class CitationsClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from citations.
 
         Args:
@@ -814,7 +814,7 @@ class CitationsClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class CombinedMetadataClient(BaseClient[TransformedResponse_co]):
+class CombinedMetadataClient(BaseClient[TransformedResponseT_co]):
     """
     This endpoint combines metadata from timeseries and field measurements
     collections by site.
@@ -890,7 +890,7 @@ class CombinedMetadataClient(BaseClient[TransformedResponse_co]):
         vertical_datum_name: Optional[str] = None,
         web_description: Optional[str] = None,
         well_constructed_depth: Optional[float] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from combined-metadata.
 
         Args:
@@ -1302,7 +1302,7 @@ class CombinedMetadataClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class ContinuousClient(BaseClient[TransformedResponse_co]):
+class ContinuousClient(BaseClient[TransformedResponseT_co]):
     """
     Continuous data are collected via automated sensors installed at a
     monitoring location. They are collected at a high frequency and often
@@ -1340,7 +1340,7 @@ class ContinuousClient(BaseClient[TransformedResponse_co]):
         time_series_id: Optional[str] = None,
         unit_of_measure: Optional[str] = None,
         value: Optional[str] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from continuous.
 
         Args:
@@ -1521,7 +1521,7 @@ class ContinuousClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class CoordinateAccuracyCodesClient(BaseClient[TransformedResponse_co]):
+class CoordinateAccuracyCodesClient(BaseClient[TransformedResponseT_co]):
     """
     Appropriate code on the schedule to indicate the accuracy of the
     latitude-longitude values.
@@ -1543,7 +1543,7 @@ class CoordinateAccuracyCodesClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from coordinate-accuracy-codes.
 
         Args:
@@ -1620,7 +1620,7 @@ class CoordinateAccuracyCodesClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class CoordinateDatumCodesClient(BaseClient[TransformedResponse_co]):
+class CoordinateDatumCodesClient(BaseClient[TransformedResponseT_co]):
     """
     Horizontal datum code for the latitude/longitude coordinates. There
     are currently more than 300 horizontal datums available for entry.
@@ -1642,7 +1642,7 @@ class CoordinateDatumCodesClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from coordinate-datum-codes.
 
         Args:
@@ -1719,7 +1719,7 @@ class CoordinateDatumCodesClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class CoordinateMethodCodesClient(BaseClient[TransformedResponse_co]):
+class CoordinateMethodCodesClient(BaseClient[TransformedResponseT_co]):
     """
     Methods used to determine latitude-longitude values.
     """
@@ -1740,7 +1740,7 @@ class CoordinateMethodCodesClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from coordinate-method-codes.
 
         Args:
@@ -1817,7 +1817,7 @@ class CoordinateMethodCodesClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class CountiesClient(BaseClient[TransformedResponse_co]):
+class CountiesClient(BaseClient[TransformedResponseT_co]):
     """
     The name of the county or county equivalent (parish, borough, planning
     reagion, etc.) in which the site is located. List includes Census
@@ -1843,7 +1843,7 @@ class CountiesClient(BaseClient[TransformedResponse_co]):
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
         state_fips_code: Optional[str] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from counties.
 
         Args:
@@ -1929,7 +1929,7 @@ class CountiesClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class CountriesClient(BaseClient[TransformedResponse_co]):
+class CountriesClient(BaseClient[TransformedResponseT_co]):
     """
     FIPS country codes and names.
     """
@@ -1950,7 +1950,7 @@ class CountriesClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from countries.
 
         Args:
@@ -2029,7 +2029,7 @@ class CountriesClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class DailyClient(BaseClient[TransformedResponse_co]):
+class DailyClient(BaseClient[TransformedResponseT_co]):
     """
     Daily data provide one data value to represent water conditions for
     the day. Throughout much of the history of the USGS, the primary water
@@ -2070,7 +2070,7 @@ class DailyClient(BaseClient[TransformedResponse_co]):
         time_series_id: Optional[str] = None,
         unit_of_measure: Optional[str] = None,
         value: Optional[str] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from daily.
 
         Args:
@@ -2261,7 +2261,7 @@ class DailyClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class FieldMeasurementsClient(BaseClient[TransformedResponse_co]):
+class FieldMeasurementsClient(BaseClient[TransformedResponseT_co]):
     """
     Field measurements are physically measured values collected during a
     visit to the monitoring location. Field measurements consist of
@@ -2304,7 +2304,7 @@ class FieldMeasurementsClient(BaseClient[TransformedResponse_co]):
         unit_of_measure: Optional[str] = None,
         value: Optional[str] = None,
         vertical_datum: Optional[str] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from field-measurements.
 
         Args:
@@ -2507,7 +2507,7 @@ class FieldMeasurementsClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class FieldMeasurementsMetadataClient(BaseClient[TransformedResponse_co]):
+class FieldMeasurementsMetadataClient(BaseClient[TransformedResponseT_co]):
     """
     This endpoint provides metadata about field measurement collections,
     including when the earliest and most recent observations for a
@@ -2536,7 +2536,7 @@ class FieldMeasurementsMetadataClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from field-measurements-metadata.
 
         Args:
@@ -2698,7 +2698,7 @@ class FieldMeasurementsMetadataClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class HydrologicUnitCodesClient(BaseClient[TransformedResponse_co]):
+class HydrologicUnitCodesClient(BaseClient[TransformedResponseT_co]):
     """
     Hydrologic units are geographic areas representing part or all of a
     surface drainage basin or distinct hydrologic feature identified by a
@@ -2728,7 +2728,7 @@ class HydrologicUnitCodesClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from hydrologic-unit-codes.
 
         Args:
@@ -2820,7 +2820,7 @@ class HydrologicUnitCodesClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class LatestContinuousClient(BaseClient[TransformedResponse_co]):
+class LatestContinuousClient(BaseClient[TransformedResponseT_co]):
     """
     This endpoint provides the most recent observation for each time
     series of continuous data. Continuous data are collected via automated
@@ -2861,7 +2861,7 @@ class LatestContinuousClient(BaseClient[TransformedResponse_co]):
         time_series_id: Optional[str] = None,
         unit_of_measure: Optional[str] = None,
         value: Optional[str] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from latest-continuous.
 
         Args:
@@ -3050,7 +3050,7 @@ class LatestContinuousClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class LatestDailyClient(BaseClient[TransformedResponse_co]):
+class LatestDailyClient(BaseClient[TransformedResponseT_co]):
     """
     Daily data provide one data value to represent water conditions for
     the day. Throughout much of the history of the USGS, the primary water
@@ -3091,7 +3091,7 @@ class LatestDailyClient(BaseClient[TransformedResponse_co]):
         time_series_id: Optional[str] = None,
         unit_of_measure: Optional[str] = None,
         value: Optional[str] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from latest-daily.
 
         Args:
@@ -3282,7 +3282,7 @@ class LatestDailyClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class MediumCodesClient(BaseClient[TransformedResponse_co]):
+class MediumCodesClient(BaseClient[TransformedResponseT_co]):
     """
     Medium refers to the specific environmental medium from which the
     sample was collected. Medium type differs from site type because one
@@ -3308,7 +3308,7 @@ class MediumCodesClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from medium-codes.
 
         Args:
@@ -3401,7 +3401,7 @@ class MediumCodesClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class MethodCategoriesClient(BaseClient[TransformedResponse_co]):
+class MethodCategoriesClient(BaseClient[TransformedResponseT_co]):
     """
     Categorical standards for methods describing the associated data's
     appropriateness for an intended use.
@@ -3424,7 +3424,7 @@ class MethodCategoriesClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from method-categories.
 
         Args:
@@ -3505,7 +3505,7 @@ class MethodCategoriesClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class MethodCitationsClient(BaseClient[TransformedResponse_co]):
+class MethodCitationsClient(BaseClient[TransformedResponseT_co]):
     """
     Citation identifiers for water measurement methods.
     """
@@ -3529,7 +3529,7 @@ class MethodCitationsClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[int] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from method-citations.
 
         Args:
@@ -3615,7 +3615,7 @@ class MethodCitationsClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class MethodsClient(BaseClient[TransformedResponse_co]):
+class MethodsClient(BaseClient[TransformedResponseT_co]):
     """
     Water measurement or water-quality analytical methods. Codes and
     descriptions defining a method for calculating or measuring the value
@@ -3642,7 +3642,7 @@ class MethodsClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from methods.
 
         Args:
@@ -3726,7 +3726,7 @@ class MethodsClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class MonitoringLocationsClient(BaseClient[TransformedResponse_co]):
+class MonitoringLocationsClient(BaseClient[TransformedResponseT_co]):
     """
     Location information is basic information about the monitoring
     location including the name, identifier, agency responsible for data
@@ -3793,7 +3793,7 @@ class MonitoringLocationsClient(BaseClient[TransformedResponse_co]):
         vertical_datum: Optional[str] = None,
         vertical_datum_name: Optional[str] = None,
         well_constructed_depth: Optional[float] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from monitoring-locations.
 
         Args:
@@ -4088,7 +4088,7 @@ class MonitoringLocationsClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class NationalAquiferCodesClient(BaseClient[TransformedResponse_co]):
+class NationalAquiferCodesClient(BaseClient[TransformedResponseT_co]):
     """
     National aquifers are the principal aquifers or aquifer systems in the
     United States, defined as regionally extensive aquifers or aquifer
@@ -4112,7 +4112,7 @@ class NationalAquiferCodesClient(BaseClient[TransformedResponse_co]):
         query_id: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from national-aquifer-codes.
 
         Args:
@@ -4189,7 +4189,7 @@ class NationalAquiferCodesClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class ParameterCodesClient(BaseClient[TransformedResponse_co]):
+class ParameterCodesClient(BaseClient[TransformedResponseT_co]):
     """
     Parameter codes are 5-digit codes and associated descriptions used to
     identify the constituent measured and the units of measure. Some
@@ -4228,7 +4228,7 @@ class ParameterCodesClient(BaseClient[TransformedResponse_co]):
         time_basis: Optional[str] = None,
         unit_of_measure: Optional[str] = None,
         weight_basis: Optional[str] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from parameter-codes.
 
         Args:
@@ -4329,7 +4329,7 @@ class ParameterCodesClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class PeaksClient(BaseClient[TransformedResponse_co]):
+class PeaksClient(BaseClient[TransformedResponseT_co]):
     """
     Annual peak flow values are the maximum instantaneous streamflow
     values recorded at a particular site for the entire water year from
@@ -4366,7 +4366,7 @@ class PeaksClient(BaseClient[TransformedResponse_co]):
         value: Optional[str] = None,
         water_year: Optional[int] = None,
         year: Optional[int] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from peaks.
 
         Args:
@@ -4533,7 +4533,7 @@ class PeaksClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class ReliabilityCodesClient(BaseClient[TransformedResponse_co]):
+class ReliabilityCodesClient(BaseClient[TransformedResponseT_co]):
     """
     Code indicating the reliability of the data available for the site.
     """
@@ -4554,7 +4554,7 @@ class ReliabilityCodesClient(BaseClient[TransformedResponse_co]):
         reliability_description: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from reliability-codes.
 
         Args:
@@ -4631,7 +4631,7 @@ class ReliabilityCodesClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class SiteTypesClient(BaseClient[TransformedResponse_co]):
+class SiteTypesClient(BaseClient[TransformedResponseT_co]):
     """
     The hydrologic cycle setting or a man-made feature thought to affect
     the hydrologic conditions measured at a site. Primary and secondary
@@ -4658,7 +4658,7 @@ class SiteTypesClient(BaseClient[TransformedResponse_co]):
         site_type_primary_flag: Optional[str] = None,
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from site-types.
 
         Args:
@@ -4739,7 +4739,7 @@ class SiteTypesClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class StatesClient(BaseClient[TransformedResponse_co]):
+class StatesClient(BaseClient[TransformedResponseT_co]):
     """
     State name or territory. Includes U.S. states and foreign entities
     classified under FIPS as 'Principal Administrative Divisions'.
@@ -4764,7 +4764,7 @@ class StatesClient(BaseClient[TransformedResponse_co]):
         state_fips_code: Optional[str] = None,
         state_name: Optional[str] = None,
         state_postal_code: Optional[str] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from states.
 
         Args:
@@ -4850,7 +4850,7 @@ class StatesClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class StatisticCodesClient(BaseClient[TransformedResponse_co]):
+class StatisticCodesClient(BaseClient[TransformedResponseT_co]):
     """
     Statistic codes.
     """
@@ -4872,7 +4872,7 @@ class StatisticCodesClient(BaseClient[TransformedResponse_co]):
         sortby: Optional[Sequence[str]] = None,
         statistic_description: Optional[str] = None,
         statistic_name: Optional[str] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from statistic-codes.
 
         Args:
@@ -4951,7 +4951,7 @@ class StatisticCodesClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class TimeSeriesMetadataClient(BaseClient[TransformedResponse_co]):
+class TimeSeriesMetadataClient(BaseClient[TransformedResponseT_co]):
     """
     Daily data and continuous measurements are grouped into time series,
     which represent a collection of observations of a single parameter,
@@ -4997,7 +4997,7 @@ class TimeSeriesMetadataClient(BaseClient[TransformedResponse_co]):
         thresholds: Optional[str] = None,
         unit_of_measure: Optional[str] = None,
         web_description: Optional[str] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from time-series-metadata.
 
         Args:
@@ -5230,7 +5230,7 @@ class TimeSeriesMetadataClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class TimeZoneCodesClient(BaseClient[TransformedResponse_co]):
+class TimeZoneCodesClient(BaseClient[TransformedResponseT_co]):
     """
     The ISO 8601 standard defines time zone offsets as a numerical value
     added to a local time to convert it to Coordinated Universal Time
@@ -5261,7 +5261,7 @@ class TimeZoneCodesClient(BaseClient[TransformedResponse_co]):
         time_zone_description: Optional[str] = None,
         time_zone_name: Optional[str] = None,
         time_zone_utc_offset: Optional[str] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from time-zone-codes.
 
         Args:
@@ -5350,7 +5350,7 @@ class TimeZoneCodesClient(BaseClient[TransformedResponse_co]):
         # Transform
         return self._handle_response(data)
 
-class TopographicCodesClient(BaseClient[TransformedResponse_co]):
+class TopographicCodesClient(BaseClient[TransformedResponseT_co]):
     """
     The code that best describes the topographic setting in which the site
     is located. Topographic setting refers to the geomorphic features in
@@ -5375,7 +5375,7 @@ class TopographicCodesClient(BaseClient[TransformedResponse_co]):
         skipgeometry: Optional[bool] = False,
         sortby: Optional[Sequence[str]] = None,
         topography_name: Optional[str] = None,
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from topographic-codes.
 
         Args:

@@ -14,7 +14,7 @@ from typing import Sequence, Literal, Optional
 from yarl import URL
 from .base_client import BaseClient
 from .constants import USGSCollection
-from .transformers import TransformedResponse_co
+from .transformers import TransformedResponseT_co
 
 __all__ = [
 {% for item in collections %}
@@ -23,7 +23,7 @@ __all__ = [
 ]
 
 {% for item in collections %}
-class {{ item.class_name }}(BaseClient[TransformedResponse_co]):
+class {{ item.class_name }}(BaseClient[TransformedResponseT_co]):
     """
     {{ item.description | wordwrap(70) | indent(4) }}
     """
@@ -34,7 +34,7 @@ class {{ item.class_name }}(BaseClient[TransformedResponse_co]):
         {% for p in item.parameters %}
         {{ p.python_name }}: {{ p.type_hint }} = {{ p.default }},
         {% endfor %}
-        ) -> TransformedResponse_co:
+        ) -> TransformedResponseT_co:
         """Retrieve items from {{ item.value }}.
 
         Args:

@@ -3,7 +3,6 @@ import keyword
 import re
 from typing import Any, Optional, TypedDict
 import builtins
-from hydrotools.waterdata_client._version import __version__
 
 OPENAPI_TO_PYTHON_TYPES: dict[str, str] = {
     "string": "str",

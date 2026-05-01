@@ -19,10 +19,11 @@ from pathlib import Path
 from datetime import datetime, UTC
 import click
 from jinja2 import Environment, FileSystemLoader
+from schema_extract import get_template_data
+
 from hydrotools.waterdata_client.schema import get_schema
 from hydrotools.waterdata_client.client_config import SETTINGS
 from hydrotools.waterdata_client._version import __version__
-from schema_extract import get_template_data
 
 @click.command()
 @click.argument("templates", type=click.Path(exists=True, file_okay=False,
@@ -88,7 +89,7 @@ def write_clients_module(
         lstrip_blocks=True
     )
 
-    # Render and save
+    # Render and save clients.py
     template = env.get_template(name=name)
     content = template.render(
         timestamp=timestamp,
