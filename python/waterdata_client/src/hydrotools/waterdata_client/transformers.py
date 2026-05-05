@@ -147,9 +147,9 @@ def optimize_series_categorical(s: pd.Series) -> pd.Series:
 
 def optimize_series_datetime_utc(s: pd.Series) -> pd.Series:
     """Applies pandas.to_datetime to a pandas.Series. Converts to UTC and strips
-    timezone awareness.
+    timezone awareness. Defaults to unit 's' (seconds).
     """
-    return pd.to_datetime(s, utc=True).dt.tz_localize(None)
+    return pd.to_datetime(s, utc=True).dt.tz_localize(None).astype("datetime64[s]")
 
 def optimize_series_float32(s: pd.Series) -> pd.Series:
     """Applies float32 type to a pandas.Series."""
