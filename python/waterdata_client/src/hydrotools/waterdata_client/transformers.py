@@ -1,13 +1,14 @@
 """Defines transformation methods for handling deserialized JSON responses from
 USGS OGC APIs.
 """
-from typing import Any, Protocol, TypeVar, runtime_checkable, Optional
+from typing import (Any, Protocol, TypeVar, runtime_checkable, Optional,
+    Callable, cast)
 
 import pandas as pd
 from pandas._typing import Renamer
 import geopandas as gpd
 
-from .constants import HYDROTOOLS_DATAFRAME_COLUMN_MAPPING
+from .constants import HYDROTOOLS_DATAFRAME_COLUMN_MAPPING, HydroToolsColumn
 
 TransformedResponseT_co = TypeVar("TransformedResponseT_co", covariant=True)
 """Generic transformed response type for transformer methods."""
@@ -130,3 +131,129 @@ def to_dataframe(
     if column_mapper is None:
         return dataframe
     return dataframe.rename(mapper=column_mapper, axis=1)
+
+# pickle/multiprocessing friendly optimization strategies
+
+DataFrameT = TypeVar("DataFrameT", bound=pd.DataFrame)
+"""pandas.DataFrame or geopandas.GeoDataFrame"""
+
+SeriesOptimizer = Callable[[pd.Series], pd.Series]
+"""A callable that takes a pandas.Series and returns a memory-optimized version
+of the same."""
+
+def optimize_series_categorical(s: pd.Series) -> pd.Series:
+    """Applies pandas.Categorical type to a pandas.Series."""
+    return s.astype("category")
+
+def optimize_series_datetime_utc(s: pd.Series) -> pd.Series:
+    """Applies pandas.to_datetime to a pandas.Series. Converts to UTC and strips
+    timezone awareness.
+    """
+    return pd.to_datetime(s, utc=True).dt.tz_localize(None)
+
+def optimize_series_float32(s: pd.Series) -> pd.Series:
+    """Applies float32 type to a pandas.Series."""
+    return pd.to_numeric(s).astype("float32")
+
+SERIES_OPTIMIZERS: dict[HydroToolsColumn, SeriesOptimizer] = {
+    # Categorical optimizations
+    HydroToolsColumn.USGS_SITE_CODE: optimize_series_categorical,
+    HydroToolsColumn.USACE_GAUGE_ID: optimize_series_categorical,
+    HydroToolsColumn.NWS_LID: optimize_series_categorical,
+    HydroToolsColumn.PARAMETER_CODE: optimize_series_categorical,
+    HydroToolsColumn.STATISTIC_ID: optimize_series_categorical,
+    HydroToolsColumn.MEASUREMENT_UNIT: optimize_series_categorical,
+    HydroToolsColumn.VARIABLE_NAME: optimize_series_categorical,
+    HydroToolsColumn.QUALIFIERS: optimize_series_categorical,
+    HydroToolsColumn.CONFIGURATION: optimize_series_categorical,
+    HydroToolsColumn.APPROVAL_STATUS: optimize_series_categorical,
+    HydroToolsColumn.ID: optimize_series_categorical,
+    HydroToolsColumn.TIME_SERIES_ID: optimize_series_categorical,
+    HydroToolsColumn.GEOMETRY_TYPE: optimize_series_categorical,
+    HydroToolsColumn.GEO_FEATURE_ID: optimize_series_categorical,
+    HydroToolsColumn.TYPE: optimize_series_categorical,
+
+    # Numeric optimizations
+    HydroToolsColumn.VALUE: optimize_series_float32,
+
+    # DateTime optimizations
+    HydroToolsColumn.VALUE_TIME: optimize_series_datetime_utc,
+    HydroToolsColumn.LAST_MODIFIED: optimize_series_datetime_utc,
+    HydroToolsColumn.START: optimize_series_datetime_utc,
+    HydroToolsColumn.END: optimize_series_datetime_utc
+}
+"""Mapping from canonical hydrotools columns to optimization function."""
+
+def optimize_dataframe(
+        dataframe: DataFrameT,
+        optimizations: Optional[dict[HydroToolsColumn, SeriesOptimizer]] = None
+) -> DataFrameT:
+    """Apply column-specific optimizations to a dataframe.
+    
+    Args:
+        dataframe: Dataframe to be optimized.
+        optimizations: Mapping from column labels to optimization functions.
+            Defaults to hydrotools canonical optimizations.
+    
+    Returns:
+        Optimized dataframe.
+    """
+    if optimizations is None:
+        optimizations = SERIES_OPTIMIZERS
+
+    # Copy to avoid set with copy error. Cast back to original dataframe type.
+    df = cast(DataFrameT, dataframe.copy())
+
+    # Look for optimizable columns
+    for column, optimizer in optimizations.items():
+        if column.value in df.columns:
+            # Apply the conversion
+            df[column.value] = optimizer(df[column.value])
+
+    return df
+
+def to_optimized_geodataframe(
+        data: list[dict[str, Any]],
+        column_mapper: Optional[Renamer] = default_column_mapper
+) -> gpd.GeoDataFrame:
+    """Transforms a list of GeoJSON-derived dictionaries to a single GeoDataFrame
+    with memory-optimizations.
+    
+    Args:
+        data: A list of deserialized GeoJSON responses from an OGC-compliant API.
+        column_mapper: Dict-like or function transformations to apply to that
+            column values. Passed directly to GeoDataFrame.rename with axis=1.
+    
+    Returns:
+        Transformed and concatenated responses in a single GeoDataFrame.
+    
+    Raises:
+        NoDataError if data is empty or all items are None.
+    """
+    # Apply base transformation and optimize
+    return optimize_dataframe(to_geodataframe(
+        data=data, column_mapper=column_mapper
+    ))
+
+def to_optimized_dataframe(
+        data: list[dict[str, Any]],
+        column_mapper: Optional[Renamer] = default_column_mapper
+) -> pd.DataFrame:
+    """Transforms a list of GeoJSON-derived dictionaries to a single DataFrame
+    with memory-optimizations.
+    
+    Args:
+        data: A list of deserialized GeoJSON responses from an OGC-compliant API.
+        column_mapper: Dict-like or function transformations to apply to that
+            column values. Passed directly to DataFrame.rename with axis=1.
+    
+    Returns:
+        Transformed and concatenated responses in a single DataFrame.
+    
+    Raises:
+        NoDataError if data is empty or all items are None.
+    """
+    # Apply base transformation and optimize
+    return optimize_dataframe(to_dataframe(
+        data=data, column_mapper=column_mapper
+    ))
