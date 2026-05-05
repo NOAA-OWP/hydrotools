@@ -59,6 +59,9 @@ class HydroToolsColumn(StrEnum):
     APPROVAL_STATUS = "approval_status"
     LAST_MODIFIED = "last_modified"
     GEO_FEATURE_ID = "geo_feature_id"
+    GEOMETRY_TYPE = "geometry_type"
+    COORDINATES = "coordinates"
+    TYPE = "type"
 
 HYDROTOOLS_DATAFRAME_COLUMN_MAPPING: dict[str, HydroToolsColumn] = {
     "properties.id": HydroToolsColumn.GEO_FEATURE_ID,
@@ -82,7 +85,10 @@ HYDROTOOLS_DATAFRAME_COLUMN_MAPPING: dict[str, HydroToolsColumn] = {
     "unit_of_measure": HydroToolsColumn.MEASUREMENT_UNIT,
     "approval_status": HydroToolsColumn.APPROVAL_STATUS,
     "qualifier": HydroToolsColumn.QUALIFIERS,
-    "last_modified": HydroToolsColumn.LAST_MODIFIED
+    "last_modified": HydroToolsColumn.LAST_MODIFIED,
+    "geometry.type": HydroToolsColumn.GEOMETRY_TYPE,
+    "geometry.coordinates": HydroToolsColumn.COORDINATES,
+    "type": HydroToolsColumn.TYPE
 }
 """Mapping from default pandas.json_normalize column names to HydroTools
 canonical column labels."""
