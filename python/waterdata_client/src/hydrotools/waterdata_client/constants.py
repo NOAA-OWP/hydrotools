@@ -5,7 +5,7 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.0a0
 Generation script: build_constants.py
-Generated: 2026-05-01 15:29:03 Z
+Generated: 2026-05-05 17:55:55 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -90,6 +90,9 @@ class HydroToolsColumn(StrEnum):
     APPROVAL_STATUS = "approval_status"
     LAST_MODIFIED = "last_modified"
     GEO_FEATURE_ID = "geo_feature_id"
+    GEOMETRY_TYPE = "geometry_type"
+    COORDINATES = "coordinates"
+    TYPE = "type"
 
 HYDROTOOLS_DATAFRAME_COLUMN_MAPPING: dict[str, HydroToolsColumn] = {
     "properties.id": HydroToolsColumn.GEO_FEATURE_ID,
@@ -113,7 +116,10 @@ HYDROTOOLS_DATAFRAME_COLUMN_MAPPING: dict[str, HydroToolsColumn] = {
     "unit_of_measure": HydroToolsColumn.MEASUREMENT_UNIT,
     "approval_status": HydroToolsColumn.APPROVAL_STATUS,
     "qualifier": HydroToolsColumn.QUALIFIERS,
-    "last_modified": HydroToolsColumn.LAST_MODIFIED
+    "last_modified": HydroToolsColumn.LAST_MODIFIED,
+    "geometry.type": HydroToolsColumn.GEOMETRY_TYPE,
+    "geometry.coordinates": HydroToolsColumn.COORDINATES,
+    "type": HydroToolsColumn.TYPE
 }
 """Mapping from default pandas.json_normalize column names to HydroTools
 canonical column labels."""
