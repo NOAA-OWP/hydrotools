@@ -152,7 +152,7 @@ def test_optimize_dataframe_custom_strategies():
     # Custom optimizer
     optimized_df = optimize_dataframe(
         df,
-        optimizations={
+        transformations={
             HydroToolsColumn.VALUE: pd.to_numeric
         }
         )

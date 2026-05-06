@@ -137,75 +137,75 @@ def to_dataframe(
 DataFrameT = TypeVar("DataFrameT", bound=pd.DataFrame)
 """pandas.DataFrame or geopandas.GeoDataFrame"""
 
-SeriesOptimizer = Callable[[pd.Series], pd.Series]
-"""A callable that takes a pandas.Series and returns a memory-optimized version
+SeriesTransformer = Callable[[pd.Series], pd.Series]
+"""A callable that takes a pandas.Series and returns a transformed version
 of the same."""
 
-def optimize_series_categorical(s: pd.Series) -> pd.Series:
+def categorize_series(s: pd.Series) -> pd.Series:
     """Applies pandas.Categorical type to a pandas.Series."""
     return s.astype("category")
 
-def optimize_series_datetime_utc(s: pd.Series) -> pd.Series:
+def downscale_datetime_series(s: pd.Series) -> pd.Series:
     """Applies pandas.to_datetime to a pandas.Series. Converts to UTC and strips
     timezone awareness. Defaults to unit 's' (seconds).
     """
     return pd.to_datetime(s, utc=True).dt.tz_localize(None).astype("datetime64[s]")
 
-def optimize_series_float32(s: pd.Series) -> pd.Series:
+def downscale_float32_series(s: pd.Series) -> pd.Series:
     """Applies float32 type to a pandas.Series."""
     return pd.to_numeric(s).astype("float32")
 
-SERIES_OPTIMIZERS: dict[HydroToolsColumn, SeriesOptimizer] = {
+SERIES_TRANSFORMERS: dict[HydroToolsColumn, SeriesTransformer] = {
     # Categorical optimizations
-    HydroToolsColumn.USGS_SITE_CODE: optimize_series_categorical,
-    HydroToolsColumn.USACE_GAUGE_ID: optimize_series_categorical,
-    HydroToolsColumn.NWS_LID: optimize_series_categorical,
-    HydroToolsColumn.PARAMETER_CODE: optimize_series_categorical,
-    HydroToolsColumn.STATISTIC_ID: optimize_series_categorical,
-    HydroToolsColumn.MEASUREMENT_UNIT: optimize_series_categorical,
-    HydroToolsColumn.VARIABLE_NAME: optimize_series_categorical,
-    HydroToolsColumn.QUALIFIERS: optimize_series_categorical,
-    HydroToolsColumn.CONFIGURATION: optimize_series_categorical,
-    HydroToolsColumn.APPROVAL_STATUS: optimize_series_categorical,
-    HydroToolsColumn.ID: optimize_series_categorical,
-    HydroToolsColumn.TIME_SERIES_ID: optimize_series_categorical,
-    HydroToolsColumn.GEOMETRY_TYPE: optimize_series_categorical,
-    HydroToolsColumn.GEO_FEATURE_ID: optimize_series_categorical,
-    HydroToolsColumn.TYPE: optimize_series_categorical,
+    HydroToolsColumn.USGS_SITE_CODE: categorize_series,
+    HydroToolsColumn.USACE_GAUGE_ID: categorize_series,
+    HydroToolsColumn.NWS_LID: categorize_series,
+    HydroToolsColumn.PARAMETER_CODE: categorize_series,
+    HydroToolsColumn.STATISTIC_ID: categorize_series,
+    HydroToolsColumn.MEASUREMENT_UNIT: categorize_series,
+    HydroToolsColumn.VARIABLE_NAME: categorize_series,
+    HydroToolsColumn.QUALIFIERS: categorize_series,
+    HydroToolsColumn.CONFIGURATION: categorize_series,
+    HydroToolsColumn.APPROVAL_STATUS: categorize_series,
+    HydroToolsColumn.ID: categorize_series,
+    HydroToolsColumn.TIME_SERIES_ID: categorize_series,
+    HydroToolsColumn.GEOMETRY_TYPE: categorize_series,
+    HydroToolsColumn.GEO_FEATURE_ID: categorize_series,
+    HydroToolsColumn.TYPE: categorize_series,
 
     # Numeric optimizations
-    HydroToolsColumn.VALUE: optimize_series_float32,
+    HydroToolsColumn.VALUE: downscale_float32_series,
 
     # DateTime optimizations
-    HydroToolsColumn.VALUE_TIME: optimize_series_datetime_utc,
-    HydroToolsColumn.LAST_MODIFIED: optimize_series_datetime_utc,
-    HydroToolsColumn.START: optimize_series_datetime_utc,
-    HydroToolsColumn.END: optimize_series_datetime_utc
+    HydroToolsColumn.VALUE_TIME: downscale_datetime_series,
+    HydroToolsColumn.LAST_MODIFIED: downscale_datetime_series,
+    HydroToolsColumn.START: downscale_datetime_series,
+    HydroToolsColumn.END: downscale_datetime_series
 }
 """Mapping from canonical hydrotools columns to optimization function."""
 
 def optimize_dataframe(
         dataframe: DataFrameT,
-        optimizations: Optional[dict[HydroToolsColumn, SeriesOptimizer]] = None
+        transformations: Optional[dict[HydroToolsColumn, SeriesTransformer]] = None
 ) -> DataFrameT:
-    """Apply column-specific optimizations to a dataframe.
+    """Apply column-specific transformations to a dataframe to reduce memory-usage.
     
     Args:
         dataframe: Dataframe to be optimized.
-        optimizations: Mapping from column labels to optimization functions.
-            Defaults to hydrotools canonical optimizations.
+        transformations: Mapping from column labels to optimization functions.
+            Defaults to hydrotools canonical transformations.
     
     Returns:
         Optimized dataframe.
     """
-    if optimizations is None:
-        optimizations = SERIES_OPTIMIZERS
+    if transformations is None:
+        transformations = SERIES_TRANSFORMERS
 
     # Copy to avoid set with copy error. Cast back to original dataframe type.
     df = cast(DataFrameT, dataframe.copy())
 
     # Look for optimizable columns
-    for column, optimizer in optimizations.items():
+    for column, optimizer in transformations.items():
         if column.value in df.columns:
             # Apply the conversion
             df[column.value] = optimizer(df[column.value])
