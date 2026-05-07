@@ -2,6 +2,7 @@
 import pytest
 from unittest.mock import patch
 from yarl import URL
+from pydantic import ValidationError
 
 # Import a few representative generated clients
 from hydrotools.waterdata_client import (
@@ -97,3 +98,17 @@ def test_get_all_is_called_with_client_config():
         _, kwargs = mock_get_all.call_args
         assert kwargs["concurrency_limit"] == 99
         assert kwargs["max_retries"] == 5
+
+def test_invalid_query_values():
+    """Confirm invalid argument values trigger ValidationError."""
+    client = ContinuousClient()
+
+    # Patch the lower-level get_all called by _get_json_responses
+    with patch("hydrotools.waterdata_client.base_client.get_all") as mock_get_all:
+        mock_get_all.return_value = []
+
+        with pytest.raises(ValidationError, match="should be less than or equal to 50000"):
+            client.get(limit=1_000_000)
+
+        with pytest.raises(ValidationError, match="should be greater than or equal to 1"):
+            client.get(limit=0)
