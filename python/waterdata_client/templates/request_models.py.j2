@@ -1,0 +1,32 @@
+# AUTO-GENERATED FILE. DO NOT EDIT MANUALLY.
+"""This is a Jinja2 auto-generated module. This module contains individual
+pydantic request models for USGS OGC API items endpoints. These classes are generated
+by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints.
+
+Package version: {{ package_version }}
+Generation script: {{ script_name }}
+Generated: {{ timestamp }}
+JSON Schema source: {{ schema_source }}
+JSON Schema version: {{ schema_version }}
+OpenAPI version: {{ openapi_version }}
+"""
+from typing import Sequence, Literal, Optional
+from yarl import URL
+from pydantic import BaseModel, Field
+
+__all__ = [
+{% for item in collections %}
+    "{{ item.request_model }}",
+{% endfor %}
+]
+
+{% for item in collections %}
+class {{ item.request_model }}(BaseModel):
+    """
+    {{ item.description | wordwrap(70) | indent(4) }}
+    """
+    {% for p in item.parameters %}
+    {{ p.python_name }}: {{ p.type_hint }} = Field({{ p.field_constraints }})
+    {% endfor %}
+
+{% endfor %}
