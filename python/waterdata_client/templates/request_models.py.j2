@@ -10,7 +10,7 @@ JSON Schema source: {{ schema_source }}
 JSON Schema version: {{ schema_version }}
 OpenAPI version: {{ openapi_version }}
 """
-from typing import Sequence, Literal, Optional
+from typing import Sequence, Literal, Optional, Any
 from yarl import URL
 from pydantic import BaseModel, Field
 
@@ -28,5 +28,19 @@ class {{ item.request_model }}(BaseModel):
     {% for p in item.parameters %}
     {{ p.python_name }}: {{ p.type_hint }} = Field({{ p.field_constraints }})
     {% endfor %}
+
+    def generate_query(self) -> dict[str, Any]:
+        """Translates class attributes to valid API parameters. Returns a URL
+        builder compatible query.
+        """
+        # Translate Python parameters to API parameters
+        query = {
+            {% for p in item.parameters %}
+            "{{ p.name }}": self.{{ p.python_name }},
+            {% endfor %}
+        }
+
+        # Ignore None
+        return {k: v for k, v in query.items() if v is not None}
 
 {% endfor %}
