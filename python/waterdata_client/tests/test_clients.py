@@ -107,8 +107,14 @@ def test_invalid_query_values():
     with patch("hydrotools.waterdata_client.base_client.get_all") as mock_get_all:
         mock_get_all.return_value = []
 
+        # Raise on too big
         with pytest.raises(ValidationError, match="should be less than or equal to 50000"):
             client.get(limit=1_000_000)
 
+        # Raise on too small
         with pytest.raises(ValidationError, match="should be greater than or equal to 1"):
             client.get(limit=0)
+
+        # Raise on invalid type
+        with pytest.raises(ValidationError, match="should be a valid integer"):
+            client.get(limit=complex(3, 4))
