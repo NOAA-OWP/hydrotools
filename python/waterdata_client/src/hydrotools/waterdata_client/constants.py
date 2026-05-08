@@ -5,7 +5,7 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.0a0
 Generation script: build_constants.py
-Generated: 2026-05-05 17:55:55 Z
+Generated: 2026-05-08 14:20:26 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2

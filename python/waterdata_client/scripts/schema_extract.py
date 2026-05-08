@@ -102,7 +102,7 @@ def to_pascal_case(
 
 def get_type_hint(
         type_schema: dict[str, Any], required: bool = False
-) -> tuple[str, Any, str]:
+) -> tuple[str, Any, dict[str, Any]]:
     """Returns type hint, default value, and pydantic field constraints.
 
     Args:
@@ -177,10 +177,7 @@ def get_type_hint(
     ]
     field_args.update({k: v for k, v in field_map if v is not None})
 
-    # Convert to string
-    arguments = [f"{k}={v}" for k, v in field_args.items()]
-
-    return type_hint, default, ", ".join(arguments)
+    return type_hint, default, field_args
 
 def validate_identifier(
         identifier: str,
@@ -249,13 +246,22 @@ def parse_parameters(
         type_hint, default_value, field_constraints = get_type_hint(
             param.get("schema", {}), required)
 
+        # Set parameter description
+        parameter_description: str = param.get("description", "")
+        short_description = parameter_description.replace(
+            "\n", " ").replace('"', " ").split(".", 1)[0].strip()
+
+        # Convert field constraints to strings
+        field_constraints.update({"description": f'"{short_description}."'})
+        arguments = [f"{k}={v}" for k, v in field_constraints.items()]
+
         parsed.append({
             "name": name,
             "python_name": python_name,
             "type_hint": type_hint,
-            "description": param.get("description", ""),
+            "description": parameter_description,
             "default": default_value,
-            "field_constraints": field_constraints
+            "field_constraints": ", ".join(arguments)
         })
 
     return parsed
