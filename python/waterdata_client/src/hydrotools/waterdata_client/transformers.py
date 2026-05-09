@@ -164,7 +164,9 @@ SERIES_TRANSFORMERS: dict[HydroToolsColumn, SeriesTransformer] = {
     HydroToolsColumn.STATISTIC_ID: categorize_series,
     HydroToolsColumn.MEASUREMENT_UNIT: categorize_series,
     HydroToolsColumn.VARIABLE_NAME: categorize_series,
-    HydroToolsColumn.QUALIFIERS: categorize_series,
+    # Qualifiers can contain list values (for example ["P", "Ice"]), which
+    # cannot be categorized because lists are unhashable. Leave this column as
+    # object dtype until list-valued response fields get a dedicated strategy.
     HydroToolsColumn.CONFIGURATION: categorize_series,
     HydroToolsColumn.APPROVAL_STATUS: categorize_series,
     HydroToolsColumn.ID: categorize_series,

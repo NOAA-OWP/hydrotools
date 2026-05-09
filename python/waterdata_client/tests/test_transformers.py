@@ -137,6 +137,27 @@ def test_to_optimized_dataframe_integration(mock_geojson_response):
     assert df[HydroToolsColumn.VALUE].dtype == np.float32
     assert df[HydroToolsColumn.VALUE_TIME].dtype == "datetime64[s]"
 
+
+def test_optimize_dataframe_skips_list_qualifiers():
+    """Verify list-valued qualifiers do not break dataframe optimization."""
+    df = pd.DataFrame({
+        HydroToolsColumn.QUALIFIERS: [["P", "Ice"], ["ESTIMATED"]],
+        HydroToolsColumn.USGS_SITE_CODE: ["USGS-01", "USGS-01"],
+    })
+
+    optimized_df = optimize_dataframe(df)
+
+    assert optimized_df[HydroToolsColumn.QUALIFIERS].tolist() == [
+        ["P", "Ice"],
+        ["ESTIMATED"],
+    ]
+    assert optimized_df[HydroToolsColumn.QUALIFIERS].dtype == object
+    assert isinstance(
+        optimized_df[HydroToolsColumn.USGS_SITE_CODE].dtype,
+        pd.CategoricalDtype,
+    )
+
+
 def test_optimize_dataframe_custom_strategies():
     """Verify that custom optimization dictionaries can be injected."""
     df = pd.DataFrame({
