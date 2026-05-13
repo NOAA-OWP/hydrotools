@@ -29,12 +29,14 @@ from hydrotools.waterdata_client._version import __version__
 @click.argument("templates", type=click.Path(exists=True, file_okay=False,
     dir_okay=True, path_type=Path))
 @click.option("-n", "--name", nargs=1, type=str, default="clients.py.j2",
-    help="Output file name.")
+    help="Clients template file name.")
+@click.option("-i", "--init-template", nargs=1, type=str, default="clients_init.py.j2",
+    help="Init template file name.")
 @click.option("-o", "--output", nargs=1, type=click.Path(
-    exists=False, file_okay=True, dir_okay=False, path_type=Path, allow_dash=True),
-    help="Output file path", default="-") # NOTE: "-" means stdout
+    exists=False, file_okay=False, dir_okay=True, path_type=Path),
+    help="Output directory path", default="./generated_clients")
 @click.option('--overwrite/--no-overwrite', default=False,
-    help="Overwrite existing file, disabled by default")
+    help="Overwrite existing files, disabled by default")
 @click.option('--ignore-errors/--no-ignore-errors', default=False,
     help="Ignore non-Python friendly collection labels, disabled by default")
 @click.option('--fix-errors/--no-fix-errors', default=False,
@@ -44,20 +46,22 @@ from hydrotools.waterdata_client._version import __version__
 def write_clients_module(
         templates: Path,
         name: str,
+        init_template: str,
         output: Path,
         overwrite: bool = False,
         ignore_errors: bool = False,
         fix_errors: bool = False,
         prefix: str = "Collection"
 ) -> None:
-    """Renders the clients.py file from the OGC schema.
+    """Renders the clients subpackage from the OGC schema.
 
     \b
     Args:
         templates: File system directory containing Jinja2 template files.
-        name: Template file name. Defaults to 'clients.py.j2'.
-        output: The location to write the resulting file. Defaults to stdout.
-        overwrite: If true, overwrite the file if it exists. Defaults to false.
+        client_template: Client template file name. Defaults to 'clients.py.j2'.
+        init_template: Client template file name. Defaults to 'clients_init.py.j2'.
+        output: The location to write the resulting files. Defaults to './generated_clients'.
+        overwrite: If true, overwrite the files if they exist. Defaults to false.
         ignore_errors: If True, skips collections with invalid Python identifier
             characters. If False, raises.
         fix_errors: If True, prepend error_prefix to erroneous collection labels.
@@ -67,11 +71,12 @@ def write_clients_module(
     
     \b
     Raises:
-        FileExistsError: If the file exists and overwrite is False.
+        FileExistsError: If the directory exists and overwrite is False.
     """
-    # Check for file
+    # Check for directory
     if output.exists() and not overwrite:
         raise FileExistsError(f"{output} already exists")
+    output.mkdir(exist_ok=True)
 
     # Resolve schema
     schema = get_schema()
@@ -89,9 +94,31 @@ def write_clients_module(
         lstrip_blocks=True
     )
 
-    # Render and save clients.py
-    template = env.get_template(name=name)
-    content = template.render(
+    # Render and save clients
+    client_template = env.get_template(name=name)
+    for item in template_data:
+        # Output file
+        module_path = output / (item["module_name"] + ".py")
+
+        # Render and save
+        content = client_template.render(
+            timestamp=timestamp,
+            schema_source=str(SETTINGS.schema_url),
+            schema_version=schema.get("info", {}).get("version", "UNKNOWN"),
+            openapi_version=schema.get("openapi", "UNKNOWN"),
+            item=item,
+            package_version=__version__,
+            script_name=Path(__file__).name
+            )
+        with click.open_file(module_path, "w", encoding="utf-8") as fo:
+            fo.write(content)
+
+    # Init file
+    module_path = output / "__init__.py"
+
+    # Render and save
+    jinja_template = env.get_template(name=init_template)
+    content = jinja_template.render(
         timestamp=timestamp,
         schema_source=str(SETTINGS.schema_url),
         schema_version=schema.get("info", {}).get("version", "UNKNOWN"),
@@ -100,7 +127,7 @@ def write_clients_module(
         package_version=__version__,
         script_name=Path(__file__).name
         )
-    with click.open_file(output, "w", encoding="utf-8") as fo:
+    with click.open_file(module_path, "w", encoding="utf-8") as fo:
         fo.write(content)
 
 if __name__ == "__main__":

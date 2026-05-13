@@ -1,5 +1,5 @@
 # AUTO-GENERATED FILE. DO NOT EDIT MANUALLY.
-"""This is a Jinja2 auto-generated module. This module contains individual
+"""This is a Jinja2 auto-generated module. These modules contain individual
 client classes for USGS OGC API items endpoints. These classes are generated
 by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints.
 
@@ -12,18 +12,11 @@ OpenAPI version: {{ openapi_version }}
 """
 from typing import Sequence, Literal, Optional
 from yarl import URL
-from .base_client import BaseClient
-from .constants import USGSCollection
-from .transformers import TransformedResponseT_co
-from . import request_models as rm
+from ..base_client import BaseClient
+from ..constants import USGSCollection
+from ..transformers import TransformedResponseT_co
+from .. import request_models as rm
 
-__all__ = [
-{% for item in collections %}
-    "{{ item.class_name }}",
-{% endfor %}
-]
-
-{% for item in collections %}
 class {{ item.class_name }}(BaseClient[TransformedResponseT_co]):
     """
     {{ item.description | wordwrap(70) | indent(4) }}
@@ -56,4 +49,3 @@ class {{ item.class_name }}(BaseClient[TransformedResponseT_co]):
         # Transform
         return self._handle_response(data)
 
-{% endfor %}
