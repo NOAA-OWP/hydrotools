@@ -154,7 +154,8 @@ def downscale_datetime_series(s: pd.Series) -> pd.Series:
     """Applies pandas.to_datetime to a pandas.Series. Converts to UTC and strips
     timezone awareness. Defaults to unit 's' (seconds).
     """
-    return pd.to_datetime(s, utc=True).dt.tz_localize(None).astype("datetime64[s]")
+    return pd.to_datetime(s, utc=True,
+        format="ISO8601").dt.tz_localize(None).astype("datetime64[s]")
 
 def downscale_float32_series(s: pd.Series) -> pd.Series:
     """Applies float32 type to a pandas.Series."""

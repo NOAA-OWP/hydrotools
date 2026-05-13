@@ -166,3 +166,18 @@ def test_qualifier_objects():
         })
 
     optimized_df = optimize_dataframe(df)
+    assert isinstance(optimized_df["qualifiers"].dtype, pd.CategoricalDtype)
+
+def test_heterogenous_datetimes():
+    """Tests that optimizations work on any ISO8601 datetimes."""
+    df = pd.DataFrame({
+        "value_time": [
+            "2026-05-11 00",
+            "2026-05-12T00:00",
+            "2026-05-13T00:00:00",
+            ],
+        "value": ["1.0", "2.0", "3.0"]
+        })
+
+    optimized_df = optimize_dataframe(df)
+    assert optimized_df[HydroToolsColumn.VALUE_TIME].dtype == "datetime64[s]"
