@@ -157,3 +157,12 @@ def test_optimize_dataframe_custom_strategies():
         }
         )
     assert optimized_df["value"].dtype == np.float64
+
+def test_qualifier_objects():
+    """Tests that optimizations work with list qualifiers."""
+    df = pd.DataFrame({
+        "qualifiers": [["P", "ice"], ["P", "ICE"], "A"],
+        "value": ["1.0", "2.0", "3.0"]
+        })
+
+    optimized_df = optimize_dataframe(df)

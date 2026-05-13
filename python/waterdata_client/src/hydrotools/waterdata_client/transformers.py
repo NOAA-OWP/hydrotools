@@ -145,6 +145,11 @@ def categorize_series(s: pd.Series) -> pd.Series:
     """Applies pandas.Categorical type to a pandas.Series."""
     return s.astype("category")
 
+def categorize_object_series(s: pd.Series) -> pd.Series:
+    """Applies pandas.Categorical type to a pandas.Series that may contain
+    non-string objects by first casting them to string."""
+    return s.astype(str).astype("category")
+
 def downscale_datetime_series(s: pd.Series) -> pd.Series:
     """Applies pandas.to_datetime to a pandas.Series. Converts to UTC and strips
     timezone awareness. Defaults to unit 's' (seconds).
@@ -164,7 +169,7 @@ SERIES_TRANSFORMERS: dict[HydroToolsColumn, SeriesTransformer] = {
     HydroToolsColumn.STATISTIC_ID: categorize_series,
     HydroToolsColumn.MEASUREMENT_UNIT: categorize_series,
     HydroToolsColumn.VARIABLE_NAME: categorize_series,
-    HydroToolsColumn.QUALIFIERS: categorize_series,
+    HydroToolsColumn.QUALIFIERS: categorize_object_series,
     HydroToolsColumn.CONFIGURATION: categorize_series,
     HydroToolsColumn.APPROVAL_STATUS: categorize_series,
     HydroToolsColumn.ID: categorize_series,
