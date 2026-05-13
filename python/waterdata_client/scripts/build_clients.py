@@ -1,5 +1,5 @@
-"""Run this script to generate and write the `clients.py` file using the Jinja2
-template and the "items" collections found in the USGS OGC API schema.
+"""Run this script to generate and write the `clients` package using the Jinja2
+templates and the "items" collections found in the USGS OGC API schema.
 
 # Usage
 The following assumes you are developing in an UNIX-like environment and using a
@@ -12,7 +12,7 @@ $ python3 -m venv env
 $ source env/bin/activate
 (env) $ python3 -m pip install -U pip wheel
 (env) $ pip install -e .[develop]
-(env) $ python3 scripts/build_clients.py ./templates/ --output src/hydrotools/waterdata_client/clients.py
+(env) $ python3 scripts/build_clients.py ./templates/ --output src/hydrotools/waterdata_client/clients
 ```
 """
 from pathlib import Path
@@ -58,7 +58,7 @@ def write_clients_module(
     \b
     Args:
         templates: File system directory containing Jinja2 template files.
-        client_template: Client template file name. Defaults to 'clients.py.j2'.
+        name: Client template file name. Defaults to 'clients.py.j2'.
         init_template: Client template file name. Defaults to 'clients_init.py.j2'.
         output: The location to write the resulting files. Defaults to './generated_clients'.
         overwrite: If true, overwrite the files if they exist. Defaults to false.

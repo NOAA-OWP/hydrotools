@@ -14,13 +14,6 @@ from typing import Sequence, Literal, Optional, Any
 from yarl import URL
 from pydantic import BaseModel, Field
 
-__all__ = [
-{% for item in collections %}
-    "{{ item.request_model }}",
-{% endfor %}
-]
-
-{% for item in collections %}
 class {{ item.request_model }}(BaseModel):
     """
     {{ item.description | wordwrap(70) | indent(4) }}
@@ -43,4 +36,3 @@ class {{ item.request_model }}(BaseModel):
         # Ignore None
         return {k: v for k, v in query.items() if v is not None}
 
-{% endfor %}

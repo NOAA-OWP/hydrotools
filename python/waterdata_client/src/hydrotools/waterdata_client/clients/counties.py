@@ -5,7 +5,7 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.0a0
 Generation script: build_clients.py
-Generated: 2026-05-13 16:08:08 Z
+Generated: 2026-05-13 17:38:51 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -15,7 +15,7 @@ from yarl import URL
 from ..base_client import BaseClient
 from ..constants import USGSCollection
 from ..transformers import TransformedResponseT_co
-from .. import request_models as rm
+from ..request_models.counties import CountiesRequest
 
 class CountiesClient(BaseClient[TransformedResponseT_co]):
     """
@@ -101,7 +101,7 @@ class CountiesClient(BaseClient[TransformedResponseT_co]):
             state_fips_code: State FIPS code.
         """
         # Validate query
-        query = rm.CountiesRequest(
+        query = CountiesRequest(
             bbox=bbox,
             bbox_crs=bbox_crs,
             country_code=country_code,
