@@ -45,7 +45,7 @@ def raise_on_no_data(data: list[dict[str, Any]]) -> None:
         raise NoDataError("All data returned were None.")
 
     # Check for no features
-    if sum([d.get("numberReturned", 0) for d in data]) == 0:
+    if sum([d.get("numberReturned", 0) for d in data if d]) == 0:
         raise NoDataError("All responses returned 0 features.")
 
 def check_features(data: list[dict[str, Any]]) -> list[dict[str, Any]]:

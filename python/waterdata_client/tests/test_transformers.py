@@ -53,6 +53,36 @@ def empty_geojson_response():
         'features': []
     }]
 
+@pytest.fixture
+def partial_geojson_response():
+    """Mock response with some None features."""
+    return [{
+        'type': 'FeatureCollection',
+        'numberReturned': 2,
+        'features': [
+            {
+                'type': 'Feature',
+                'properties': {
+                    'id': '1',
+                    'monitoring_location_id': 'USGS-01',
+                    'value': '1.1',
+                    'time': '2026-05-05T18:15:00+00:00'
+                },
+                'geometry': {'type': 'Point', 'coordinates': [0, 0]}
+            },
+            {
+                'type': 'Feature',
+                'properties': {
+                    'id': '2',
+                    'monitoring_location_id': 'USGS-01',
+                    'value': '2.2',
+                    'time': '2026-05-05T18:30:00+00:00'
+                },
+                'geometry': {'type': 'Point', 'coordinates': [1, 1]}
+            }
+        ]
+    }, None, {}]
+
 def test_raise_on_no_data_empty():
     """Verify NoDataError on empty input."""
     with pytest.raises(NoDataError, match="No data available"):
@@ -67,6 +97,16 @@ def test_raise_on_no_data_zero_features(empty_geojson_response):
     """Verify NoDataError when numberReturned is 0."""
     with pytest.raises(NoDataError, match="returned 0 features"):
         raise_on_no_data(empty_geojson_response)
+
+def test_partial_response(partial_geojson_response):
+    """Verify handling of partial response."""
+    df = to_dataframe(partial_geojson_response, column_mapper=None)
+
+    assert isinstance(df, pd.DataFrame)
+    assert len(df) == 2
+    # Verify json_normalize dot notation
+    assert "properties.monitoring_location_id" in df.columns
+    assert df.loc[0, "properties.value"] == "1.1"
 
 def test_to_dataframe_success(mock_geojson_response):
     """Verify JSON to DataFrame flattening."""
