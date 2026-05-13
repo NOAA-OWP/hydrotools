@@ -1,0 +1,21 @@
+# AUTO-GENERATED FILE. DO NOT EDIT MANUALLY.
+"""This is a Jinja2 auto-generated module. These modules contain individual
+client classes for USGS OGC API items endpoints. These classes are generated
+by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints.
+
+Package version: {{ package_version }}
+Generation script: {{ script_name }}
+Generated: {{ timestamp }}
+JSON Schema source: {{ schema_source }}
+JSON Schema version: {{ schema_version }}
+OpenAPI version: {{ openapi_version }}
+"""
+{% for item in collections %}
+from .{{ item.module_name }} import {{ item.class_name }}
+{% endfor %}
+
+__all__ = [
+{% for item in collections %}
+    "{{ item.class_name }}",
+{% endfor %}
+]

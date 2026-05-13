@@ -27,6 +27,7 @@ class CollectionMetadata(TypedDict):
     """Defines collection metadata used by Jinja2 templates."""
     value: str
     enum_member: str
+    module_name: str
     class_name: str
     request_model: str
     description: str
@@ -324,6 +325,9 @@ def get_template_data(
                     continue
                 raise e
 
+            # Set module name
+            module_name = enum_member.lower()
+
             # Extract endpoint 'get' details
             endpoint_information = details.get("get", {})
 
@@ -336,6 +340,7 @@ def get_template_data(
             collections.append({
                 "value": cid,
                 "enum_member": enum_member,
+                "module_name": module_name,
                 "class_name": class_name,
                 "request_model": request_model,
                 "description": endpoint_information.get("description", f"Client for {cid}."),
