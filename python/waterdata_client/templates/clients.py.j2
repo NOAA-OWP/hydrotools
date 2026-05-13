@@ -15,7 +15,7 @@ from yarl import URL
 from ..base_client import BaseClient
 from ..constants import USGSCollection
 from ..transformers import TransformedResponseT_co
-from .. import request_models as rm
+from ..request_models.{{ item.module_name }} import {{ item.request_model }}
 
 class {{ item.class_name }}(BaseClient[TransformedResponseT_co]):
     """
@@ -37,7 +37,7 @@ class {{ item.class_name }}(BaseClient[TransformedResponseT_co]):
         {% endfor %}
         """
         # Validate query
-        query = rm.{{ item.request_model }}(
+        query = {{ item.request_model }}(
         {% for p in item.parameters %}
             {{ p.python_name }}={{ p.python_name }},
         {% endfor %}
