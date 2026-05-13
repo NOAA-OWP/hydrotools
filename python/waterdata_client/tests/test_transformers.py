@@ -53,6 +53,36 @@ def empty_geojson_response():
         'features': []
     }]
 
+@pytest.fixture
+def partial_geojson_response():
+    """Mock response with some None features."""
+    return [{
+        'type': 'FeatureCollection',
+        'numberReturned': 2,
+        'features': [
+            {
+                'type': 'Feature',
+                'properties': {
+                    'id': '1',
+                    'monitoring_location_id': 'USGS-01',
+                    'value': '1.1',
+                    'time': '2026-05-05T18:15:00+00:00'
+                },
+                'geometry': {'type': 'Point', 'coordinates': [0, 0]}
+            },
+            {
+                'type': 'Feature',
+                'properties': {
+                    'id': '2',
+                    'monitoring_location_id': 'USGS-01',
+                    'value': '2.2',
+                    'time': '2026-05-05T18:30:00+00:00'
+                },
+                'geometry': {'type': 'Point', 'coordinates': [1, 1]}
+            }
+        ]
+    }, None, {}]
+
 def test_raise_on_no_data_empty():
     """Verify NoDataError on empty input."""
     with pytest.raises(NoDataError, match="No data available"):
@@ -67,6 +97,16 @@ def test_raise_on_no_data_zero_features(empty_geojson_response):
     """Verify NoDataError when numberReturned is 0."""
     with pytest.raises(NoDataError, match="returned 0 features"):
         raise_on_no_data(empty_geojson_response)
+
+def test_partial_response(partial_geojson_response):
+    """Verify handling of partial response."""
+    df = to_dataframe(partial_geojson_response, column_mapper=None)
+
+    assert isinstance(df, pd.DataFrame)
+    assert len(df) == 2
+    # Verify json_normalize dot notation
+    assert "properties.monitoring_location_id" in df.columns
+    assert df.loc[0, "properties.value"] == "1.1"
 
 def test_to_dataframe_success(mock_geojson_response):
     """Verify JSON to DataFrame flattening."""
@@ -157,3 +197,42 @@ def test_optimize_dataframe_custom_strategies():
         }
         )
     assert optimized_df["value"].dtype == np.float64
+
+def test_qualifier_objects():
+    """Tests that optimizations work with list qualifiers."""
+    df = pd.DataFrame({
+        "qualifiers": [["P", "ice"], ["P", "ICE"], "A"],
+        "value": ["1.0", "2.0", "3.0"]
+        })
+
+    optimized_df = optimize_dataframe(df)
+    assert isinstance(optimized_df["qualifiers"].dtype, pd.CategoricalDtype)
+
+def test_heterogenous_datetimes():
+    """Tests that optimizations work on any ISO8601 datetimes."""
+    df = pd.DataFrame({
+        "value_time": [
+            "2026-05-11 00",
+            "2026-05-12T00:00",
+            "2026-05-13T00:00:00",
+            ],
+        "value": ["1.0", "2.0", "3.0"]
+        })
+
+    optimized_df = optimize_dataframe(df)
+    assert optimized_df[HydroToolsColumn.VALUE_TIME].dtype == "datetime64[s]"
+
+def test_non_number_values():
+    """Tests that optimizations handle non-float values."""
+    df = pd.DataFrame({
+        "value_time": [
+            "2026-05-11 00",
+            "2026-05-12T00:00",
+            "2026-05-13T00:00:00",
+            ],
+        "value": ["1.0", "2.0", "EMPTY"]
+        })
+
+    optimized_df = optimize_dataframe(df)
+    assert optimized_df[HydroToolsColumn.VALUE].dtype == np.float32
+    assert np.isnan(optimized_df["value"].iloc[2])

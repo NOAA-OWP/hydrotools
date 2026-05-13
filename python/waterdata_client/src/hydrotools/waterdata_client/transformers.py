@@ -45,7 +45,7 @@ def raise_on_no_data(data: list[dict[str, Any]]) -> None:
         raise NoDataError("All data returned were None.")
 
     # Check for no features
-    if sum([d.get("numberReturned", 0) for d in data]) == 0:
+    if sum([d.get("numberReturned", 0) for d in data if d]) == 0:
         raise NoDataError("All responses returned 0 features.")
 
 def check_features(data: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -145,15 +145,21 @@ def categorize_series(s: pd.Series) -> pd.Series:
     """Applies pandas.Categorical type to a pandas.Series."""
     return s.astype("category")
 
+def categorize_object_series(s: pd.Series) -> pd.Series:
+    """Applies pandas.Categorical type to a pandas.Series that may contain
+    non-string objects by first casting them to string."""
+    return s.astype(str).astype("category")
+
 def downscale_datetime_series(s: pd.Series) -> pd.Series:
     """Applies pandas.to_datetime to a pandas.Series. Converts to UTC and strips
     timezone awareness. Defaults to unit 's' (seconds).
     """
-    return pd.to_datetime(s, utc=True).dt.tz_localize(None).astype("datetime64[s]")
+    return pd.to_datetime(s, utc=True,
+        format="ISO8601").dt.tz_localize(None).astype("datetime64[s]")
 
 def downscale_float32_series(s: pd.Series) -> pd.Series:
     """Applies float32 type to a pandas.Series."""
-    return pd.to_numeric(s).astype("float32")
+    return pd.to_numeric(s, errors="coerce").astype("float32")
 
 SERIES_TRANSFORMERS: dict[HydroToolsColumn, SeriesTransformer] = {
     # Categorical optimizations
@@ -164,7 +170,7 @@ SERIES_TRANSFORMERS: dict[HydroToolsColumn, SeriesTransformer] = {
     HydroToolsColumn.STATISTIC_ID: categorize_series,
     HydroToolsColumn.MEASUREMENT_UNIT: categorize_series,
     HydroToolsColumn.VARIABLE_NAME: categorize_series,
-    HydroToolsColumn.QUALIFIERS: categorize_series,
+    HydroToolsColumn.QUALIFIERS: categorize_object_series,
     HydroToolsColumn.CONFIGURATION: categorize_series,
     HydroToolsColumn.APPROVAL_STATUS: categorize_series,
     HydroToolsColumn.ID: categorize_series,
