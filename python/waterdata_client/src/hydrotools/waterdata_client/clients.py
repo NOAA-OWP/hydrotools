@@ -5,7 +5,7 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.0a0
 Generation script: build_clients.py
-Generated: 2026-05-01 17:52:23 Z
+Generated: 2026-05-08 14:20:47 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -15,6 +15,7 @@ from yarl import URL
 from .base_client import BaseClient
 from .constants import USGSCollection
 from .transformers import TransformedResponseT_co
+from . import request_models as rm
 
 __all__ = [
     "AgencyCodesClient",
@@ -127,28 +128,25 @@ class AgencyCodesClient(BaseClient[TransformedResponseT_co]):
                 order
                 implied is ascending (+).
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "agency_name": agency_name,
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "crs": crs,
-            "f": f,
-            "lang": lang,
-            "limit": limit,
-            "offset": offset,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.AgencyCodesRequest(
+            agency_name=agency_name,
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            crs=crs,
+            f=f,
+            lang=lang,
+            limit=limit,
+            offset=offset,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -231,28 +229,25 @@ class AltitudeDatumsClient(BaseClient[TransformedResponseT_co]):
                 order
                 implied is ascending (+).
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "altitude_datum_description": altitude_datum_description,
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "crs": crs,
-            "f": f,
-            "lang": lang,
-            "limit": limit,
-            "offset": offset,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.AltitudeDatumsRequest(
+            altitude_datum_description=altitude_datum_description,
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            crs=crs,
+            f=f,
+            lang=lang,
+            limit=limit,
+            offset=offset,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -345,28 +340,25 @@ class AquiferCodesClient(BaseClient[TransformedResponseT_co]):
                 order
                 implied is ascending (+).
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "aquifer_name": aquifer_name,
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "crs": crs,
-            "f": f,
-            "lang": lang,
-            "limit": limit,
-            "offset": offset,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.AquiferCodesRequest(
+            aquifer_name=aquifer_name,
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            crs=crs,
+            f=f,
+            lang=lang,
+            limit=limit,
+            offset=offset,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -450,28 +442,25 @@ class AquiferTypesClient(BaseClient[TransformedResponseT_co]):
                 order
                 implied is ascending (+).
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "aquifer_type_description": aquifer_type_description,
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "crs": crs,
-            "f": f,
-            "lang": lang,
-            "limit": limit,
-            "offset": offset,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.AquiferTypesRequest(
+            aquifer_type_description=aquifer_type_description,
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            crs=crs,
+            f=f,
+            lang=lang,
+            limit=limit,
+            offset=offset,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -664,53 +653,50 @@ class ChannelMeasurementsClient(BaseClient[TransformedResponseT_co]):
                 to determine the extent or all relevant temporal properties.
             vertical_velocity_description: The vertical velocity description.
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "channel_area": channel_area,
-            "channel_area_unit": channel_area_unit,
-            "channel_evenness": channel_evenness,
-            "channel_flow": channel_flow,
-            "channel_flow_unit": channel_flow_unit,
-            "channel_location_direction": channel_location_direction,
-            "channel_location_distance": channel_location_distance,
-            "channel_location_distance_unit": channel_location_distance_unit,
-            "channel_material": channel_material,
-            "channel_measurement_type": channel_measurement_type,
-            "channel_name": channel_name,
-            "channel_stability": channel_stability,
-            "channel_velocity": channel_velocity,
-            "channel_velocity_unit": channel_velocity_unit,
-            "channel_width": channel_width,
-            "channel_width_unit": channel_width_unit,
-            "crs": crs,
-            "datetime": datetime,
-            "f": f,
-            "field_visit_id": field_visit_id,
-            "horizontal_velocity_description": horizontal_velocity_description,
-            "lang": lang,
-            "last_modified": last_modified,
-            "limit": limit,
-            "longitudinal_velocity_description": longitudinal_velocity_description,
-            "measurement_number": measurement_number,
-            "measurement_type": measurement_type,
-            "monitoring_location_id": monitoring_location_id,
-            "offset": offset,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-            "time": time,
-            "vertical_velocity_description": vertical_velocity_description,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.ChannelMeasurementsRequest(
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            channel_area=channel_area,
+            channel_area_unit=channel_area_unit,
+            channel_evenness=channel_evenness,
+            channel_flow=channel_flow,
+            channel_flow_unit=channel_flow_unit,
+            channel_location_direction=channel_location_direction,
+            channel_location_distance=channel_location_distance,
+            channel_location_distance_unit=channel_location_distance_unit,
+            channel_material=channel_material,
+            channel_measurement_type=channel_measurement_type,
+            channel_name=channel_name,
+            channel_stability=channel_stability,
+            channel_velocity=channel_velocity,
+            channel_velocity_unit=channel_velocity_unit,
+            channel_width=channel_width,
+            channel_width_unit=channel_width_unit,
+            crs=crs,
+            datetime=datetime,
+            f=f,
+            field_visit_id=field_visit_id,
+            horizontal_velocity_description=horizontal_velocity_description,
+            lang=lang,
+            last_modified=last_modified,
+            limit=limit,
+            longitudinal_velocity_description=longitudinal_velocity_description,
+            measurement_number=measurement_number,
+            measurement_type=measurement_type,
+            monitoring_location_id=monitoring_location_id,
+            offset=offset,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+            time=time,
+            vertical_velocity_description=vertical_velocity_description,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -788,28 +774,25 @@ class CitationsClient(BaseClient[TransformedResponseT_co]):
                 order
                 implied is ascending (+).
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "citation_description": citation_description,
-            "crs": crs,
-            "f": f,
-            "lang": lang,
-            "limit": limit,
-            "offset": offset,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.CitationsRequest(
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            citation_description=citation_description,
+            crs=crs,
+            f=f,
+            lang=lang,
+            limit=limit,
+            offset=offset,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -1222,82 +1205,79 @@ class CombinedMetadataClient(BaseClient[TransformedResponseT_co]):
                 Well Depth. Such monitoring locations will not be retrieved using this
                 search criteria.
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "agency_code": agency_code,
-            "agency_name": agency_name,
-            "altitude": altitude,
-            "altitude_accuracy": altitude_accuracy,
-            "altitude_method_code": altitude_method_code,
-            "altitude_method_name": altitude_method_name,
-            "aquifer_code": aquifer_code,
-            "aquifer_type_code": aquifer_type_code,
-            "basin_code": basin_code,
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "begin": begin,
-            "computation_identifier": computation_identifier,
-            "construction_date": construction_date,
-            "contributing_drainage_area": contributing_drainage_area,
-            "country_code": country_code,
-            "country_name": country_name,
-            "county_code": county_code,
-            "county_name": county_name,
-            "crs": crs,
-            "data_type": data_type,
-            "depth_source_code": depth_source_code,
-            "district_code": district_code,
-            "drainage_area": drainage_area,
-            "end": end,
-            "f": f,
-            "hole_constructed_depth": hole_constructed_depth,
-            "horizontal_position_method_code": horizontal_position_method_code,
-            "horizontal_position_method_name": horizontal_position_method_name,
-            "horizontal_positional_accuracy": horizontal_positional_accuracy,
-            "horizontal_positional_accuracy_code": horizontal_positional_accuracy_code,
-            "hydrologic_unit_code": hydrologic_unit_code,
-            "lang": lang,
-            "last_modified": last_modified,
-            "limit": limit,
-            "minor_civil_division_code": minor_civil_division_code,
-            "monitoring_location_id": monitoring_location_id,
-            "monitoring_location_name": monitoring_location_name,
-            "monitoring_location_number": monitoring_location_number,
-            "national_aquifer_code": national_aquifer_code,
-            "offset": offset,
-            "original_horizontal_datum": original_horizontal_datum,
-            "original_horizontal_datum_name": original_horizontal_datum_name,
-            "parameter_code": parameter_code,
-            "parameter_description": parameter_description,
-            "parameter_name": parameter_name,
-            "parent_time_series_id": parent_time_series_id,
-            "primary": primary,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "site_type": site_type,
-            "site_type_code": site_type_code,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-            "state_code": state_code,
-            "state_name": state_name,
-            "statistic_id": statistic_id,
-            "sublocation_identifier": sublocation_identifier,
-            "thresholds": thresholds,
-            "time_zone_abbreviation": time_zone_abbreviation,
-            "unit_of_measure": unit_of_measure,
-            "uses_daylight_savings": uses_daylight_savings,
-            "vertical_datum": vertical_datum,
-            "vertical_datum_name": vertical_datum_name,
-            "web_description": web_description,
-            "well_constructed_depth": well_constructed_depth,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.CombinedMetadataRequest(
+            agency_code=agency_code,
+            agency_name=agency_name,
+            altitude=altitude,
+            altitude_accuracy=altitude_accuracy,
+            altitude_method_code=altitude_method_code,
+            altitude_method_name=altitude_method_name,
+            aquifer_code=aquifer_code,
+            aquifer_type_code=aquifer_type_code,
+            basin_code=basin_code,
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            begin=begin,
+            computation_identifier=computation_identifier,
+            construction_date=construction_date,
+            contributing_drainage_area=contributing_drainage_area,
+            country_code=country_code,
+            country_name=country_name,
+            county_code=county_code,
+            county_name=county_name,
+            crs=crs,
+            data_type=data_type,
+            depth_source_code=depth_source_code,
+            district_code=district_code,
+            drainage_area=drainage_area,
+            end=end,
+            f=f,
+            hole_constructed_depth=hole_constructed_depth,
+            horizontal_position_method_code=horizontal_position_method_code,
+            horizontal_position_method_name=horizontal_position_method_name,
+            horizontal_positional_accuracy=horizontal_positional_accuracy,
+            horizontal_positional_accuracy_code=horizontal_positional_accuracy_code,
+            hydrologic_unit_code=hydrologic_unit_code,
+            lang=lang,
+            last_modified=last_modified,
+            limit=limit,
+            minor_civil_division_code=minor_civil_division_code,
+            monitoring_location_id=monitoring_location_id,
+            monitoring_location_name=monitoring_location_name,
+            monitoring_location_number=monitoring_location_number,
+            national_aquifer_code=national_aquifer_code,
+            offset=offset,
+            original_horizontal_datum=original_horizontal_datum,
+            original_horizontal_datum_name=original_horizontal_datum_name,
+            parameter_code=parameter_code,
+            parameter_description=parameter_description,
+            parameter_name=parameter_name,
+            parent_time_series_id=parent_time_series_id,
+            primary=primary,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            site_type=site_type,
+            site_type_code=site_type_code,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+            state_code=state_code,
+            state_name=state_name,
+            statistic_id=statistic_id,
+            sublocation_identifier=sublocation_identifier,
+            thresholds=thresholds,
+            time_zone_abbreviation=time_zone_abbreviation,
+            unit_of_measure=unit_of_measure,
+            uses_daylight_savings=uses_daylight_savings,
+            vertical_datum=vertical_datum,
+            vertical_datum_name=vertical_datum_name,
+            web_description=web_description,
+            well_constructed_depth=well_constructed_depth,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -1486,37 +1466,34 @@ class ContinuousClient(BaseClient[TransformedResponseT_co]):
             value: The value of the observation. Values are transmitted as strings in the
                 JSON response format in order to preserve precision.
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "approval_status": approval_status,
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "crs": crs,
-            "datetime": datetime,
-            "f": f,
-            "lang": lang,
-            "last_modified": last_modified,
-            "limit": limit,
-            "monitoring_location_id": monitoring_location_id,
-            "offset": offset,
-            "parameter_code": parameter_code,
-            "properties": properties,
-            "qualifier": qualifier,
-            "filter": query_filter,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-            "statistic_id": statistic_id,
-            "time": time,
-            "time_series_id": time_series_id,
-            "unit_of_measure": unit_of_measure,
-            "value": value,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.ContinuousRequest(
+            approval_status=approval_status,
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            crs=crs,
+            datetime=datetime,
+            f=f,
+            lang=lang,
+            last_modified=last_modified,
+            limit=limit,
+            monitoring_location_id=monitoring_location_id,
+            offset=offset,
+            parameter_code=parameter_code,
+            properties=properties,
+            qualifier=qualifier,
+            query_filter=query_filter,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+            statistic_id=statistic_id,
+            time=time,
+            time_series_id=time_series_id,
+            unit_of_measure=unit_of_measure,
+            value=value,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -1594,28 +1571,25 @@ class CoordinateAccuracyCodesClient(BaseClient[TransformedResponseT_co]):
                 order
                 implied is ascending (+).
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "coordinate_accuracy_description": coordinate_accuracy_description,
-            "crs": crs,
-            "f": f,
-            "lang": lang,
-            "limit": limit,
-            "offset": offset,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.CoordinateAccuracyCodesRequest(
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            coordinate_accuracy_description=coordinate_accuracy_description,
+            crs=crs,
+            f=f,
+            lang=lang,
+            limit=limit,
+            offset=offset,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -1693,28 +1667,25 @@ class CoordinateDatumCodesClient(BaseClient[TransformedResponseT_co]):
                 order
                 implied is ascending (+).
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "coordinate_datum_description": coordinate_datum_description,
-            "crs": crs,
-            "f": f,
-            "lang": lang,
-            "limit": limit,
-            "offset": offset,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.CoordinateDatumCodesRequest(
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            coordinate_datum_description=coordinate_datum_description,
+            crs=crs,
+            f=f,
+            lang=lang,
+            limit=limit,
+            offset=offset,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -1791,28 +1762,25 @@ class CoordinateMethodCodesClient(BaseClient[TransformedResponseT_co]):
                 order
                 implied is ascending (+).
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "coordinate_method_description": coordinate_method_description,
-            "crs": crs,
-            "f": f,
-            "lang": lang,
-            "limit": limit,
-            "offset": offset,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.CoordinateMethodCodesRequest(
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            coordinate_method_description=coordinate_method_description,
+            crs=crs,
+            f=f,
+            lang=lang,
+            limit=limit,
+            offset=offset,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -1900,31 +1868,28 @@ class CountiesClient(BaseClient[TransformedResponseT_co]):
                 implied is ascending (+).
             state_fips_code: State FIPS code.
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "country_code": country_code,
-            "county_fips_code": county_fips_code,
-            "county_name": county_name,
-            "crs": crs,
-            "f": f,
-            "lang": lang,
-            "limit": limit,
-            "offset": offset,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-            "state_fips_code": state_fips_code,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.CountiesRequest(
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            country_code=country_code,
+            county_fips_code=county_fips_code,
+            county_name=county_name,
+            crs=crs,
+            f=f,
+            lang=lang,
+            limit=limit,
+            offset=offset,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+            state_fips_code=state_fips_code,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -2003,28 +1968,25 @@ class CountriesClient(BaseClient[TransformedResponseT_co]):
                 order
                 implied is ascending (+).
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "country_name": country_name,
-            "crs": crs,
-            "f": f,
-            "lang": lang,
-            "limit": limit,
-            "offset": offset,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.CountriesRequest(
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            country_name=country_name,
+            crs=crs,
+            f=f,
+            lang=lang,
+            limit=limit,
+            offset=offset,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -2225,38 +2187,35 @@ class DailyClient(BaseClient[TransformedResponseT_co]):
             value: The value of the observation. Values are transmitted as strings in the
                 JSON response format in order to preserve precision.
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "approval_status": approval_status,
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "crs": crs,
-            "datetime": datetime,
-            "f": f,
-            "lang": lang,
-            "last_modified": last_modified,
-            "limit": limit,
-            "monitoring_location_id": monitoring_location_id,
-            "offset": offset,
-            "parameter_code": parameter_code,
-            "properties": properties,
-            "qualifier": qualifier,
-            "filter": query_filter,
-            "id": query_id,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-            "statistic_id": statistic_id,
-            "time": time,
-            "time_series_id": time_series_id,
-            "unit_of_measure": unit_of_measure,
-            "value": value,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.DailyRequest(
+            approval_status=approval_status,
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            crs=crs,
+            datetime=datetime,
+            f=f,
+            lang=lang,
+            last_modified=last_modified,
+            limit=limit,
+            monitoring_location_id=monitoring_location_id,
+            offset=offset,
+            parameter_code=parameter_code,
+            properties=properties,
+            qualifier=qualifier,
+            query_filter=query_filter,
+            query_id=query_id,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+            statistic_id=statistic_id,
+            time=time,
+            time_series_id=time_series_id,
+            unit_of_measure=unit_of_measure,
+            value=value,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -2465,44 +2424,41 @@ class FieldMeasurementsClient(BaseClient[TransformedResponseT_co]):
                 items](https://api.waterdata.usgs.gov/ogcapi/v0/collections/altitude-
                 datums/items).
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "approval_status": approval_status,
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "control_condition": control_condition,
-            "crs": crs,
-            "datetime": datetime,
-            "f": f,
-            "field_measurements_series_id": field_measurements_series_id,
-            "field_visit_id": field_visit_id,
-            "lang": lang,
-            "last_modified": last_modified,
-            "limit": limit,
-            "measurement_rated": measurement_rated,
-            "measuring_agency": measuring_agency,
-            "monitoring_location_id": monitoring_location_id,
-            "observing_procedure": observing_procedure,
-            "observing_procedure_code": observing_procedure_code,
-            "offset": offset,
-            "parameter_code": parameter_code,
-            "properties": properties,
-            "qualifier": qualifier,
-            "filter": query_filter,
-            "id": query_id,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-            "time": time,
-            "unit_of_measure": unit_of_measure,
-            "value": value,
-            "vertical_datum": vertical_datum,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.FieldMeasurementsRequest(
+            approval_status=approval_status,
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            control_condition=control_condition,
+            crs=crs,
+            datetime=datetime,
+            f=f,
+            field_measurements_series_id=field_measurements_series_id,
+            field_visit_id=field_visit_id,
+            lang=lang,
+            last_modified=last_modified,
+            limit=limit,
+            measurement_rated=measurement_rated,
+            measuring_agency=measuring_agency,
+            monitoring_location_id=monitoring_location_id,
+            observing_procedure=observing_procedure,
+            observing_procedure_code=observing_procedure_code,
+            offset=offset,
+            parameter_code=parameter_code,
+            properties=properties,
+            qualifier=qualifier,
+            query_filter=query_filter,
+            query_id=query_id,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+            time=time,
+            unit_of_measure=unit_of_measure,
+            value=value,
+            vertical_datum=vertical_datum,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -2666,34 +2622,31 @@ class FieldMeasurementsMetadataClient(BaseClient[TransformedResponseT_co]):
                 you need more than a single page of data, don't specify a sortby value
                 and sort the full data set after it's been downloaded.
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "begin": begin,
-            "crs": crs,
-            "end": end,
-            "f": f,
-            "lang": lang,
-            "last_modified": last_modified,
-            "limit": limit,
-            "monitoring_location_id": monitoring_location_id,
-            "offset": offset,
-            "parameter_code": parameter_code,
-            "parameter_description": parameter_description,
-            "parameter_name": parameter_name,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.FieldMeasurementsMetadataRequest(
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            begin=begin,
+            crs=crs,
+            end=end,
+            f=f,
+            lang=lang,
+            last_modified=last_modified,
+            limit=limit,
+            monitoring_location_id=monitoring_location_id,
+            offset=offset,
+            parameter_code=parameter_code,
+            parameter_description=parameter_description,
+            parameter_name=parameter_name,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -2793,29 +2746,26 @@ class HydrologicUnitCodesClient(BaseClient[TransformedResponseT_co]):
                 order
                 implied is ascending (+).
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "crs": crs,
-            "f": f,
-            "hydrologic_unit_classification_code": hydrologic_unit_classification_code,
-            "hydrologic_unit_name": hydrologic_unit_name,
-            "lang": lang,
-            "limit": limit,
-            "offset": offset,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.HydrologicUnitCodesRequest(
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            crs=crs,
+            f=f,
+            hydrologic_unit_classification_code=hydrologic_unit_classification_code,
+            hydrologic_unit_name=hydrologic_unit_name,
+            lang=lang,
+            limit=limit,
+            offset=offset,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -3014,38 +2964,35 @@ class LatestContinuousClient(BaseClient[TransformedResponseT_co]):
             value: The value of the observation. Values are transmitted as strings in the
                 JSON response format in order to preserve precision.
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "approval_status": approval_status,
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "crs": crs,
-            "datetime": datetime,
-            "f": f,
-            "lang": lang,
-            "last_modified": last_modified,
-            "limit": limit,
-            "monitoring_location_id": monitoring_location_id,
-            "offset": offset,
-            "parameter_code": parameter_code,
-            "properties": properties,
-            "qualifier": qualifier,
-            "filter": query_filter,
-            "id": query_id,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-            "statistic_id": statistic_id,
-            "time": time,
-            "time_series_id": time_series_id,
-            "unit_of_measure": unit_of_measure,
-            "value": value,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.LatestContinuousRequest(
+            approval_status=approval_status,
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            crs=crs,
+            datetime=datetime,
+            f=f,
+            lang=lang,
+            last_modified=last_modified,
+            limit=limit,
+            monitoring_location_id=monitoring_location_id,
+            offset=offset,
+            parameter_code=parameter_code,
+            properties=properties,
+            qualifier=qualifier,
+            query_filter=query_filter,
+            query_id=query_id,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+            statistic_id=statistic_id,
+            time=time,
+            time_series_id=time_series_id,
+            unit_of_measure=unit_of_measure,
+            value=value,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -3246,38 +3193,35 @@ class LatestDailyClient(BaseClient[TransformedResponseT_co]):
             value: The value of the observation. Values are transmitted as strings in the
                 JSON response format in order to preserve precision.
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "approval_status": approval_status,
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "crs": crs,
-            "datetime": datetime,
-            "f": f,
-            "lang": lang,
-            "last_modified": last_modified,
-            "limit": limit,
-            "monitoring_location_id": monitoring_location_id,
-            "offset": offset,
-            "parameter_code": parameter_code,
-            "properties": properties,
-            "qualifier": qualifier,
-            "filter": query_filter,
-            "id": query_id,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-            "statistic_id": statistic_id,
-            "time": time,
-            "time_series_id": time_series_id,
-            "unit_of_measure": unit_of_measure,
-            "value": value,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.LatestDailyRequest(
+            approval_status=approval_status,
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            crs=crs,
+            datetime=datetime,
+            f=f,
+            lang=lang,
+            last_modified=last_modified,
+            limit=limit,
+            monitoring_location_id=monitoring_location_id,
+            offset=offset,
+            parameter_code=parameter_code,
+            properties=properties,
+            qualifier=qualifier,
+            query_filter=query_filter,
+            query_id=query_id,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+            statistic_id=statistic_id,
+            time=time,
+            time_series_id=time_series_id,
+            unit_of_measure=unit_of_measure,
+            value=value,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -3373,30 +3317,27 @@ class MediumCodesClient(BaseClient[TransformedResponseT_co]):
                 order
                 implied is ascending (+).
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "crs": crs,
-            "f": f,
-            "lang": lang,
-            "legacy_medium_code": legacy_medium_code,
-            "limit": limit,
-            "medium_description": medium_description,
-            "medium_name": medium_name,
-            "offset": offset,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.MediumCodesRequest(
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            crs=crs,
+            f=f,
+            lang=lang,
+            legacy_medium_code=legacy_medium_code,
+            limit=limit,
+            medium_description=medium_description,
+            medium_name=medium_name,
+            offset=offset,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -3478,29 +3419,26 @@ class MethodCategoriesClient(BaseClient[TransformedResponseT_co]):
                 order
                 implied is ascending (+).
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "crs": crs,
-            "f": f,
-            "lang": lang,
-            "limit": limit,
-            "method_category_description": method_category_description,
-            "method_category_name": method_category_name,
-            "offset": offset,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.MethodCategoriesRequest(
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            crs=crs,
+            f=f,
+            lang=lang,
+            limit=limit,
+            method_category_description=method_category_description,
+            method_category_name=method_category_name,
+            offset=offset,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -3586,31 +3524,28 @@ class MethodCitationsClient(BaseClient[TransformedResponseT_co]):
                 order
                 implied is ascending (+).
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "citation_method_number": citation_method_number,
-            "citation_name": citation_name,
-            "crs": crs,
-            "f": f,
-            "lang": lang,
-            "limit": limit,
-            "method_id": method_id,
-            "method_source": method_source,
-            "offset": offset,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.MethodCitationsRequest(
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            citation_method_number=citation_method_number,
+            citation_name=citation_name,
+            crs=crs,
+            f=f,
+            lang=lang,
+            limit=limit,
+            method_id=method_id,
+            method_source=method_source,
+            offset=offset,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -3697,31 +3632,28 @@ class MethodsClient(BaseClient[TransformedResponseT_co]):
                 order
                 implied is ascending (+).
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "crs": crs,
-            "f": f,
-            "lang": lang,
-            "limit": limit,
-            "method_category": method_category,
-            "method_description": method_description,
-            "method_name": method_name,
-            "method_type": method_type,
-            "offset": offset,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.MethodsRequest(
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            crs=crs,
+            f=f,
+            lang=lang,
+            limit=limit,
+            method_category=method_category,
+            method_description=method_description,
+            method_name=method_name,
+            method_type=method_type,
+            offset=offset,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -4021,69 +3953,66 @@ class MonitoringLocationsClient(BaseClient[TransformedResponseT_co]):
                 Well Depth. Such monitoring locations will not be retrieved using this
                 search criteria.
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "agency_code": agency_code,
-            "agency_name": agency_name,
-            "altitude": altitude,
-            "altitude_accuracy": altitude_accuracy,
-            "altitude_method_code": altitude_method_code,
-            "altitude_method_name": altitude_method_name,
-            "aquifer_code": aquifer_code,
-            "aquifer_type_code": aquifer_type_code,
-            "basin_code": basin_code,
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "construction_date": construction_date,
-            "contributing_drainage_area": contributing_drainage_area,
-            "country_code": country_code,
-            "country_name": country_name,
-            "county_code": county_code,
-            "county_name": county_name,
-            "crs": crs,
-            "depth_source_code": depth_source_code,
-            "district_code": district_code,
-            "drainage_area": drainage_area,
-            "f": f,
-            "hole_constructed_depth": hole_constructed_depth,
-            "horizontal_position_method_code": horizontal_position_method_code,
-            "horizontal_position_method_name": horizontal_position_method_name,
-            "horizontal_positional_accuracy": horizontal_positional_accuracy,
-            "horizontal_positional_accuracy_code": horizontal_positional_accuracy_code,
-            "hydrologic_unit_code": hydrologic_unit_code,
-            "lang": lang,
-            "limit": limit,
-            "minor_civil_division_code": minor_civil_division_code,
-            "monitoring_location_name": monitoring_location_name,
-            "monitoring_location_number": monitoring_location_number,
-            "national_aquifer_code": national_aquifer_code,
-            "offset": offset,
-            "original_horizontal_datum": original_horizontal_datum,
-            "original_horizontal_datum_name": original_horizontal_datum_name,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "revision_created": revision_created,
-            "revision_modified": revision_modified,
-            "revision_note": revision_note,
-            "site_type": site_type,
-            "site_type_code": site_type_code,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-            "state_code": state_code,
-            "state_name": state_name,
-            "time_zone_abbreviation": time_zone_abbreviation,
-            "uses_daylight_savings": uses_daylight_savings,
-            "vertical_datum": vertical_datum,
-            "vertical_datum_name": vertical_datum_name,
-            "well_constructed_depth": well_constructed_depth,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.MonitoringLocationsRequest(
+            agency_code=agency_code,
+            agency_name=agency_name,
+            altitude=altitude,
+            altitude_accuracy=altitude_accuracy,
+            altitude_method_code=altitude_method_code,
+            altitude_method_name=altitude_method_name,
+            aquifer_code=aquifer_code,
+            aquifer_type_code=aquifer_type_code,
+            basin_code=basin_code,
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            construction_date=construction_date,
+            contributing_drainage_area=contributing_drainage_area,
+            country_code=country_code,
+            country_name=country_name,
+            county_code=county_code,
+            county_name=county_name,
+            crs=crs,
+            depth_source_code=depth_source_code,
+            district_code=district_code,
+            drainage_area=drainage_area,
+            f=f,
+            hole_constructed_depth=hole_constructed_depth,
+            horizontal_position_method_code=horizontal_position_method_code,
+            horizontal_position_method_name=horizontal_position_method_name,
+            horizontal_positional_accuracy=horizontal_positional_accuracy,
+            horizontal_positional_accuracy_code=horizontal_positional_accuracy_code,
+            hydrologic_unit_code=hydrologic_unit_code,
+            lang=lang,
+            limit=limit,
+            minor_civil_division_code=minor_civil_division_code,
+            monitoring_location_name=monitoring_location_name,
+            monitoring_location_number=monitoring_location_number,
+            national_aquifer_code=national_aquifer_code,
+            offset=offset,
+            original_horizontal_datum=original_horizontal_datum,
+            original_horizontal_datum_name=original_horizontal_datum_name,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            revision_created=revision_created,
+            revision_modified=revision_modified,
+            revision_note=revision_note,
+            site_type=site_type,
+            site_type_code=site_type_code,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+            state_code=state_code,
+            state_name=state_name,
+            time_zone_abbreviation=time_zone_abbreviation,
+            uses_daylight_savings=uses_daylight_savings,
+            vertical_datum=vertical_datum,
+            vertical_datum_name=vertical_datum_name,
+            well_constructed_depth=well_constructed_depth,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -4163,28 +4092,25 @@ class NationalAquiferCodesClient(BaseClient[TransformedResponseT_co]):
                 order
                 implied is ascending (+).
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "crs": crs,
-            "f": f,
-            "lang": lang,
-            "limit": limit,
-            "national_aquifer_name": national_aquifer_name,
-            "offset": offset,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.NationalAquiferCodesRequest(
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            crs=crs,
+            f=f,
+            lang=lang,
+            limit=limit,
+            national_aquifer_name=national_aquifer_name,
+            offset=offset,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -4292,39 +4218,36 @@ class ParameterCodesClient(BaseClient[TransformedResponseT_co]):
                 USEPA.
             weight_basis: Parameter weight basis.
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "crs": crs,
-            "epa_equivalence": epa_equivalence,
-            "f": f,
-            "lang": lang,
-            "limit": limit,
-            "medium": medium,
-            "offset": offset,
-            "parameter_description": parameter_description,
-            "parameter_group_code": parameter_group_code,
-            "parameter_name": parameter_name,
-            "particle_size_basis": particle_size_basis,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "sample_fraction": sample_fraction,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-            "statistical_basis": statistical_basis,
-            "temperature_basis": temperature_basis,
-            "time_basis": time_basis,
-            "unit_of_measure": unit_of_measure,
-            "weight_basis": weight_basis,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.ParameterCodesRequest(
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            crs=crs,
+            epa_equivalence=epa_equivalence,
+            f=f,
+            lang=lang,
+            limit=limit,
+            medium=medium,
+            offset=offset,
+            parameter_description=parameter_description,
+            parameter_group_code=parameter_group_code,
+            parameter_name=parameter_name,
+            particle_size_basis=particle_size_basis,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            sample_fraction=sample_fraction,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+            statistical_basis=statistical_basis,
+            temperature_basis=temperature_basis,
+            time_basis=time_basis,
+            unit_of_measure=unit_of_measure,
+            weight_basis=weight_basis,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -4495,40 +4418,37 @@ class PeaksClient(BaseClient[TransformedResponseT_co]):
                  Split parameters are enabled for this field, so you can supply
                 multiple values separated by commas.
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "crs": crs,
-            "day": day,
-            "f": f,
-            "lang": lang,
-            "last_modified": last_modified,
-            "limit": limit,
-            "monitoring_location_id": monitoring_location_id,
-            "month": month,
-            "offset": offset,
-            "parameter_code": parameter_code,
-            "peak_since": peak_since,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-            "time": time,
-            "time_of_day": time_of_day,
-            "time_series_id": time_series_id,
-            "unit_of_measure": unit_of_measure,
-            "value": value,
-            "water_year": water_year,
-            "year": year,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.PeaksRequest(
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            crs=crs,
+            day=day,
+            f=f,
+            lang=lang,
+            last_modified=last_modified,
+            limit=limit,
+            monitoring_location_id=monitoring_location_id,
+            month=month,
+            offset=offset,
+            parameter_code=parameter_code,
+            peak_since=peak_since,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+            time=time,
+            time_of_day=time_of_day,
+            time_series_id=time_series_id,
+            unit_of_measure=unit_of_measure,
+            value=value,
+            water_year=water_year,
+            year=year,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -4605,28 +4525,25 @@ class ReliabilityCodesClient(BaseClient[TransformedResponseT_co]):
                 order
                 implied is ascending (+).
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "crs": crs,
-            "f": f,
-            "lang": lang,
-            "limit": limit,
-            "offset": offset,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "reliability_description": reliability_description,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.ReliabilityCodesRequest(
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            crs=crs,
+            f=f,
+            lang=lang,
+            limit=limit,
+            offset=offset,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            reliability_description=reliability_description,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -4711,30 +4628,27 @@ class SiteTypesClient(BaseClient[TransformedResponseT_co]):
                 order
                 implied is ascending (+).
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "crs": crs,
-            "f": f,
-            "lang": lang,
-            "limit": limit,
-            "offset": offset,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "site_type_description": site_type_description,
-            "site_type_name": site_type_name,
-            "site_type_primary_flag": site_type_primary_flag,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.SiteTypesRequest(
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            crs=crs,
+            f=f,
+            lang=lang,
+            limit=limit,
+            offset=offset,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            site_type_description=site_type_description,
+            site_type_name=site_type_name,
+            site_type_primary_flag=site_type_primary_flag,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -4821,31 +4735,28 @@ class StatesClient(BaseClient[TransformedResponseT_co]):
             state_postal_code: State postal abbreviation. A two-letter USPS state postal
                 abbreviation.
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "country_code": country_code,
-            "crs": crs,
-            "f": f,
-            "lang": lang,
-            "limit": limit,
-            "offset": offset,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-            "state_fips_code": state_fips_code,
-            "state_name": state_name,
-            "state_postal_code": state_postal_code,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.StatesRequest(
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            country_code=country_code,
+            crs=crs,
+            f=f,
+            lang=lang,
+            limit=limit,
+            offset=offset,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+            state_fips_code=state_fips_code,
+            state_name=state_name,
+            state_postal_code=state_postal_code,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -4924,29 +4835,26 @@ class StatisticCodesClient(BaseClient[TransformedResponseT_co]):
             statistic_description: Statistic description.
             statistic_name: Statistic name.
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "crs": crs,
-            "f": f,
-            "lang": lang,
-            "limit": limit,
-            "offset": offset,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-            "statistic_description": statistic_description,
-            "statistic_name": statistic_name,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.StatisticCodesRequest(
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            crs=crs,
+            f=f,
+            lang=lang,
+            limit=limit,
+            offset=offset,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+            statistic_description=statistic_description,
+            statistic_name=statistic_name,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -5185,47 +5093,44 @@ class TimeSeriesMetadataClient(BaseClient[TransformedResponseT_co]):
                 multiple time series for the same parameter code, statistic code, and
                 monitoring location.
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "begin": begin,
-            "begin_utc": begin_utc,
-            "computation_identifier": computation_identifier,
-            "computation_period_identifier": computation_period_identifier,
-            "crs": crs,
-            "end": end,
-            "end_utc": end_utc,
-            "f": f,
-            "hydrologic_unit_code": hydrologic_unit_code,
-            "lang": lang,
-            "last_modified": last_modified,
-            "limit": limit,
-            "monitoring_location_id": monitoring_location_id,
-            "offset": offset,
-            "parameter_code": parameter_code,
-            "parameter_description": parameter_description,
-            "parameter_name": parameter_name,
-            "parent_time_series_id": parent_time_series_id,
-            "primary": primary,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-            "state_name": state_name,
-            "statistic_id": statistic_id,
-            "sublocation_identifier": sublocation_identifier,
-            "thresholds": thresholds,
-            "unit_of_measure": unit_of_measure,
-            "web_description": web_description,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.TimeSeriesMetadataRequest(
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            begin=begin,
+            begin_utc=begin_utc,
+            computation_identifier=computation_identifier,
+            computation_period_identifier=computation_period_identifier,
+            crs=crs,
+            end=end,
+            end_utc=end_utc,
+            f=f,
+            hydrologic_unit_code=hydrologic_unit_code,
+            lang=lang,
+            last_modified=last_modified,
+            limit=limit,
+            monitoring_location_id=monitoring_location_id,
+            offset=offset,
+            parameter_code=parameter_code,
+            parameter_description=parameter_description,
+            parameter_name=parameter_name,
+            parent_time_series_id=parent_time_series_id,
+            primary=primary,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+            state_name=state_name,
+            statistic_id=statistic_id,
+            sublocation_identifier=sublocation_identifier,
+            thresholds=thresholds,
+            unit_of_measure=unit_of_measure,
+            web_description=web_description,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -5319,33 +5224,30 @@ class TimeZoneCodesClient(BaseClient[TransformedResponseT_co]):
             time_zone_utc_offset: Coordinated Universal Time (UTC) offset time. The number of hours
                 offset from UTC time, in ISO format.
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "crs": crs,
-            "f": f,
-            "lang": lang,
-            "limit": limit,
-            "offset": offset,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-            "time_zone_daylight_savings_time_code": time_zone_daylight_savings_time_code,
-            "time_zone_daylight_savings_time_name": time_zone_daylight_savings_time_name,
-            "time_zone_daylight_savings_utc_offset": time_zone_daylight_savings_utc_offset,
-            "time_zone_description": time_zone_description,
-            "time_zone_name": time_zone_name,
-            "time_zone_utc_offset": time_zone_utc_offset,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.TimeZoneCodesRequest(
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            crs=crs,
+            f=f,
+            lang=lang,
+            limit=limit,
+            offset=offset,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+            time_zone_daylight_savings_time_code=time_zone_daylight_savings_time_code,
+            time_zone_daylight_savings_time_name=time_zone_daylight_savings_time_name,
+            time_zone_daylight_savings_utc_offset=time_zone_daylight_savings_utc_offset,
+            time_zone_description=time_zone_description,
+            time_zone_name=time_zone_name,
+            time_zone_utc_offset=time_zone_utc_offset,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)
@@ -5428,30 +5330,27 @@ class TopographicCodesClient(BaseClient[TransformedResponseT_co]):
                 implied is ascending (+).
             topography_name: 
         """
-        # Translate Python parameters to API parameters
-        query = {
-            "bbox": bbox,
-            "bbox-crs": bbox_crs,
-            "crs": crs,
-            "f": f,
-            "full_topography_description": full_topography_description,
-            "lang": lang,
-            "limit": limit,
-            "offset": offset,
-            "properties": properties,
-            "filter": query_filter,
-            "id": query_id,
-            "short_topography_description": short_topography_description,
-            "skipGeometry": skipgeometry,
-            "sortby": sortby,
-            "topography_name": topography_name,
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        # Validate query
+        query = rm.TopographicCodesRequest(
+            bbox=bbox,
+            bbox_crs=bbox_crs,
+            crs=crs,
+            f=f,
+            full_topography_description=full_topography_description,
+            lang=lang,
+            limit=limit,
+            offset=offset,
+            properties=properties,
+            query_filter=query_filter,
+            query_id=query_id,
+            short_topography_description=short_topography_description,
+            skipgeometry=skipgeometry,
+            sortby=sortby,
+            topography_name=topography_name,
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)

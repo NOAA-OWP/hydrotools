@@ -28,7 +28,8 @@ dependencies = [
     "jsonref",
     "diskcache",
     "PyYAML",
-    "geopandas"
+    "geopandas",
+    "pydantic"
 ]
 dynamic = ["version"]
 

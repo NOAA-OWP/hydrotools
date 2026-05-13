@@ -15,6 +15,7 @@ from yarl import URL
 from .base_client import BaseClient
 from .constants import USGSCollection
 from .transformers import TransformedResponseT_co
+from . import request_models as rm
 
 __all__ = [
 {% for item in collections %}
@@ -42,18 +43,15 @@ class {{ item.class_name }}(BaseClient[TransformedResponseT_co]):
             {{ p.python_name }}: {{ p.description | wordwrap(70) | indent(16) }}
         {% endfor %}
         """
-        # Translate Python parameters to API parameters
-        query = {
+        # Validate query
+        query = rm.{{ item.request_model }}(
         {% for p in item.parameters %}
-            "{{ p.name }}": {{ p.python_name }},
+            {{ p.python_name }}={{ p.python_name }},
         {% endfor %}
-        }
-
-        # Ignore None
-        valid_query = {k: v for k, v in query.items() if v is not None}
+        ).generate_query()
 
         # Get responses
-        data = self._get_json_responses(queries=[valid_query])
+        data = self._get_json_responses(queries=[query])
 
         # Transform
         return self._handle_response(data)

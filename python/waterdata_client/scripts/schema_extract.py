@@ -21,12 +21,14 @@ class ParameterMetadata(TypedDict):
     type_hint: str
     description: str
     default: str
+    field_constraints: str
 
 class CollectionMetadata(TypedDict):
     """Defines collection metadata used by Jinja2 templates."""
     value: str
     enum_member: str
     class_name: str
+    request_model: str
     description: str
     parameters: list[ParameterMetadata]
 
@@ -100,15 +102,15 @@ def to_pascal_case(
 
 def get_type_hint(
         type_schema: dict[str, Any], required: bool = False
-) -> tuple[str, Any]:
-    """Returns type hint and default value.
+) -> tuple[str, Any, dict[str, Any]]:
+    """Returns type hint, default value, and pydantic field constraints.
 
     Args:
         type_schema: 'schema' object in OpenAPI JSON schema parameter.
         required: If False, designates type as 'Optional'. Defaults to False.
     
     Returns:
-        type_hint, default_value.
+        type_hint, default_value, field_constraints.
     
     Raises:
         ValueError if unable to determine type.
@@ -159,7 +161,23 @@ def get_type_hint(
     if not required:
         type_hint = f"Optional[{type_hint}]"
 
-    return type_hint, default
+    # Build Field arguments
+    field_args = {
+        "frozen": True,
+        "default": default
+    }
+
+    # Update field arguments
+    field_map = [
+        ("ge", type_schema.get("minimum")),
+        ("le", type_schema.get("maximum")),
+        ("pattern", type_schema.get("pattern")),
+        ("min_length", type_schema.get("minLength")),
+        ("max_length", type_schema.get("maxLength"))
+    ]
+    field_args.update({k: v for k, v in field_map if v is not None})
+
+    return type_hint, default, field_args
 
 def validate_identifier(
         identifier: str,
@@ -225,14 +243,25 @@ def parse_parameters(
 
         # Extract type information
         required = param.get("required", False)
-        type_hint, default_value = get_type_hint(param.get("schema", {}), required)
+        type_hint, default_value, field_constraints = get_type_hint(
+            param.get("schema", {}), required)
+
+        # Set parameter description
+        parameter_description: str = param.get("description", "")
+        short_description = parameter_description.replace(
+            "\n", " ").replace('"', " ").split(".", 1)[0].strip()
+
+        # Convert field constraints to strings
+        field_constraints.update({"description": f'"{short_description}."'})
+        arguments = [f"{k}={v}" for k, v in field_constraints.items()]
 
         parsed.append({
             "name": name,
             "python_name": python_name,
             "type_hint": type_hint,
-            "description": param.get("description", ""),
-            "default": default_value
+            "description": parameter_description,
+            "default": default_value,
+            "field_constraints": ", ".join(arguments)
         })
 
     return parsed
@@ -271,6 +300,7 @@ def get_template_data(
             cid = match.group("cid")
             enum_member = to_screaming_snake_case(cid)
             class_name = f"{to_pascal_case(cid)}Client"
+            request_model = f"{to_pascal_case(cid)}Request"
 
             # Validate enum member and class name
             try:
@@ -281,6 +311,11 @@ def get_template_data(
                 )
                 class_name = validate_identifier(
                     class_name,
+                    fix_errors=fix_errors,
+                    error_prefix=error_prefix
+                )
+                request_model = validate_identifier(
+                    request_model,
                     fix_errors=fix_errors,
                     error_prefix=error_prefix
                 )
@@ -302,6 +337,7 @@ def get_template_data(
                 "value": cid,
                 "enum_member": enum_member,
                 "class_name": class_name,
+                "request_model": request_model,
                 "description": endpoint_information.get("description", f"Client for {cid}."),
                 "parameters": sorted(parameters, key=lambda x: x["python_name"])
             })
