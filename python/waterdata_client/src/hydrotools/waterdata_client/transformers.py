@@ -159,7 +159,7 @@ def downscale_datetime_series(s: pd.Series) -> pd.Series:
 
 def downscale_float32_series(s: pd.Series) -> pd.Series:
     """Applies float32 type to a pandas.Series."""
-    return pd.to_numeric(s).astype("float32")
+    return pd.to_numeric(s, errors="coerce").astype("float32")
 
 SERIES_TRANSFORMERS: dict[HydroToolsColumn, SeriesTransformer] = {
     # Categorical optimizations

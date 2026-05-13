@@ -181,3 +181,18 @@ def test_heterogenous_datetimes():
 
     optimized_df = optimize_dataframe(df)
     assert optimized_df[HydroToolsColumn.VALUE_TIME].dtype == "datetime64[s]"
+
+def test_non_number_values():
+    """Tests that optimizations handle non-float values."""
+    df = pd.DataFrame({
+        "value_time": [
+            "2026-05-11 00",
+            "2026-05-12T00:00",
+            "2026-05-13T00:00:00",
+            ],
+        "value": ["1.0", "2.0", "EMPTY"]
+        })
+
+    optimized_df = optimize_dataframe(df)
+    assert optimized_df[HydroToolsColumn.VALUE].dtype == np.float32
+    assert np.isnan(optimized_df["value"].iloc[2])
