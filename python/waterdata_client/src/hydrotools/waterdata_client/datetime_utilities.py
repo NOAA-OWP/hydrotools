@@ -59,8 +59,10 @@ def convert_datetime_to_string(
     def normalize_datetime(dt: DateTimeObject) -> DateTimeObject:
         if dt.tzinfo:
             return dt.astimezone(UTC)
-        else:
-            return pd.Timestamp(dt).tz_localize(UTC)
+        if isinstance(dt, datetime):
+            # This is faster than using pandas.Timestamp.tz_localize
+            return dt.replace(tzinfo=UTC)
+        return pd.Timestamp(dt).tz_localize(UTC)
 
     # Normalize object and convert to string
     if isinstance(datetime_object, DateTimeObject):
