@@ -16,6 +16,9 @@ from ..base_client import BaseClient
 from ..constants import USGSCollection
 from ..transformers import TransformedResponseT_co
 from ..request_models.{{ item.module_name }} import {{ item.request_model }}
+{% for e in item.extra_imports %}
+{{ e }}
+{% endfor %}
 
 class {{ item.class_name }}(BaseClient[TransformedResponseT_co]):
     """

@@ -5,7 +5,7 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.0a0
 Generation script: build_clients.py
-Generated: 2026-05-13 17:38:51 Z
+Generated: 2026-05-18 16:16:34 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -16,6 +16,7 @@ from ..base_client import BaseClient
 from ..constants import USGSCollection
 from ..transformers import TransformedResponseT_co
 from ..request_models.latest_continuous import LatestContinuousRequest
+from ..datetime_utilities import DateTimeObject
 
 class LatestContinuousClient(BaseClient[TransformedResponseT_co]):
     """
@@ -39,7 +40,7 @@ class LatestContinuousClient(BaseClient[TransformedResponseT_co]):
         bbox: Optional[Sequence[float]] = None,
         bbox_crs: Optional[URL] = None,
         crs: Optional[URL] = None,
-        datetime: Optional[str] = None,
+        datetime: Optional[DateTimeObject] = None,
         f: Optional[Literal["json", "html", "jsonld", "csv"]] = "json",
         lang: Optional[Literal["en-US"]] = "en-US",
         last_modified: Optional[str] = None,
