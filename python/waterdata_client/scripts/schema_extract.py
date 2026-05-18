@@ -4,6 +4,18 @@ import re
 from typing import Any, Optional, TypedDict
 import builtins
 
+TYPE_OVERRIDES: dict[str, str] = {
+    "datetime": "DateTimeObject"
+}
+"""Mapping from specific arguments to special type hints. This facilitates
+various query interventions.
+"""
+
+EXTRA_IMPORTS: dict[str, str] = {
+    "datetime": "from ..datetime_utilities import DateTimeObject"
+}
+"""Mapping from specific arguments to extra required imports."""
+
 OPENAPI_TO_PYTHON_TYPES: dict[str, str] = {
     "string": "str",
     "integer": "int",
@@ -32,6 +44,7 @@ class CollectionMetadata(TypedDict):
     request_model: str
     description: str
     parameters: list[ParameterMetadata]
+    extra_imports: set[str]
 
 def to_screaming_snake_case(
         text: str,
@@ -102,11 +115,12 @@ def to_pascal_case(
     return "".join(word.capitalize() for word in words if word)
 
 def get_type_hint(
-        type_schema: dict[str, Any], required: bool = False
+        python_name: str, type_schema: dict[str, Any], required: bool = False
 ) -> tuple[str, Any, dict[str, Any]]:
     """Returns type hint, default value, and pydantic field constraints.
 
     Args:
+        python_name: Python friendly name. Used to check for type override.
         type_schema: 'schema' object in OpenAPI JSON schema parameter.
         required: If False, designates type as 'Optional'. Defaults to False.
     
@@ -122,7 +136,10 @@ def get_type_hint(
 
     # Get base type
     oa_type = type_schema.get("type", "string")
-    type_hint = OPENAPI_TO_PYTHON_TYPES.get(oa_type, "str")
+    if python_name in TYPE_OVERRIDES:
+        type_hint = TYPE_OVERRIDES[python_name]
+    else:
+        type_hint = OPENAPI_TO_PYTHON_TYPES.get(oa_type, "str")
     default = type_schema.get("default")
 
     # Handle string
@@ -245,7 +262,7 @@ def parse_parameters(
         # Extract type information
         required = param.get("required", False)
         type_hint, default_value, field_constraints = get_type_hint(
-            param.get("schema", {}), required)
+            python_name, param.get("schema", {}), required)
 
         # Set parameter description
         parameter_description: str = param.get("description", "")
@@ -336,6 +353,13 @@ def get_template_data(
                 endpoint_information.get("parameters", [{}])
             )
 
+            # Resolve extra imports
+            extra_imports = set()
+            for p in parameters:
+                extra = EXTRA_IMPORTS.get(p["python_name"])
+                if extra:
+                    extra_imports.add(extra)
+
             # Add collection
             collections.append({
                 "value": cid,
@@ -344,7 +368,8 @@ def get_template_data(
                 "class_name": class_name,
                 "request_model": request_model,
                 "description": endpoint_information.get("description", f"Client for {cid}."),
-                "parameters": sorted(parameters, key=lambda x: x["python_name"])
+                "parameters": sorted(parameters, key=lambda x: x["python_name"]),
+                "extra_imports": extra_imports
             })
 
     # Return sorted by value for a deterministic file
