@@ -1,7 +1,9 @@
-"""Utilities for handling datetime arguments."""
+"""Utilities for validating and transforming datetime arguments."""
 from datetime import datetime, timedelta, UTC
-from typing import TypeAlias, Union, Literal, Sequence
+from typing import TypeAlias, Union, Literal, Sequence, Annotated
 import pandas as pd
+from pandas._libs.tslibs.parsing import DateParseError
+from pydantic import AfterValidator
 
 DateTimeLike: TypeAlias = Union[datetime, pd.Timestamp]
 """Type alias for date+time objects."""
@@ -100,3 +102,25 @@ def convert_datetime_to_string(
         return f"{normalized_strings[0]}/{normalized_strings[1]}"
 
     raise ValueError(f"Cannot convert {datetime_object} to datetime string or interval string.")
+
+def validate_datetime_argument(
+        datetime_object: str | DateTimeLike | DurationLike | TimeInterval
+) -> str:
+    """Reusable validator for datetime arguments. Note that strings are not
+    validated for proper format. String arguments are left as-is to facilitate
+    direct access to the API.
+    """
+    # Strings are not validated
+    if isinstance(datetime_object, str):
+        return datetime_object
+
+    # Other types
+    return convert_datetime_to_string(datetime_object)
+
+DateTimeObject: TypeAlias = Annotated[
+    str | DateTimeLike | DurationLike | TimeInterval,
+    AfterValidator(validate_datetime_argument)
+]
+"""Annotated type that validates and converts object to RFC 3339 strings.
+Note that string inputs will be passed directly to the API without validation.
+"""
