@@ -4,7 +4,7 @@ from zoneinfo import ZoneInfo
 import pandas as pd
 import pytest
 from unittest.mock import patch
-from hydrotools.waterdata_client.datetime_utilities import convert_datetime_to_string, DateTimeObject
+from hydrotools.waterdata_client.datetime_utilities import convert_datetime_to_string, DateTimeField
 from pydantic import BaseModel
 from pydantic_core import ValidationError
 
@@ -13,7 +13,7 @@ MOCK_CURRENT_TIME: pd.Timestamp = pd.Timestamp("2025-05-05")
 
 class MockRequestModel(BaseModel):
     """Minimal model for testing datetime validation."""
-    datetime: DateTimeObject
+    datetime: DateTimeField
 
 @pytest.mark.parametrize("datetime_object, datetime_string", [
     (pd.Timestamp("2010-01-01"), "2010-01-01T00:00:00+00:00"),

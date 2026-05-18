@@ -25,6 +25,18 @@ from hydrotools.waterdata_client.schema import get_schema
 from hydrotools.waterdata_client.client_config import SETTINGS
 from hydrotools.waterdata_client._version import __version__
 
+TYPE_OVERRIDES: dict[str, str] = {
+    "datetime": "DateTimeInput"
+}
+"""Mapping from specific arguments to special type hints. This facilitates
+various query interventions.
+"""
+
+EXTRA_IMPORTS: dict[str, str] = {
+    "datetime": "from ..datetime_utilities import DateTimeInput"
+}
+"""Mapping from specific arguments to extra required imports."""
+
 @click.command()
 @click.argument("templates", type=click.Path(exists=True, file_okay=False,
     dir_okay=True, path_type=Path))
@@ -82,7 +94,8 @@ def write_clients_module(
     schema = get_schema()
     template_data = get_template_data(
         schema, ignore_errors=ignore_errors, fix_errors=fix_errors,
-        error_prefix=prefix)
+        error_prefix=prefix, type_overrides=TYPE_OVERRIDES,
+        additional_imports=EXTRA_IMPORTS)
 
     # Metadata
     timestamp = datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S Z")
@@ -115,6 +128,11 @@ def write_clients_module(
 
     # Init file
     module_path = output / "__init__.py"
+
+    # Drop extras
+    template_data = get_template_data(
+        schema, ignore_errors=ignore_errors, fix_errors=fix_errors,
+        error_prefix=prefix)
 
     # Render and save
     jinja_template = env.get_template(name=init_template)

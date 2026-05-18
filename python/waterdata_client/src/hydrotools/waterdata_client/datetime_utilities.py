@@ -4,17 +4,20 @@ from typing import TypeAlias, Union, Literal, Sequence, Annotated
 import pandas as pd
 from pydantic import BeforeValidator
 
-DateTimeLike: TypeAlias = Union[datetime, pd.Timestamp]
+DateTimeObject: TypeAlias = Union[datetime, pd.Timestamp]
 """Type alias for date+time objects."""
 
-DurationLike: TypeAlias = Union[timedelta, pd.Timedelta]
+DurationObject: TypeAlias = Union[timedelta, pd.Timedelta]
 """Type alias for time duration objects."""
 
-TimeInterval: TypeAlias = Sequence[DateTimeLike | None]
+TimeInterval: TypeAlias = Sequence[DateTimeObject | None]
 """Type alias for a bounded or half-bounded time interval."""
 
+DateTimeInput: TypeAlias = Union[DateTimeObject, DurationObject, TimeInterval]
+"""Type alias for objects compatible with datetime arguments."""
+
 def convert_datetime_to_string(
-        datetime_object: DateTimeLike | DurationLike | TimeInterval,
+        datetime_object: DateTimeInput,
         timespec: Literal['auto', 'hours', 'minutes', 'seconds', 'milliseconds',
             'microseconds', 'nanoseconds'] = "seconds"
 ) -> str:
@@ -53,18 +56,18 @@ def convert_datetime_to_string(
         ValueError if unable to convert object to string.
     """
     # Datetime normalizer
-    def normalize_datetime(dt: DateTimeLike) -> DateTimeLike:
+    def normalize_datetime(dt: DateTimeObject) -> DateTimeObject:
         if dt.tzinfo:
             return dt.astimezone(UTC)
         else:
             return pd.Timestamp(dt).tz_localize(UTC)
 
     # Normalize object and convert to string
-    if isinstance(datetime_object, DateTimeLike):
+    if isinstance(datetime_object, DateTimeObject):
         # Normalize
         return normalize_datetime(datetime_object).isoformat(timespec=timespec)
 
-    elif isinstance(datetime_object, DurationLike):
+    elif isinstance(datetime_object, DurationObject):
         # Convert to UTC datetime interval
         now = pd.Timestamp.now(UTC)
         end = normalize_datetime(now).isoformat(timespec=timespec)
@@ -83,14 +86,14 @@ def convert_datetime_to_string(
             raise ValueError("Both datetime objects are None. Cannot convert unbounded interval.")
 
         # Check that non-None objects are actually datetime
-        if any([not isinstance(d, DateTimeLike) for d in datetime_object if d]):
+        if any([not isinstance(d, DateTimeObject) for d in datetime_object if d]):
             raise ValueError(f"All items in {datetime_object} must be datetime-compatible")
 
         # Normalize
         normalized = [normalize_datetime(d) if d else d for d in datetime_object]
 
         # Check that start occurs before end
-        if isinstance(normalized[0], DateTimeLike) and isinstance(normalized[1], DateTimeLike):
+        if isinstance(normalized[0], DateTimeObject) and isinstance(normalized[1], DateTimeObject):
             if normalized[0] >= normalized[1]:
                 raise ValueError(
                     f"Improper interval {datetime_object} ([start, end]). start must be < end."
@@ -103,7 +106,7 @@ def convert_datetime_to_string(
     raise ValueError(f"Cannot convert {datetime_object} to datetime string or interval string.")
 
 def validate_datetime_argument(
-        datetime_object: str | DateTimeLike | DurationLike | TimeInterval
+        datetime_object: str | DateTimeInput
 ) -> str:
     """Reusable validator for datetime arguments. Note that strings are not
     validated for proper format. String arguments are left as-is to facilitate
@@ -116,7 +119,7 @@ def validate_datetime_argument(
     # Other types
     return convert_datetime_to_string(datetime_object)
 
-DateTimeObject: TypeAlias = Annotated[
+DateTimeField: TypeAlias = Annotated[
     str,
     BeforeValidator(validate_datetime_argument)
 ]

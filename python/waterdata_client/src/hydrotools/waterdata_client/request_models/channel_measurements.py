@@ -5,7 +5,7 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.0a0
 Generation script: build_request_models.py
-Generated: 2026-05-18 15:30:16 Z
+Generated: 2026-05-18 17:18:28 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -13,7 +13,7 @@ OpenAPI version: 3.0.2
 from typing import Sequence, Literal, Optional, Any
 from yarl import URL
 from pydantic import BaseModel, Field
-from ..datetime_utilities import DateTimeObject
+from ..datetime_utilities import DateTimeField
 
 class ChannelMeasurementsRequest(BaseModel):
     """
@@ -38,7 +38,7 @@ class ChannelMeasurementsRequest(BaseModel):
     channel_width: Optional[str] = Field(frozen=True, default=None, description="The channel width.")
     channel_width_unit: Optional[str] = Field(frozen=True, default=None, description="The units for channel width.")
     crs: Optional[URL] = Field(frozen=True, default=None, description="Indicates the coordinate reference system for the results.")
-    datetime: Optional[DateTimeObject] = Field(frozen=True, default=None, description="Either a date-time or an interval.")
+    datetime: Optional[DateTimeField] = Field(frozen=True, default=None, description="Either a date-time or an interval.")
     f: Optional[Literal["json", "html", "jsonld", "csv"]] = Field(frozen=True, default="json", description="The optional f parameter indicates the output format which the server shall provide as part of the response document.")
     field_visit_id: Optional[str] = Field(frozen=True, default=None, description="A universally unique identifier (UUID) for the field visit.")
     horizontal_velocity_description: Optional[str] = Field(frozen=True, default=None, description="The horizontal velocity description.")
