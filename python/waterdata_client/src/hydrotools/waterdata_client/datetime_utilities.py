@@ -2,8 +2,7 @@
 from datetime import datetime, timedelta, UTC
 from typing import TypeAlias, Union, Literal, Sequence, Annotated
 import pandas as pd
-from pandas._libs.tslibs.parsing import DateParseError
-from pydantic import AfterValidator
+from pydantic import BeforeValidator
 
 DateTimeLike: TypeAlias = Union[datetime, pd.Timestamp]
 """Type alias for date+time objects."""
@@ -118,8 +117,8 @@ def validate_datetime_argument(
     return convert_datetime_to_string(datetime_object)
 
 DateTimeObject: TypeAlias = Annotated[
-    str | DateTimeLike | DurationLike | TimeInterval,
-    AfterValidator(validate_datetime_argument)
+    str,
+    BeforeValidator(validate_datetime_argument)
 ]
 """Annotated type that validates and converts object to RFC 3339 strings.
 Note that string inputs will be passed directly to the API without validation.
