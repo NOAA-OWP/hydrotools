@@ -1,5 +1,4 @@
-"""Generally useful methods.
-"""
+"""Utilities for handling datetime arguments."""
 from datetime import datetime, timedelta, UTC
 from typing import TypeAlias, Union, Literal, Sequence
 import pandas as pd
@@ -7,12 +6,16 @@ import pandas as pd
 DateTimeLike: TypeAlias = Union[datetime, pd.Timestamp]
 """Type alias for date+time objects."""
 
-DurationLike: TypeAlias = Union[timedelta, pd.Timedelta, Sequence[DateTimeLike | None]]
+DurationLike: TypeAlias = Union[timedelta, pd.Timedelta]
 """Type alias for time duration objects."""
 
+TimeInterval: TypeAlias = Sequence[DateTimeLike | None]
+"""Type alias for a bounded or half-bounded time interval."""
+
 def convert_datetime_to_string(
-        datetime_object: DateTimeLike | DurationLike,
-        timespec: Literal['auto', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'] = "seconds"
+        datetime_object: DateTimeLike | DurationLike | TimeInterval,
+        timespec: Literal['auto', 'hours', 'minutes', 'seconds', 'milliseconds',
+            'microseconds', 'nanoseconds'] = "seconds"
 ) -> str:
     """Converts a datetime-like or duration-like object to a standardized RFC 3339
     string in UTC.
@@ -60,7 +63,7 @@ def convert_datetime_to_string(
         # Normalize
         return normalize_datetime(datetime_object).isoformat(timespec=timespec)
 
-    elif isinstance(datetime_object, timedelta | pd.Timedelta):
+    elif isinstance(datetime_object, DurationLike):
         # Convert to UTC datetime interval
         now = pd.Timestamp.now(UTC)
         end = normalize_datetime(now).isoformat(timespec=timespec)
@@ -86,7 +89,7 @@ def convert_datetime_to_string(
         normalized = [normalize_datetime(d) if d else d for d in datetime_object]
 
         # Check that start occurs before end
-        if all([isinstance(d, DateTimeLike) for d in normalized]):
+        if isinstance(normalized[0], DateTimeLike) and isinstance(normalized[1], DateTimeLike):
             if normalized[0] >= normalized[1]:
                 raise ValueError(
                     f"Improper interval {datetime_object} ([start, end]). start must be < end."
