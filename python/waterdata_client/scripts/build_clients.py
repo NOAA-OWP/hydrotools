@@ -26,7 +26,7 @@ from hydrotools.waterdata_client.client_config import SETTINGS
 from hydrotools.waterdata_client._version import __version__
 
 TYPE_OVERRIDES: dict[str, str] = {
-    "datetime": "DateTimeInput"
+    "datetime": "str | DateTimeInput"
 }
 """Mapping from specific arguments to special type hints. This facilitates
 various query interventions.
