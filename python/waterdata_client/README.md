@@ -27,11 +27,10 @@ The following examples demonstrate typical usage of `hydrotools.waterdata_client
 ### Retrieve most recent streamflow values
 
 ```python
-# The LatestContinuousClient provides an interface to the latest-continuous
-#   endpoint.
+# The LatestContinuousClient provides an interface to the latest-continuous endpoint.
 from hydrotools.waterdata_client import LatestContinuousClient
 
-# The default client return deserialized JSON as a list of Python dictionaries.
+# The default client returns deserialized JSON as a list of Python dictionaries.
 #   We'll import a transformer that converts these data to a GeoDataFrame.
 from hydrotools.waterdata_client.transformers import to_geodataframe
 
@@ -66,11 +65,12 @@ Index(['geometry', 'id', 'time_series_id', 'usgs_site_code', 'parameter_code',
 ```python
 import pandas as pd
 # from datetime import datetime, timedelta
+# from zoneinfo import ZoneInfo
 
 # The ContinuousClient provides an interface to the continuous endpoint.
 from hydrotools.waterdata_client import ContinuousClient
 
-# The default client return deserialized JSON as a list of Python dictionaries.
+# The default client returns deserialized JSON as a list of Python dictionaries.
 #   We'll import a transformer that converts these data to a DataFrame.
 from hydrotools.waterdata_client.transformers import to_dataframe
 
@@ -80,6 +80,7 @@ client = ContinuousClient(transformer=to_dataframe)
 # Retrieve data using datetime handling
 observations = client.get(
     monitoring_location_id="USGS-02146470",
+    limit=50_000,
     parameter_code="00065", # Stage in ft.
 
     # Strings are passed directly to the API without intervention. See the API
@@ -93,14 +94,20 @@ observations = client.get(
     #   Timezone naive objects are assumed to be UTC.
     # datetime=pd.Timestamp("2010-01-01"),
 
-    # Retrieve timezone aware types are converted to UTC before retrieval.
-    # datetime=pd.Timestamp("2010-01-01", tzinfo=ZoneInfo("America/Chicago"),
+    # Timezone aware types are converted to UTC before retrieval.
+    # datetime=pd.Timestamp("2010-01-01", tzinfo=ZoneInfo("America/Chicago")),
 
-    # Retrieve using standard datetime objects
+    # Retrieve using a standard datetime object
     # datetime=datetime(2026, 1, 1, 0, 30, 0),
 
-    # Retrieve using standard timedelta objects
-    # datetime=timedelta(hours=6)
+    # Retrieve using a standard timedelta object
+    # datetime=timedelta(hours=6),
+
+    # Use a list of datetime objects to specify a bounded interval [start, end]
+    # datetime=[pd.Timestamp("2026-01-01"), pd.Timestamp("2026-01-02")],
+
+    # Specify a half-bounded interval using None
+    # datetime=[pd.Timestamp("2026-05-01"), None],
     )
 
 # Look at values
