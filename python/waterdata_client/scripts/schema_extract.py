@@ -128,6 +128,9 @@ def get_type_hint(
     oa_type = type_schema.get("type", "string")
     if type_overrides and python_name in type_overrides:
         type_hint = type_overrides[python_name]
+
+        # Override default schema
+        type_schema = {"type": oa_type, "default": type_schema.get("default")}
     else:
         type_hint = OPENAPI_TO_PYTHON_TYPES.get(oa_type, "str")
     default = type_schema.get("default")
