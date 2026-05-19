@@ -32,6 +32,7 @@ class CollectionMetadata(TypedDict):
     request_model: str
     description: str
     parameters: list[ParameterMetadata]
+    extra_imports: set[str]
 
 def to_screaming_snake_case(
         text: str,
@@ -102,13 +103,16 @@ def to_pascal_case(
     return "".join(word.capitalize() for word in words if word)
 
 def get_type_hint(
-        type_schema: dict[str, Any], required: bool = False
+        python_name: str, type_schema: dict[str, Any], required: bool = False,
+        type_overrides: Optional[dict[str, str]] = None
 ) -> tuple[str, Any, dict[str, Any]]:
     """Returns type hint, default value, and pydantic field constraints.
 
     Args:
+        python_name: Python friendly name. Used to check for type override.
         type_schema: 'schema' object in OpenAPI JSON schema parameter.
         required: If False, designates type as 'Optional'. Defaults to False.
+        type_overrides: Optional dict mapping OGC JSON types to Python types.
     
     Returns:
         type_hint, default_value, field_constraints.
@@ -122,7 +126,13 @@ def get_type_hint(
 
     # Get base type
     oa_type = type_schema.get("type", "string")
-    type_hint = OPENAPI_TO_PYTHON_TYPES.get(oa_type, "str")
+    if type_overrides and python_name in type_overrides:
+        type_hint = type_overrides[python_name]
+
+        # Override default schema
+        type_schema = {"type": oa_type, "default": type_schema.get("default")}
+    else:
+        type_hint = OPENAPI_TO_PYTHON_TYPES.get(oa_type, "str")
     default = type_schema.get("default")
 
     # Handle string
@@ -213,7 +223,8 @@ def validate_identifier(
     return identifier
 
 def parse_parameters(
-        param_list: list[dict[str, Any]]
+        param_list: list[dict[str, Any]],
+        type_overrides: Optional[dict[str, str]] = None
     ) -> list[ParameterMetadata]:
     """Parse endpoint parameters."""
     parsed: list[ParameterMetadata] = []
@@ -245,7 +256,7 @@ def parse_parameters(
         # Extract type information
         required = param.get("required", False)
         type_hint, default_value, field_constraints = get_type_hint(
-            param.get("schema", {}), required)
+            python_name, param.get("schema", {}), required, type_overrides)
 
         # Set parameter description
         parameter_description: str = param.get("description", "")
@@ -271,7 +282,9 @@ def get_template_data(
         schema: dict[str, Any],
         ignore_errors: bool = False,
         fix_errors: bool = False,
-        error_prefix: str = "COLLECTION_"
+        error_prefix: str = "COLLECTION_",
+        type_overrides: Optional[dict[str, str]] = None,
+        additional_imports: Optional[dict[str, str]] = None
     ) -> list[CollectionMetadata]:
     """Extracts collection metadata for the jinja2 templates.
     
@@ -283,6 +296,8 @@ def get_template_data(
             Defaults to False.
         error_prefix: String added to front of collection enumeration value, if
             fix_errors is True. Defaults to 'COLLECTION_'.
+        type_overrides: Optional dict mapping OGC JSON types to Python types.
+        additional_imports: Optional dict mapping OGC JSON types to Python import statements.
     
     Returns:
         List of extracted metadata for each USGS collection identified.
@@ -333,8 +348,17 @@ def get_template_data(
 
             # Extract parameters
             parameters = parse_parameters(
-                endpoint_information.get("parameters", [{}])
+                endpoint_information.get("parameters", [{}]),
+                type_overrides
             )
+
+            # Resolve extra imports
+            extra_imports = set()
+            if additional_imports:
+                for p in parameters:
+                    extra = additional_imports.get(p["python_name"])
+                    if extra:
+                        extra_imports.add(extra)
 
             # Add collection
             collections.append({
@@ -344,7 +368,8 @@ def get_template_data(
                 "class_name": class_name,
                 "request_model": request_model,
                 "description": endpoint_information.get("description", f"Client for {cid}."),
-                "parameters": sorted(parameters, key=lambda x: x["python_name"])
+                "parameters": sorted(parameters, key=lambda x: x["python_name"]),
+                "extra_imports": extra_imports
             })
 
     # Return sorted by value for a deterministic file

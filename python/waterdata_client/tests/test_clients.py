@@ -3,6 +3,7 @@ import pytest
 from unittest.mock import patch
 from yarl import URL
 from pydantic import ValidationError
+import pandas as pd
 
 # Import a few representative generated clients
 from hydrotools.waterdata_client import (
@@ -11,6 +12,36 @@ from hydrotools.waterdata_client import (
     DailyClient,
     ContinuousClient
 )
+
+@pytest.fixture
+def mock_geojson_response():
+    """Mock OGC FeatureCollection response."""
+    return [{
+        'type': 'FeatureCollection',
+        'numberReturned': 2,
+        'features': [
+            {
+                'type': 'Feature',
+                'properties': {
+                    'id': '1',
+                    'monitoring_location_id': 'USGS-01',
+                    'value': '1.1',
+                    'time': '2026-05-05T18:15:00+00:00'
+                },
+                'geometry': {'type': 'Point', 'coordinates': [0, 0]}
+            },
+            {
+                'type': 'Feature',
+                'properties': {
+                    'id': '2',
+                    'monitoring_location_id': 'USGS-01',
+                    'value': '2.2',
+                    'time': '2026-05-05T18:30:00+00:00'
+                },
+                'geometry': {'type': 'Point', 'coordinates': [1, 1]}
+            }
+        ]
+    }]
 
 @pytest.mark.parametrize("client_class, test_args, expected_query_subset", [
     # Test AgencyCodesClient: Verify kebab-case mapping (bbox-crs)
@@ -118,3 +149,16 @@ def test_invalid_query_values():
         # Raise on invalid type
         with pytest.raises(ValidationError, match="should be a valid integer"):
             client.get(limit=complex(3, 4))
+
+def test_datetime_validation(mock_geojson_response):
+    """Verify that datetimes are correctly validated and transformed."""
+    client = ContinuousClient()
+
+    # Patch the lower-level get_all called by _get_json_responses
+    with patch("hydrotools.waterdata_client.base_client.get_all") as mock_get_all:
+        mock_get_all.return_value = mock_geojson_response
+
+        client.get(datetime=pd.Timestamp("2020-01-01"))
+
+        _, kwargs = mock_get_all.call_args
+        assert "2020-01-01T00:00:00%2B00:00" in str(kwargs["urls"][0])

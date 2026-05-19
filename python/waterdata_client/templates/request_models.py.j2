@@ -13,6 +13,9 @@ OpenAPI version: {{ openapi_version }}
 from typing import Sequence, Literal, Optional, Any
 from yarl import URL
 from pydantic import BaseModel, Field
+{% for e in item.extra_imports %}
+{{ e }}
+{% endfor %}
 
 class {{ item.request_model }}(BaseModel):
     """

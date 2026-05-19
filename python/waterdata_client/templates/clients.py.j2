@@ -12,10 +12,13 @@ OpenAPI version: {{ openapi_version }}
 """
 from typing import Sequence, Literal, Optional
 from yarl import URL
-from ..base_client import BaseClient
-from ..constants import USGSCollection
-from ..transformers import TransformedResponseT_co
-from ..request_models.{{ item.module_name }} import {{ item.request_model }}
+from hydrotools.waterdata_client.base_client import BaseClient
+from hydrotools.waterdata_client.constants import USGSCollection
+from hydrotools.waterdata_client.transformers import TransformedResponseT_co
+from hydrotools.waterdata_client.request_models.{{ item.module_name }} import {{ item.request_model }}
+{% for e in item.extra_imports %}
+{{ e }}
+{% endfor %}
 
 class {{ item.class_name }}(BaseClient[TransformedResponseT_co]):
     """
