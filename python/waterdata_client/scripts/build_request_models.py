@@ -33,7 +33,7 @@ various query interventions.
 """
 
 EXTRA_IMPORTS: dict[str, str] = {
-    "datetime": "from ..datetime_utilities import DateTimeField"
+    "datetime": "from hydrotools.waterdata_client.datetime_utilities import DateTimeField"
 }
 """Mapping from specific arguments to extra required imports."""
 

@@ -5,7 +5,7 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.0a0
 Generation script: build_request_models.py
-Generated: 2026-05-18 17:18:28 Z
+Generated: 2026-05-19 16:04:54 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -13,7 +13,7 @@ OpenAPI version: 3.0.2
 from typing import Sequence, Literal, Optional, Any
 from yarl import URL
 from pydantic import BaseModel, Field
-from ..datetime_utilities import DateTimeField
+from hydrotools.waterdata_client.datetime_utilities import DateTimeField
 
 class ChannelMeasurementsRequest(BaseModel):
     """
