@@ -31,6 +31,7 @@ class {{ item.class_name }}(BaseClient[TransformedResponseT_co]):
         {% for p in item.parameters %}
         {{ p.python_name }}: {{ p.type_hint }} = {{ p.default }},
         {% endfor %}
+        api_key: Optional[str] = None
         ) -> TransformedResponseT_co:
         """Retrieve items from {{ item.value }}.
 
@@ -38,12 +39,15 @@ class {{ item.class_name }}(BaseClient[TransformedResponseT_co]):
         {% for p in item.parameters %}
             {{ p.python_name }}: {{ p.description | wordwrap(70) | indent(16) }}
         {% endfor %}
+            api_key: Providing your API key gives you higher rate limits when querying
+                our APIs. You can obtain an API key at https://api.waterdata.usgs.gov/signup
         """
         # Validate query
         query = {{ item.request_model }}(
         {% for p in item.parameters %}
             {{ p.python_name }}={{ p.python_name }},
         {% endfor %}
+            api_key=api_key
         ).generate_query()
 
         # Get responses

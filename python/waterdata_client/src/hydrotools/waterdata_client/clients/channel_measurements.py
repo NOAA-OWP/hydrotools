@@ -5,7 +5,7 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.0a0
 Generation script: build_clients.py
-Generated: 2026-05-19 16:06:48 Z
+Generated: 2026-05-20 16:58:11 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -64,6 +64,7 @@ class ChannelMeasurementsClient(BaseClient[TransformedResponseT_co]):
         sortby: Optional[Sequence[str]] = None,
         time: Optional[str] = None,
         vertical_velocity_description: Optional[str] = None,
+        api_key: Optional[str] = None
         ) -> TransformedResponseT_co:
         """Retrieve items from channel-measurements.
 
@@ -205,6 +206,8 @@ class ChannelMeasurementsClient(BaseClient[TransformedResponseT_co]):
                 decision of the server whether only a single temporal property is used
                 to determine the extent or all relevant temporal properties.
             vertical_velocity_description: The vertical velocity description.
+            api_key: Providing your API key gives you higher rate limits when querying
+                our APIs. You can obtain an API key at https://api.waterdata.usgs.gov/signup
         """
         # Validate query
         query = ChannelMeasurementsRequest(
@@ -246,6 +249,7 @@ class ChannelMeasurementsClient(BaseClient[TransformedResponseT_co]):
             sortby=sortby,
             time=time,
             vertical_velocity_description=vertical_velocity_description,
+            api_key=api_key
         ).generate_query()
 
         # Get responses

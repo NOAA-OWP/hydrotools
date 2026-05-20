@@ -5,7 +5,7 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.0a0
 Generation script: build_clients.py
-Generated: 2026-05-19 16:06:48 Z
+Generated: 2026-05-20 16:58:11 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -48,6 +48,7 @@ class TimeZoneCodesClient(BaseClient[TransformedResponseT_co]):
         time_zone_description: Optional[str] = None,
         time_zone_name: Optional[str] = None,
         time_zone_utc_offset: Optional[str] = None,
+        api_key: Optional[str] = None
         ) -> TransformedResponseT_co:
         """Retrieve items from time-zone-codes.
 
@@ -105,6 +106,8 @@ class TimeZoneCodesClient(BaseClient[TransformedResponseT_co]):
             time_zone_name: Time zone name. An English name for a world time zone.
             time_zone_utc_offset: Coordinated Universal Time (UTC) offset time. The number of hours
                 offset from UTC time, in ISO format.
+            api_key: Providing your API key gives you higher rate limits when querying
+                our APIs. You can obtain an API key at https://api.waterdata.usgs.gov/signup
         """
         # Validate query
         query = TimeZoneCodesRequest(
@@ -126,6 +129,7 @@ class TimeZoneCodesClient(BaseClient[TransformedResponseT_co]):
             time_zone_description=time_zone_description,
             time_zone_name=time_zone_name,
             time_zone_utc_offset=time_zone_utc_offset,
+            api_key=api_key
         ).generate_query()
 
         # Get responses

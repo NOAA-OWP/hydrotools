@@ -5,7 +5,7 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.0a0
 Generation script: build_request_models.py
-Generated: 2026-05-19 16:04:54 Z
+Generated: 2026-05-20 17:00:05 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -38,6 +38,7 @@ class AquiferTypesRequest(BaseModel):
     query_id: Optional[str] = Field(frozen=True, default=None, description="The single-character code identifying the type of aquifer.")
     skipgeometry: Optional[bool] = Field(frozen=True, default=False, description="This option can be used to skip response geometries for each feature.")
     sortby: Optional[Sequence[str]] = Field(frozen=True, default=None, description="Specifies a comma-separated list of property names by which the response shall be sorted.")
+    api_key: Optional[str] = Field(frozen=True, default=None, description="Providing your API key gives you higher rate limits when querying our APIs. You can obtain an API key at https://api.waterdata.usgs.gov/signup.")
 
     def generate_query(self) -> dict[str, Any]:
         """Translates class attributes to valid API parameters. Returns a URL
@@ -58,6 +59,7 @@ class AquiferTypesRequest(BaseModel):
             "id": self.query_id,
             "skipGeometry": self.skipgeometry,
             "sortby": self.sortby,
+            "api_key": self.api_key
         }
 
         # Ignore None

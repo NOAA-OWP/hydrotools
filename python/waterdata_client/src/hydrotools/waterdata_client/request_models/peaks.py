@@ -5,7 +5,7 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.0a0
 Generation script: build_request_models.py
-Generated: 2026-05-19 16:04:54 Z
+Generated: 2026-05-20 17:00:05 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -47,6 +47,7 @@ class PeaksRequest(BaseModel):
     value: Optional[str] = Field(frozen=True, default=None, description="The value of the observation.")
     water_year: Optional[int] = Field(frozen=True, default=None, description="The water year (running from October 1st to September 30th) a peak occurred.")
     year: Optional[int] = Field(frozen=True, default=None, description="The calendar year a peak occurred.")
+    api_key: Optional[str] = Field(frozen=True, default=None, description="Providing your API key gives you higher rate limits when querying our APIs. You can obtain an API key at https://api.waterdata.usgs.gov/signup.")
 
     def generate_query(self) -> dict[str, Any]:
         """Translates class attributes to valid API parameters. Returns a URL
@@ -79,6 +80,7 @@ class PeaksRequest(BaseModel):
             "value": self.value,
             "water_year": self.water_year,
             "year": self.year,
+            "api_key": self.api_key
         }
 
         # Ignore None
