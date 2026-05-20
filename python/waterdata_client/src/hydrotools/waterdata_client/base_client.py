@@ -42,6 +42,7 @@ class BaseClient(Generic[TransformedResponseT_co]):
     _path: OGCPATH = SETTINGS.default_path
     _content_type: ResponseContentType = ResponseContentType.JSON
     _max_pages: int = SETTINGS.max_pages
+    _api_key: Optional[str] = SETTINGS.usgs_api_key
 
     def __init__(
         self,

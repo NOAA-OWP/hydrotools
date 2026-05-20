@@ -47,7 +47,7 @@ class {{ item.class_name }}(BaseClient[TransformedResponseT_co]):
         {% for p in item.parameters %}
             {{ p.python_name }}={{ p.python_name }},
         {% endfor %}
-            api_key=api_key
+            api_key=api_key if api_key else self._api_key
         ).generate_query()
 
         # Get responses
