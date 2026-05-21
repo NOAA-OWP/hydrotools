@@ -5,7 +5,7 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.0a0
 Generation script: build_request_models.py
-Generated: 2026-05-19 16:04:54 Z
+Generated: 2026-05-20 17:00:05 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -32,6 +32,7 @@ class StatisticCodesRequest(BaseModel):
     sortby: Optional[Sequence[str]] = Field(frozen=True, default=None, description="Specifies a comma-separated list of property names by which the response shall be sorted.")
     statistic_description: Optional[str] = Field(frozen=True, default=None, description="Statistic description.")
     statistic_name: Optional[str] = Field(frozen=True, default=None, description="Statistic name.")
+    api_key: Optional[str] = Field(frozen=True, default=None, description="Providing your API key gives you higher rate limits when querying our APIs. You can obtain an API key at https://api.waterdata.usgs.gov/signup.")
 
     def generate_query(self) -> dict[str, Any]:
         """Translates class attributes to valid API parameters. Returns a URL
@@ -53,6 +54,7 @@ class StatisticCodesRequest(BaseModel):
             "sortby": self.sortby,
             "statistic_description": self.statistic_description,
             "statistic_name": self.statistic_name,
+            "api_key": self.api_key
         }
 
         # Ignore None

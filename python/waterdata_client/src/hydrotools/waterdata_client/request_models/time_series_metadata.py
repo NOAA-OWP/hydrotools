@@ -5,7 +5,7 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.0a0
 Generation script: build_request_models.py
-Generated: 2026-05-19 16:04:54 Z
+Generated: 2026-05-20 17:00:05 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -56,6 +56,7 @@ class TimeSeriesMetadataRequest(BaseModel):
     thresholds: Optional[str] = Field(frozen=True, default=None, description="Thresholds represent known numeric limits for a time series, for example the historic maximum value for a parameter or a level below which a sensor is non-operative.")
     unit_of_measure: Optional[str] = Field(frozen=True, default=None, description="A human-readable description of the units of measurement associated with an observation.")
     web_description: Optional[str] = Field(frozen=True, default=None, description="An optional description of the time series.")
+    api_key: Optional[str] = Field(frozen=True, default=None, description="Providing your API key gives you higher rate limits when querying our APIs. You can obtain an API key at https://api.waterdata.usgs.gov/signup.")
 
     def generate_query(self) -> dict[str, Any]:
         """Translates class attributes to valid API parameters. Returns a URL
@@ -95,6 +96,7 @@ class TimeSeriesMetadataRequest(BaseModel):
             "thresholds": self.thresholds,
             "unit_of_measure": self.unit_of_measure,
             "web_description": self.web_description,
+            "api_key": self.api_key
         }
 
         # Ignore None

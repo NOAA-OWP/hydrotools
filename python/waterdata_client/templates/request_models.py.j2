@@ -24,6 +24,7 @@ class {{ item.request_model }}(BaseModel):
     {% for p in item.parameters %}
     {{ p.python_name }}: {{ p.type_hint }} = Field({{ p.field_constraints }})
     {% endfor %}
+    api_key: Optional[str] = Field(frozen=True, default=None, description="Providing your API key gives you higher rate limits when querying our APIs. You can obtain an API key at https://api.waterdata.usgs.gov/signup.")
 
     def generate_query(self) -> dict[str, Any]:
         """Translates class attributes to valid API parameters. Returns a URL
@@ -34,6 +35,7 @@ class {{ item.request_model }}(BaseModel):
             {% for p in item.parameters %}
             "{{ p.name }}": self.{{ p.python_name }},
             {% endfor %}
+            "api_key": self.api_key
         }
 
         # Ignore None

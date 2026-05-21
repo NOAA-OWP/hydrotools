@@ -5,13 +5,14 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.0a0
 Generation script: build_clients.py
-Generated: 2026-05-19 16:06:48 Z
+Generated: 2026-05-20 18:31:11 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
 """
 from typing import Sequence, Literal, Optional
 from yarl import URL
+from hydrotools.waterdata_client.client_config import SETTINGS
 from hydrotools.waterdata_client.base_client import BaseClient
 from hydrotools.waterdata_client.constants import USGSCollection
 from hydrotools.waterdata_client.transformers import TransformedResponseT_co
@@ -56,6 +57,7 @@ class ParameterCodesClient(BaseClient[TransformedResponseT_co]):
         time_basis: Optional[str] = None,
         unit_of_measure: Optional[str] = None,
         weight_basis: Optional[str] = None,
+        api_key: Optional[str] = None
         ) -> TransformedResponseT_co:
         """Retrieve items from parameter-codes.
 
@@ -119,6 +121,8 @@ class ParameterCodesClient(BaseClient[TransformedResponseT_co]):
             unit_of_measure: Parameter reporting units defined to cooperate with descriptions by
                 USEPA.
             weight_basis: Parameter weight basis.
+            api_key: Providing your API key gives you higher rate limits when querying
+                our APIs. You can obtain an API key at https://api.waterdata.usgs.gov/signup
         """
         # Validate query
         query = ParameterCodesRequest(
@@ -146,6 +150,7 @@ class ParameterCodesClient(BaseClient[TransformedResponseT_co]):
             time_basis=time_basis,
             unit_of_measure=unit_of_measure,
             weight_basis=weight_basis,
+            api_key=api_key if api_key else SETTINGS.usgs_api_key
         ).generate_query()
 
         # Get responses

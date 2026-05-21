@@ -5,7 +5,7 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.0a0
 Generation script: build_request_models.py
-Generated: 2026-05-19 16:04:54 Z
+Generated: 2026-05-20 17:00:05 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -52,6 +52,7 @@ class LatestDailyRequest(BaseModel):
     time_series_id: Optional[str] = Field(frozen=True, default=None, description="A unique identifier representing a single time series.")
     unit_of_measure: Optional[str] = Field(frozen=True, default=None, description="A human-readable description of the units of measurement associated with an observation.")
     value: Optional[str] = Field(frozen=True, default=None, description="The value of the observation.")
+    api_key: Optional[str] = Field(frozen=True, default=None, description="Providing your API key gives you higher rate limits when querying our APIs. You can obtain an API key at https://api.waterdata.usgs.gov/signup.")
 
     def generate_query(self) -> dict[str, Any]:
         """Translates class attributes to valid API parameters. Returns a URL
@@ -82,6 +83,7 @@ class LatestDailyRequest(BaseModel):
             "time_series_id": self.time_series_id,
             "unit_of_measure": self.unit_of_measure,
             "value": self.value,
+            "api_key": self.api_key
         }
 
         # Ignore None
