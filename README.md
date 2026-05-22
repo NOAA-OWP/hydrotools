@@ -29,7 +29,7 @@ Currently the repository has the following subpackages:
 - `events`: Variety of methods used to perform event-based evaluations of hydrometric time series
 - `nwm_client`: Provides methods for retrieving National Water Model data from various sources including [Google Cloud Platform](https://console.cloud.google.com/marketplace/details/noaa-public/national-water-model) and [NOMADS](https://nomads.ncep.noaa.gov/pub/data/nccf/com/nwm/prod/)
 - `metrics`: Variety of methods used to compute common evaluation metrics
-- `waterdata_client`: Provides easy to use methods for retrieving data from the [USGS WaterData APIs](https://https://api.waterdata.usgs.gov/)
+- `waterdata_client`: Provides easy to use methods for retrieving data from the [USGS WaterData APIs](https://api.waterdata.usgs.gov/)
 - `svi_client`: Provides programmatic access to the Center for Disease Control's (CDC) [Social Vulnerability Index (SVI)](https://www.atsdr.cdc.gov/placeandhealth/svi/index.html)
 
 - `_restclient`: A generic REST client with built in cache that make the construction and retrieval of GET requests painless
