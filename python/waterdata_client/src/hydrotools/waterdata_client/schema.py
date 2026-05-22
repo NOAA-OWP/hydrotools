@@ -15,7 +15,7 @@ from yarl import URL
 from .client_config import SETTINGS
 from .async_web_client import get_all, ResponseContentType
 
-LOGGER: logging.Logger = logging.getLogger(Path(__file__).stem)
+LOGGER: logging.Logger = logging.getLogger(__name__)
 """Module-level logger."""
 
 def retrieve_yaml(url: str) -> dict[str, Any]:

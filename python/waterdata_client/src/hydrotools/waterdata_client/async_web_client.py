@@ -54,7 +54,7 @@ from yarl import URL
 
 from .client_config import SETTINGS
 
-LOGGER: logging.Logger = logging.getLogger(Path(__file__).stem)
+LOGGER: logging.Logger = logging.getLogger(__name__)
 """Module-level logger."""
 
 class ResponseContentType(StrEnum):
