@@ -1,6 +1,6 @@
 ![hydrotools.events testing status](https://github.com/noaa-owp/hydrotools/actions/workflows/run_events.yml/badge.svg)
 ![hydrotools.metrics testing status](https://github.com/noaa-owp/hydrotools/actions/workflows/run_metrics.yml/badge.svg)
-![hydrotools.nwis_client testing status](https://github.com/noaa-owp/hydrotools/actions/workflows/run_nwis_client.yml/badge.svg)
+![hydrotools.waterdata_client testing status](https://github.com/noaa-owp/hydrotools/actions/workflows/run_waterdata_client.yml/badge.svg)
 ![hydrotools.nwm_client testing status](https://github.com/noaa-owp/hydrotools/actions/workflows/run_nwm_client.yml/badge.svg)
 ![hydrotools._restclient testing status](https://github.com/noaa-owp/hydrotools/actions/workflows/run_rest_client.yml/badge.svg)
 ![hydrotools.svi_client testing status](https://github.com/noaa-owp/hydrotools/actions/workflows/run_svi_client.yml/badge.svg)
@@ -22,14 +22,14 @@ We also attempted to adhere to organizational (NOAA-OWP) data standards where th
 
 We've taken a grab-and-go approach to installation and usage of OWPHydroTools. This means, in line with a standard toolbox, you will typically install just the tool or tools that get your job done without having to install all the other tools available. This means a lighter installation load and that tools can be added to the toolbox, without affecting your workflows!
 
-It should be noted, we commonly refer to individual tools in OWPHydroTools as a subpackage or by their name (e.g. `nwis_client`). You will find this lingo in both issues and documentation.
+It should be noted, we commonly refer to individual tools in OWPHydroTools as a subpackage or by their name (e.g. `waterdata_client`). You will find this lingo in both issues and documentation.
 
 Currently the repository has the following subpackages:
 
 - `events`: Variety of methods used to perform event-based evaluations of hydrometric time series
 - `nwm_client`: Provides methods for retrieving National Water Model data from various sources including [Google Cloud Platform](https://console.cloud.google.com/marketplace/details/noaa-public/national-water-model) and [NOMADS](https://nomads.ncep.noaa.gov/pub/data/nccf/com/nwm/prod/)
 - `metrics`: Variety of methods used to compute common evaluation metrics
-- `nwis_client`: Provides easy to use methods for retrieving data from the [USGS NWIS Instantaneous Values (IV) Web Service](https://waterservices.usgs.gov/rest/IV-Service.html)
+- `waterdata_client`: Provides easy to use methods for retrieving data from the [USGS WaterData APIs](https://api.waterdata.usgs.gov/)
 - `svi_client`: Provides programmatic access to the Center for Disease Control's (CDC) [Social Vulnerability Index (SVI)](https://www.atsdr.cdc.gov/placeandhealth/svi/index.html)
 
 - `_restclient`: A generic REST client with built in cache that make the construction and retrieval of GET requests painless
@@ -56,8 +56,8 @@ $ python3 -m pip install --upgrade pip
 $ python3 -m pip install hydrotools
 
 # Alternatively you can install a single tool
-#  This installs the NWIS Client tool
-$ python3 -m pip install hydrotools.nwis_client
+#  This installs the WaterData Client tool
+$ python3 -m pip install hydrotools.waterdata_client
 ```
 
 ## OWPHydroTools Canonical Format

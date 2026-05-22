@@ -18,6 +18,7 @@ import re
 import aiohttp
 import six
 import warnings
+import sys
 
 import numpy as np
 import pandas as pd
@@ -115,6 +116,13 @@ class IVDataService:
             enable_cache=self._cache_enabled,
             cache_filename=str(cache_filename),
             cache_expire_after=cache_expire_after,
+        )
+        warnings.warn(
+            "The hydrotools.nwis_client package is DEPRECATED. "
+            "USGS will permanently decommssion the NWIS API in early 2027, "
+            "which will break this library. Please migrate to hydrotools.waterdata_client",
+            category=FutureWarning,
+            stacklevel=2
         )
         self._value_time_label = value_time_label
 
@@ -243,6 +251,13 @@ class IVDataService:
         >>> # counties = "36109,36107"
         >>> df = service.get(countyCd=counties, period='P5D')
         """
+        warnings.warn(
+            "The hydrotools.nwis_client package is DEPRECATED. "
+            "USGS will permanently decommssion the NWIS API in early 2027, "
+            "which will break this library. Please migrate to hydrotools.waterdata_client",
+            category=FutureWarning,
+            stacklevel=2
+        )
         raw_data = self.get_raw(
             sites=sites,
             stateCd=stateCd,
@@ -610,6 +625,18 @@ class IVDataService:
         List[dict]
             A list of handled responses
         """
+        print(
+            "The hydrotools.nwis_client package is DEPRECATED. "
+            "USGS will permanently decommssion the NWIS API in early 2027, "
+            "which will break this library. Please migrate to hydrotools.waterdata_client",
+            file=sys.stdout
+        )
+        print(
+            "The hydrotools.nwis_client package is DEPRECATED. "
+            "USGS will permanently decommssion the NWIS API in early 2027, "
+            "which will break this library. Please migrate to hydrotools.waterdata_client",
+            file=sys.stderr
+        )
         # TODO: Speed test using orjson instead of native
         deserialized_response = raw_response.json()
 

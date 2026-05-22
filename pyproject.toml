@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=70"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -8,24 +8,22 @@ authors = [
     { name = "Jason A. Regina", email = "jason.regina@noaa.gov" },
     { name = "Austin Raney", email = "austin.raney@noaa.gov" },
 ]
-description = "Suite of tools for retrieving USGS NWIS observations and evaluating National Water Model (NWM) data."
+description = "Suite of tools for retrieving USGS data and evaluating National Water Model (NWM) output."
 readme = "README.md"
-requires-python = ">=3.9"
-license = { file = "LICENSE" }
+requires-python = ">=3.11"
+license = "Apache-2.0"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Education",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: Apache Software License",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Scientific/Engineering :: Hydrology",
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "hydrotools.nwis_client==4.1.0",
+    "hydrotools.waterdata_client==0.8.2a0",
     "hydrotools.nwm_client==9.1.0",
     "hydrotools.events==2.2.0",
     "hydrotools.metrics==2.2.0",

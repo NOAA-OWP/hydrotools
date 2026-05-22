@@ -1,5 +1,8 @@
 # OWPHydroTools :: NWIS Client
 
+> [!CAUTION]
+> **DEPRECATION NOTICE**: The hydrotools.nwis_client package is DEPRECATED. USGS will permanently decommssion the NWIS API in early 2027, which will break this library. Please migrate to [hydrotools.waterdata_client](https://pypi.org/project/hydrotools.waterdata-client/).
+
 This subpackage implements an interface to the USGS NWIS [Instantaneous Values Web Service](https://waterservices.usgs.gov/rest/IV-Service.html). The primary use for this tool is to populate `pandas.Dataframe` objects with USGS streamflow data. See the [NWIS Client Documentation](https://noaa-owp.github.io/hydrotools/hydrotools.nwis_client.html) for a complete list and description of the currently available methods. To report bugs or request new features, submit an issue through the [OWPHydroTools Issue Tracker](https://github.com/NOAA-OWP/hydrotools/issues) on GitHub.
 
 ## Installation

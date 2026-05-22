@@ -22,7 +22,6 @@ jobs:
         python -m pip install --upgrade pip Sphinx furo
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         python3 -m pip install ./python/_restclient[develop]
-        python3 -m pip install ./python/nwis_client[develop]
         python3 -m pip install ./python/nwm_client[develop]
         python3 -m pip install ./python/events[develop]
         python3 -m pip install ./python/metrics[develop]
