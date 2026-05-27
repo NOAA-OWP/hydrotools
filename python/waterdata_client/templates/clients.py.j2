@@ -44,15 +44,15 @@ class {{ item.class_name }}(BaseClient[TransformedResponseT_co]):
                 our APIs. You can obtain an API key at https://api.waterdata.usgs.gov/signup
         """
         # Validate query
-        query = {{ item.request_model }}(
+        queries = {{ item.request_model }}(
         {% for p in item.parameters %}
             {{ p.python_name }}={{ p.python_name }},
         {% endfor %}
             api_key=api_key if api_key else SETTINGS.usgs_api_key
-        ).generate_query()
+        ).generate_queries()
 
         # Get responses
-        data = self._get_json_responses(queries=[query])
+        data = self._get_json_responses(queries=queries)
 
         # Transform
         return self._handle_response(data)

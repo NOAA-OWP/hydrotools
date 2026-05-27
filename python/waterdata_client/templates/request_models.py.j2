@@ -26,7 +26,7 @@ class {{ item.request_model }}(BaseModel):
     {% endfor %}
     api_key: Optional[str] = Field(frozen=True, default=None, description="Providing your API key gives you higher rate limits when querying our APIs. You can obtain an API key at https://api.waterdata.usgs.gov/signup.")
 
-    def generate_query(self) -> dict[str, Any]:
+    def generate_queries(self) -> list[dict[str, Any]]:
         """Translates class attributes to valid API parameters. Returns a URL
         builder compatible query.
         """
@@ -39,5 +39,5 @@ class {{ item.request_model }}(BaseModel):
         }
 
         # Ignore None
-        return {k: v for k, v in query.items() if v is not None}
+        return [{k: v for k, v in query.items() if v is not None}]
 
