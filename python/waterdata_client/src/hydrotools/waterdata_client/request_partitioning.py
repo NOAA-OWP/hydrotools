@@ -1,6 +1,7 @@
 """Methods to support request partitioning for arguments that accept Sequence."""
 import sys
-from typing import Iterable
+from typing import Iterable, TypeAlias, Annotated
+from pydantic import BeforeValidator
 
 if sys.version_info >= (3, 12):
     from itertools import batched
@@ -32,7 +33,7 @@ else:
             yield batch
 
 def group_string_iterable(
-        sequence: Iterable[str],
+        iterable: Iterable[str],
         group_size: int = 3,
         delimiter: str = ","
 ) -> tuple[str, ...]:
@@ -40,7 +41,7 @@ def group_string_iterable(
     strings are delimited groups of group_size.
     
     Args:
-        sequence: Input iterable of strings to group.
+        iterable: Input iterable of strings to group.
         group_size: The number of strings to group together.
         delimiter: How component strings are separated in each grouped string.
     
@@ -51,4 +52,26 @@ def group_string_iterable(
         >>> group_string_iterable(['item-0', 'item-1', 'item-2', 'item-3', 'item-4'], 2)
         ('item-0,item-1', 'item-2,item-3', 'item-4')
     """
-    return tuple(delimiter.join(b) for b in batched(sequence, group_size))
+    return tuple(delimiter.join(b) for b in batched(iterable, group_size))
+
+def validate_iterable_argument(
+        iterable_object: str | Iterable[str]
+) -> tuple[str, ...]:
+    """Reusable validator for string iterable arguments."""
+    # Plain strings are put in tuples
+    if isinstance(iterable_object, str):
+        return (iterable_object,)
+
+    # Sequences are grouped
+    if isinstance(iterable_object, Iterable):
+        if all(isinstance(s, str) for s in iterable_object):
+            return group_string_iterable(iterable_object)
+    raise ValueError(f"Unable to convert {iterable_object} to tuple[str, ..]")
+
+StringIterable: TypeAlias = Annotated[
+    tuple[str, ...],
+    BeforeValidator(validate_iterable_argument)
+]
+"""Annotated type that validates and converts object to tuple of strings. Iterables
+are grouped according to chunk size.
+"""
