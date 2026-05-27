@@ -49,13 +49,15 @@ class BaseClient(Generic[TransformedResponseT_co]):
         max_retries: int = SETTINGS.default_retries,
         timeout_seconds: int = SETTINGS.timeout_seconds,
         ssl_context: Optional[ssl.SSLContext] = None,
-        transformer: Optional[ResponseTransformer[TransformedResponseT_co]] = check_features
+        transformer: Optional[ResponseTransformer[TransformedResponseT_co]] = check_features,
+        chunk_size: int = SETTINGS.chunk_size
     ) -> None:
         self.concurrency_limit = concurrency_limit
         self.max_retries = max_retries
         self.timeout_seconds = timeout_seconds
         self.ssl_context = ssl_context
         self.transformer = transformer
+        self.chunk_size = chunk_size
 
         # Setup request builder
         self._builder = partial(
