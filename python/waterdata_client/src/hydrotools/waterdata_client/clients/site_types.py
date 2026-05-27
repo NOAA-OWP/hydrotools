@@ -3,9 +3,9 @@
 client classes for USGS OGC API items endpoints. These classes are generated
 by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints.
 
-Package version: 0.8.0a0
+Package version: 0.8.3a0
 Generation script: build_clients.py
-Generated: 2026-05-20 18:31:11 Z
+Generated: 2026-05-27 16:07:03 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -102,7 +102,7 @@ class SiteTypesClient(BaseClient[TransformedResponseT_co]):
                 our APIs. You can obtain an API key at https://api.waterdata.usgs.gov/signup
         """
         # Validate query
-        query = SiteTypesRequest(
+        queries = SiteTypesRequest(
             bbox=bbox,
             bbox_crs=bbox_crs,
             crs=crs,
@@ -119,10 +119,10 @@ class SiteTypesClient(BaseClient[TransformedResponseT_co]):
             skipgeometry=skipgeometry,
             sortby=sortby,
             api_key=api_key if api_key else SETTINGS.usgs_api_key
-        ).generate_query()
+        ).generate_queries()
 
         # Get responses
-        data = self._get_json_responses(queries=[query])
+        data = self._get_json_responses(queries=queries)
 
         # Transform
         return self._handle_response(data)

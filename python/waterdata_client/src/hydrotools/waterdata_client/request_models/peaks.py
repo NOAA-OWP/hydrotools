@@ -3,9 +3,9 @@
 pydantic request models for USGS OGC API items endpoints. These classes are generated
 by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints.
 
-Package version: 0.8.0a0
+Package version: 0.8.3a0
 Generation script: build_request_models.py
-Generated: 2026-05-20 17:00:05 Z
+Generated: 2026-05-27 16:06:42 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -49,7 +49,7 @@ class PeaksRequest(BaseModel):
     year: Optional[int] = Field(frozen=True, default=None, description="The calendar year a peak occurred.")
     api_key: Optional[str] = Field(frozen=True, default=None, description="Providing your API key gives you higher rate limits when querying our APIs. You can obtain an API key at https://api.waterdata.usgs.gov/signup.")
 
-    def generate_query(self) -> dict[str, Any]:
+    def generate_queries(self) -> list[dict[str, Any]]:
         """Translates class attributes to valid API parameters. Returns a URL
         builder compatible query.
         """
@@ -84,4 +84,4 @@ class PeaksRequest(BaseModel):
         }
 
         # Ignore None
-        return {k: v for k, v in query.items() if v is not None}
+        return [{k: v for k, v in query.items() if v is not None}]
