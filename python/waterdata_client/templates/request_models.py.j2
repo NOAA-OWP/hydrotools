@@ -20,6 +20,7 @@ from pydantic import BaseModel, Field
 {% for p in item.parameters %}
 {% if p.name == "monitoring_location_id" %}
 {% set location_id.found = true %}
+from copy import deepcopy
 from hydrotools.waterdata_client.client_config import SETTINGS
 from hydrotools.waterdata_client.request_partitioning import group_string_iterable
 {% endif %}
@@ -46,6 +47,8 @@ class {{ item.request_model }}(BaseModel):
         builder compatible query.
         """
         # Translate Python parameters to API parameters
+        #   NOTE: "monitoring_location_id" is omitted from this mapping in 
+        #     the jinja2 template.
         base_query = {
             {% for p in item.parameters %}
             {% if p.name != "monitoring_location_id" %}
@@ -57,20 +60,19 @@ class {{ item.request_model }}(BaseModel):
         {% if location_id.found %}
 
         # Partition query
-        if isinstance(self.monitoring_location_id, list):
+        if self.monitoring_location_id is not None:
             grouped_list = group_string_iterable(
                 iterable=self.monitoring_location_id,
                 group_size=chunk_size
             )
             queries = []
             for group in grouped_list:
-                q = dict(base_query)
+                q = deepcopy(base_query)
                 q["monitoring_location_id"] = group
                 queries.append({k: v for k, v in q.items() if v is not None})
             return queries
         {% endif %}
 
         # Ignore None
-        base_query["monitoring_location_id"] = self.monitoring_location_id
         return [{k: v for k, v in base_query.items() if v is not None}]
 

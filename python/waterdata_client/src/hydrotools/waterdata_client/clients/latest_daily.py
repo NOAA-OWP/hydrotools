@@ -5,7 +5,7 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.3a0
 Generation script: build_clients.py
-Generated: 2026-05-28 16:23:28 Z
+Generated: 2026-05-28 17:59:00 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -17,8 +17,8 @@ from hydrotools.waterdata_client.base_client import BaseClient
 from hydrotools.waterdata_client.constants import USGSCollection
 from hydrotools.waterdata_client.transformers import TransformedResponseT_co
 from hydrotools.waterdata_client.request_models.latest_daily import LatestDailyRequest
-from hydrotools.waterdata_client.datetime_utilities import DateTimeInput
 from hydrotools.waterdata_client.request_partitioning import StringList
+from hydrotools.waterdata_client.datetime_utilities import DateTimeInput
 
 class LatestDailyClient(BaseClient[TransformedResponseT_co]):
     """
@@ -47,7 +47,7 @@ class LatestDailyClient(BaseClient[TransformedResponseT_co]):
         lang: Optional[Literal["en-US"]] = "en-US",
         last_modified: Optional[str] = None,
         limit: Optional[int] = 10,
-        monitoring_location_id: Optional[StringList] = None,
+        monitoring_location_id: Optional[str | StringList] = None,
         offset: Optional[int] = 0,
         parameter_code: Optional[str] = None,
         properties: Optional[Sequence[Literal["id", "time_series_id", "monitoring_location_id", "parameter_code", "statistic_id", "time", "value", "unit_of_measure", "approval_status", "qualifier", "last_modified"]]] = None,

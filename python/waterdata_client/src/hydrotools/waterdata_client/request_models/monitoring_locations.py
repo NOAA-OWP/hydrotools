@@ -5,7 +5,7 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.3a0
 Generation script: build_request_models.py
-Generated: 2026-05-28 16:14:36 Z
+Generated: 2026-05-28 18:10:46 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -86,6 +86,8 @@ class MonitoringLocationsRequest(BaseModel):
         builder compatible query.
         """
         # Translate Python parameters to API parameters
+        #   NOTE: "monitoring_location_id" is omitted from this mapping in 
+        #     the jinja2 template.
         base_query = {
             "agency_code": self.agency_code,
             "agency_name": self.agency_name,

@@ -208,3 +208,18 @@ def test_location_partitioning_override(mock_geojson_response):
         _, kwargs = mock_get_all.call_args
         assert len(kwargs["urls"]) == 1
         assert "2020-01-01T00:00:00%2B00:00" in str(kwargs["urls"][0])
+
+def test_location_partitioning_url_encoding(mock_geojson_response):
+    """Verify that monitoring location partitioning."""
+    client = ContinuousClient(chunk_size=2)
+
+    # Patch the lower-level get_all called by _get_json_responses
+    with patch("hydrotools.waterdata_client.base_client.get_all") as mock_get_all:
+        mock_get_all.return_value = mock_geojson_response
+
+        client.get(
+            monitoring_location_id=["USGS-1", "USGS-2"]
+        )
+        _, kwargs = mock_get_all.call_args
+        assert len(kwargs["urls"]) == 1
+        assert "monitoring_location_id=USGS-1,USGS-2" in str(kwargs["urls"][0])

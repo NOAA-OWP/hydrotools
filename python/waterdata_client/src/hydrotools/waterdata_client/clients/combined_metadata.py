@@ -5,7 +5,7 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.3a0
 Generation script: build_clients.py
-Generated: 2026-05-28 16:23:28 Z
+Generated: 2026-05-28 17:59:00 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -64,7 +64,7 @@ class CombinedMetadataClient(BaseClient[TransformedResponseT_co]):
         last_modified: Optional[str] = None,
         limit: Optional[int] = 10,
         minor_civil_division_code: Optional[str] = None,
-        monitoring_location_id: Optional[StringList] = None,
+        monitoring_location_id: Optional[str | StringList] = None,
         monitoring_location_name: Optional[str] = None,
         monitoring_location_number: Optional[str] = None,
         national_aquifer_code: Optional[str] = None,
