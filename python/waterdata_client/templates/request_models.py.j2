@@ -71,5 +71,6 @@ class {{ item.request_model }}(BaseModel):
         {% endif %}
 
         # Ignore None
+        base_query["monitoring_location_id"] = self.monitoring_location_id
         return [{k: v for k, v in base_query.items() if v is not None}]
 
