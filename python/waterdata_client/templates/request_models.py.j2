@@ -31,13 +31,29 @@ class {{ item.request_model }}(BaseModel):
         builder compatible query.
         """
         # Translate Python parameters to API parameters
-        query = {
+        {% set location_id = namespace(found=false) %}
+        base_query = {
             {% for p in item.parameters %}
+            {% if p.name == "monitoring_location_id" %}
+            {% set location_id.found = true %}
+            {% else %}
             "{{ p.name }}": self.{{ p.python_name }},
+            {% endif %}
             {% endfor %}
             "api_key": self.api_key
         }
+        {% if location_id.found %}
+
+        # Partition query
+        if isinstance(self.monitoring_location_id, list):
+            queries = []
+            for group in self.monitoring_location_id:
+                q = dict(base_query)
+                q["monitoring_location_id"] = group
+                queries.append({k: v for k, v in q.items() if v is not None})
+            return queries
+        {% endif %}
 
         # Ignore None
-        return [{k: v for k, v in query.items() if v is not None}]
+        return [{k: v for k, v in base_query.items() if v is not None}]
 

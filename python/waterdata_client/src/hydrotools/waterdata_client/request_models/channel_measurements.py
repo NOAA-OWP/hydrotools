@@ -5,7 +5,7 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.3a0
 Generation script: build_request_models.py
-Generated: 2026-05-27 16:06:42 Z
+Generated: 2026-05-28 15:37:18 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -14,6 +14,7 @@ from typing import Sequence, Literal, Optional, Any
 from yarl import URL
 from pydantic import BaseModel, Field
 from hydrotools.waterdata_client.datetime_utilities import DateTimeField
+from hydrotools.waterdata_client.request_partitioning import StringList
 
 class ChannelMeasurementsRequest(BaseModel):
     """
@@ -48,7 +49,7 @@ class ChannelMeasurementsRequest(BaseModel):
     longitudinal_velocity_description: Optional[str] = Field(frozen=True, default=None, description="The longitudinal velocity description.")
     measurement_number: Optional[str] = Field(frozen=True, default=None, description="Measurement number.")
     measurement_type: Optional[str] = Field(frozen=True, default=None, description="The measurement type.")
-    monitoring_location_id: Optional[str] = Field(frozen=True, default=None, description="A unique identifier representing a single monitoring location.")
+    monitoring_location_id: Optional[StringList] = Field(frozen=True, default=None, description="A unique identifier representing a single monitoring location.")
     offset: Optional[int] = Field(frozen=True, default=0, ge=0, description="The optional offset parameter indicates the index within the result set from which the server shall begin presenting results in the response document.")
     properties: Optional[Sequence[Literal["id", "monitoring_location_id", "field_visit_id", "measurement_number", "time", "channel_name", "channel_flow", "channel_flow_unit", "channel_width", "channel_width_unit", "channel_area", "channel_area_unit", "channel_velocity", "channel_velocity_unit", "channel_location_distance", "channel_location_distance_unit", "channel_stability", "channel_material", "channel_evenness", "horizontal_velocity_description", "vertical_velocity_description", "longitudinal_velocity_description", "measurement_type", "last_modified", "channel_measurement_type", "channel_location_direction"]]] = Field(frozen=True, default=None, description="The properties that should be included.")
     query_filter: Optional[str] = Field(frozen=True, default=None, description="CQL Text filter expression.")
@@ -64,7 +65,7 @@ class ChannelMeasurementsRequest(BaseModel):
         builder compatible query.
         """
         # Translate Python parameters to API parameters
-        query = {
+        base_query = {
             "bbox": self.bbox,
             "bbox-crs": self.bbox_crs,
             "channel_area": self.channel_area,
@@ -94,7 +95,6 @@ class ChannelMeasurementsRequest(BaseModel):
             "longitudinal_velocity_description": self.longitudinal_velocity_description,
             "measurement_number": self.measurement_number,
             "measurement_type": self.measurement_type,
-            "monitoring_location_id": self.monitoring_location_id,
             "offset": self.offset,
             "properties": self.properties,
             "filter": self.query_filter,
@@ -106,5 +106,14 @@ class ChannelMeasurementsRequest(BaseModel):
             "api_key": self.api_key
         }
 
+        # Partition query
+        if isinstance(self.monitoring_location_id, list):
+            queries = []
+            for group in self.monitoring_location_id:
+                q = dict(base_query)
+                q["monitoring_location_id"] = group
+                queries.append({k: v for k, v in q.items() if v is not None})
+            return queries
+
         # Ignore None
-        return [{k: v for k, v in query.items() if v is not None}]
+        return [{k: v for k, v in base_query.items() if v is not None}]

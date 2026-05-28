@@ -5,7 +5,7 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.3a0
 Generation script: build_request_models.py
-Generated: 2026-05-27 16:06:42 Z
+Generated: 2026-05-28 15:37:18 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -39,7 +39,7 @@ class CoordinateAccuracyCodesRequest(BaseModel):
         builder compatible query.
         """
         # Translate Python parameters to API parameters
-        query = {
+        base_query = {
             "bbox": self.bbox,
             "bbox-crs": self.bbox_crs,
             "coordinate_accuracy_description": self.coordinate_accuracy_description,
@@ -57,4 +57,4 @@ class CoordinateAccuracyCodesRequest(BaseModel):
         }
 
         # Ignore None
-        return [{k: v for k, v in query.items() if v is not None}]
+        return [{k: v for k, v in base_query.items() if v is not None}]

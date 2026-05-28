@@ -54,24 +54,23 @@ def group_string_iterable(
     """
     return tuple(delimiter.join(b) for b in batched(iterable, group_size))
 
-def validate_iterable_argument(
+def validate_sequence_argument(
         iterable_object: str | Iterable[str]
-) -> tuple[str, ...]:
+) -> list[str]:
     """Reusable validator for string iterable arguments."""
-    # Plain strings are put in tuples
+    # Plain strings are put into a list
     if isinstance(iterable_object, str):
-        return (iterable_object,)
+        return [iterable_object]
 
-    # Sequences are grouped
+    # Iterables are converted to lists
     if isinstance(iterable_object, Iterable):
         if all(isinstance(s, str) for s in iterable_object):
-            return group_string_iterable(iterable_object)
-    raise ValueError(f"Unable to convert {iterable_object} to tuple[str, ..]")
+            return list(iterable_object)
+    raise ValueError(f"Unable to convert {iterable_object} to list[str]")
 
-StringIterable: TypeAlias = Annotated[
-    tuple[str, ...],
-    BeforeValidator(validate_iterable_argument)
+StringList: TypeAlias = Annotated[
+    list[str],
+    BeforeValidator(validate_sequence_argument)
 ]
-"""Annotated type that validates and converts object to tuple of strings. Iterables
-are grouped according to chunk size.
+"""Annotated type that validates and converts object to list of strings.
 """

@@ -5,7 +5,7 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.3a0
 Generation script: build_request_models.py
-Generated: 2026-05-27 16:06:42 Z
+Generated: 2026-05-28 15:37:18 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -14,6 +14,7 @@ from typing import Sequence, Literal, Optional, Any
 from yarl import URL
 from pydantic import BaseModel, Field
 from hydrotools.waterdata_client.datetime_utilities import DateTimeField
+from hydrotools.waterdata_client.request_partitioning import StringList
 
 class LatestDailyRequest(BaseModel):
     """
@@ -38,7 +39,7 @@ class LatestDailyRequest(BaseModel):
     lang: Optional[Literal["en-US"]] = Field(frozen=True, default="en-US", description="The optional lang parameter instructs the server return a response in a certain language, if supported.")
     last_modified: Optional[str] = Field(frozen=True, default=None, description="The last time a record was refreshed in our database.")
     limit: Optional[int] = Field(frozen=True, default=10, ge=1, le=50000, description="The optional limit parameter limits the number of items that are presented in the response document (maximum=50000, default=10).")
-    monitoring_location_id: Optional[str] = Field(frozen=True, default=None, description="A unique identifier representing a single monitoring location.")
+    monitoring_location_id: Optional[StringList] = Field(frozen=True, default=None, description="A unique identifier representing a single monitoring location.")
     offset: Optional[int] = Field(frozen=True, default=0, ge=0, description="The optional offset parameter indicates the index within the result set from which the server shall begin presenting results in the response document.")
     parameter_code: Optional[str] = Field(frozen=True, default=None, description="Parameter codes are 5-digit codes used to identify the constituent measured and the units of measure.")
     properties: Optional[Sequence[Literal["id", "time_series_id", "monitoring_location_id", "parameter_code", "statistic_id", "time", "value", "unit_of_measure", "approval_status", "qualifier", "last_modified"]]] = Field(frozen=True, default=None, description="The properties that should be included.")
@@ -59,7 +60,7 @@ class LatestDailyRequest(BaseModel):
         builder compatible query.
         """
         # Translate Python parameters to API parameters
-        query = {
+        base_query = {
             "approval_status": self.approval_status,
             "bbox": self.bbox,
             "bbox-crs": self.bbox_crs,
@@ -69,7 +70,6 @@ class LatestDailyRequest(BaseModel):
             "lang": self.lang,
             "last_modified": self.last_modified,
             "limit": self.limit,
-            "monitoring_location_id": self.monitoring_location_id,
             "offset": self.offset,
             "parameter_code": self.parameter_code,
             "properties": self.properties,
@@ -86,5 +86,14 @@ class LatestDailyRequest(BaseModel):
             "api_key": self.api_key
         }
 
+        # Partition query
+        if isinstance(self.monitoring_location_id, list):
+            queries = []
+            for group in self.monitoring_location_id:
+                q = dict(base_query)
+                q["monitoring_location_id"] = group
+                queries.append({k: v for k, v in q.items() if v is not None})
+            return queries
+
         # Ignore None
-        return [{k: v for k, v in query.items() if v is not None}]
+        return [{k: v for k, v in base_query.items() if v is not None}]
