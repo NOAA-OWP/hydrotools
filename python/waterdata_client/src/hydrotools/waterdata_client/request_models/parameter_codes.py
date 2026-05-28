@@ -5,7 +5,7 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.3a0
 Generation script: build_request_models.py
-Generated: 2026-05-28 15:37:18 Z
+Generated: 2026-05-28 16:14:36 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -51,7 +51,9 @@ class ParameterCodesRequest(BaseModel):
     weight_basis: Optional[str] = Field(frozen=True, default=None, description="Parameter weight basis.")
     api_key: Optional[str] = Field(frozen=True, default=None, description="Providing your API key gives you higher rate limits when querying our APIs. You can obtain an API key at https://api.waterdata.usgs.gov/signup.")
 
-    def generate_queries(self) -> list[dict[str, Any]]:
+    def generate_queries(
+        self
+    ) -> list[dict[str, Any]]:
         """Translates class attributes to valid API parameters. Returns a URL
         builder compatible query.
         """

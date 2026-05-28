@@ -20,6 +20,12 @@ from hydrotools.waterdata_client.request_models.{{ item.module_name }} import {{
 {% for e in item.extra_imports %}
 {{ e }}
 {% endfor %}
+{% set location_id = namespace(found=false) %}
+{% for p in item.parameters %}
+{% if p.name == "monitoring_location_id" %}
+{% set location_id.found = true %}
+{% endif %}
+{% endfor %}
 
 class {{ item.class_name }}(BaseClient[TransformedResponseT_co]):
     """
@@ -49,7 +55,11 @@ class {{ item.class_name }}(BaseClient[TransformedResponseT_co]):
             {{ p.python_name }}={{ p.python_name }},
         {% endfor %}
             api_key=api_key if api_key else SETTINGS.usgs_api_key
+        {% if location_id.found %}
+        ).generate_queries(chunk_size=self.chunk_size)
+        {% else %}
         ).generate_queries()
+        {% endif %}
 
         # Get responses
         data = self._get_json_responses(queries=queries)

@@ -162,3 +162,49 @@ def test_datetime_validation(mock_geojson_response):
 
         _, kwargs = mock_get_all.call_args
         assert "2020-01-01T00:00:00%2B00:00" in str(kwargs["urls"][0])
+
+def test_location_partitioning_string(mock_geojson_response):
+    """Verify that monitoring location partitioning."""
+    client = ContinuousClient()
+
+    # Patch the lower-level get_all called by _get_json_responses
+    with patch("hydrotools.waterdata_client.base_client.get_all") as mock_get_all:
+        mock_get_all.return_value = mock_geojson_response
+
+        client.get(monitoring_location_id="USGS-1", datetime=pd.Timestamp("2020-01-01"))
+        _, kwargs = mock_get_all.call_args
+        assert "USGS-1" in str(kwargs["urls"][0])
+        assert "2020-01-01T00:00:00%2B00:00" in str(kwargs["urls"][0])
+
+def test_location_partitioning_default(mock_geojson_response):
+    """Verify that monitoring location partitioning."""
+    client = ContinuousClient()
+
+    # Patch the lower-level get_all called by _get_json_responses
+    with patch("hydrotools.waterdata_client.base_client.get_all") as mock_get_all:
+        mock_get_all.return_value = mock_geojson_response
+
+        client.get(
+            monitoring_location_id=[f"USGS-{i}" for i in range(26)],
+            datetime=pd.Timestamp("2020-01-01")
+        )
+        _, kwargs = mock_get_all.call_args
+        assert len(kwargs["urls"]) == 6
+        for url in kwargs["urls"]:
+            assert "2020-01-01T00:00:00%2B00:00" in str(url)
+
+def test_location_partitioning_override(mock_geojson_response):
+    """Verify that monitoring location partitioning."""
+    client = ContinuousClient(chunk_size=20)
+
+    # Patch the lower-level get_all called by _get_json_responses
+    with patch("hydrotools.waterdata_client.base_client.get_all") as mock_get_all:
+        mock_get_all.return_value = mock_geojson_response
+
+        client.get(
+            monitoring_location_id=[f"USGS-{i}" for i in range(20)],
+            datetime=pd.Timestamp("2020-01-01")
+        )
+        _, kwargs = mock_get_all.call_args
+        assert len(kwargs["urls"]) == 1
+        assert "2020-01-01T00:00:00%2B00:00" in str(kwargs["urls"][0])

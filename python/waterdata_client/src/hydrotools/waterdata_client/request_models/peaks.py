@@ -5,7 +5,7 @@ by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints
 
 Package version: 0.8.3a0
 Generation script: build_request_models.py
-Generated: 2026-05-28 15:37:18 Z
+Generated: 2026-05-28 16:14:36 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -14,6 +14,8 @@ from typing import Sequence, Literal, Optional, Any
 from yarl import URL
 from pydantic import BaseModel, Field
 from hydrotools.waterdata_client.request_partitioning import StringList
+from hydrotools.waterdata_client.client_config import SETTINGS
+from hydrotools.waterdata_client.request_partitioning import group_string_iterable
 
 class PeaksRequest(BaseModel):
     """
@@ -50,7 +52,10 @@ class PeaksRequest(BaseModel):
     year: Optional[int] = Field(frozen=True, default=None, description="The calendar year a peak occurred.")
     api_key: Optional[str] = Field(frozen=True, default=None, description="Providing your API key gives you higher rate limits when querying our APIs. You can obtain an API key at https://api.waterdata.usgs.gov/signup.")
 
-    def generate_queries(self) -> list[dict[str, Any]]:
+    def generate_queries(
+        self,
+        chunk_size: int = SETTINGS.chunk_size
+    ) -> list[dict[str, Any]]:
         """Translates class attributes to valid API parameters. Returns a URL
         builder compatible query.
         """
@@ -85,8 +90,12 @@ class PeaksRequest(BaseModel):
 
         # Partition query
         if isinstance(self.monitoring_location_id, list):
+            grouped_list = group_string_iterable(
+                iterable=self.monitoring_location_id,
+                group_size=chunk_size
+            )
             queries = []
-            for group in self.monitoring_location_id:
+            for group in grouped_list:
                 q = dict(base_query)
                 q["monitoring_location_id"] = group
                 queries.append({k: v for k, v in q.items() if v is not None})

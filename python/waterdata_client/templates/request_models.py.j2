@@ -16,6 +16,14 @@ from pydantic import BaseModel, Field
 {% for e in item.extra_imports %}
 {{ e }}
 {% endfor %}
+{% set location_id = namespace(found=false) %}
+{% for p in item.parameters %}
+{% if p.name == "monitoring_location_id" %}
+{% set location_id.found = true %}
+from hydrotools.waterdata_client.client_config import SETTINGS
+from hydrotools.waterdata_client.request_partitioning import group_string_iterable
+{% endif %}
+{% endfor %}
 
 class {{ item.request_model }}(BaseModel):
     """
@@ -26,17 +34,21 @@ class {{ item.request_model }}(BaseModel):
     {% endfor %}
     api_key: Optional[str] = Field(frozen=True, default=None, description="Providing your API key gives you higher rate limits when querying our APIs. You can obtain an API key at https://api.waterdata.usgs.gov/signup.")
 
-    def generate_queries(self) -> list[dict[str, Any]]:
+    def generate_queries(
+        {% if location_id.found %}
+        self,
+        chunk_size: int = SETTINGS.chunk_size
+        {% else %}
+        self
+        {% endif %}
+    ) -> list[dict[str, Any]]:
         """Translates class attributes to valid API parameters. Returns a URL
         builder compatible query.
         """
         # Translate Python parameters to API parameters
-        {% set location_id = namespace(found=false) %}
         base_query = {
             {% for p in item.parameters %}
-            {% if p.name == "monitoring_location_id" %}
-            {% set location_id.found = true %}
-            {% else %}
+            {% if p.name != "monitoring_location_id" %}
             "{{ p.name }}": self.{{ p.python_name }},
             {% endif %}
             {% endfor %}
@@ -46,8 +58,12 @@ class {{ item.request_model }}(BaseModel):
 
         # Partition query
         if isinstance(self.monitoring_location_id, list):
+            grouped_list = group_string_iterable(
+                iterable=self.monitoring_location_id,
+                group_size=chunk_size
+            )
             queries = []
-            for group in self.monitoring_location_id:
+            for group in grouped_list:
                 q = dict(base_query)
                 q["monitoring_location_id"] = group
                 queries.append({k: v for k, v in q.items() if v is not None})
