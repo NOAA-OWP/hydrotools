@@ -3,9 +3,9 @@
 pydantic request models for USGS OGC API items endpoints. These classes are generated
 by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints.
 
-Package version: 0.8.3a0
+Package version: 0.9.0b0
 Generation script: build_request_models.py
-Generated: 2026-05-28 18:10:46 Z
+Generated: 2026-05-29 15:52:48 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -13,8 +13,8 @@ OpenAPI version: 3.0.2
 from typing import Sequence, Literal, Optional, Any
 from yarl import URL
 from pydantic import BaseModel, Field
-from hydrotools.waterdata_client.request_partitioning import StringList
 from hydrotools.waterdata_client.datetime_utilities import DateTimeField
+from hydrotools.waterdata_client.request_partitioning import StringList
 from copy import deepcopy
 from hydrotools.waterdata_client.client_config import SETTINGS
 from hydrotools.waterdata_client.request_partitioning import group_string_iterable

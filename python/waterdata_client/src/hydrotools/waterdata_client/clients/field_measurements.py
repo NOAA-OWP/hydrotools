@@ -3,9 +3,9 @@
 client classes for USGS OGC API items endpoints. These classes are generated
 by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints.
 
-Package version: 0.8.3a0
+Package version: 0.9.0b0
 Generation script: build_clients.py
-Generated: 2026-05-28 17:59:00 Z
+Generated: 2026-05-29 15:52:35 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -17,8 +17,8 @@ from hydrotools.waterdata_client.base_client import BaseClient
 from hydrotools.waterdata_client.constants import USGSCollection
 from hydrotools.waterdata_client.transformers import TransformedResponseT_co
 from hydrotools.waterdata_client.request_models.field_measurements import FieldMeasurementsRequest
-from hydrotools.waterdata_client.request_partitioning import StringList
 from hydrotools.waterdata_client.datetime_utilities import DateTimeInput
+from hydrotools.waterdata_client.request_partitioning import StringList
 
 class FieldMeasurementsClient(BaseClient[TransformedResponseT_co]):
     """
