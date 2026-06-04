@@ -3,9 +3,9 @@
 pydantic request models for USGS OGC API items endpoints. These classes are generated
 by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints.
 
-Package version: 0.8.0a0
+Package version: 0.9.0b0
 Generation script: build_request_models.py
-Generated: 2026-05-20 17:00:05 Z
+Generated: 2026-05-29 15:52:48 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -13,6 +13,10 @@ OpenAPI version: 3.0.2
 from typing import Sequence, Literal, Optional, Any
 from yarl import URL
 from pydantic import BaseModel, Field
+from hydrotools.waterdata_client.request_partitioning import StringList
+from copy import deepcopy
+from hydrotools.waterdata_client.client_config import SETTINGS
+from hydrotools.waterdata_client.request_partitioning import group_string_iterable
 
 class TimeSeriesMetadataRequest(BaseModel):
     """
@@ -38,7 +42,7 @@ class TimeSeriesMetadataRequest(BaseModel):
     lang: Optional[Literal["en-US"]] = Field(frozen=True, default="en-US", description="The optional lang parameter instructs the server return a response in a certain language, if supported.")
     last_modified: Optional[str] = Field(frozen=True, default=None, description="The last time a record was refreshed in our database.")
     limit: Optional[int] = Field(frozen=True, default=10, ge=1, le=50000, description="The optional limit parameter limits the number of items that are presented in the response document (maximum=50000, default=10).")
-    monitoring_location_id: Optional[str] = Field(frozen=True, default=None, description="A unique identifier representing a single monitoring location.")
+    monitoring_location_id: Optional[StringList] = Field(frozen=True, default=None, description="A unique identifier representing a single monitoring location.")
     offset: Optional[int] = Field(frozen=True, default=0, ge=0, description="The optional offset parameter indicates the index within the result set from which the server shall begin presenting results in the response document.")
     parameter_code: Optional[str] = Field(frozen=True, default=None, description="Parameter codes are 5-digit codes used to identify the constituent measured and the units of measure.")
     parameter_description: Optional[str] = Field(frozen=True, default=None, description="A description of what the parameter code represents, as used by WDFN and other USGS data dissemination products.")
@@ -58,12 +62,17 @@ class TimeSeriesMetadataRequest(BaseModel):
     web_description: Optional[str] = Field(frozen=True, default=None, description="An optional description of the time series.")
     api_key: Optional[str] = Field(frozen=True, default=None, description="Providing your API key gives you higher rate limits when querying our APIs. You can obtain an API key at https://api.waterdata.usgs.gov/signup.")
 
-    def generate_query(self) -> dict[str, Any]:
+    def generate_queries(
+        self,
+        chunk_size: int = SETTINGS.chunk_size
+    ) -> list[dict[str, Any]]:
         """Translates class attributes to valid API parameters. Returns a URL
         builder compatible query.
         """
         # Translate Python parameters to API parameters
-        query = {
+        #   NOTE: "monitoring_location_id" is omitted from this mapping in 
+        #     the jinja2 template.
+        base_query = {
             "bbox": self.bbox,
             "bbox-crs": self.bbox_crs,
             "begin": self.begin,
@@ -78,7 +87,6 @@ class TimeSeriesMetadataRequest(BaseModel):
             "lang": self.lang,
             "last_modified": self.last_modified,
             "limit": self.limit,
-            "monitoring_location_id": self.monitoring_location_id,
             "offset": self.offset,
             "parameter_code": self.parameter_code,
             "parameter_description": self.parameter_description,
@@ -99,5 +107,18 @@ class TimeSeriesMetadataRequest(BaseModel):
             "api_key": self.api_key
         }
 
+        # Partition query
+        if self.monitoring_location_id is not None:
+            grouped_list = group_string_iterable(
+                iterable=self.monitoring_location_id,
+                group_size=chunk_size
+            )
+            queries = []
+            for group in grouped_list:
+                q = deepcopy(base_query)
+                q["monitoring_location_id"] = group
+                queries.append({k: v for k, v in q.items() if v is not None})
+            return queries
+
         # Ignore None
-        return {k: v for k, v in query.items() if v is not None}
+        return [{k: v for k, v in base_query.items() if v is not None}]

@@ -26,14 +26,16 @@ from hydrotools.waterdata_client.client_config import SETTINGS
 from hydrotools.waterdata_client._version import __version__
 
 TYPE_OVERRIDES: dict[str, str] = {
-    "datetime": "DateTimeField"
+    "datetime": "DateTimeField",
+    "monitoring_location_id": "StringList"
 }
 """Mapping from specific arguments to special type hints. This facilitates
 various query interventions.
 """
 
 EXTRA_IMPORTS: dict[str, str] = {
-    "datetime": "from hydrotools.waterdata_client.datetime_utilities import DateTimeField"
+    "datetime": "from hydrotools.waterdata_client.datetime_utilities import DateTimeField",
+    "monitoring_location_id": "from hydrotools.waterdata_client.request_partitioning import StringList"
 }
 """Mapping from specific arguments to extra required imports."""
 

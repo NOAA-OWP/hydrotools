@@ -3,9 +3,9 @@
 pydantic request models for USGS OGC API items endpoints. These classes are generated
 by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints.
 
-Package version: 0.8.0a0
+Package version: 0.9.0b0
 Generation script: build_request_models.py
-Generated: 2026-05-20 17:00:05 Z
+Generated: 2026-05-29 15:52:48 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -13,6 +13,10 @@ OpenAPI version: 3.0.2
 from typing import Sequence, Literal, Optional, Any
 from yarl import URL
 from pydantic import BaseModel, Field
+from hydrotools.waterdata_client.request_partitioning import StringList
+from copy import deepcopy
+from hydrotools.waterdata_client.client_config import SETTINGS
+from hydrotools.waterdata_client.request_partitioning import group_string_iterable
 
 class CombinedMetadataRequest(BaseModel):
     """
@@ -55,7 +59,7 @@ class CombinedMetadataRequest(BaseModel):
     last_modified: Optional[str] = Field(frozen=True, default=None, description="The last time a record was refreshed in our database.")
     limit: Optional[int] = Field(frozen=True, default=10, ge=1, le=50000, description="The optional limit parameter limits the number of items that are presented in the response document (maximum=50000, default=10).")
     minor_civil_division_code: Optional[str] = Field(frozen=True, default=None, description="Codes for primary governmental or administrative divisions of the county or county equivalent in which the monitoring location is located.")
-    monitoring_location_id: Optional[str] = Field(frozen=True, default=None, description="A unique identifier representing a single monitoring location.")
+    monitoring_location_id: Optional[StringList] = Field(frozen=True, default=None, description="A unique identifier representing a single monitoring location.")
     monitoring_location_name: Optional[str] = Field(frozen=True, default=None, description="This is the official name of the monitoring location in the database.")
     monitoring_location_number: Optional[str] = Field(frozen=True, default=None, description="Each monitoring location in the USGS data base has a unique 8- to 15-digit identification number.")
     national_aquifer_code: Optional[str] = Field(frozen=True, default=None, description="National aquifers are the principal aquifers or aquifer systems in the United States, defined as regionally extensive aquifers or aquifer systems that have the potential to be used as a source of potable water.")
@@ -88,12 +92,17 @@ class CombinedMetadataRequest(BaseModel):
     well_constructed_depth: Optional[float] = Field(frozen=True, default=None, description="The depth of the finished well, in feet below land surface datum.")
     api_key: Optional[str] = Field(frozen=True, default=None, description="Providing your API key gives you higher rate limits when querying our APIs. You can obtain an API key at https://api.waterdata.usgs.gov/signup.")
 
-    def generate_query(self) -> dict[str, Any]:
+    def generate_queries(
+        self,
+        chunk_size: int = SETTINGS.chunk_size
+    ) -> list[dict[str, Any]]:
         """Translates class attributes to valid API parameters. Returns a URL
         builder compatible query.
         """
         # Translate Python parameters to API parameters
-        query = {
+        #   NOTE: "monitoring_location_id" is omitted from this mapping in 
+        #     the jinja2 template.
+        base_query = {
             "agency_code": self.agency_code,
             "agency_name": self.agency_name,
             "altitude": self.altitude,
@@ -130,7 +139,6 @@ class CombinedMetadataRequest(BaseModel):
             "last_modified": self.last_modified,
             "limit": self.limit,
             "minor_civil_division_code": self.minor_civil_division_code,
-            "monitoring_location_id": self.monitoring_location_id,
             "monitoring_location_name": self.monitoring_location_name,
             "monitoring_location_number": self.monitoring_location_number,
             "national_aquifer_code": self.national_aquifer_code,
@@ -164,5 +172,18 @@ class CombinedMetadataRequest(BaseModel):
             "api_key": self.api_key
         }
 
+        # Partition query
+        if self.monitoring_location_id is not None:
+            grouped_list = group_string_iterable(
+                iterable=self.monitoring_location_id,
+                group_size=chunk_size
+            )
+            queries = []
+            for group in grouped_list:
+                q = deepcopy(base_query)
+                q["monitoring_location_id"] = group
+                queries.append({k: v for k, v in q.items() if v is not None})
+            return queries
+
         # Ignore None
-        return {k: v for k, v in query.items() if v is not None}
+        return [{k: v for k, v in base_query.items() if v is not None}]

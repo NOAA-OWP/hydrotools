@@ -16,6 +16,15 @@ from pydantic import BaseModel, Field
 {% for e in item.extra_imports %}
 {{ e }}
 {% endfor %}
+{% set location_id = namespace(found=false) %}
+{% for p in item.parameters %}
+{% if p.name == "monitoring_location_id" %}
+{% set location_id.found = true %}
+from copy import deepcopy
+from hydrotools.waterdata_client.client_config import SETTINGS
+from hydrotools.waterdata_client.request_partitioning import group_string_iterable
+{% endif %}
+{% endfor %}
 
 class {{ item.request_model }}(BaseModel):
     """
@@ -26,18 +35,44 @@ class {{ item.request_model }}(BaseModel):
     {% endfor %}
     api_key: Optional[str] = Field(frozen=True, default=None, description="Providing your API key gives you higher rate limits when querying our APIs. You can obtain an API key at https://api.waterdata.usgs.gov/signup.")
 
-    def generate_query(self) -> dict[str, Any]:
+    def generate_queries(
+        {% if location_id.found %}
+        self,
+        chunk_size: int = SETTINGS.chunk_size
+        {% else %}
+        self
+        {% endif %}
+    ) -> list[dict[str, Any]]:
         """Translates class attributes to valid API parameters. Returns a URL
         builder compatible query.
         """
         # Translate Python parameters to API parameters
-        query = {
+        #   NOTE: "monitoring_location_id" is omitted from this mapping in 
+        #     the jinja2 template.
+        base_query = {
             {% for p in item.parameters %}
+            {% if p.name != "monitoring_location_id" %}
             "{{ p.name }}": self.{{ p.python_name }},
+            {% endif %}
             {% endfor %}
             "api_key": self.api_key
         }
+        {% if location_id.found %}
+
+        # Partition query
+        if self.monitoring_location_id is not None:
+            grouped_list = group_string_iterable(
+                iterable=self.monitoring_location_id,
+                group_size=chunk_size
+            )
+            queries = []
+            for group in grouped_list:
+                q = deepcopy(base_query)
+                q["monitoring_location_id"] = group
+                queries.append({k: v for k, v in q.items() if v is not None})
+            return queries
+        {% endif %}
 
         # Ignore None
-        return {k: v for k, v in query.items() if v is not None}
+        return [{k: v for k, v in base_query.items() if v is not None}]
 

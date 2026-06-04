@@ -3,9 +3,9 @@
 client classes for USGS OGC API items endpoints. These classes are generated
 by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints.
 
-Package version: 0.8.0a0
+Package version: 0.9.0b0
 Generation script: build_clients.py
-Generated: 2026-05-20 18:31:11 Z
+Generated: 2026-05-29 15:52:35 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -18,6 +18,7 @@ from hydrotools.waterdata_client.constants import USGSCollection
 from hydrotools.waterdata_client.transformers import TransformedResponseT_co
 from hydrotools.waterdata_client.request_models.channel_measurements import ChannelMeasurementsRequest
 from hydrotools.waterdata_client.datetime_utilities import DateTimeInput
+from hydrotools.waterdata_client.request_partitioning import StringList
 
 class ChannelMeasurementsClient(BaseClient[TransformedResponseT_co]):
     """
@@ -56,7 +57,7 @@ class ChannelMeasurementsClient(BaseClient[TransformedResponseT_co]):
         longitudinal_velocity_description: Optional[str] = None,
         measurement_number: Optional[str] = None,
         measurement_type: Optional[str] = None,
-        monitoring_location_id: Optional[str] = None,
+        monitoring_location_id: Optional[str | StringList] = None,
         offset: Optional[int] = 0,
         properties: Optional[Sequence[Literal["id", "monitoring_location_id", "field_visit_id", "measurement_number", "time", "channel_name", "channel_flow", "channel_flow_unit", "channel_width", "channel_width_unit", "channel_area", "channel_area_unit", "channel_velocity", "channel_velocity_unit", "channel_location_distance", "channel_location_distance_unit", "channel_stability", "channel_material", "channel_evenness", "horizontal_velocity_description", "vertical_velocity_description", "longitudinal_velocity_description", "measurement_type", "last_modified", "channel_measurement_type", "channel_location_direction"]]] = None,
         query_filter: Optional[str] = None,
@@ -211,7 +212,7 @@ class ChannelMeasurementsClient(BaseClient[TransformedResponseT_co]):
                 our APIs. You can obtain an API key at https://api.waterdata.usgs.gov/signup
         """
         # Validate query
-        query = ChannelMeasurementsRequest(
+        queries = ChannelMeasurementsRequest(
             bbox=bbox,
             bbox_crs=bbox_crs,
             channel_area=channel_area,
@@ -251,10 +252,10 @@ class ChannelMeasurementsClient(BaseClient[TransformedResponseT_co]):
             time=time,
             vertical_velocity_description=vertical_velocity_description,
             api_key=api_key if api_key else SETTINGS.usgs_api_key
-        ).generate_query()
+        ).generate_queries(chunk_size=self.chunk_size)
 
         # Get responses
-        data = self._get_json_responses(queries=[query])
+        data = self._get_json_responses(queries=queries)
 
         # Transform
         return self._handle_response(data)

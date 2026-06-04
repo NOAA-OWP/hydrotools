@@ -3,9 +3,9 @@
 client classes for USGS OGC API items endpoints. These classes are generated
 by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints.
 
-Package version: 0.8.0a0
+Package version: 0.9.0b0
 Generation script: build_clients.py
-Generated: 2026-05-20 18:31:11 Z
+Generated: 2026-05-29 15:52:35 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -18,6 +18,7 @@ from hydrotools.waterdata_client.constants import USGSCollection
 from hydrotools.waterdata_client.transformers import TransformedResponseT_co
 from hydrotools.waterdata_client.request_models.latest_daily import LatestDailyRequest
 from hydrotools.waterdata_client.datetime_utilities import DateTimeInput
+from hydrotools.waterdata_client.request_partitioning import StringList
 
 class LatestDailyClient(BaseClient[TransformedResponseT_co]):
     """
@@ -46,7 +47,7 @@ class LatestDailyClient(BaseClient[TransformedResponseT_co]):
         lang: Optional[Literal["en-US"]] = "en-US",
         last_modified: Optional[str] = None,
         limit: Optional[int] = 10,
-        monitoring_location_id: Optional[str] = None,
+        monitoring_location_id: Optional[str | StringList] = None,
         offset: Optional[int] = 0,
         parameter_code: Optional[str] = None,
         properties: Optional[Sequence[Literal["id", "time_series_id", "monitoring_location_id", "parameter_code", "statistic_id", "time", "value", "unit_of_measure", "approval_status", "qualifier", "last_modified"]]] = None,
@@ -219,7 +220,7 @@ class LatestDailyClient(BaseClient[TransformedResponseT_co]):
                 our APIs. You can obtain an API key at https://api.waterdata.usgs.gov/signup
         """
         # Validate query
-        query = LatestDailyRequest(
+        queries = LatestDailyRequest(
             approval_status=approval_status,
             bbox=bbox,
             bbox_crs=bbox_crs,
@@ -244,10 +245,10 @@ class LatestDailyClient(BaseClient[TransformedResponseT_co]):
             unit_of_measure=unit_of_measure,
             value=value,
             api_key=api_key if api_key else SETTINGS.usgs_api_key
-        ).generate_query()
+        ).generate_queries(chunk_size=self.chunk_size)
 
         # Get responses
-        data = self._get_json_responses(queries=[query])
+        data = self._get_json_responses(queries=queries)
 
         # Transform
         return self._handle_response(data)

@@ -3,9 +3,9 @@
 pydantic request models for USGS OGC API items endpoints. These classes are generated
 by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints.
 
-Package version: 0.8.0a0
+Package version: 0.9.0b0
 Generation script: build_request_models.py
-Generated: 2026-05-20 17:00:05 Z
+Generated: 2026-05-29 15:52:48 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -14,6 +14,10 @@ from typing import Sequence, Literal, Optional, Any
 from yarl import URL
 from pydantic import BaseModel, Field
 from hydrotools.waterdata_client.datetime_utilities import DateTimeField
+from hydrotools.waterdata_client.request_partitioning import StringList
+from copy import deepcopy
+from hydrotools.waterdata_client.client_config import SETTINGS
+from hydrotools.waterdata_client.request_partitioning import group_string_iterable
 
 class FieldMeasurementsRequest(BaseModel):
     """
@@ -39,7 +43,7 @@ class FieldMeasurementsRequest(BaseModel):
     limit: Optional[int] = Field(frozen=True, default=10, ge=1, le=50000, description="The optional limit parameter limits the number of items that are presented in the response document (maximum=50000, default=10).")
     measurement_rated: Optional[str] = Field(frozen=True, default=None, description="A qualitative estimate of the quality of a measurement.")
     measuring_agency: Optional[str] = Field(frozen=True, default=None, description="The agency performing the measurement.")
-    monitoring_location_id: Optional[str] = Field(frozen=True, default=None, description="A unique identifier representing a single monitoring location.")
+    monitoring_location_id: Optional[StringList] = Field(frozen=True, default=None, description="A unique identifier representing a single monitoring location.")
     observing_procedure: Optional[str] = Field(frozen=True, default=None, description="Water measurement or water-quality observing procedure descriptions.")
     observing_procedure_code: Optional[str] = Field(frozen=True, default=None, description="A short code corresponding to the observing procedure for the field measurement.")
     offset: Optional[int] = Field(frozen=True, default=0, ge=0, description="The optional offset parameter indicates the index within the result set from which the server shall begin presenting results in the response document.")
@@ -56,12 +60,17 @@ class FieldMeasurementsRequest(BaseModel):
     vertical_datum: Optional[str] = Field(frozen=True, default=None, description="The datum used to determine altitude and vertical position at the monitoring location.")
     api_key: Optional[str] = Field(frozen=True, default=None, description="Providing your API key gives you higher rate limits when querying our APIs. You can obtain an API key at https://api.waterdata.usgs.gov/signup.")
 
-    def generate_query(self) -> dict[str, Any]:
+    def generate_queries(
+        self,
+        chunk_size: int = SETTINGS.chunk_size
+    ) -> list[dict[str, Any]]:
         """Translates class attributes to valid API parameters. Returns a URL
         builder compatible query.
         """
         # Translate Python parameters to API parameters
-        query = {
+        #   NOTE: "monitoring_location_id" is omitted from this mapping in 
+        #     the jinja2 template.
+        base_query = {
             "approval_status": self.approval_status,
             "bbox": self.bbox,
             "bbox-crs": self.bbox_crs,
@@ -76,7 +85,6 @@ class FieldMeasurementsRequest(BaseModel):
             "limit": self.limit,
             "measurement_rated": self.measurement_rated,
             "measuring_agency": self.measuring_agency,
-            "monitoring_location_id": self.monitoring_location_id,
             "observing_procedure": self.observing_procedure,
             "observing_procedure_code": self.observing_procedure_code,
             "offset": self.offset,
@@ -94,5 +102,18 @@ class FieldMeasurementsRequest(BaseModel):
             "api_key": self.api_key
         }
 
+        # Partition query
+        if self.monitoring_location_id is not None:
+            grouped_list = group_string_iterable(
+                iterable=self.monitoring_location_id,
+                group_size=chunk_size
+            )
+            queries = []
+            for group in grouped_list:
+                q = deepcopy(base_query)
+                q["monitoring_location_id"] = group
+                queries.append({k: v for k, v in q.items() if v is not None})
+            return queries
+
         # Ignore None
-        return {k: v for k, v in query.items() if v is not None}
+        return [{k: v for k, v in base_query.items() if v is not None}]

@@ -3,9 +3,9 @@
 pydantic request models for USGS OGC API items endpoints. These classes are generated
 by inspecting the USGS OGC API JSON schema and identifying all "items" endpoints.
 
-Package version: 0.8.0a0
+Package version: 0.9.0b0
 Generation script: build_request_models.py
-Generated: 2026-05-20 17:00:05 Z
+Generated: 2026-05-29 15:52:48 Z
 JSON Schema source: https://api.waterdata.usgs.gov/ogcapi/v0/openapi?f=json
 JSON Schema version: 0.49.2
 OpenAPI version: 3.0.2
@@ -14,6 +14,10 @@ from typing import Sequence, Literal, Optional, Any
 from yarl import URL
 from pydantic import BaseModel, Field
 from hydrotools.waterdata_client.datetime_utilities import DateTimeField
+from hydrotools.waterdata_client.request_partitioning import StringList
+from copy import deepcopy
+from hydrotools.waterdata_client.client_config import SETTINGS
+from hydrotools.waterdata_client.request_partitioning import group_string_iterable
 
 class ChannelMeasurementsRequest(BaseModel):
     """
@@ -48,7 +52,7 @@ class ChannelMeasurementsRequest(BaseModel):
     longitudinal_velocity_description: Optional[str] = Field(frozen=True, default=None, description="The longitudinal velocity description.")
     measurement_number: Optional[str] = Field(frozen=True, default=None, description="Measurement number.")
     measurement_type: Optional[str] = Field(frozen=True, default=None, description="The measurement type.")
-    monitoring_location_id: Optional[str] = Field(frozen=True, default=None, description="A unique identifier representing a single monitoring location.")
+    monitoring_location_id: Optional[StringList] = Field(frozen=True, default=None, description="A unique identifier representing a single monitoring location.")
     offset: Optional[int] = Field(frozen=True, default=0, ge=0, description="The optional offset parameter indicates the index within the result set from which the server shall begin presenting results in the response document.")
     properties: Optional[Sequence[Literal["id", "monitoring_location_id", "field_visit_id", "measurement_number", "time", "channel_name", "channel_flow", "channel_flow_unit", "channel_width", "channel_width_unit", "channel_area", "channel_area_unit", "channel_velocity", "channel_velocity_unit", "channel_location_distance", "channel_location_distance_unit", "channel_stability", "channel_material", "channel_evenness", "horizontal_velocity_description", "vertical_velocity_description", "longitudinal_velocity_description", "measurement_type", "last_modified", "channel_measurement_type", "channel_location_direction"]]] = Field(frozen=True, default=None, description="The properties that should be included.")
     query_filter: Optional[str] = Field(frozen=True, default=None, description="CQL Text filter expression.")
@@ -59,12 +63,17 @@ class ChannelMeasurementsRequest(BaseModel):
     vertical_velocity_description: Optional[str] = Field(frozen=True, default=None, description="The vertical velocity description.")
     api_key: Optional[str] = Field(frozen=True, default=None, description="Providing your API key gives you higher rate limits when querying our APIs. You can obtain an API key at https://api.waterdata.usgs.gov/signup.")
 
-    def generate_query(self) -> dict[str, Any]:
+    def generate_queries(
+        self,
+        chunk_size: int = SETTINGS.chunk_size
+    ) -> list[dict[str, Any]]:
         """Translates class attributes to valid API parameters. Returns a URL
         builder compatible query.
         """
         # Translate Python parameters to API parameters
-        query = {
+        #   NOTE: "monitoring_location_id" is omitted from this mapping in 
+        #     the jinja2 template.
+        base_query = {
             "bbox": self.bbox,
             "bbox-crs": self.bbox_crs,
             "channel_area": self.channel_area,
@@ -94,7 +103,6 @@ class ChannelMeasurementsRequest(BaseModel):
             "longitudinal_velocity_description": self.longitudinal_velocity_description,
             "measurement_number": self.measurement_number,
             "measurement_type": self.measurement_type,
-            "monitoring_location_id": self.monitoring_location_id,
             "offset": self.offset,
             "properties": self.properties,
             "filter": self.query_filter,
@@ -106,5 +114,18 @@ class ChannelMeasurementsRequest(BaseModel):
             "api_key": self.api_key
         }
 
+        # Partition query
+        if self.monitoring_location_id is not None:
+            grouped_list = group_string_iterable(
+                iterable=self.monitoring_location_id,
+                group_size=chunk_size
+            )
+            queries = []
+            for group in grouped_list:
+                q = deepcopy(base_query)
+                q["monitoring_location_id"] = group
+                queries.append({k: v for k, v in q.items() if v is not None})
+            return queries
+
         # Ignore None
-        return {k: v for k, v in query.items() if v is not None}
+        return [{k: v for k, v in base_query.items() if v is not None}]

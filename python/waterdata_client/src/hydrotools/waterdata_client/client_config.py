@@ -73,6 +73,7 @@ class EnvironmentKey(StrEnum):
     TIMEOUT = f"{_KEY_START}TIMEOUT"
     API_KEY = f"{_KEY_START}USGS_API_KEY"
     MAX_PAGES = f"{_KEY_START}MAX_PAGES"
+    CHUNK_SIZE = f"{_KEY_START}CHUNK_SIZE"
 
     @classmethod
     def describe_keys(cls) -> str:
@@ -115,6 +116,7 @@ class _Settings:
             cache_expires.
         max_pages: Maximum number of times to follow paginated 'next' links
             in JSON responses.
+        chunk_size: Size of request chunks for arguments that accept Sequences.
     """
     usgs_base_url: URL = URL("https://api.waterdata.usgs.gov/ogcapi/v0")
     schema_path: str = "openapi"
@@ -129,6 +131,7 @@ class _Settings:
     timeout_seconds: int = 900
     usgs_api_key: Optional[str] = None
     max_pages: int = 20
+    chunk_size: int = 5
 
     @classmethod
     def from_env(cls) -> Self:
@@ -154,7 +157,8 @@ class _Settings:
             default_retries=int(os.getenv(EnvironmentKey.RETRIES, cls.default_retries)),
             timeout_seconds=int(os.getenv(EnvironmentKey.TIMEOUT, cls.timeout_seconds)),
             usgs_api_key=os.getenv(EnvironmentKey.API_KEY, cls.usgs_api_key),
-            max_pages=int(os.getenv(EnvironmentKey.MAX_PAGES, cls.max_pages))
+            max_pages=int(os.getenv(EnvironmentKey.MAX_PAGES, cls.max_pages)),
+            chunk_size=int(os.getenv(EnvironmentKey.CHUNK_SIZE, cls.chunk_size))
             )
 
     @cached_property
