@@ -400,33 +400,35 @@ def test_coefficient_of_extrapolation():
     # Default
     v = [1, 2, 4, 5]
     COE = metrics.coefficient_of_extrapolation(v, y_pred)
-    expected = -3.0
+    expected = -9.0
     assert np.isclose(COE, expected)
 
     # Test with series
     s = pd.Series(data=v, index=y_true_series.index)
     COE = metrics.coefficient_of_extrapolation(s, y_pred_series)
-    expected = -3.0
+    expected = -9.0
     assert np.isclose(COE, expected)
 
     # Identity
-    COE = metrics.coefficient_of_extrapolation(y_true, np.array(y_true) * 1.0)
+    # Note: uses v because perfectly linear observations (like y_true) are
+    # degenerate for this metric (the extrapolated baseline has zero error)
+    COE = metrics.coefficient_of_extrapolation(v, np.array(v) * 1.0)
     expected = 1.0
     assert np.isclose(COE, expected)
 
     # Power
     COE = metrics.coefficient_of_extrapolation(v, y_pred, power=1.5)
-    expected = -1.82842712474619
+    expected = -4.41421356237310
     assert np.isclose(COE, expected)
 
     # Normalized
     COE = metrics.coefficient_of_extrapolation(v, y_pred, normalized=True)
-    expected = 0.2
+    expected = (1.0 / 11.0)
     assert np.isclose(COE, expected)
 
     # Log
     COE = metrics.coefficient_of_extrapolation(v, y_pred, log=True)
-    expected = -2.19567503891363
+    expected = -12.9008419425907
     assert np.isclose(COE, expected)
 
 def test_mean_squared_error():

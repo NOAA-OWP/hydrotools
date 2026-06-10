@@ -364,7 +364,7 @@ def coefficient_of_extrapolation(
 
     # Compute baseline
     slope = np.diff(y_true)[:-1]
-    y_base = y_true[2:] + slope
+    y_base = np.asarray(y_true)[1:-1] + slope
 
     # Compute score
     return mean_error_skill_score(y_true[2:], y_pred[2:], y_base, 
