@@ -19,7 +19,8 @@ def test_flashiness() -> None:
     flashiness. Lastly, it verifies an assertion error is raised for an empty
     array."""
     assert emet.flashiness(ONE_SERIES) == 0.0
-    assert emet.flashiness(RANGE_SERIES) == 0.25
+    assert emet.flashiness(RANGE_SERIES) == 2.0 / 9.0
+    assert emet.flashiness(np.array([1.0, 2.0, 1.0, 2.0, 1.0, 2.0, 1.0])) == 0.6
 
     with pytest.raises(AssertionError):
         emet.flashiness(EMPTY_SERIES)

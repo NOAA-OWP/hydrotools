@@ -41,9 +41,9 @@ def flashiness(series: npt.ArrayLike) -> float:
     streams. Note: that flashiness is sensitive to catchment area. Comparisons
     of flashiness across catchments of differnt area should be approached with
     caution.
-        This implementaion uses the central difference formula found in
-    Equation 3 of Baker et al., 2004. Gradients for edge values use a 1-D
-    approximation. See numpy.gradient for more details.
+        This implementaion uses the sum of absolute first differences in
+    flow (the flow "pathlength") divided by total discharge, as found in
+    Equation 3 of Baker et al., 2004.
 
     Parameters
     ----------
@@ -57,7 +57,7 @@ def flashiness(series: npt.ArrayLike) -> float:
     # Validate
     assert len(series) > 0, "cannot compute flashiness for empty series"
 
-    return np.sum(np.abs(np.gradient(series))) / np.sum(series)
+    return np.sum(np.abs(np.diff(series))) / np.sum(series)
 
 def peak(series: npt.ArrayLike, **options) -> float:
     """
