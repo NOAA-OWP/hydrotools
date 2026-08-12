@@ -8,6 +8,6 @@ authors:
   given-names: "Austin"
   orcid: "https://orcid.org/0000-0002-7670-1298"
 title: "OWPHydroTools"
-version: 3.1.0
-date-released: 2025-04-09
+version: 4.0.0
+date-released: 2026-05-22
 url: "https://github.com/noaa-owp/hydrotools"
