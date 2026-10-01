@@ -22,7 +22,6 @@ import numpy.typing as npt
 from typing import List, Tuple, Sequence
 import pandas as pd
 import warnings
-from pandas.api.types import CategoricalDtype
 
 class InconsistentShapesError(Exception):
     def __init__(self,
@@ -127,11 +126,8 @@ def convert_to_boolean_categorical_series(
     -------
     Validated boolean categorical series.
     """
-    # Create boolean categorical series
-    s = pd.Series(
-        data=data,
-        dtype=CategoricalDtype([True, False])
-    )
+    # Infer categories first, then explicitly drop categories other than booleans.
+    s = pd.Series(data=data, dtype="category").cat.set_categories([True, False])
 
     # Check for NaN
     if s.isnull().any():
